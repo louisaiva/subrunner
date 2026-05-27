@@ -63,7 +63,7 @@ public class RoomDataSaver : MonoBehaviour
                 if (ChunkEngine.Instance == null) { return; }
 
                 // unload all rooms from system
-                ChunkEngine.Instance.UnloadAllChunks();
+                _ = ChunkEngine.Instance.UnloadAllChunks();
                 ChunkBank.Instance.DestroyAllChunksInstantly();
             }
 

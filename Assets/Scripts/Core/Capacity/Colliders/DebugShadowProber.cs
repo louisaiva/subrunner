@@ -7,13 +7,13 @@ public class DebugShadowProber : MonoBehaviour
 {
     ShadowCaster2D sc;
     Collider2D col;
-    string tag;
+    string _tag;
 
     public void Init(ShadowCaster2D sc, Collider2D col, string tag)
     {
         this.sc = sc;
         this.col = col;
-        this.tag = tag;
+        this._tag = tag;
     }
 
     IEnumerator Start()
@@ -29,7 +29,7 @@ public class DebugShadowProber : MonoBehaviour
     void LogState(string phase)
     {
         var sb = new System.Text.StringBuilder();
-        sb.AppendLine($"[ShadowProbe:{tag}] Env={(Application.isEditor ? "EDITOR" : "PLAYER")} frame={Time.frameCount} time={Time.realtimeSinceStartup:F3}");
+        sb.AppendLine($"[ShadowProbe:{_tag}] Env={(Application.isEditor ? "EDITOR" : "PLAYER")} frame={Time.frameCount} time={Time.realtimeSinceStartup:F3}");
         sb.AppendLine($" GameObject activeInHierarchy={gameObject.activeInHierarchy}");
         sb.AppendLine($" ShadowCaster enabled={(sc != null ? sc.enabled.ToString() : "null")} selfShadows={(sc != null ? sc.selfShadows.ToString() : "n/a")} castingOption={(sc != null ? sc.castingOption.ToString() : "n/a")}");
         var shape = sc?.shapePath;

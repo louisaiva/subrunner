@@ -1,3 +1,4 @@
+#pragma warning disable 1998
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;

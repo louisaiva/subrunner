@@ -1,3 +1,5 @@
+#pragma warning disable 1998
+
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;

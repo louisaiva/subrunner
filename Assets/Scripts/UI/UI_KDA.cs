@@ -9,7 +9,7 @@ public class UI_KDA : MonoBehaviour
     public TextMeshProUGUI kda;
 
     AttackCapacity attack;
-    DieCapacity die;
+    // DieCapacity die;
 
     private void Start()
     {
@@ -22,9 +22,9 @@ public class UI_KDA : MonoBehaviour
 
         // we get the capacities
         if (attack == null) { attack = Controller.Perso.GetCapacity<AttackCapacity>(); }
-        if (die == null) { die = Controller.Perso.GetCapacity<DieCapacity>(); }
+        // if (die == null) { die = Controller.Perso.GetCapacity<DieCapacity>(); }
 
         // KDA
-        kda.text = "KDA : "+attack?.kills + "/" + die.deaths;
+        // kda.text = "KDA : "+attack?.kills + "/" + die.deaths;
     }
 }

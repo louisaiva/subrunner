@@ -49,6 +49,7 @@ public class AnimLayer : MonoBehaviour
     private void Awake()
     {
         if (leader != null) { AssignLeader(leader); }
+        bool a = visible_on;
     }
 
     // ASSING LEADER

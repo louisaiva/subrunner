@@ -11069,7 +11069,7 @@ MonoBehaviour:
   hide_already_loaded: 1
   hide_data_not_found: 1
   log_ticks: 0
-  log_room_transfers: 0
+  log_room_transfers: 1
   log_loaded_area_transfers: 0
   log_best_match_calcul: 0
   log_spatial_queries: 0
@@ -44092,11 +44092,11 @@ MonoBehaviour:
   log_world_data_loading: 1
   log_awake_data_extended: 0
   log_start_capacity_ownership: 0
-  log_duplicating: 0
-  log_spawning: 0
+  log_duplicating: 1
+  log_spawning: 1
   log_item_switching: 0
   hide_log_ownership_validation: 1
-  log_loading: 0
+  log_loading: 1
   log_loading_extended: 0
   log_visibility: 0
   hide_log_no_data_found: 1
@@ -194527,8 +194527,8 @@ MonoBehaviour:
   hackable_navigator: {fileID: 598553482}
   exploit_navigator: {fileID: 598553481}
   see_through: {fileID: 531669800}
-  log: 0
-  log_perso: 0
+  log: 1
+  log_perso: 1
 --- !u!114 &1409124454
 MonoBehaviour:
   m_ObjectHideFlags: 0
