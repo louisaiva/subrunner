@@ -22,11 +22,11 @@ public class UI_PauseMenu : UI_Pool
     }
 
     // EVENTS
-    protected override void on_added_to_stack()
+    protected override void before_adding_to_stack()
     {
         GameManager.State = GameState.Paused;
     }
-    protected override void on_removed_from_stack()
+    protected override void after_removed_from_stack()
     {
         GameManager.State = GameState.Gaming;
     }

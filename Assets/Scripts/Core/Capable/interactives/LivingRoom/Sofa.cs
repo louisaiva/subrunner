@@ -15,7 +15,7 @@ public class Sofa : Capable, Interactable, Sittable
     public void OnInteract(Capable interactor)
     {
         // check if the interactor is the controlled one
-        if (interactor != Controller.LazyInstance.Capable) { return; }
+        if (interactor != Controller.Capable) { return; }
 
         // we sit on the sofa
         interactor.GetCapacity<SitCapacity>()?.Sit(this);

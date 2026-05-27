@@ -8,8 +8,7 @@ public class PersoInputsController : InputController
     public bool log = false;
 
     // Controller thing
-    private Controller controller;
-    private Capable Capable => controller.Capable;
+    private Capable Capable => Controller.Capable;
 
     [Header("INPUTS")]
     public bool InputsDisabled = false;
@@ -37,8 +36,6 @@ public class PersoInputsController : InputController
     {
         // on récupère les inputs
         initInputs();
-
-        controller = GetComponent<Controller>();
 
         HackableNavigator = transform.Find("hacking").GetComponent<HackableNavigator>();
         ExploitNavigator = transform.Find("hacking").GetComponent<ExploitNavigator>();
@@ -259,7 +256,7 @@ public class PersoInputsController : InputController
         HackCapacity hacker = HackableNavigator.hacker;
         if (hacker == null) { if (log) { Debug.Log("(PersoInputsController) " + name + " tried to hack " + HackableNavigator.name + " but it has no HackCapacity"); } return; } // if the hacker is not set, we return
 
-        ConnectCapacity connector = Controller.LazyInstance.Capable.Connector;
+        ConnectCapacity connector = Controller.Capable.Connector;
         if (connector == null) { if (log) { Debug.Log("(PersoInputsController) " + name + " tried to hack " + HackableNavigator.name + " but it has no Connector"); } return; } // if the connector is not set,
 
         // on hack
@@ -273,7 +270,7 @@ public class PersoInputsController : InputController
     {
         // we activate the hackable navigator when input is pressed > 0.5
         // and disable it when released < 0.5
-        if (input.magnitude < InputManager.Instance.JOYSTICK_MIN_THRESHOLD || Perso.Instance.Device == null)
+        if (input.magnitude < InputManager.Instance.JOYSTICK_MIN_THRESHOLD || Controller.Perso == null || Controller.Perso.Device == null)
         {
             HackableNavigator.Disable();
             return;
@@ -297,7 +294,7 @@ public class PersoInputsController : InputController
     // MOUSE HACKING INPUTS
     public void handle_mouse_hack_selection(InputAction.CallbackContext context)
     {
-        if (Perso.Instance.Device == null) { HackableNavigator.Disable(); return; }
+        if (Controller.Perso == null || Controller.Perso.Device == null) { HackableNavigator.Disable(); return; }
         
         // checks if we are releasing the right button while connected to a target -> we run the hack
         if (Input.GetMouseButtonUp(1) && Controller.LazyInstance.HackableNavigator.IsConnected) { OnHack(); return; }
@@ -318,7 +315,7 @@ public class PersoInputsController : InputController
     private void handle_exploit_wheel_mouse(InputAction.CallbackContext context)
     {
         // checks if we are pressing the middle button & have a device
-        if (!Input.GetMouseButton(2) || Perso.Instance.Device == null)
+        if (!Input.GetMouseButton(2) || Controller.Perso == null || Controller.Perso.Device == null)
         {
             ExploitNavigator.HandleExploitWheelInput(0f);
             Cursor.visible = true;
@@ -344,7 +341,7 @@ public class PersoInputsController : InputController
     private Vector2 calculate_mouse_direction()
     {
         Vector2 mouse_position = Mouse.current.position.ReadValue();
-        Vector2 distance = Camera.main.ScreenToWorldPoint(mouse_position) - Controller.LazyInstance.Capable.transform.position;
+        Vector2 distance = Camera.main.ScreenToWorldPoint(mouse_position) - Controller.Capable.transform.position;
         return distance.normalized;
     }
 }

@@ -37,14 +37,14 @@ public class UI_CompactItemPool : UI_ItemSlottable
 
 
     // ITEMPOOL ATTACHMENT
-    public void AttachToStorer(ItemStorer real_holder, string item_rule = "")
+    public void AttachStorer(ItemStorer real_holder, string item_rule = "")
     {
         if (log_attach) { Debug.Log($"(UI_CompactItemPool) attaching to storer {(real_holder != null ? real_holder.gameObject.name : "null")} with item rule '{item_rule}'"); }
 
         if (real_holder == null) { return; }
 
         // remove all callbacks
-        if (storer != null) { DetachFromStorer(); }
+        if (storer != null) { DetachStorer(); }
 
         // set new real_holder and register callbacks
         storer = real_holder;
@@ -56,7 +56,7 @@ public class UI_CompactItemPool : UI_ItemSlottable
         // set item rule
         this.item_rule = item_rule;
 
-        // create the UI_ItemStack for matching the ItemStack of the ItemPool
+        // create the ItemStacks AND UI_ItemStack for matching the ItemStack of the ItemPool
         createStacksForStorer();
 
         if (stacks.Count == 0) { empty_text.gameObject.SetActive(true); }
@@ -64,7 +64,7 @@ public class UI_CompactItemPool : UI_ItemSlottable
 
         if (log_attach) { Debug.Log($"(UI_CompactItemPool) attached to storer {real_holder.gameObject.name} and created {stacks.Count} stacks"); }
     }
-    public void DetachFromStorer()
+    public void DetachStorer()
     {
         if (log_attach) { Debug.Log($"(UI_CompactItemPool) detaching from storer {(storer != null ? storer.gameObject.name : "null")}"); }
         if (storer == null) { return; }
@@ -93,13 +93,27 @@ public class UI_CompactItemPool : UI_ItemSlottable
     {
         if (storer == null) { return; }
 
-        // we go through all items of the storer and grab them so we copy them into our stacks
-        // (that will create ui_stacks)
-        for (int i = 0; i < storer.Items.Count; i++)
+        // get all stacks of the storer and duplicates them if they pass the rule
+        List<ItemStack> storer_stacks = storer.Stacks;
+        for (int i = 0; i < storer_stacks.Count; i++)
         {
-            Item item = storer.Items[i];
-            grab_item(item);
+            ItemStack stack = storer_stacks[i];
+
+            // we check the rule on the stack, if it doesn't pass we skip it
+            if (!stack.ValidateRule(item_rule)) { continue; }
+
+            // we create a new stack for the pool and add it to the list of stacks of the pool
+            ItemStack new_stack = new ItemStack(storer);
+            foreach (Item item in stack.Items)
+            {
+                new_stack.Add(item);
+            }
+            stacks.Add(new_stack);
+
+            // we create the UI stack for this stack
+            add_ui_stack(new_stack);
         }
+
     }
 
     // ITEM GRABBED / DROPPED
@@ -139,8 +153,12 @@ public class UI_CompactItemPool : UI_ItemSlottable
     protected void drop_item(Item item)
     {
         // we find the stack that contains the item and remove it
-        ItemStack stack = stacks.Find(s => s.Items.Contains(item));
-        if (stack == null) { return; }
+        ItemStack stack = stacks.Find(s => s.HasItem(item));
+        if (stack == null)
+        {
+            if (log_grab_drop) { Debug.LogWarning($"(UI_CompactItemPool) could not find stack for dropped item {item.name}"); }
+            return;
+        }
         
         if (log_grab_drop) { Debug.Log($"(UI_CompactItemPool) dropping item {item.name}"); }
         stack.Remove(item);

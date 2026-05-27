@@ -513,11 +513,6 @@ public class AnimBank : MonoBehaviour
     }
     private Anim get_closest_orientation_anim(string skin, string capacity, string orientation)
     {
-        // special cases
-        if ((skin == "zombo" || skin == "qwin") && capacity == "attack" && (orientation == "LD" || orientation == "RD"))
-        { return get_closest_orientation_anim(skin, capacity, "D"); }
-
-
         // we gather the orientations we have for this skin and capacity
         // if we find the perfect orientation we return it directly
         Vector2 target = AnimOrientationHelper.GetOrientationVector(orientation);
@@ -527,15 +522,22 @@ public class AnimBank : MonoBehaviour
             return anims[skin][capacity][0];
         }
 
+
+        // we gather the best orientation
+        // if we have exact one, we return it directly
         Anim bestAnim = null;
         float bestDot = float.NegativeInfinity;
-
+        List<string> existing = new List<string>();
+        List<Anim> existing_anims = new List<Anim>();
         foreach (Anim anim in anims[skin][capacity])
         {
-            if (anim.orientation == orientation) { return anim; }
+            if (anim.orientation == orientation) { return anim; } // exact match, we return it directly
 
             Vector2 animDir = AnimOrientationHelper.GetOrientationVector(anim.orientation);
-            if (animDir == Vector2.zero) { continue; }
+            if (animDir == Vector2.zero) { continue; } // weird case, no orientation, we skip it
+
+            existing.Add(anim.orientation);
+            existing_anims.Add(anim);
 
             float dot = Vector2.Dot(target.normalized, animDir.normalized);
             if (dot > bestDot)
@@ -544,9 +546,31 @@ public class AnimBank : MonoBehaviour
                 bestAnim = anim;
             }
         }
+        // here we have no exact match, but we have the best match, as well as the list of existing orientations
+        if (log_get_anim) { Debug.LogWarning($"(AnimBank - GetClosestOrientationAnim : {skin}.{capacity}.{orientation} ) Exact Orientation not found, found closest one : {bestAnim.orientation} (with dot : {bestDot}).   ---- BUT FIRST --- we are checking some special cases so the return anim may be different (try putting more logs if you want to know which one :D)"); }
 
+        // we filter some special cases
 
-        if (log_get_anim) { Debug.LogWarning($"(AnimBank - GetClosestOrientationAnim : {skin}.{capacity}.{orientation} ) Exact Orientation not found, returning closest one : {bestAnim.orientation} with dot : {bestDot}"); }
+        // D attack is better than L/R if LD/RD asked
+        if (capacity == "attack" && existing.Contains("D") && (orientation == "LD" || orientation == "RD"))
+        {
+            return existing_anims[existing.IndexOf("D")];
+        }
+        
+        // L/R run & walk are better than D if LD/RD asked
+        // L/R run & walk also better than U if LU/RU asked
+        if (capacity == "run" || capacity == "walk")
+        {
+            if (existing.Contains("L") && (orientation == "LD" || orientation == "LU"))
+            {
+                return existing_anims[existing.IndexOf("L")];
+            }
+            else if (existing.Contains("R") && (orientation == "RD" || orientation == "RU"))
+            {
+                return existing_anims[existing.IndexOf("R")];
+            }
+        }
+        
         return bestAnim;
     }
 

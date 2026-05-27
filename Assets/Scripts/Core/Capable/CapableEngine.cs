@@ -64,6 +64,8 @@ public class CapableEngine : BSOD_System<CapableEngine>
     // EVENTS
     public Action<CapableData> OnCapableAppear; // =/= spawned bcz it works for items too. a dropped item appears BUT is was not spawned !
     public Action<CapableData> OnCapableDisappear; // despawned capables + grabbed items
+    public Action<CapableData> OnCapableSpawned; // only first time a capable appear
+    public Action<CapableData> OnCapableDespawned; // after this we have no capable data stored anymore
 
 
     ///
@@ -244,7 +246,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
         if (data_type != null)
         {
             data = JsonUtility.FromJson(json, data_type) as CapableData;
-            if (log_awake_data_extended) { Debug.Log($"(CapableEngine) Loading capable data : \n{data.GetDetails()}\n\n{json}"); }
+            if (log_awake_data_extended) { Debug.Log($"(CapableEngine) Loading capable data for '{data.id}' of type {data.GetType().Name}: \n{data.GetDetails()}\n\n{json}"); }
             data_by_id.Add(data.id, data);
             if (generate_runtime) { generate_runtime_id(data.id); }
 
@@ -257,9 +259,12 @@ public class CapableEngine : BSOD_System<CapableEngine>
         // ex : ItemData, DoorData
         // (insert in the list below)
         Type capable_type = Type.GetType(kind);
+
+        // PersoData
+        if (GameManager.IsKind(capable_type, typeof(Perso))) { data_type = typeof(PersoData); }
         
         // ItemData
-        if (GameManager.IsKind(capable_type, typeof(Item))) { data_type = typeof(ItemData); }
+        else if (GameManager.IsKind(capable_type, typeof(Item))) { data_type = typeof(ItemData); }
 
         // IAData
         else if (GameManager.IsKind(capable_type, typeof(IA))) { data_type = typeof(IAData); }
@@ -273,7 +278,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
         // we finally extract the data
         data = JsonUtility.FromJson(json, data_type) as CapableData;
-        if (log_awake_data_extended) { Debug.Log($"(CapableEngine) Loading capable data : \n{data.GetDetails()}\n\n{json}"); }
+        if (log_awake_data_extended) { Debug.Log($"(CapableEngine) Loading capable data for '{data.id}' of type {data.GetType().Name}: \n{data.GetDetails()}\n\n{json}"); }
         data_by_id.Add(data.id, data);
         if (generate_runtime) { generate_runtime_id(data.id); }
         log += data.GetDetails() + "\n";
@@ -617,6 +622,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
         // 2. we fire events
         OnCapableAppear?.Invoke(data);
+        OnCapableSpawned?.Invoke(data);
 
         if (log_spawning) { Debug.Log($"(CapableEngine) Spawned {data.id}"); }
 
@@ -627,6 +633,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
     {
         // UNLOAD THE CAPABLE
         OnCapableDisappear?.Invoke(cdata);
+        OnCapableDespawned?.Invoke(cdata);
         unload_capable(cdata.id);
     }
 
@@ -911,6 +918,13 @@ public class CapableEngine : BSOD_System<CapableEngine>
         for (int i = 0; i < capables_ids.Count; i++)
         {
             string id = capables_ids[i];
+
+            // verify that the capable is not controlled, if yes we skip it
+            if (Controller.Capable != null && Controller.Capable.ID == id)
+            {
+                if (log_loading) { Debug.Log($"(CapableSystem - UnloadCapables) Skipping unloading of {id} since it is currently controlled by the player"); }
+                continue;
+            }
             
             // we remove them from the loading_queue if they are inside it (so no need for unloading them)
             if (loading_queue.Contains(id)) { loading_queue.Remove(id); }

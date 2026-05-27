@@ -27,6 +27,9 @@ public abstract class UI_ItemSlottable : UI_Slottable, Startable
 
     // [SerializeField] protected bool log_storage = false;
 
+    [Header("Logs")]
+    [SerializeField] protected Loggable<UI_ItemSlottable> log_ui_stack = new Loggable<UI_ItemSlottable>();
+
     // START
     public virtual void InitStart()
     {
@@ -38,12 +41,15 @@ public abstract class UI_ItemSlottable : UI_Slottable, Startable
 
         // clear the ui_items
         destroyAllStacks();
+        log_ui_stack.LogExtended($"InitStart done, destroyed all UI stacks for {name}");
     }
     protected void destroyAllStacks()
     {
+        log_ui_stack.Log($"Destroying all UI stacks ({ui_stacks.Count}) for {name}.");
         // we destroy all the slots
         for (int i = 0; i < ui_stacks.Count; i++)
         {
+            ui_stacks[i].UnregisterCallbacks();
             Destroy(ui_stacks[i].gameObject);
         }
         ui_stacks.Clear();
@@ -54,6 +60,7 @@ public abstract class UI_ItemSlottable : UI_Slottable, Startable
     {
         UI_ItemStack ui_stack = create_ui_stack(stack); // creates the ui_stack
         ui_stacks.Add(ui_stack); // add it
+        log_ui_stack.LogExtended($"Added an ui_itemstack on {name} for stack : {stack.GetDetails()}");
     }
     protected UI_ItemStack create_ui_stack(ItemStack stack)
     {
@@ -77,11 +84,17 @@ public abstract class UI_ItemSlottable : UI_Slottable, Startable
     {
         // we find the corresponding ui_itemstack to the stack
         UI_ItemStack ui_stack = get_ui_stack_attached_to_stack(stack);
-        if (ui_stack == null) { return; }
+        if (ui_stack == null)
+        {
+            log_ui_stack.Warning($"Couldn't find an ui_itemstack to remove on {name} for stack : {stack.GetDetails()}");
+            return;
+        }
 
         // we destroy the ui_stack
         ui_stacks.Remove(ui_stack);
+        ui_stack.UnregisterCallbacks(); // we unregister the callbacks to avoid errors when destroying the ui_stack
         Destroy(ui_stack.gameObject);
+        log_ui_stack.LogExtended($"Removed an ui_itemstack on {name} for stack : {stack.GetDetails()}");
     }
 
 

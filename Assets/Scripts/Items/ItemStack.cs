@@ -49,6 +49,13 @@ using UnityEngine;
     {
         return Items.Contains(item);
     }
+    public string GetDetails()
+    {
+        return $"Stack of '{ItemReference}'      -    qty/max qty : {Quantity}/{MaxQty}";
+    }
+
+    // RULE
+    public bool ValidateRule(string rule) { return Item?.ValidateRule(rule) ?? false; }
 
     // CAN ADD
     public bool CanAdd(List<Item> items)

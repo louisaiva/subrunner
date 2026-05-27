@@ -8761,7 +8761,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: stuff
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 0
   stacks:
   - MaxQty: 1
@@ -11069,7 +11069,7 @@ MonoBehaviour:
   hide_already_loaded: 1
   hide_data_not_found: 1
   log_ticks: 0
-  log_room_transfers: 1
+  log_room_transfers: 0
   log_loaded_area_transfers: 0
   log_best_match_calcul: 0
   log_spatial_queries: 0
@@ -11079,8 +11079,8 @@ MonoBehaviour:
   hide_log_no_room_of_capable_found: 1
   log_chunk_distance: 0
   log_tilemaps_loading: 0
-  log_colliders: 1
-  log_enter_exit: 1
+  log_colliders: 0
+  log_enter_exit: 0
 --- !u!114 &112018661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15660,7 +15660,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: chest
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 3
   stacks:
   - MaxQty: 1
@@ -19771,6 +19771,8 @@ MonoBehaviour:
   AlwaysShow: 0
   ui_stacks: []
   bank: {fileID: 0}
+  log_ui_stack:
+    Verbose: 2
   PoolID: conso_2
 --- !u!114 &173496227
 MonoBehaviour:
@@ -38411,7 +38413,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: chest
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 3
   stacks:
   - MaxQty: 1
@@ -38791,7 +38793,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: stuff
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 0
   stacks:
   - MaxQty: 1
@@ -42633,7 +42635,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: stuff
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 0
   stacks:
   - MaxQty: 1
@@ -44094,7 +44096,7 @@ MonoBehaviour:
   log_spawning: 0
   log_item_switching: 0
   hide_log_ownership_validation: 1
-  log_loading: 1
+  log_loading: 0
   log_loading_extended: 0
   log_visibility: 0
   hide_log_no_data_found: 1
@@ -47255,7 +47257,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: stuff
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 0
   stacks:
   - MaxQty: 1
@@ -54893,6 +54895,8 @@ MonoBehaviour:
   AlwaysShow: 1
   ui_stacks: []
   bank: {fileID: 0}
+  log_ui_stack:
+    Verbose: 2
   PoolID: none
 --- !u!114 &406660990
 MonoBehaviour:
@@ -63214,6 +63218,8 @@ MonoBehaviour:
   AlwaysShow: 0
   ui_stacks: []
   bank: {fileID: 0}
+  log_ui_stack:
+    Verbose: 2
   PoolID: files
 --- !u!114 &472838379
 MonoBehaviour:
@@ -67540,7 +67546,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: stuff
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 0
   stacks:
   - MaxQty: 1
@@ -68667,7 +68673,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InputIndicationEngine
   input_indication: {fileID: 117402598}
   log:
-    Verbose: 3
+    Verbose: 2
 --- !u!1 &508457655
 GameObject:
   m_ObjectHideFlags: 0
@@ -70972,7 +70978,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: stuff
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 0
   stacks:
   - MaxQty: 1
@@ -74220,6 +74226,8 @@ MonoBehaviour:
   AlwaysShow: 0
   ui_stacks: []
   bank: {fileID: 0}
+  log_ui_stack:
+    Verbose: 2
   PoolID: conso_3
 --- !u!114 &548193323
 MonoBehaviour:
@@ -84681,7 +84689,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: stuff
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 0
   stacks:
   - MaxQty: 1
@@ -85857,7 +85865,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: chest
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 3
   stacks:
   - MaxQty: 1
@@ -112223,7 +112231,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: stuff
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 0
   stacks:
   - MaxQty: 1
@@ -113147,7 +113155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: stuff
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 0
   stacks:
   - MaxQty: 1
@@ -125335,7 +125343,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: stuff
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 0
   stacks:
   - MaxQty: 1
@@ -140527,6 +140535,8 @@ MonoBehaviour:
   AlwaysShow: 0
   ui_stacks: []
   bank: {fileID: 0}
+  log_ui_stack:
+    Verbose: 2
   PoolID: conso_4
 --- !u!114 &1018816753
 MonoBehaviour:
@@ -147138,7 +147148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: stuff
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 0
   stacks:
   - MaxQty: 1
@@ -156485,7 +156495,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: stuff
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 0
   stacks:
   - MaxQty: 1
@@ -156779,6 +156789,8 @@ MonoBehaviour:
   AlwaysShow: 0
   ui_stacks: []
   bank: {fileID: 0}
+  log_ui_stack:
+    Verbose: 2
   PoolID: weapon
 --- !u!1 &1140343059
 GameObject:
@@ -159800,7 +159812,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: stuff
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 0
   stacks:
   - MaxQty: 1
@@ -187854,7 +187866,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: chest
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 3
   stacks:
   - MaxQty: 1
@@ -194516,7 +194528,7 @@ MonoBehaviour:
   exploit_navigator: {fileID: 598553481}
   see_through: {fileID: 531669800}
   log: 0
-  log_ui_attachment: 0
+  log_perso: 0
 --- !u!114 &1409124454
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -199141,7 +199153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: stuff
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 0
   stacks:
   - MaxQty: 1
@@ -213980,7 +213992,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: stuff
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 0
   stacks:
   - MaxQty: 1
@@ -232467,7 +232479,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: chest
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 2
   stacks:
   - MaxQty: 1
@@ -236707,7 +236719,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: stuff
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 0
   stacks:
   - MaxQty: 1
@@ -238517,7 +238529,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: stuff
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 0
   stacks:
   - MaxQty: 1
@@ -239749,7 +239761,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: stuff
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 0
   stacks:
   - MaxQty: 1
@@ -275516,7 +275528,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: stuff
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 0
   stacks:
   - MaxQty: 1
@@ -281207,7 +281219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: stuff
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 0
   stacks:
   - MaxQty: 1
@@ -282448,7 +282460,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: stuff
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 0
   stacks:
   - MaxQty: 1
@@ -282688,8 +282700,10 @@ MonoBehaviour:
   AlwaysShow: 1
   ui_stacks: []
   bank: {fileID: 0}
+  log_ui_stack:
+    Verbose: 2
   log_attach: 0
-  log_grab_drop: 0
+  log_grab_drop: 1
   item_rule: 
   stacks: []
   outliner: {fileID: 1598208586}
@@ -286566,7 +286580,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: chest
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 3
   stacks:
   - MaxQty: 1
@@ -302382,6 +302396,8 @@ MonoBehaviour:
   AlwaysShow: 0
   ui_stacks: []
   bank: {fileID: 0}
+  log_ui_stack:
+    Verbose: 2
   PoolID: device
 --- !u!1 &2118324574
 GameObject:
@@ -306467,7 +306483,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: stuff
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 0
   stacks:
   - MaxQty: 1
@@ -309144,6 +309160,8 @@ MonoBehaviour:
   log_extended: 0
   log_elements_showing: 0
   log_refresh_pools: 0
+  log_ui_attachment: 0
+  log_specific_get_item_pools: 1
   no_inventory_panel: {fileID: 2680335235115919118}
   base_transition: 0.2
   never_fade_pools: 1
@@ -310472,10 +310490,12 @@ MonoBehaviour:
   starting_slot: {fileID: 0}
   log: 0
   log_starting_slot: 0
-  item_slot_type: file
+  item_slot_type: item
   AlwaysShow: 0
   ui_stacks: []
   bank: {fileID: 0}
+  log_ui_stack:
+    Verbose: 2
   PoolID: stuff
 --- !u!1 &535560840734372483
 GameObject:
@@ -318620,6 +318640,8 @@ MonoBehaviour:
   AlwaysShow: 0
   ui_stacks: []
   bank: {fileID: 0}
+  log_ui_stack:
+    Verbose: 2
   PoolID: conso_1
 --- !u!224 &1847567306624971391
 RectTransform:
@@ -330510,6 +330532,8 @@ MonoBehaviour:
   AlwaysShow: 0
   ui_stacks: []
   bank: {fileID: 0}
+  log_ui_stack:
+    Verbose: 2
   PoolID: shoes
 --- !u!114 &3678063576079407624
 MonoBehaviour:
@@ -331872,10 +331896,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7531783600036605408, guid: a9768066d763cfb47aecb2bc540e9806, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8810855308826184979, guid: a9768066d763cfb47aecb2bc540e9806, type: 3}
-      propertyPath: log
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -336957,7 +336977,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: chest
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 2
   stacks:
   - MaxQty: 1
@@ -340064,7 +340084,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: chest
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 3
   stacks:
   - MaxQty: 1

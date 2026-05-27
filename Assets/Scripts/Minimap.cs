@@ -142,7 +142,7 @@ public class Minimap : MonoBehaviour
         // si on a pas généré le monde, on return
         if (!generator || !generator.generate_world) return;
 
-        if (is_discovering && Controller.LazyInstance.Capable.HasCapacity("gyroscope"))
+        if (is_discovering && Controller.Capable.HasCapacity("gyroscope"))
         {
             // on récupère la position du perso
             Vector2Int pos = world.getPersoPos();

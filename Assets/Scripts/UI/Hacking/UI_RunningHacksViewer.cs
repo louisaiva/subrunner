@@ -39,8 +39,8 @@ public class UI_RunningHacksViewer : MonoBehaviour, Startable
         // GameObject.Find("/perso").GetComponent<Perso>().OnDeviceGranted += HandleDeviceChanged;
         hacks_waiting_info.Init();
 
-        // Perso.Instance.OnDeviceGranted += HandleDeviceGranted;
-        // Perso.Instance.OnDeviceRemoved += HandleDeviceRemoved;
+        // Controller.Perso.OnDeviceGranted += HandleDeviceGranted;
+        // Controller.Perso.OnDeviceRemoved += HandleDeviceRemoved;
         update_title();
     }
 
@@ -117,13 +117,13 @@ public class UI_RunningHacksViewer : MonoBehaviour, Startable
     }
     private void update_title()
     {
-        if (Perso.Instance?.Device == null)
+        if (Controller.Perso?.Device == null)
         {
             title_text.text = "no device";
             return;
         }
 
-        if (Perso.Instance?.Device.Hacker == null)
+        if (Controller.Perso?.Device.Hacker == null)
         {
             title_text.text = "no module:hack";
             return;

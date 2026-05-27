@@ -16,6 +16,21 @@ using UnityEngine;
     // last spawn
     public string last_sofa_id;
 
+    // DUPLICATE
+    public ControllerData Duplicate()
+    {
+        return new ControllerData
+        {
+            controlled_capable_id = this.controlled_capable_id,
+            stack_capable_ids = new List<string>(this.stack_capable_ids),
+            player_level = this.player_level,
+            player_room = this.player_room,
+            player_chunk = this.player_chunk,
+            last_sofa_id = this.last_sofa_id
+        };
+    }
+
+    // GET DETAILS
     public string GetDetails()
     {
         string details = $" - controlled capable id : {controlled_capable_id}\n" +

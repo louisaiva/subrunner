@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -15,6 +16,7 @@ using UnityEngine;
 ///             x = K + l * (b + l * m * K)
 /// </summary>
 
+[Obsolete("SkillManager is deprecated, we should use the new upgrade system instead, Expcapacity")]
 public class SkillManager : MonoBehaviour
 {
 
@@ -64,8 +66,8 @@ public class SkillManager : MonoBehaviour
     public void Start()
     {
         // on met à jour les valeurs du perso
-        Perso.Instance.GetCapacity<HealthCapacity>().MaxHealth = (int)calculateX("stat:max_life");
-        Perso.Instance.GetCapacity<HealthCapacity>().RegenHealth = calculateX("stat:regen_life");
+        Controller.Perso.GetCapacity<HealthCapacity>().MaxHealth = (int)calculateX("stat:max_life");
+        Controller.Perso.GetCapacity<HealthCapacity>().RegenHealth = calculateX("stat:regen_life");
         // perso.GetCapacity<AttackCapacity>().damage = calculateX("damage");
         // perso.max_bits = (int) calculateX("max_bits");
         // perso.regen_bits = calculateX("regen_bits");
@@ -75,20 +77,20 @@ public class SkillManager : MonoBehaviour
     // UPGRADING
     public void UpgradeSkill(string reference)
     {
-        if (Perso.Instance == null) { Debug.LogWarning("(SkillManager) Perso instance is null, can't upgrade skill " + reference); return; }
+        if (Controller.Perso == null) { Debug.LogWarning("(SkillManager) Perso instance is null, can't upgrade skill " + reference); return; }
         
         if (reference == "stat:max_life")
         {
             max_life_level++;
-            Perso.Instance.GetCapacity<HealthCapacity>().MaxHealth = (int)calculateX(reference);
-            if (log) { Debug.Log("(SkillManager) skill " + reference + " upgraded to level " + max_life_level + " (new value: " + Perso.Instance.GetCapacity<HealthCapacity>().MaxHealth + ")"); }
+            Controller.Perso.GetCapacity<HealthCapacity>().MaxHealth = (int)calculateX(reference);
+            if (log) { Debug.Log("(SkillManager) skill " + reference + " upgraded to level " + max_life_level + " (new value: " + Controller.Perso.GetCapacity<HealthCapacity>().MaxHealth + ")"); }
             return;
         }
         if (reference == "stat:regen_life")
         {
             regen_life_level++;
-            Perso.Instance.GetCapacity<HealthCapacity>().RegenHealth = calculateX(reference);
-            if (log) { Debug.Log("(SkillManager) skill " + reference + " upgraded to level " + regen_life_level + " (new value: " + Perso.Instance.GetCapacity<HealthCapacity>().RegenHealth + ")");}
+            Controller.Perso.GetCapacity<HealthCapacity>().RegenHealth = calculateX(reference);
+            if (log) { Debug.Log("(SkillManager) skill " + reference + " upgraded to level " + regen_life_level + " (new value: " + Controller.Perso.GetCapacity<HealthCapacity>().RegenHealth + ")");}
             return;
         }
         if (reference == "stat:damage")

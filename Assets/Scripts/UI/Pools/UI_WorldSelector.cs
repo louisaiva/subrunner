@@ -15,9 +15,9 @@ public class UI_WorldSelector : UI_SlottablePool, Scrollable
     public UI_Scroller Scroller => scroller;
 
     // BEFORE SHOWING
-    protected override void before_showing()
+    protected override void before_adding_to_stack()
     {
-        base.before_showing();
+        base.before_adding_to_stack();
 
         // clear the worlds slots if any
         foreach (UI_WorldSlot world_slot in world_slots)

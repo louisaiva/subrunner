@@ -155,11 +155,11 @@ public class PostProcessManager : MonoBehaviour
     // BASE CHROMA (different than chroma because this is based on scene + perso life percentage)
     private float calculate_perso_additive_chroma()
     {
-        // checks if we don't have a Perso.Instance it is null
-        if (Perso.Instance == null) { return 0f; }
+        // checks if we don't have a Controller.Perso it is null
+        if (Controller.Perso == null) { return 0f; }
 
         // on calcule le chroma en fonction de la vie du perso
-        float life = Perso.Instance.GetCapacity<HealthCapacity>().LifePourcent;
+        float life = Controller.Perso.GetCapacity<HealthCapacity>().LifePourcent;
         if (life >= 0.5f) { return 0f; } // pas de chroma si on est au dessus de 50% de vie
         // chroma = -life + 0.5 -> bcz when life = 0 we want to have chroma = 0.5
         return -life + 0.5f; 

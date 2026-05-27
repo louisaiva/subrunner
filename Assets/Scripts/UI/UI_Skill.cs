@@ -44,12 +44,12 @@ public class UI_Skill : UI_Slot, Descriptable
     public override void OnPointerClick(PointerEventData eventData)
     {
         if (log) Debug.Log("(UI_Skill) clicking on " + Reference);
-        if (Perso.Instance == null) { return; }
+        if (Controller.Perso == null) { return; }
 
         // reset the color
         skill_bg.color = new Color(1, 1, 1, 1);
 
-        Perso.Instance.skillManager.UpgradeSkill(Reference);
+        // Controller.Perso.skillManager.UpgradeSkill(Reference);
 
         // on reouvre le hud
         UI_Manager.Instance.SwitchToHUD(force: true);

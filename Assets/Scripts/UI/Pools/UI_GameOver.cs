@@ -61,19 +61,22 @@ public class UI_GameOver : UI_Pool
     // DISABLING
     protected override IEnumerator disable_coroutine()
     {
+        yield return base.disable_coroutine();
+
         // we remove the callbacks
         reviveAction.performed -= reviveCallback;
 
-        // we remove the controller
-        Destroy(Controller.LazyInstance.gameObject);
-        yield return null;
+        // we respawn the perso
+        if (Controller.LazyInstance == null) { yield break; } // if there is no controller, we do nothing
+        Controller.LazyInstance.RespawnPerso();
+
 
         // we get the spawn point
-        Vector3 perso_spawn_point = Vector3.zero;
+        /* Vector3 perso_spawn_point = Vector3.zero;
         /* if (World2.Instance.spawn_point != null)
         {
             perso_spawn_point = World2.Instance.spawn_point.position;
-        } */ // todo update this with respawn
+        }  // todo update this with respawn
 
         // we instantiate the perso prefab at the spawn point
         bool instantiated = false;
@@ -81,7 +84,7 @@ public class UI_GameOver : UI_Pool
         instantiation.completed += (op) => instantiated = true;
         yield return new WaitUntil(() => instantiated);
         GameObject[] perso = instantiation.Result;
-        perso[0].name = "bob";
+        perso[0].name = "bob"; */
     }
 
 }

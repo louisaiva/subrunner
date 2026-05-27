@@ -44,8 +44,10 @@ public class XPProvider : Singleton<XPProvider>
         visibleKeyword = new LocalKeyword(renderer.material.shader, "_VISIBLE");
         renderer.material.EnableKeyword(visibleKeyword);
 
-        if (Perso.Instance == null) { return; } // no player, no trigger
-        ParticuleSystem.trigger.SetCollider(0, Perso.Instance.transform.Find("particles").GetComponent<Collider2D>());
+
+        // todo make this global through capable.LoadData() or something so any capable can be a trigger for the xp provider
+        /* if (Controller.Perso == null) { return; } // no player, no trigger
+        ParticuleSystem.trigger.SetCollider(0, Controller.Perso.transform.Find("particles").GetComponent<Collider2D>()); */
     }
 
     // UPDATE
@@ -97,7 +99,7 @@ public class XPProvider : Singleton<XPProvider>
     // TRIGGERS
     private void OnParticleTrigger()
     {
-        if (Perso.Instance == null) { return; } // no player, no trigger
+        if (Controller.Perso == null) { return; } // no player, no trigger
 
         // on récupère les particules
         int triggeredParticles = ParticuleSystem.GetTriggerParticles(ParticleSystemTriggerEventType.Enter, particles);
@@ -136,10 +138,10 @@ public class XPProvider : Singleton<XPProvider>
 
 
         // on ajoute l'xp au player
-        if (xp_bonus > 0) { Perso.Instance.addXP(xp_bonus); }
+        if (xp_bonus > 0) { Controller.Perso.addXP(xp_bonus); }
 
         // on ajoute de la life au player
-        if (life_bonus > 0) { Perso.Instance.GetCapacity<HealthCapacity>().Heal(life_bonus); }
+        if (life_bonus > 0) { Controller.Perso.GetCapacity<HealthCapacity>().Heal(life_bonus); }
     }
 
 }

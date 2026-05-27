@@ -42,6 +42,7 @@ public class UI_ItemStack : UI_ImageSlot, Descriptable, Droppable, ItemReceivabl
     [Header("Logs part 2")]
     public bool log_drop = false;
     [SerializeField] private bool log_color = false;
+    [SerializeField] private bool log_callbacks = false;
 
 
     // UI_ItemSlottable
@@ -72,9 +73,12 @@ public class UI_ItemStack : UI_ImageSlot, Descriptable, Droppable, ItemReceivabl
 
         // sync the ui
         SyncUIWithStack();
+
+        if (log_callbacks) { Debug.Log($"(UI_ItemStack) Init called on {name}, stack is {(Stack != null ? Stack.GetDetails() : "null")}, UI_ItemSlottable is {(UI_ItemSlottable != null ? UI_ItemSlottable.name : "null")}"); }
     }
-    private void OnDestroy()
+    public void UnregisterCallbacks()
     {
+        if (log_callbacks) { Debug.Log($"(UI_ItemStack) UnregisterCallbacks called on {name}, stack is {(Stack != null ? Stack.GetDetails() : "null")}, UI_ItemSlottable is {(UI_ItemSlottable != null ? UI_ItemSlottable.name : "null")}"); }
         if (Stack == null) { return; }
         Stack.OnUpdated -= SyncUIWithStack; // we unregister from the stack callbacks
     }

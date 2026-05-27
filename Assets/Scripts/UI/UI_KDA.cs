@@ -18,11 +18,11 @@ public class UI_KDA : MonoBehaviour
 
     private void Update()
     {
-        if (Perso.Instance == null) { return; }
+        if (Controller.Perso == null) { return; }
 
         // we get the capacities
-        if (attack == null) { attack = Perso.Instance.GetCapacity("attack") as AttackCapacity; }
-        if (die == null) { die = Perso.Instance.GetCapacity("die") as DieCapacity; }
+        if (attack == null) { attack = Controller.Perso.GetCapacity<AttackCapacity>(); }
+        if (die == null) { die = Controller.Perso.GetCapacity<DieCapacity>(); }
 
         // KDA
         kda.text = "KDA : "+attack?.kills + "/" + die.deaths;

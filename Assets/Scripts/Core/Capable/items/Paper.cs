@@ -30,9 +30,9 @@ public class Paper : Item, Usable
         await System.Threading.Tasks.Task.Yield();
 
         // we show the paper if we are grabbed by the perso
-        if (Controller.LazyInstance.Capable == Holder)
+        if (Controller.Capable == Holder)
         {
-            Use(Controller.LazyInstance.Capable);
+            Use(Controller.Capable);
         }
     } */
 }

@@ -11,7 +11,7 @@ public class UI_SkillDescriptor : UI_Descriptor
     [SerializeField] private UI_Writer level_writer;
 
     // DESCRIPTION
-    public override void Describe(Descriptable descriptable)
+    /* public override void Describe(Descriptable descriptable)
     {
         base.Describe(descriptable);
 
@@ -56,5 +56,5 @@ public class UI_SkillDescriptor : UI_Descriptor
         // level
         data = "level " + skill_manager.GetSkillLevel(ui_skill.Reference).ToString();
         level_writer.Write(data);
-    }
+    } */
 }

@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,7 @@ using UnityEngine;
 /// gives Immobile for eternity & changes the Layer to "Meat"
 /// </summary>
 
+[Obsolete("DieCapacity is deprecated. we must make a DieEngine capacity subsystem instead")]
 public class DieCapacity : Capacity
 {
     public int deaths = 0;
@@ -42,7 +44,7 @@ public class DieCapacity : Capacity
         // on donne un floating dmg
         if (show_smiley)
         {
-            float test = Random.Range(0, 100);
+            float test = UnityEngine.Random.Range(0, 100);
             for (int i = 0; i < smileys.Count; i++)
             {
                 if (test < 100 / smileys.Count * (i + 1))
@@ -68,7 +70,7 @@ public class DieCapacity : Capacity
             Capable.DropAllItems(); // we wait for dropping all items
         }
 
-        health.Die();
+        // health.Die();
 
         // 2 - DESTROYING CAPACITIES
         if (log) { Debug.Log("Destroying capacities of " + Capable.name); }

@@ -67,7 +67,11 @@ public class Item : Movable, EndlessInteractable
         {
             if (_item_pool_holder != null) { return _item_pool_holder; }
             if (transform.parent == null) { return null; }
-            _item_pool_holder = transform.parent.GetComponent<ItemPool>();
+            List<ItemPool> pools_in_parents = transform.parent.GetComponents<ItemPool>().ToList();
+            for (int i = 0; i < pools_in_parents.Count; i++)
+            {
+                if (pools_in_parents[i].HasItem(this)) { _item_pool_holder = pools_in_parents[i]; return _item_pool_holder; }
+            }
             return _item_pool_holder;
         }
     }
@@ -168,6 +172,11 @@ public class Item : Movable, EndlessInteractable
         if (Reference.Contains(rule)) { return true; }
 
         return false;
+    }
+    public static bool ValidateRule(string rule, Item item)
+    {
+        if (item == null) { return false; }
+        return item.ValidateRule(rule);
     }
 
     // START

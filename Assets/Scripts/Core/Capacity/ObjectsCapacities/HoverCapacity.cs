@@ -60,7 +60,7 @@ public class HoverCapacity : Capacity
         OnHover?.Invoke(capable);
 
         // then we only play animation if the capable is the one controlled
-        if (Controller.LazyInstance == null || capable != Controller.LazyInstance.Capable) { return; }
+        if (Controller.LazyInstance == null || capable != Controller.Capable) { return; }
         
         // we play the animation
         this.Capable.AnimPlayer.Play(played_animation);
@@ -75,7 +75,7 @@ public class HoverCapacity : Capacity
         if (this.Capable == null) { Debug.LogWarning($"(HoverCapacity) this.capable is null on {name}"); }
 
         // then we only stop playing animation if the capable is the one controlled
-        if (Controller.LazyInstance != null && capable == Controller.LazyInstance.Capable) { this.Capable.AnimPlayer.StopPlaying(played_animation); } // we stop the animation
+        if (Controller.LazyInstance != null && capable == Controller.Capable) { this.Capable.AnimPlayer.StopPlaying(played_animation); } // we stop the animation
 
         OnHoverLost?.Invoke(capable);
         if (log) { Debug.Log("(HoverCapacity) " + capable.name + " stop hovering " + this.Capable.name + $", stopped playing {played_animation}"); }
@@ -109,7 +109,7 @@ public class HoverCapacity : Capacity
 
         /* if (canvas_kf == null) { return; }
         if (Controller.LazyInstance == null) { return; }
-        if (hoverer != Controller.LazyInstance.Capable) { return; }
+        if (hoverer != Controller.Capable) { return; }
         canvas_kf.gameObject.SetActive(show); */
     }
     private void hide_input_indication(Capable hoverer)

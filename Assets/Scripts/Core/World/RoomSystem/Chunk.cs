@@ -214,7 +214,7 @@ public class Chunk : MonoBehaviour
 
         // check if capable is not the controlled one and not in the capable system
         // we just ignore the trigger
-        if (Controller.LazyInstance.Capable != capable && !CapableBank.Instance.HasCapable(capable)) { return; }
+        if (Controller.Capable != capable && !CapableBank.Instance.HasCapable(capable)) { return; }
         string id = capable.data.id;
 
         if (ChunkEngine.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) {id} - IN -"); }
@@ -239,7 +239,7 @@ public class Chunk : MonoBehaviour
         if (capable == null) { capable = collider.transform.parent.parent.GetComponent<Capable>(); }
         if (capable == null) { return; }
 
-        if (Controller.LazyInstance.Capable != capable && !CapableBank.Instance.HasCapable(capable)) { return; }
+        if (Controller.Capable != capable && !CapableBank.Instance.HasCapable(capable)) { return; }
         string id = capable.data.id;
         if (ChunkEngine.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) {id} - OUT -"); }
 

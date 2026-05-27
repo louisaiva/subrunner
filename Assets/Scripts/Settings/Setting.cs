@@ -18,8 +18,6 @@ using UnityEngine;
             OnSettingChanged?.Invoke(this);
         }
     }
-
-
     public virtual void SetValueWithoutNotify(float value)
     {
         _value = value;

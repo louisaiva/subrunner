@@ -50,7 +50,8 @@ public class UI_OutlineSlot : UI_ImageSlot, ItemReceivable
     public void OnReceived(ItemStack moving_ui_item)
     {
         if (log) { Debug.Log($"(UI_OutlineSlot) received itemstack with {moving_ui_item.Quantity} items of type {moving_ui_item.ItemReference}, calling OnReceivedItem delegate"); }
-        for (int i = 0; i < moving_ui_item.Quantity; i++)
+        int quantity = moving_ui_item.Quantity; // cache it bcz it will decrease
+        for (int i = 0; i < quantity; i++)
         {
             Item item = moving_ui_item.Item;
             OnReceivedItem?.Invoke(item);

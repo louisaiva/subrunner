@@ -18,8 +18,10 @@ public class UI_WorldBuilderPool : UI_SlottablePool, Descriptable
     [SerializeField] private WorldFolderCaller world_folder_caller;
 
 
-    protected override void before_showing()
+    protected override void before_adding_to_stack()
     {
+        GameManager.State = GameState.Building;
+        
         world_slot.Initialize(WorldManager.Instance.SelectedWorldData);
         world_folder_caller.world_id = WorldManager.Instance.SelectedWorld;
         RefreshLevelSlots();
@@ -62,11 +64,7 @@ public class UI_WorldBuilderPool : UI_SlottablePool, Descriptable
 
 
     // EVENTS
-    protected override void on_added_to_stack()
-    {
-        GameManager.State = GameState.Building;
-    }
-    protected override void on_removed_from_stack()
+    protected override void after_removed_from_stack()
     {
         GameManager.State = GameState.Paused;
     }

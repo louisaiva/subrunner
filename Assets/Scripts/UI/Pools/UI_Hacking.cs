@@ -11,7 +11,7 @@ public class UI_Hacking : UI_Pool
         get
         {
             if (in_transition) { return false; }
-            if (!Perso.Instance.Alive) { return false; }
+            if (!Controller.Perso.Alive) { return false; }
             if (UI_LaptopItemSlot.Instance == null || !UI_LaptopItemSlot.Instance.HasLaptop) { return false; }
             return true;
         }
@@ -25,8 +25,8 @@ public class UI_Hacking : UI_Pool
     /* private void Start()
     {
         // on met le callback de pour afficher ui_hacking
-        Perso.Instance.OnDeviceGranted += HandleDeviceGranted;
-        Perso.Instance.OnDeviceRemoved += HandleDeviceRemoved;
+        Controller.Perso.OnDeviceGranted += HandleDeviceGranted;
+        Controller.Perso.OnDeviceRemoved += HandleDeviceRemoved;
     } */
 
     // ON PERSO DEVICE CHANGED

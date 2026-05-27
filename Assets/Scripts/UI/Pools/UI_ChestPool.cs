@@ -70,12 +70,12 @@ public class UI_ChestPool : UI_SlottablePool
         if (chestable != null) { rule = chestable.Inventory.ItemRule; }
 
         // on met les items du chest dans le UI_Inventory du perso
-        PersoUI_Inventory.AttachToStorer(perso_inv, rule);
+        PersoUI_Inventory.AttachStorer(perso_inv, rule);
     }
     public void DetachPerso()
     {
         // on met les items du chest dans le UI_Inventory du perso
-        PersoUI_Inventory.DetachFromStorer();
+        PersoUI_Inventory.DetachStorer();
     }
 
 

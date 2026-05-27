@@ -60,14 +60,6 @@ public class OpenCapacity : Capacity
         // on joue l'animation
         Invoke("success_open", opening_duration);
 
-        // on fait les vérifications pour les portes
-        if (Capable is Door door && !door.DontTouchSortingLayer)
-        {
-            // on reset le layer à fg & order in layer à 1
-            Capable.AnimPlayer.Renderer.sortingLayerName = "fg";
-            Capable.AnimPlayer.Renderer.sortingOrder = 1;
-        }
-
         if (log) { Debug.Log(Capable.name + " is opening..."); }
     }
     protected virtual void success_open()
@@ -90,15 +82,6 @@ public class OpenCapacity : Capacity
         Capable.AnimPlayer.AddToPile(idle_open_anim);
         GetSiblingCapacity<HoverCapacity>()?.ChangeAnimation(hover_open_anim);
 
-        // on fait les vérifications pour les portes
-        if (Capable is Door door && !door.DontTouchSortingLayer)
-        {
-            // on reset le layer à main & order in layer a -1
-            Capable.AnimPlayer.Renderer.sortingLayerName = "main";
-            Capable.AnimPlayer.Renderer.sortingOrder = -1;
-        }
-        if (Capable is Door door2) { door2.UpdateIF(door2.Orientation); }
-
         if (log) { Debug.Log(Capable.ID + " is open !"); }
     }
 
@@ -115,8 +98,8 @@ public class OpenCapacity : Capacity
     // CancelInvoke
     public void CancelOpenInvoke()
     {
-        if (log) { Debug.Log("(OpenCapacity) " + Capable.name + " CancelInvoke SuccessOpen"); }
-        CancelInvoke("SuccessOpen");
+        if (log) { Debug.Log("(OpenCapacity) " + Capable.name + " CancelInvoke success_open"); }
+        CancelInvoke("success_open");
     }
 
 

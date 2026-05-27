@@ -5,7 +5,7 @@ using UnityEngine;
 public class Perso : Movable, Hacker
 {
     public static int deaths = 0; // nombre de morts du perso
-    public static Perso Instance { get; private set; }
+    // public static Perso Instance { get; private set; }
     public override ConnectCapacity Connector => Device?.Connector;
 
     [Header("PERSO")]
@@ -15,19 +15,15 @@ public class Perso : Movable, Hacker
     public int total_xp = 0;
     public int xp_to_next_level = 100;
 
-    [Header("SETTINGS")]
-    private StringSetting skin_setting;
-    private Setting ghost_setting;
-
-    [Header("SKILLS")]
-    public SkillManager skillManager;
+    // [Header("SKILLS")]
+    // public SkillManager skillManager;
     
 
     [Header("METAMORPH")]
     [SerializeField] private List<string> metamorph_skins = new List<string>() { "bob", "cat", "zombo", "robot", "apple", "fridge", "small_laptop" };
 
 
-    [Header("Items")]
+    /* [Header("Items")]
     public ItemManager ItemManager
     {
         get
@@ -39,7 +35,7 @@ public class Perso : Movable, Hacker
             return _itemManager;
         }
     }
-    private ItemManager _itemManager;
+    private ItemManager _itemManager; */
 
 
     [Header("Devices")]
@@ -123,79 +119,51 @@ public class Perso : Movable, Hacker
 
 
     // AWAKE
-    protected override void Awake()
+    /* protected override void Awake()
     {
         base.Awake();
-
-        // Singleton logic
-        // if (Instance != null) { Destroy(Instance.gameObject); }
-        Instance = this;
 
         // set des logs
         OnDeviceGranted += (Device new_device) =>
         {
-            /* if (debug) {  */Debug.Log($"(Perso) new device set : {(new_device is Laptop laptop ? laptop.Reference : new_device.name)}"); /* } */
+            /* if (debug) {  Debug.Log($"(Perso) new device set : {(new_device is Laptop laptop ? laptop.Reference : new_device.name)}"); /* } 
         };
         OnDeviceRemoved += (Device old_device) =>
         {
-            /* if (debug) {  */
-            Debug.Log($"(Perso) Device removed: {(old_device is Laptop laptop ? laptop.Reference : old_device.name)}"); /* } */
+            /* if (debug) {  
+            Debug.Log($"(Perso) Device removed: {(old_device is Laptop laptop ? laptop.Reference : old_device.name)}"); /* } 
         };
+    } */
 
-        // ON RECUP DES TRUCS
-        skillManager = GetComponentInChildren<SkillManager>();
-    }
 
-    // START & CALLBACKS
-    protected override void Start()
-    {
-        // on start de d'habitude
-        base.Start();
 
-        // on s'enregistre en tant que trigger dans l'XPProvider particle system
-        var trigger_particle_module = XPProvider.Instance.GetComponent<ParticleSystem>().trigger;
-        trigger_particle_module.SetCollider(0, GetCapacity<HealthCapacity>().HealthCollider);
+    ///
+    //
+    /// PERSO CALLBACKS
+    //
+    ///
 
-        // mets les callbacks
-        set_callbacks();
 
-        // on met le skin en fonction du settings skin
-        skin_setting = SettingsManager.Instance.GetSetting("skin") as StringSetting;
-        if (skin_setting != null)
-        {
-            SetSkin(skin_setting.ToString());
-            skin_setting.OnStringChanged += SetSkin;
-        }
-
-        // on met le ghost en fonction du settings ghost
-        ghost_setting = SettingsManager.Instance.GetSetting("ghost_mode");
-        if (ghost_setting != null)
-        {
-            set_ghost(ghost_setting.Value >= 0.5f);
-            ghost_setting.OnValueChanged += set_ghost;
-        }
-    }
+    // CALLBACKS
     private void set_callbacks()
     {
-        // todo plutot bouger ça dans le controller si on veut pouvoir afficher l'inventaire des bots ?
-
         // met les callbacks de notif
-        UI_Manager.Instance.GetPool("hud").GetComponent<UI_HUD>().Notifier.SetCallbacks();
+        UI_Manager.Instance.GetPool("hud").GetComponent<UI_HUD>().Notifier.SetCallbacks(this);
 
         // on met le callback de pour afficher ui_hacking
-        UI_Hacking hacking_pool = UI_Manager.Instance.GetPool("hacking").GetComponent<UI_Hacking>();
-        Instance.OnDeviceGranted += hacking_pool.HandleDeviceGranted;
-        Instance.OnDeviceRemoved += hacking_pool.HandleDeviceRemoved;
+        /* UI_Hacking hacking_pool = UI_Manager.Instance.GetPool("hacking").GetComponent<UI_Hacking>();
+        OnDeviceGranted += hacking_pool.HandleDeviceGranted;
+        OnDeviceRemoved += hacking_pool.HandleDeviceRemoved;
 
         // callbacks de ui_running hacks viewer
         UI_RunningHacksViewer running_hacks_viewer = hacking_pool.transform.GetComponentInChildren<UI_RunningHacksViewer>(includeInactive: true);
-        Instance.OnDeviceGranted += running_hacks_viewer.HandleDeviceGranted;
-        Instance.OnDeviceRemoved += running_hacks_viewer.HandleDeviceRemoved;
+        OnDeviceGranted += running_hacks_viewer.HandleDeviceGranted;
+        OnDeviceRemoved += running_hacks_viewer.HandleDeviceRemoved;
 
         // et du cores viewer
         UI_CoresViewer cores_viewer = hacking_pool.transform.GetComponentInChildren<UI_CoresViewer>(includeInactive: true);
-        Instance.OnDeviceGranted += cores_viewer.HandleDeviceGranted;
-        Instance.OnDeviceRemoved += cores_viewer.HandleDeviceRemoved;
+        OnDeviceGranted += cores_viewer.HandleDeviceGranted;
+        OnDeviceRemoved += cores_viewer.HandleDeviceRemoved; */
 
         // callbacks de health capacity
         HealthCapacity health_capacity = GetCapacity<HealthCapacity>();
@@ -206,36 +174,31 @@ public class Perso : Movable, Hacker
     private void remove_callbacks()
     {
         // enleve les callbacks de notif
-        UI_Manager.Instance.GetPool("hud").GetComponent<UI_HUD>().Notifier.RemoveCallbacks();
+        UI_Manager.Instance?.GetPool<UI_HUD>()?.Notifier.RemoveCallbacks(this);
 
         // on enleve les callbacks de pour afficher ui_hacking
-        UI_Hacking hacking_pool = UI_Manager.Instance.GetPool("hacking").GetComponent<UI_Hacking>();
-        Instance.OnDeviceGranted -= hacking_pool.HandleDeviceGranted;
-        Instance.OnDeviceRemoved -= hacking_pool.HandleDeviceRemoved;
+        /* UI_Hacking hacking_pool = UI_Manager.Instance.GetPool<UI_Hacking>();
+        OnDeviceGranted -= hacking_pool.HandleDeviceGranted;
+        OnDeviceRemoved -= hacking_pool.HandleDeviceRemoved;
 
         // callbacks de ui_running hacks viewer
         UI_RunningHacksViewer running_hacks_viewer = hacking_pool.transform.GetComponentInChildren<UI_RunningHacksViewer>(includeInactive: true);
-        Instance.OnDeviceGranted -= running_hacks_viewer.HandleDeviceGranted;
-        Instance.OnDeviceRemoved -= running_hacks_viewer.HandleDeviceRemoved;
+        OnDeviceGranted -= running_hacks_viewer.HandleDeviceGranted;
+        OnDeviceRemoved -= running_hacks_viewer.HandleDeviceRemoved;
         
         // et du cores viewer
         UI_CoresViewer cores_viewer = hacking_pool.transform.GetComponentInChildren<UI_CoresViewer>(includeInactive: true);
-        Instance.OnDeviceGranted -= cores_viewer.HandleDeviceGranted;
-        Instance.OnDeviceRemoved -= cores_viewer.HandleDeviceRemoved;
+        OnDeviceGranted -= cores_viewer.HandleDeviceGranted;
+        OnDeviceRemoved -= cores_viewer.HandleDeviceRemoved; */
 
+        // callbacks de health capacity
+        HealthCapacity health_capacity = GetCapacity<HealthCapacity>();
+        health_capacity.OnTakeDamage -= OnDamageTaken;
+        health_capacity.OnHeal -= OnLifeAdded;
+        health_capacity.OnDie -= OnDie;
     }
 
-
-    private string quest_text = "mission 1 :\nfind the\nELEVATOR";
-    void showQuest()
-    {
-        FloatingDmgProvider.Instance.TextManager.addFloatingText(quest_text, transform.position + new Vector3(0, 0.5f, 0), "yellow");
-    }
-
-
-
-
-    // METAMORPH
+    // METAMORPH & GHOST
     public void Metamorph()
     {
         // checks which skins we have
@@ -257,6 +220,10 @@ public class Perso : Movable, Hacker
 
         // we set the new skin
         AnimPlayer.Skin = metamorph_skins[index];
+    }
+    public void SetSkin(Setting skin_setting)
+    {
+        SetSkin(skin_setting.ToString());
     }
     public void SetSkin(string skin_name)
     {
@@ -283,7 +250,10 @@ public class Perso : Movable, Hacker
         else
         {
             // on remet le skin de base
-            if (skin_setting != null) { AnimPlayer.Skin = skin_setting.ToString(); }
+            if (SettingsManager.Instance.GetSetting("skin") is StringSetting skin_setting)
+            {
+                AnimPlayer.Skin = skin_setting.ToString();
+            }
             else { AnimPlayer.Skin = "bob"; }
 
             // on enleve l'Effect Ghost & Invisible
@@ -292,9 +262,12 @@ public class Perso : Movable, Hacker
         }
 
         // sets the SettingsManager ghost setting
-        if (ghost_setting == null) { return; }
-        ghost_setting.Value = (AnimPlayer.Skin == "ghost") ? 1f : 0f;
+        if (SettingsManager.Instance.GetSetting("ghost") != null)
+        {
+            SettingsManager.Instance.SetSettingWithoutNotifying("ghost", AnimPlayer.Skin == "ghost" ? 1f : 0f);
+        }
     }
+    private void set_ghost(Setting ghost_setting) { set_ghost(ghost_setting.Value >= 0.5f); }
     private void set_ghost(bool activate=false) { set_ghost(activate ? 1f : 0f); }
     private void set_ghost(float value)
     {
@@ -340,51 +313,100 @@ public class Perso : Movable, Hacker
         FloatingDmgProvider.Instance.TextManager.addFloatingText("LEVEL " + level.ToString(), transform.position + new Vector3(0, 0.5f, 0), "yellow");
     }
 
-
     // HEAL & DAMAGE CALLBACKS
     public void OnLifeAdded(float life)
     {
+        if (Controller.Perso == null || Controller.Perso != this) { return; } // if we are not the controlled perso, we do nothing
+
         // si on est sur le hud, on met à jour le chroma du PostProcessManager
         if (!UI_Manager.Instance.IsOnHUD()) { return; }
         PostProcessManager.Instance.UpdateChroma();
     }
     public void OnDamageTaken(float damage, Force knockback = null)
     {
+        if (Controller.Perso == null || Controller.Perso != this) { return; } // if we are not the controlled perso, we do nothing
+
         // we make a little screenshake if perso
         float shake_magnitude = damage / GetCapacity<HealthCapacity>().Health;
         CameraShaker.Instance.Shake(shake_magnitude);
     }
-    public void OnDie()
+    public void OnDie(CapableData capable_data)
     {
+        if (Controller.Perso == null || Controller.Perso != this) { return; } // if we are not the controlled perso, we do nothing
+
+
         Debug.Log("YOU DIED");
 
         // on affiche un floating text
         FloatingDmgProvider.Instance.TextManager.addFloatingText("YOU DIED", transform.position + new Vector3(0, 0.5f, 0), "red");
 
         // on désactive le Controller & PersoInputsController
-        Controller.LazyInstance.Uncontrol(ID);
-        Controller.LazyInstance.PIC.DisableInputs();
+        // Controller.LazyInstance.Uncontrol(ID);
+        // Controller.LazyInstance.PIC.DisableInputs();
 
 
         // on switch au game_over panel
         UI_Manager.Instance.SwitchTo("game_over",force:true,override_transition:true);
 
         // on désactive plein de choses
-        Destroy(GetComponent<SeeThroughHandler>());
-        Destroy(transform.Find("body").GetComponent<ParticleSystemForceField>());
+        // Destroy(GetComponent<SeeThroughHandler>());
+        // Destroy(transform.Find("body").GetComponent<ParticleSystemForceField>());
 
-        remove_callbacks();
+        // remove_callbacks();
 
         deaths += 1; // on incrémente le nombre de morts du perso
     }
 
 
-    protected override void OnDestroy()
-    {
-        base.OnDestroy();
 
-        // enleve les callbacks des settings
-        if (skin_setting != null) { skin_setting.OnStringChanged -= SetSkin; }
-        if (ghost_setting != null) { ghost_setting.OnValueChanged -= set_ghost; }
+
+
+    ///
+    //
+    /// DATA MANAGEMENT
+    //
+    ///
+
+    public override void LoadData(CapableData data)
+    {
+        base.LoadData(data);
+
+        // mets les callbacks
+        set_callbacks();
+        SettingsManager.Instance.RegisterCallback("skin", SetSkin);
+        SettingsManager.Instance.RegisterCallback("ghost_mode", set_ghost);
+    }
+    public override void UnloadData()
+    {
+        // remove callbacks
+        SettingsManager.Instance.UnregisterCallback("skin", SetSkin);
+        SettingsManager.Instance.UnregisterCallback("ghost_mode", set_ghost);
+        remove_callbacks();
+
+        base.UnloadData();
+    }
+
+}
+
+public class PersoData : CapableData
+{
+    // CONSTRUCTOR
+    public PersoData(CapableData capable_data) : base(capable_data) { }
+
+    // DUPLICATE
+    public override ICapableData Duplicate() { return new PersoData(base.Duplicate() as CapableData);}
+
+    // RUNTIME ONLY
+    [RuntimeOnly, NonSerialized] private Perso loaded_assigned_perso;
+    [RuntimeOnly] public Perso Perso { get { return loaded_assigned_perso; } }
+    public override void OnLoaded(Capable capable)
+    {
+        base.OnLoaded(capable);
+        if (capable is Perso perso) { loaded_assigned_perso = perso; }
+    }
+    public override void OnUnloaded(Capable capable)
+    {
+        base.OnUnloaded(capable);
+        if (capable is Perso perso && loaded_assigned_perso == perso) { loaded_assigned_perso = null; }
     }
 }

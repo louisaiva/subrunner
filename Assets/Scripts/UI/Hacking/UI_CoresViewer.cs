@@ -25,8 +25,8 @@ public class UI_CoresViewer : MonoBehaviour, Startable
     // INIT START
     public void InitStart()
     {
-        // Perso.Instance.OnDeviceGranted += HandleDeviceGranted;
-        // Perso.Instance.OnDeviceRemoved += HandleDeviceRemoved;
+        // Controller.Perso.OnDeviceGranted += HandleDeviceGranted;
+        // Controller.Perso.OnDeviceRemoved += HandleDeviceRemoved;
 
         // reset title and all   
         resizer.Resize(0);

@@ -600,7 +600,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI_OutlineSlot
   _hovered: 0
   _disabled: 0
-  log: 1
+  log: 0
   image: {fileID: 1621851977367921606}
   base_sprite: {fileID: 1707068928, guid: fc2974880b368954b898e38aa700e0b4, type: 3}
   hover_sprite: {fileID: 1634852913, guid: fc2974880b368954b898e38aa700e0b4, type: 3}
@@ -714,6 +714,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1034,6 +1035,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0

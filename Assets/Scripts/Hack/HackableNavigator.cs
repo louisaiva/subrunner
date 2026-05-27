@@ -34,10 +34,10 @@ public class HackableNavigator : MonoBehaviour
 
 
     [Header("Components")]
-    private Device device => Perso.Instance.Device;
+    private Device device => Controller.Perso.Device;
     public HackCapacity hacker => device?.Hacker;
     public ConnectionTree Tree => device?.Connector.Tree;
-    private ConnectCapacity connector => Controller.LazyInstance.Capable.Connector;
+    private ConnectCapacity connector => Controller.Capable.Connector;
     [SerializeField] private ConnectCapacity cursor;
     private TextMeshProUGUI kf_exploit_text;
 
@@ -251,8 +251,8 @@ public class HackableNavigator : MonoBehaviour
             if (target == null) { continue; }
             
             // we remove ourselves
-            if (target.Capable == Controller.LazyInstance.Capable) { continue; }
-            if (target.Capable is Item item && item.Holder != null && item.Holder == Controller.LazyInstance.Capable) { continue; }
+            if (target.Capable == Controller.Capable) { continue; }
+            if (target.Capable is Item item && item.Holder != null && item.Holder == Controller.Capable) { continue; }
 
             // we remove the target we are already hacking
             if (hacker?.IsHacking(target.Vulnerable) == true) { being_hacked_connector = target; continue; }

@@ -51,6 +51,8 @@ public class UI_LifeXPHandler : MonoBehaviour
     // UPDATE
     private void Update()
     {
+        if (Controller.Perso == null) { return; }
+
         // on met à jour le fill de life
         update_life_fill();
 
@@ -63,7 +65,7 @@ public class UI_LifeXPHandler : MonoBehaviour
     private void update_life_fill()
     {
         // on récupère les infos du perso
-        float life_percent = Perso.Instance.GetCapacity<HealthCapacity>().LifePourcent;
+        float life_percent = Controller.Perso.GetCapacity<HealthCapacity>().LifePourcent;
 
         // on met à jour la taille du fill
         float life_width = life_fill_max_width * life_percent;
@@ -75,8 +77,8 @@ public class UI_LifeXPHandler : MonoBehaviour
     {
 
         // on récupère les infos du perso
-        int max_xp = Perso.Instance.xp_to_next_level;
-        float xp = (float) Perso.Instance.xp;
+        int max_xp = Controller.Perso.xp_to_next_level;
+        float xp = (float) Controller.Perso.xp;
 
         // on met à jour la taille du fill
         float xp_percent = xp / max_xp;

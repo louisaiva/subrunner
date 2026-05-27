@@ -4,6 +4,12 @@ using UnityEngine;
 public class Controller : MonoBehaviour
 {
 
+    ///
+    //
+    /// SINGLETON & SUB SYSTEMS
+    //
+    ///
+
     public static Controller _Instance;
     public static Controller LazyInstance
     {
@@ -18,6 +24,30 @@ public class Controller : MonoBehaviour
         }
     }
 
+    public static PersoData _perso;
+    public static Perso Perso
+    {
+        get
+        {
+            if (_perso == null) { return null; }
+            return _perso.Perso;
+        }
+    }
+
+    public static Capable Capable
+    {
+        get
+        {
+            if (_Instance == null) { return null; }
+            return _Instance.ControlledCapable;
+        }
+    }
+
+    ///
+    //
+    /// CLASS VARIABLES
+    //
+    ///
 
     // DATA
     public ControllerData data;
@@ -25,7 +55,7 @@ public class Controller : MonoBehaviour
     // CAPABLE RTO STACK
     private Stack<string> stack = new Stack<string>(); // holds the capable id stack, controlled_capable is NOT in the stack
     private Capable controlled_capable;
-    public Capable Capable { get { return controlled_capable; } }
+    public Capable ControlledCapable { get { return controlled_capable; } }
     public string ID { get { return controlled_capable?.ID ?? ""; } }
 
 
@@ -45,7 +75,9 @@ public class Controller : MonoBehaviour
     
     [Header("Logs")]
     [SerializeField] private bool log;
-    [SerializeField] private bool log_ui_attachment;
+    // [SerializeField] private bool log_ui_attachment;
+    // [SerializeField] private bool enable_controller_inventory_logs;
+    [SerializeField] private bool log_perso;
 
 
     ///
@@ -99,7 +131,7 @@ public class Controller : MonoBehaviour
         if (!stack.Contains(capable_id))
         {
             // if the capable is not in the stack, we do nothing
-            if (log) { Debug.LogError($"(Controller) Cannot uncontrol capable with id {capable_id} because it is not in the stack !!"); }
+            if (log) { Debug.Log($"(Controller) Cannot uncontrol capable with id {capable_id} because it is not in the stack !!"); }
             return false;
         }
 
@@ -171,16 +203,18 @@ public class Controller : MonoBehaviour
             capable = CapableEngine.LazyInstance.LoadCapableInstantly(data.controlled_capable_id);
             if (capable == null)
             {
-                Debug.LogError($"(Controller) Cannot control capable with id {capable_id} because it could not be loaded.");
+                Debug.LogError($"(Controller) Could not load instantly capable '{data.controlled_capable_id}' so we won't control it oopsie");
                 return false;
             }
         }
+        if (capable is Perso perso) { _perso = (PersoData)perso.data; if (log_perso) {Debug.Log($"(Controller) new perso controlled: {perso.ID}, Controller.Perso is now {Controller.Perso.ID}"); } }
 
         // next we uncontrol the current capable if there is one
         uncontrol();
 
         // we control the new capable
         control_capacities(capable);
+
 
         // we move the script sur le gameobject capable
         transform.parent = capable.transform;
@@ -198,6 +232,11 @@ public class Controller : MonoBehaviour
     private void uncontrol()
     {
         if (controlled_capable == null) { return; }
+        if (controlled_capable is Perso)
+        {
+            if (log_perso) { Debug.Log($"(Controller) perso uncontrolled: {_perso.id}, Controller.Perso is now null"); }
+            _perso = null;
+        }
         if (!controlled_capable.Loaded)
         {
             // si pas loadé bah on a rien besoin de faire
@@ -219,6 +258,13 @@ public class Controller : MonoBehaviour
         // on refresh la cam
         CameraFollow.Instance.ChangeCapableTarget(capa);
 
+        // register to the being died event of the new capable
+        /* if (capa.TryGetCapacity(out HealthCapacity hcapa))
+        {
+            hcapa.OnDie += handle_being_died;
+            if (log) { Debug.Log($"(Controller) Registered to OnDie event of capable with id {capa.ID}."); }
+        } */
+
         // on ajoute le callback de changement de skin
         refresh_skin_based_parameters(capa.Skin);
         capa.AnimPlayer.OnSkinChange += refresh_skin_based_parameters;
@@ -236,7 +282,7 @@ public class Controller : MonoBehaviour
         if (capa.TryGetCapacity(out AttackCapacity attack_capa)) { attack_capa.ClearTags(); }
 
         // on assigne les différents item pools de l'inventaire à leurs UI_ItemPool respectifs
-        attach_item_pools_to_ui(capa.Inventory, capa.ID);
+        // attach_item_pools_to_ui(capa.Inventory, capa.ID);
 
         // on regarde si le capable est un device
         if (capa is Device device)
@@ -251,8 +297,15 @@ public class Controller : MonoBehaviour
     }
     private void uncontrol_capacities(Capable capa)
     {
-
         capa.AnimPlayer.OnSkinChange -= refresh_skin_based_parameters; // on enlève le callback de changement de skin
+
+        // register to the being died event of the new capable
+        /* if (capa.TryGetCapacity(out HealthCapacity hcapa))
+        {
+            hcapa.OnDie -= handle_being_died;
+            if (log) { Debug.Log($"(Controller) Unregistered from OnDie event of capable with id {capa.ID}."); }
+        } */
+
 
         // clear les inputs & stoppe les déplacements
         capa.ClearInputs();
@@ -287,7 +340,7 @@ public class Controller : MonoBehaviour
 
 
         // reset l'inventory
-        unattach_ui_item_pools();
+        // unattach_ui_item_pools();
         if (capa.Inventory != null) { capa.Inventory.DisableLogs(); }
     }
     private void refresh_skin_based_parameters(string skin)
@@ -299,7 +352,7 @@ public class Controller : MonoBehaviour
     }
 
     // ui helpers
-    private void attach_item_pools_to_ui(Inventory inventory, string capable_id = "unknown")
+    /* private void attach_item_pools_to_ui(Inventory inventory, string capable_id = "unknown")
     {
         if (inventory == null) { return; }
 
@@ -329,7 +382,7 @@ public class Controller : MonoBehaviour
         }
 
         // enable inventory log if wanted
-        if (log_ui_attachment) { inventory.EnableLogs(); }
+        if (enable_controller_inventory_logs) { inventory.EnableLogs(); }
     }
     private void unattach_ui_item_pools()
     {
@@ -341,8 +394,33 @@ public class Controller : MonoBehaviour
         for (int i = 0; i < ui_pools.Count; ++i) { ui_pools[i].DetachFromPool(); }
 
         if (log_ui_attachment) { Debug.Log($"(Controller) Unattached all UI_ItemPools from their ItemPools."); }
+    } */
+
+
+    ///
+    //
+    /// DESPAWN / RESPAWN METHODS
+    //
+    ///
+
+    // HANDLE DESPAWN
+    public void handle_capable_despawned(CapableData data)
+    {
+        if (log) { Debug.Log($"(Controller) capable with id {data.id} despawned, uncontrolling it if it was controlled"); }
+        Uncontrol(data.id);
     }
 
+    // RESPAWN
+    public void RespawnPerso()
+    {
+        if (Perso != null) { return; } // if we already control a perso, we do nothing
+
+        // we unload the data
+        UnloadData();
+
+        // then we load it again to respawn the perso
+        LoadData(saved_data.Duplicate(), tp: false);
+    }
 
 
     ///
@@ -379,6 +457,7 @@ public class Controller : MonoBehaviour
     //
     ///
 
+    private ControllerData saved_data; // we keep a reference to the last loaded data for respawning
     public async Awaitable LoadWorldData(string world_id, bool log)
     {
         if (log) { Debug.Log($"(Controller) Loading controller data for world with id '{world_id}' ..."); }
@@ -391,17 +470,31 @@ public class Controller : MonoBehaviour
             Debug.LogError($"(Controller) Failed to load controller data for world with id '{world_id}' !!");
             return;
         }
+        saved_data = data;
 
         // load the data & control the initial capable
-        LoadData(data);
+        LoadData(data.Duplicate());
 
 
+        // register to CapableEngine despawn event
+        CapableEngine.LazyInstance.OnCapableDespawned += handle_capable_despawned;
 
         if (log) { Debug.Log($"(Controller) CONTROLLER SUCCESSFULLY LOADED for '{world_id}' !\n{data.GetDetails()}"); }
     }
+    public async Awaitable UnloadWorldData(bool log)
+    {
+        if (log) { Debug.Log($"(Controller) Unloading controller data ..."); }
+
+        // unregister to CapableEngine despawn event
+        CapableEngine.LazyInstance.OnCapableDespawned -= handle_capable_despawned;
+        
+        UncontrolAll(log);
+
+        if (log) { Debug.Log($"(Controller) CONTROLLER SUCCESSFULLY UNLOADED !"); }
+    }
 
     // DATA MANAGEMENT
-    public void LoadData(ControllerData data)
+    public void LoadData(ControllerData data, bool tp = true)
     {
         this.data = data;
         stack.Clear();
@@ -415,7 +508,7 @@ public class Controller : MonoBehaviour
 
         // here we can tp the camera to the controlled capable position
         this.data.controlled_capable_id = Capable.ID;
-        CameraFollow.Instance.ChangeCapableTarget(Capable, tp: true);
+        CameraFollow.Instance.ChangeCapableTarget(Capable, tp: tp);
 
         // load the capable stack
         if (data.stack_capable_ids != null)
@@ -429,8 +522,8 @@ public class Controller : MonoBehaviour
     }
     public virtual void UnloadData()
     {
-        // uncontrol the current capable
-        uncontrol();
+        // uncontrol everything
+        UncontrolAll();
 
         this.data = null;
 

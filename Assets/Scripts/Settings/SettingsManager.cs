@@ -92,6 +92,13 @@ public class SettingsManager : MonoBehaviour
         if (setting == null) { return; }
         setting.Value = value;
     }
+    public void SetSettingWithoutNotifying(string settingName, float value)
+    {
+        // Logic to set the setting based on its name without notifying callbacks
+        Setting setting = GetSetting(settingName);
+        if (setting == null) { return; }
+        setting.SetValueWithoutNotify(value);
+    }
     public float GetValue(string settingName)
     {
         // Logic to get the setting value based on its name

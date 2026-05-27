@@ -13,14 +13,6 @@ public class CameraFollow : Singleton<CameraFollow>
     [Header("Capable Target")]
     [SerializeField] private Capable target;
     [SerializeField] private Rigidbody2D capable_rb;
-    private Capable capable
-    {
-        get
-        {
-            if (Controller._Instance == null) { return null; }
-            return Controller._Instance.Capable;
-        }
-    }
 
     public float timeOffset;
     private Vector3 velocity;
@@ -68,7 +60,7 @@ public class CameraFollow : Singleton<CameraFollow>
         }
 
         if (using_simple_target) { lerp_to_simple_target(); }
-        else if (capable != null) { lerp_to_capable(); }
+        else if (Controller.Capable != null) { lerp_to_capable(); }
     }
     private void lerp_to_simple_target()
     {
@@ -78,8 +70,7 @@ public class CameraFollow : Singleton<CameraFollow>
     }
     private void lerp_to_capable()
     {
-        // if (Perso.Instance == null) { capable_rb = null; return; }
-        if (capable == null || target == null || Controller.LazyInstance.PIC.InputsDisabled) { capable_rb = null; target = null; return; }
+        if (Controller.Capable == null || target == null || Controller.LazyInstance.PIC.InputsDisabled) { capable_rb = null; target = null; return; }
 
         // calcule le mouvement de la cam en X
         float final_x = target.transform.position.x;

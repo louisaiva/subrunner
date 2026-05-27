@@ -486,7 +486,7 @@ public class Capable : MonoBehaviour, Debuggable
     // LOAD / UNLOAD
     public virtual void LoadData(CapableData data)
     {
-        if (CapableEngine.Instance.log_loading_extended) { Debug.Log($"(Capable - LoadData) Loading capable {data.id} \n\n{data.GetDetails()}"); }
+        if (CapableEngine.Instance.log_loading_extended) { Debug.Log($"(Capable - LoadData) Loading capable '{data.id}' of type {data.GetType().Name}: \n\n{data.GetDetails()}"); }
         this.data = data;
         this.name = data.id;
         this.transform.position = data.position;

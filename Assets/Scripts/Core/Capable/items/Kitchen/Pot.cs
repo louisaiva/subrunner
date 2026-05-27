@@ -81,12 +81,12 @@ public class Pot : Item, Usable
         base.on_grabbed();
 
         // we subscribe to the InventoryMenu On
-        if (Holder == Perso.Instance) { OnUsabilityChanged += inventory_menu.UpdateIFLabels; }
+        if (Controller.Perso != null && Holder == Controller.Perso) { OnUsabilityChanged += inventory_menu.UpdateIFLabels; }
     }
     protected override void on_dropped()
     {
         // we unsubscribe to the InventoryMenu On
-        if (Holder == Perso.Instance) { OnUsabilityChanged -= inventory_menu.UpdateIFLabels; }
+        if (Controller.Perso != null && Holder == Controller.Perso) { OnUsabilityChanged -= inventory_menu.UpdateIFLabels; }
 
         // we drop
         base.on_dropped();

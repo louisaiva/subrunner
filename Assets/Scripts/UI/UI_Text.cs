@@ -69,18 +69,18 @@ public class UI_Text : UI_Slot
     }
     public void ghost_mode()
     {
-        if (Perso.Instance == null) { return; }
-        Perso.Instance.ToggleGhost();
+        if (Controller.Perso == null) { return; }
+        Controller.Perso.ToggleGhost();
     }
     public void metamorph()
     {
-        if (Perso.Instance == null) { return; }
-        Perso.Instance.Metamorph();
+        if (Controller.Perso == null) { return; }
+        Controller.Perso.Metamorph();
     }
     public void heal()
     {
-        if (Perso.Instance == null) { return; }
-        Perso.Instance.GetCapacity<HealthCapacity>().HealMax();
+        if (Controller.Perso == null) { return; }
+        Controller.Perso.GetCapacity<HealthCapacity>().HealMax();
     }
     public void toggle_vsync()
     {

@@ -9,8 +9,9 @@ public class Inventory : MonoBehaviour, ItemStorer
 
     // item type
     [field:SerializeField] public ItemType ItemType { get; set; }
+    public string PoolID => "inventory on " + Capable.ID;
 
-        
+
     [Header("ItemPools")]
     [SerializeField] private bool clear_and_assign_pools_in_awake = true;
     [SerializeField] private List<ItemPool> pools = new List<ItemPool>();
@@ -49,12 +50,15 @@ public class Inventory : MonoBehaviour, ItemStorer
     public event Action<ItemStack> OnStackRemoved = delegate { };
 
     private Capable _capable;
-    public Capable Capable { get
+    public Capable Capable
+    {
+        get
         {
             if (_capable == null) { _capable = transform.parent.GetComponent<Capable>(); }
-            return _capable;  } set {
-            _capable = value;
-        } }
+            return _capable;
+        }
+        set { _capable = value; }
+    }
 
     [Header("Logs")]
     [SerializeField] protected bool log = false;
@@ -125,7 +129,7 @@ public class Inventory : MonoBehaviour, ItemStorer
 
 
         // we try to make all the pools grab the item
-        if (!pool_grab(item))
+        if (!pool_grab(item, out ItemPool grabbed_pool))
         {
             if (log_grab) { Debug.LogWarning("(Inventory) " + Capable.name + " can't grab : " + item.name); }
             return false;
@@ -135,7 +139,7 @@ public class Inventory : MonoBehaviour, ItemStorer
         // we trigger the events
         OnItemGrabbed.Invoke(item);
 
-        if (log_grab) { Debug.Log("(Inventory) " + Capable.name + " grabbed : " + item.name); }
+        if (log_grab) { Debug.Log("(Inventory) " + Capable.name + " grabbed : " + item.name + $" in pool '{grabbed_pool?.name ?? "null"}'"); }
 
         return true;
     }
@@ -180,12 +184,13 @@ public class Inventory : MonoBehaviour, ItemStorer
     /// a ItemPool grabbed/dropped succesfully, false otherwise
     /// </summary>
     /// <returns></returns>
-    protected bool pool_grab(Item item)
+    protected bool pool_grab(Item item, out ItemPool pool)
     {
+        pool = null;
         for (int i = 0; i < pools.Count; i++)
         {
-            if (pools[i].Grab(item)) { return true; }
-            if (log_grab) { Debug.Log("(Inventory) " + Capable.name + " pool " + pools[i].PoolID + " could not grab : " + item.name); }
+            if (pools[i].Grab(item)) { pool = pools[i]; return true; }
+            if (log_grab) { Debug.Log($"(Inventory)          - trying to grab {item.Reference} in pool " + pools[i].PoolID + " but could not :///"); }
         }
         return false;
     }
@@ -548,6 +553,8 @@ public class Inventory : MonoBehaviour, ItemStorer
 public interface ItemStorer
 {
     public GameObject gameObject { get; }
+    public string PoolID { get; }
+    public virtual string GetDetails() { return $"ItemStorer with PoolID : {PoolID}"; }
 
 
     // item type

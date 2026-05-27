@@ -42,7 +42,7 @@ public class Crafter : Capable, Interactable, Openable
         } */
 
         // we only show ui if the interactor is controlled & ui not shown yet
-        // if (interactor != Controller.LazyInstance.Capable || chest_pool.IsShown(this)) { return; }
+        // if (interactor != Controller.Capable || chest_pool.IsShown(this)) { return; }
 
         // we show the inventory UI
         // chest_pool.ShowChest(this);
@@ -67,7 +67,7 @@ public class Crafter : Capable, Interactable, Openable
         // if there is no more controlled interactors we hide the ui inventory
         for (int i = 0; i < interactors.Count; i++)
         {
-            if (interactors[i] == Controller.LazyInstance.Capable) { return; } // we still have the controlled interactor so we dont hide the ui
+            if (interactors[i] == Controller.Capable) { return; } // we still have the controlled interactor so we dont hide the ui
         }
 
         // we hide the inventory UI
@@ -78,7 +78,7 @@ public class Crafter : Capable, Interactable, Openable
     public async void ExitHover()
     {
         await System.Threading.Tasks.Task.Yield(); // wait a bit to avoid issues with OnHoverLost called just after
-        OnHoverLost(Controller.LazyInstance.Capable);
+        OnHoverLost(Controller.Capable);
     }
 
 

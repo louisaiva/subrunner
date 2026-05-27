@@ -10,23 +10,27 @@ public class UI_Notifier : MonoBehaviour
     private List<UI_Notif> active_notifs = new List<UI_Notif>();
 
     // CALLBACKS
-    public void SetCallbacks()
+    public void SetCallbacks(Capable capable)
     {
         // set controller's capable control callbacks
-        Perso.Instance.Inventory.OnItemGrabbed += CreateItemNotif;
+        capable.Inventory.OnItemGrabbed += CreateItemNotif;
+
+        if (capable is not Hacker hacker) { return; }
 
         // set handle device callbacks
-        Perso.Instance.OnDeviceGranted += handle_device_granted;
-        Perso.Instance.OnDeviceRemoved += handle_device_removed;
+        hacker.OnDeviceGranted += handle_device_granted;
+        hacker.OnDeviceRemoved += handle_device_removed;
     }
-    public void RemoveCallbacks()
+    public void RemoveCallbacks(Capable capable)
     {
         // remove controller's capable control callbacks
-        Perso.Instance.Inventory.OnItemGrabbed -= CreateItemNotif;
+        capable.Inventory.OnItemGrabbed -= CreateItemNotif;
+
+        if (capable is not Hacker hacker) { return; }
 
         // remove handle device callbacks
-        Perso.Instance.OnDeviceGranted -= handle_device_granted;
-        Perso.Instance.OnDeviceRemoved -= handle_device_removed;
+        hacker.OnDeviceGranted -= handle_device_granted;
+        hacker.OnDeviceRemoved -= handle_device_removed;
     }
 
     // HANDLE DEVICE

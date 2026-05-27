@@ -198,7 +198,7 @@ public class World : BSOD_System<World>
         if (log_loading_extended) { Debug.Log($"(World) ----------------------------------- LOADING CONTROLLER : (previous phase duration: {Time.realtimeSinceStartup - phase_time}s)"); }
         phase_time = Time.realtimeSinceStartup;
         await Controller.LazyInstance.LoadWorldData(world_id, log_loading_extended);
-        if (fallback_spawn_point != null) { Controller.LazyInstance.Capable.transform.position = fallback_spawn_point.position; } // debug only to tp quickly at launch
+        if (fallback_spawn_point != null) { Controller.Capable.transform.position = fallback_spawn_point.position; } // debug only to tp quickly at launch
         
         // ok so now we have a Controller.Capable defined if everything went ok ! We can determine it to load the right level
 
@@ -282,7 +282,8 @@ public class World : BSOD_System<World>
         /* */ load_status = WorldLoadStatus.Unloading;
 
         // we unload the controller first to let it do some cleanup if needed (like saving player data for example)
-        Controller.LazyInstance.UncontrolAll(log_loading_extended);
+        await Controller.LazyInstance.UnloadWorldData(log_loading_extended);
+        
 
         // we unload all the engines
         await LevelEngine.LazyInstance.UnloadWorldData(log_loading_extended);

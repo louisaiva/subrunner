@@ -47,7 +47,7 @@ public class HealthCapacity : Capacity
     // EVENTS
     public event Action<float, Force> OnTakeDamage; // damage, knockback
     public event Action<float> OnHeal; // heal amount
-    public event System.Action OnDie;
+    public event Action<CapableData> OnDie;
 
     // START
     protected void Start()
@@ -133,6 +133,9 @@ public class HealthCapacity : Capacity
             // if we can't die we come back to max health
             if (Capable.HasEffect(Effect.CantDie)) { health = MaxHealth; return true; } // we can't die
 
+            // trigger OnDie event
+            OnDie?.Invoke(Capable.data);
+
             // if we are part of the capable system we call CapableSystem.SwitchToCorpse(Capable)
             if (CapableBank.Instance.HasCapable(Capable))
             {
@@ -143,7 +146,7 @@ public class HealthCapacity : Capacity
 
             // else we are no part of the capable system (old way)
             // we call DieCapacity if it exists, else we just set health to 0
-            Capable.GetCapacity<DieCapacity>()?.Use(Capable);
+            // Capable.GetCapacity<DieCapacity>()?.Use(Capable);
             health = 0f;
         }
 
@@ -151,14 +154,12 @@ public class HealthCapacity : Capacity
     }
 
     // DIE
-    public virtual void Die()
+    /* public virtual void Die()
     {
-        // trigger OnDie event
-        OnDie?.Invoke();
 
-        if (Controller.LazyInstance.Capable != Capable) { return; }
-        Controller.LazyInstance.Uncontrol();
-    }
+        // if (Controller.Capable != Capable) { return; }
+        // Controller.LazyInstance.Uncontrol();
+    } */
 
 
     // HEALING

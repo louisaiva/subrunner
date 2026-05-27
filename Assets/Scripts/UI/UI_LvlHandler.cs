@@ -19,8 +19,8 @@ public class UI_LvlHandler : MonoBehaviour
 
     private void Update()
     {
-        if (!Perso.Instance) { return; }
-        string lvl = Perso.Instance.level.ToString();
+        if (!Controller.Perso) { return; }
+        string lvl = Controller.Perso.level.ToString();
 
         // on met à jour le niveau
         // GetComponent<TextMeshProUGUI>().text = "level " + lvl;

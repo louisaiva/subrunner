@@ -7,7 +7,7 @@ using System.Linq;
 public class ItemPool : MonoBehaviour, ItemStorer
 {
     [Header("Pool ID")]
-    public string PoolID = "stuff";
+    [field:SerializeField] public string PoolID {get; set;} = "stuff";
 
     [Header("Items")]
     [field: SerializeField] public ItemType ItemType { get; set; }
@@ -38,6 +38,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
     [Header("Inventory & Capable")]
     public Inventory Inventory;
     public Capable Capable { get { return Inventory?.Capable; } }
+
 
     [Header("Logs")]
     [SerializeField] protected bool log_start_grabbing = false;
@@ -164,7 +165,16 @@ public class ItemPool : MonoBehaviour, ItemStorer
             OnStackRemoved -= (Action<ItemStack>)d;
         }
     }
-
+    string ItemStorer.GetDetails()
+    {
+        string log = "ItemPool '" + name + "' (PoolID : " + PoolID +") of capable '" + (Capable?.ID ?? "null") + "'";
+        log += $"\n  -- Min/Max Stacks : {MinStacks}/{MaxStacks}";
+        log += $"\n  -- Scalable : {Scalable}";
+        log += $"\n  -- Stacks : {stacks.Count}";
+        log += $"\n  -- ItemType : {ItemType}";
+        log += $"\n  -- Rule : {item_rule}";
+        return log;
+    }
 
     // GET STATIC DATA
     public ItemPoolData GetStaticPoolData()
@@ -385,7 +395,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
     // low level grab drop
     private void finalise_grab(Item item, ItemStack stack)
     {
-        if (log_grab) { Debug.Log($"(ItemPool) finalising grab of item {item.name} into stack {stacks.IndexOf(stack)}. ItemPoolHolder is {item.ItemPoolHolder?.name ?? "null"}"); }
+        if (log_grab) { Debug.Log($"(ItemPool) finalising grab of item {item.name} into stack {stacks.IndexOf(stack)}. ItemPoolHolder is {(item.ItemPoolHolder as ItemStorer)?.GetDetails() ?? "null"}"); }
 
         // we check if the item is already grabbed somewhere, if so we drop it
         if (item.Grabbed && item.ItemPoolHolder != null) { item.ItemPoolHolder.Drop(item, on_ground: false); }
@@ -587,5 +597,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
         }
         return null;
     }
+
+
 }
 

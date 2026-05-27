@@ -75,12 +75,12 @@ public interface ICapableData : IData
             return this.position;
         }
     }
-    public void OnLoaded(Capable capable)
+    public virtual void OnLoaded(Capable capable)
     {
         loaded_assigned_capable = capable;
         OnCapableLoaded?.Invoke(capable, this);
     }
-    public void OnUnloaded(Capable capable)
+    public virtual void OnUnloaded(Capable capable)
     {
         OnCapableUnloaded?.Invoke(capable, this);
         loaded_assigned_capable = null;
