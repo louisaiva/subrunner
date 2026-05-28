@@ -5627,6 +5627,7 @@ GameObject:
   - component: {fileID: 48653851}
   - component: {fileID: 48653853}
   - component: {fileID: 48653852}
+  - component: {fileID: 48653854}
   m_Layer: 5
   m_Name: heart_icon
   m_TagString: Untagged
@@ -5691,6 +5692,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 48653850}
   m_CullTransparentMesh: 1
+--- !u!114 &48653854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 48653850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dd09206b53269749ae27e1c043d78c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_GraphicColorSweeper
+  graphic: {fileID: 48653852}
+  sweep:
+    colors:
+    - {r: 0.9686275, g: 0.2784314, b: 0.2784314, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 0, g: 0, b: 0, a: 1}
+    duration: 0.2
+    pause_between: 30
+    ease: 2
+    unscaled_time: 1
+    reversed: 0
+    doubled: 0
+  one_shot: 0
+  log:
+    Verbose: 3
 --- !u!1 &50219423
 GameObject:
   m_ObjectHideFlags: 0
@@ -70950,6 +70978,7 @@ GameObject:
   - component: {fileID: 522956765}
   - component: {fileID: 522956767}
   - component: {fileID: 522956766}
+  - component: {fileID: 522956768}
   m_Layer: 5
   m_Name: life_fill
   m_TagString: Untagged
@@ -70989,7 +71018,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -71014,6 +71043,34 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 522956764}
   m_CullTransparentMesh: 1
+--- !u!114 &522956768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 522956764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dd09206b53269749ae27e1c043d78c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_GraphicColorSweeper
+  graphic: {fileID: 522956766}
+  sweep:
+    colors:
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 0, g: 0, b: 0, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 0.3679245, g: 0.050329305, b: 0.050329305, a: 1}
+    duration: 0.1
+    pause_between: 10
+    ease: 2
+    unscaled_time: 1
+    reversed: 0
+    doubled: 0
+  one_shot: 1
+  log:
+    Verbose: 3
 --- !u!1 &523722363
 GameObject:
   m_ObjectHideFlags: 0
@@ -87316,7 +87373,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &643262499
 RectTransform:
   m_ObjectHideFlags: 0
@@ -171096,6 +171153,7 @@ GameObject:
   - component: {fileID: 1245680436}
   - component: {fileID: 1245680438}
   - component: {fileID: 1245680437}
+  - component: {fileID: 1245680439}
   m_Layer: 5
   m_Name: xp
   m_TagString: Untagged
@@ -171160,6 +171218,43 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1245680435}
   m_CullTransparentMesh: 1
+--- !u!114 &1245680439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1245680435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dd09206b53269749ae27e1c043d78c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_GraphicColorSweeper
+  graphic: {fileID: 1245680437}
+  sweep:
+    colors:
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 1, g: 0, b: 0, a: 1}
+    - {r: 0.52386856, g: 0, b: 1, a: 1}
+    - {r: 0.39117432, g: 1, b: 0, a: 1}
+    - {r: 0, g: 1, b: 0.9551995, a: 1}
+    - {r: 0.9032917, g: 0.58526164, b: 0.9056604, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 0.90196085, g: 0.58431375, b: 0.9058824, a: 1}
+    - {r: 0, g: 1, b: 0.9568628, a: 1}
+    - {r: 0.8396226, g: 0.8331046, b: 0.33664113, a: 1}
+    - {r: 0, g: 0, b: 0, a: 1}
+    - {r: 0.8392157, g: 0.3372549, b: 0.3746685, a: 1}
+    - {r: 0.17292629, g: 0.5471698, b: 0.286248, a: 1}
+    duration: 0.2
+    pause_between: 0
+    ease: 11
+    unscaled_time: 1
+    reversed: 1
+    doubled: 1
+  one_shot: 0
+  log:
+    Verbose: 3
 --- !u!1 &1246594668
 GameObject:
   m_ObjectHideFlags: 0
@@ -195668,7 +195763,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Controller
   data:
-    controlled_capable_id: 
+    controlled_capable_id: bob
     stack_capable_ids: []
     player_level: 
     player_room: 
@@ -281811,7 +281906,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.4484259, g: 0.7169812, b: 0.11836952, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
