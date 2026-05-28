@@ -43,17 +43,19 @@ public class UI_GameOver : UI_Pool
 
 
     // SHOWING
+    protected override void before_adding_to_stack()
+    {
+        // we update the text
+        oh_no_text.text = "oh n";
+        for (int i = 0; i < Perso.Deaths; i++)
+        {
+            oh_no_text.text += "o";
+        }
+    }
     protected override IEnumerator show_coroutine(List<GameObject> dont_show = null, float duration_override = -1f, bool was_stacked = false)
     {
         // we set the callbacks
         reviveAction.performed += reviveCallback;
-
-        // we update the text
-        oh_no_text.text = "oh n";
-        for (int i = 0; i < Perso.deaths; i++)
-        {
-            oh_no_text.text += "o";
-        }
 
         yield return base.show_coroutine(dont_show, duration_override);
     }

@@ -221,6 +221,8 @@ public class Item : Movable, EndlessInteractable
     }
     public virtual void BeDropped(Capable dropper)
     {
+        if (!Loaded) { Debug.LogError("(Item - BeDropped) trying to drop an item that is not loaded"); return; }
+
         _grabbed = false;
         idata.is_grabbed = false; // we set this to false before calling on_dropped so the events are triggered with the correct value
         on_dropped();

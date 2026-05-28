@@ -121095,7 +121095,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6965825685227298889, guid: a93bae769a1f4214dada2ee24932e732, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 854
+      value: 1022
       objectReference: {fileID: 0}
     - target: {fileID: 6965825685227298889, guid: a93bae769a1f4214dada2ee24932e732, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -124839,7 +124839,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &884193364
 RectTransform:
   m_ObjectHideFlags: 0
@@ -124853,10 +124853,10 @@ RectTransform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 799123156}
-  - {fileID: 1798320911}
   - {fileID: 2036554520}
-  - {fileID: 862075757}
   - {fileID: 935230839}
+  - {fileID: 1798320911}
+  - {fileID: 862075757}
   m_Father: {fileID: 6668829667191087797}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -130750,7 +130750,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8640442140938350909, guid: a74e93a64459a0d4c9be3859bd85108d, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1010
+      value: 698
       objectReference: {fileID: 0}
     - target: {fileID: 8640442140938350909, guid: a74e93a64459a0d4c9be3859bd85108d, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -259891,7 +259891,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1347443543047909743, guid: 237a9454b4c117b43afef3a042aedc1d, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 530
+      value: 866
       objectReference: {fileID: 0}
     - target: {fileID: 1347443543047909743, guid: 237a9454b4c117b43afef3a042aedc1d, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -281850,15 +281850,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI_HeartIcon
   heart_sprites:
   - sprite: {fileID: -708558076, guid: 9424a36975ca2434681feda6620897a9, type: 3}
-    life_percentage_threshold: 0.95
+    life_percentage_threshold: 1
   - sprite: {fileID: 475973409, guid: 9424a36975ca2434681feda6620897a9, type: 3}
-    life_percentage_threshold: 0.75
+    life_percentage_threshold: 0.95
   - sprite: {fileID: -541042512, guid: 9424a36975ca2434681feda6620897a9, type: 3}
     life_percentage_threshold: 0.5
   - sprite: {fileID: -2087371363, guid: 9424a36975ca2434681feda6620897a9, type: 3}
-    life_percentage_threshold: 0.35
+    life_percentage_threshold: 0.25
   - sprite: {fileID: 827905845, guid: 9424a36975ca2434681feda6620897a9, type: 3}
-    life_percentage_threshold: 0.15
+    life_percentage_threshold: 0.1
   - sprite: {fileID: -506922481, guid: 9424a36975ca2434681feda6620897a9, type: 3}
     life_percentage_threshold: 0
   heart_image: {fileID: 48653852}
@@ -289857,7 +289857,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4733524211880339643, guid: 193616831c3a609408c4b4f8b84d7889, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 698
+      value: 530
       objectReference: {fileID: 0}
     - target: {fileID: 4733524211880339643, guid: 193616831c3a609408c4b4f8b84d7889, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -309092,7 +309092,7 @@ MonoBehaviour:
   log_elements_showing: 0
   perso_prefab: {fileID: 3238169105776769028, guid: dd5bb13d1be1dd34caf6d4f9cb9f1125, type: 3}
   reviveInput: {fileID: -5345809961903225854, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
-  oh_no_text: {fileID: 4548655108220485874}
+  oh_no_text: {fileID: 533592823}
 --- !u!4 &138212635192023724
 Transform:
   m_ObjectHideFlags: 0
@@ -353537,7 +353537,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pool_stack: []
   hud_stack: hud
-  log: 0
+  log: 1
   log_extended: 0
 --- !u!114 &6740274404158655516
 MonoBehaviour:

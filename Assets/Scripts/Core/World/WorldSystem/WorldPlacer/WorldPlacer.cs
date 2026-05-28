@@ -55,11 +55,15 @@ public class WorldPlacer : MonoBehaviour
         // show the text popup to enter capable template id
         UI_Manager.Instance.OpenInputPopup("place capable", "enter capable template id", ValidateStartPlacingObject);
     }
-    public void ValidateStartPlacingObject(string template)
+    public async void ValidateStartPlacingObject(string template)
     {
         if (string.IsNullOrEmpty(template)) { log.Error("invalid template id"); return; }
         current_template = template;
-        UI_Manager.Instance.SwitchTo("capable_placer");
+
+        // wait until the end of the frame to avoid issues with the popup being closed and the placer being enabled at the same time
+        await System.Threading.Tasks.Task.Yield();
+        while (UI_Manager.Instance.IsInTransition) { await System.Threading.Tasks.Task.Yield(); }
+        UI_Manager.Instance.StackPool("capable_placer");
     }
     private string current_template = null;
     public void Enable()

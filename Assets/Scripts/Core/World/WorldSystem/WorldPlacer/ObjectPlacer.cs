@@ -75,15 +75,19 @@ public class ObjectPlacer : MonoBehaviour
 
     private void handle_left_click()
     {
-        // we place the object at the mouse position !!
-        Capable spawned_object = CapableEngine.Instance.SpawnCapable(capable_visu.template);
-        if (spawned_object == null) { Debug.LogWarning("(ObjectPlacer) failed to spawn capable with template " + capable_visu.template); return; }
+        // we get the capable data 
+        CapableData data = CapableEngine.Instance.DuplicateTemplate(capable_visu.template);
+        if (data == null) { log.Warning("(ObjectPlacer) failed to get capable data for template " + capable_visu.template); return; }
 
-        // we set its position to the mouse position
-        Vector2 position = capable_visu.GetPosition();
-        // Vector3 mousePos = Mouse.current.position.ReadValue();
-        // Vector2 world_mouse = Camera.main.ScreenToWorldPoint(mousePos);
-        spawned_object.transform.position = new Vector3(position.x, position.y, spawned_object.transform.position.z);
+        // we apply some small modifications to the data (like setting the position to the mouse position)
+        data.position = capable_visu.GetPosition();
+
+        // also if this is an item we make sure it is not grabbed since we spawn it on the ground
+        if (data is ItemData item_data) { item_data.is_grabbed = false; }
+
+        // we spawn the object !!
+        Capable spawned_object = CapableEngine.Instance.SpawnCapable(data);
+        if (spawned_object == null) { log.Warning("(ObjectPlacer) failed to spawn capable with template " + capable_visu.template); return; }
     }
     private void handle_right_click() { UI_Manager.Instance.UnstackPool("capable_placer"); }
 }

@@ -20,11 +20,11 @@ public class UI_HeartIcon : MonoBehaviour
         // on trouve le sprite correspondant dans la liste
         foreach (HeartSprite heart_sprite in heart_sprites)
         {
-            if (life_percentage >= heart_sprite.life_percentage_threshold)
+            if (heart_sprite.life_percentage_threshold >= life_percentage)
             {
                 heart_image.sprite = heart_sprite.sprite;
-                break;
             }
+            else { break; }
         }
     }
 }

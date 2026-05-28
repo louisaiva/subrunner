@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class Perso : Movable, Hacker
 {
-    public static int deaths = 0; // nombre de morts du perso
-    // public static Perso Instance { get; private set; }
+    public static int Deaths = 0; // nombre de morts du perso
     public override ConnectCapacity Connector => Device?.Connector;
 
     [Header("PERSO")]
@@ -334,7 +333,7 @@ public class Perso : Movable, Hacker
     {
         if (Controller.Perso == null || Controller.Perso != this) { return; } // if we are not the controlled perso, we do nothing
 
-
+        Deaths += 1; // on incrémente le nombre de morts du perso
         Debug.Log("YOU DIED");
 
         // on affiche un floating text
@@ -354,7 +353,6 @@ public class Perso : Movable, Hacker
 
         // remove_callbacks();
 
-        deaths += 1; // on incrémente le nombre de morts du perso
     }
 
 
