@@ -3,25 +3,17 @@ using UnityEngine;
 public class UI_LifeXPHandler : MonoBehaviour
 {
     // life filling bar
-    public RectTransform life_fill;
+    [SerializeField] private RectTransform life_fill;
     private float life_fill_max_width = 192;
     private float life_fill_height = 16;
 
     // xp filling bar
-    public RectTransform xp_fill;
+    [SerializeField] private RectTransform xp_fill;
     private float xp_fill_max_width = 182;
     private float xp_fill_height = 8;
 
 
     // AWAKE & START
-    private void Awake()
-    {
-        if (life_fill == null || xp_fill == null)
-        {
-            life_fill = transform.Find("life_fill").GetComponent<RectTransform>();
-            xp_fill = transform.Find("xp_fill").GetComponent<RectTransform>();
-        }
-    }
     private void Start()
     {
         // on récupère la taille des fills
@@ -37,7 +29,7 @@ public class UI_LifeXPHandler : MonoBehaviour
     }
 
     // ON ENABLE
-    private async void OnEnable()
+    /* private async void OnEnable()
     {
         // on désactive / reactive les cutout image de la barre de vie pour régler un léger bug
         life_fill.GetComponent<CutoutMaskUI>().enabled = false;
@@ -47,7 +39,9 @@ public class UI_LifeXPHandler : MonoBehaviour
         life_fill.GetComponent<CutoutMaskUI>().enabled = true;
         xp_fill.GetComponent<CutoutMaskUI>().enabled = true;
     }
+    */
 
+   
     // UPDATE
     private void Update()
     {

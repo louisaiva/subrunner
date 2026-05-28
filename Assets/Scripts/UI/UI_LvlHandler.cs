@@ -4,7 +4,7 @@ using TMPro;
 public class UI_LvlHandler : MonoBehaviour
 {
     
-    [Header("UI Level2 Handler Parameters")]
+    [Header("UI Level Handler Parameters")]
     [SerializeField] private string levelPrefix = "level ";
     [HideInInspector] private TextMeshProUGUI levelText;
 
