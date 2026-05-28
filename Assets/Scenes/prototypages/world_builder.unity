@@ -11051,6 +11051,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf38d555c3b87ae408e186092a015d37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomEngine
+  loader:
+    load_tasks: []
+    unload_tasks: []
+    log_ask: 0
+    log_loading: 0
+    log_run: 0
   PlayerChunkData:
     <id>k__BackingField: 
     room_id: 
@@ -11060,16 +11066,13 @@ MonoBehaviour:
     capables_ids: []
     movables_ids: []
     lights_data: []
-  frames_between_loading_rooms: 2
   frames_between_ticks: 1
   dirty_capables_handled_per_tick: 6
-  chunk_distance: 1
+  ticks_between_loading_chunks: 20
+  chunk_distance: 2
   log_awake_data: 1
-  log_loading: 0
-  hide_already_loaded: 1
-  hide_data_not_found: 1
   log_ticks: 0
-  log_room_transfers: 1
+  log_chunk_transfers: 0
   log_loaded_area_transfers: 0
   log_best_match_calcul: 0
   log_spatial_queries: 0
@@ -44092,11 +44095,11 @@ MonoBehaviour:
   log_world_data_loading: 1
   log_awake_data_extended: 0
   log_start_capacity_ownership: 0
-  log_duplicating: 1
+  log_duplicating: 0
   log_spawning: 1
   log_item_switching: 0
   hide_log_ownership_validation: 1
-  log_loading: 1
+  log_loading: 0
   log_loading_extended: 0
   log_visibility: 0
   hide_log_no_data_found: 1
@@ -94680,7 +94683,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 320, y: -72}
+  m_AnchoredPosition: {x: 615, y: -72}
   m_SizeDelta: {x: 275, y: 284}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &712416423
@@ -109292,6 +109295,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2136914006577252643, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: log
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3744786912224508728, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -194528,7 +194535,7 @@ MonoBehaviour:
   exploit_navigator: {fileID: 598553481}
   see_through: {fileID: 531669800}
   log: 1
-  log_perso: 1
+  log_perso: 0
 --- !u!114 &1409124454
 MonoBehaviour:
   m_ObjectHideFlags: 0

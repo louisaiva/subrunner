@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: conso_3
+  <PoolID>k__BackingField: conso_3
   <ItemType>k__BackingField: 2
   stacks: []
   MaxStacks: 1
@@ -845,7 +845,6 @@ MonoBehaviour:
   xp: 0
   total_xp: 0
   xp_to_next_level: 100
-  skillManager: {fileID: 0}
   metamorph_skins:
   - perso
   - cat
@@ -1107,7 +1106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: conso_1
+  <PoolID>k__BackingField: conso_1
   <ItemType>k__BackingField: 2
   stacks: []
   MaxStacks: 1
@@ -1164,7 +1163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: conso_2
+  <PoolID>k__BackingField: conso_2
   <ItemType>k__BackingField: 2
   stacks: []
   MaxStacks: 1
@@ -1221,7 +1220,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: conso_4
+  <PoolID>k__BackingField: conso_4
   <ItemType>k__BackingField: 2
   stacks: []
   MaxStacks: 1
@@ -1278,8 +1277,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: weapon
-  <ItemType>k__BackingField: 0
+  <PoolID>k__BackingField: weapon
+  <ItemType>k__BackingField: 2
   stacks: []
   MaxStacks: 1
   MinStacks: 1
@@ -1335,8 +1334,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: shoes
-  <ItemType>k__BackingField: 0
+  <PoolID>k__BackingField: shoes
+  <ItemType>k__BackingField: 2
   stacks: []
   MaxStacks: 1
   MinStacks: 1
@@ -1392,8 +1391,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: device
-  <ItemType>k__BackingField: 0
+  <PoolID>k__BackingField: device
+  <ItemType>k__BackingField: 2
   stacks: []
   MaxStacks: 1
   MinStacks: 1
@@ -1641,7 +1640,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: stuff
+  <PoolID>k__BackingField: stuff
   <ItemType>k__BackingField: 2
   stacks: []
   MaxStacks: 20

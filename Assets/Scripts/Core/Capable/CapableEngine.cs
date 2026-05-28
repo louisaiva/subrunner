@@ -922,11 +922,11 @@ public class CapableEngine : BSOD_System<CapableEngine>
             string id = capables_ids[i];
 
             // verify that the capable is not controlled, if yes we skip it
-            if (Controller.Capable != null && Controller.Capable.ID == id)
+            /* if (Controller.Capable != null && Controller.Capable.ID == id)
             {
                 if (log_loading) { Debug.Log($"(CapableSystem - UnloadCapables) Skipping unloading of {id} since it is currently controlled by the player"); }
                 continue;
-            }
+            } */
             
             // we remove them from the loading_queue if they are inside it (so no need for unloading them)
             if (loading_queue.Contains(id)) { loading_queue.Remove(id); }

@@ -20,6 +20,9 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
         }
     }
 
+    [SerializeField] private ChunkLoader loader = new ChunkLoader();
+    public ChunkLoader Loader { get => loader; }
+
 
 
     // CHUNKS DATA
@@ -29,7 +32,7 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
     private Dictionary<string, int> chunks_hashs_by_ids = new Dictionary<string, int>();
     private Dictionary<int, string> chunks_ids_by_hash = new Dictionary<int, string>();
     private int next_room_hash = 1;
-    public Dictionary<string, ChunkData> loaded_chunks_data = new Dictionary<string, ChunkData>();
+    // public Dictionary<string, ChunkData> loaded_chunks_data = new Dictionary<string, ChunkData>();
     public ChunkData PlayerChunkData; // the main room is the one where the perso is, we need to keep track of it to know which room to load when the perso changes room
     public Action<ChunkData> OnPlayerChunkChange = delegate { };
 
@@ -51,15 +54,14 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
 
     // PARAMETERS & LOGS
 
-    [Header("Loading parameters")]
-    public int frames_between_loading_rooms = 10;
 
     [Header("Tick parameters")]
     public int frames_between_ticks = 1;
     public int dirty_capables_handled_per_tick = 10;
     private bool ticking = false;
 
-    [Header("Room transfer parameters")]
+    [Header("Loading parameters")]
+    public int ticks_between_loading_chunks = 2;
     [SerializeField, Range(1, 10)] public int chunk_distance = 1;
     public void SetChunkDistance(int distance)
     {
@@ -72,14 +74,14 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
     public bool log_awake_data = false;
     // public bool log_init = false;
 
-    [Header("Logs loading")]
+    /* [Header("Logs loading")]
     public bool log_loading = false;
     public bool hide_already_loaded = false;
-    public bool hide_data_not_found = false;
+    public bool hide_data_not_found = false; */
 
     [Header("Log ticks")]
     public bool log_ticks = false;
-    public bool log_room_transfers = false;
+    public bool log_chunk_transfers = false;
     public bool log_loaded_area_transfers = false;
     public bool log_best_match_calcul = false;
     public bool log_spatial_queries = false;
@@ -157,7 +159,7 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
         spatial_maps_by_level_id.Clear();
 
         // we destroy all the chunks gameobjects
-        loaded_chunks_data.Clear();
+        loader.Clear();
         ChunkBank.Instance.DestroyAllChunksInstantly();
 
         // clear all the rooms data
@@ -435,7 +437,7 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
         // we save the id and time of detach to prevent the calling of room triggers
         capables_attach_times[id] = Time.time;
 
-        if (log_room_transfers) { Debug.Log($"(ChunkEngine) [{room.id}] >> {id} >> [none]         -- was freed !!"); }
+        if (log_chunk_transfers) { Debug.Log($"(ChunkEngine) [{room.id}] >> {id} >> [none]         -- was freed !!"); }
         if (log_loaded_area_transfers) { Debug.Log($"(ChunkEngine) [{room.id}] >> {id} >> [none]         -- was freed !!"); }
     }
     public bool ShouldIgnoreRoomTrigger(string id)
@@ -452,10 +454,11 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
     ///  3. DYNAMIC CHUNK OF CAPABLE MANAGEMENT (UPDATE)
     //
     ///
-    
+
 
     // UPDATE
     private int frames_since_last_tick = 0;
+    private int tick_since_last_loading = 0;
     protected virtual void Update()
     {
         if (!ticking) { return; }
@@ -466,6 +469,13 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
 
         // we tick !
         Tick();
+
+        tick_since_last_loading++;
+        if (tick_since_last_loading < ticks_between_loading_chunks) { return; }
+        tick_since_last_loading = 0;
+
+        // we run the loader, which will make it load & unload 1 chunk per time
+        loader.RunTask(); 
     }
 
     // TICK
@@ -492,12 +502,12 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
             if (log_ticks) { log_tick += $"\n  - {capable_id} : \n"; }
 
             // we get the current room of the capable, if it has one
-            ChunkData current_room = GetCapableChunk(capable_id);
-            if (log_ticks) { log_tick += $"    - current room : {(current_room != null ? current_room.id : "none")}\n"; }
+            ChunkData current_chunk = GetCapableChunk(capable_id);
+            if (log_ticks) { log_tick += $"    - current room : {(current_chunk != null ? current_chunk.id : "none")}\n"; }
 
             // we get the rooms candidates for the capable
             chunk_candidates.Clear();
-            if (current_room != null) { get_chunk_neighbours(current_room.id, ref chunk_candidates); }
+            if (current_chunk != null) { get_chunk_neighbours(current_chunk.id, ref chunk_candidates); }
             else { get_chunks_candidates_from_position(capable_id, ref chunk_candidates); }
             if (log_ticks) { log_tick += $"    - room candidates : {chunk_candidates.Count} ({string.Join(", ", chunk_candidates.Select(r => r.id))})\n"; }
 
@@ -509,31 +519,31 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
             }
 
             // we resolve the best room
-            ChunkData best_room = get_best_chunk_for_capable(capable_id, chunk_candidates);
-            if (log_ticks) { log_tick += $"    - best room : {(best_room != null ? best_room.id : "none")}\n"; }
-            if (best_room == null) { continue; }
-            if (current_room != null && best_room.id == current_room.id) { continue; }
+            ChunkData best_chunk = get_best_chunk_for_capable(capable_id, chunk_candidates);
+            if (log_ticks) { log_tick += $"    - best chunk : {(best_chunk != null ? best_chunk.id : "none")}\n"; }
+            if (best_chunk == null) { continue; }
+            if (current_chunk != null && best_chunk.id == current_chunk.id) { continue; }
 
             // check if perso changed room
             if (capable_id == controlled_id)
             {
-                if (log_ticks) { log_tick += $"    - controlled capable changed room, handling it... \n"; }
-                handle_perso_changed_room(current_room, best_room);
+                if (log_ticks) { log_tick += $"    - controlled capable changed chunk, handling it... \n"; }
+                handle_perso_changed_chunk(current_chunk, best_chunk);
             }
 
             // we assign the capable to the best room
-            string out_room_id = current_room != null ? current_room.id : "none";
-            string in_room_id = best_room != null ? best_room.id : "none";
-            if (log_room_transfers) { Debug.Log($"(ChunkEngine) [{out_room_id}] >> {capable_id} >> [{in_room_id}]"); }
-            if (current_room != null) { removeCapableFromChunk(capable_id, current_room); }
-            addCapableToChunk(capable_id, best_room, CapableEngine.Instance.IsMovable(capable_id));
-            if (log_ticks) { log_tick += $"    - TRANSFERED TO NEW CHUNK !!! : {best_room.id}\n"; }
+            string out_chunk_id = current_chunk != null ? current_chunk.id : "none";
+            string in_chunk_id = best_chunk != null ? best_chunk.id : "none";
+            if (log_chunk_transfers) { Debug.Log($"(ChunkEngine) [{out_chunk_id}] >> {capable_id} >> [{in_chunk_id}]"); }
+            if (current_chunk != null) { removeCapableFromChunk(capable_id, current_chunk); }
+            addCapableToChunk(capable_id, best_chunk, CapableEngine.Instance.IsMovable(capable_id));
+            if (log_ticks) { log_tick += $"    - TRANSFERED TO NEW CHUNK !!! : {best_chunk.id}\n"; }
 
-            // check if the new room is unloaded and if yes we need to unload the entity as well
-            if (!loaded_chunks_data.ContainsKey(best_room.id))
+            // check if the new chunk is unloading (or unloaded and not loading) and if yes we need to unload the entity as well
+            if (loader.WillChunkBeUnloaded(best_chunk.id))
             {
-                if (log_ticks) { log_tick += $"    - new room is not loaded, adding entity to unload list... \n"; }
-                if (log_loaded_area_transfers) { Debug.Log($"(ChunkEngine) [{out_room_id}] >> {capable_id} >> [{in_room_id}]      (quit loaded area)"); }
+                if (log_ticks) { log_tick += $"    - new chunk is not loaded, adding entity to unload list... \n"; }
+                if (log_loaded_area_transfers) { Debug.Log($"(ChunkEngine) [{out_chunk_id}] >> {capable_id} >> [{in_chunk_id}]      (quit loaded area)"); }
                 capables_to_unload.Add(capable_id);
             }
         }
@@ -544,10 +554,10 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
         // . we remove the handled capables from the dirty list
         foreach (string capable_id in dirty_capables_ids)
         {
-            // verify that the capable has a room, otherwise we log an error/warning because it means the capable is an outsider of the room engine system D:
+            // verify that the capable has a chunk, otherwise we log an error/warning because it means the capable is an outsider of the chunk engine system D:
             if (!IsInAChunk(capable_id) && !hide_log_no_room_of_capable_found)
             {
-                string log = $"(ChunkEngine - Tick) Capable {capable_id} could not be assigned to any room. Is now a RoomEngine outsider.";
+                string log = $"(ChunkEngine - Tick) Capable {capable_id} could not be assigned to any chunk. Is now a ChunkEngine outsider.";
                 bool is_capable_outsider = CapableEngine.Instance.IsOutsider(capable_id);
                 if (!is_capable_outsider) { Debug.LogError(log + " (Insider of the CapableSystem, critical issue...)"); }
                 else { Debug.LogWarning(log + " (Outsider of the CapableSystem as well so may be ok)"); }
@@ -650,35 +660,34 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
     }
 
     // handle perso changed room
-    private void handle_perso_changed_room(ChunkData from_room, ChunkData to_room)
+    private void handle_perso_changed_chunk(ChunkData from_chunk, ChunkData to_chunk)
     {
-
         // . find rooms to load / unload based on new controlled room neighbours.
-        Stack<string> rooms_to_unload = new Stack<string>();
-        Stack<string> rooms_to_load = new Stack<string>();
-        List<string> new_neighbours_ids = GetNeighboursIDs(to_room, depth: chunk_distance);
+        Stack<string> chunks_to_unload = new Stack<string>();
+        Stack<string> chunks_to_load = new Stack<string>();
+        List<string> new_neighbours_ids = GetNeighboursIDs(to_chunk, depth: chunk_distance);
 
         // check which of the currently loaded rooms we need to unload
-        foreach (string loaded_room_id in loaded_chunks_data.Keys)
+        foreach (string loaded_chunk_id in loader.LoadedChunkIDs)
         {
-            if (loaded_room_id == to_room.id) { continue; }
-            if (!new_neighbours_ids.Contains(loaded_room_id)) { rooms_to_unload.Push(loaded_room_id); }
+            if (loaded_chunk_id == to_chunk.id) { continue; }
+            if (!new_neighbours_ids.Contains(loaded_chunk_id)) { chunks_to_unload.Push(loaded_chunk_id); }
         }
 
         // check which of the new neighbours we need to load (that are not already loaded)
         for (int i = 0; i < new_neighbours_ids.Count; i++)
         {
             string neighbour_id = new_neighbours_ids[i];
-            if (neighbour_id == to_room.id) { continue; }
-            if (!loaded_chunks_data.ContainsKey(neighbour_id)) { rooms_to_load.Push(neighbour_id); }
+            // here we keep the to_chunk.id bcz if we tp the to_chunk may not be loaded but we want it always loaded
+            if (!loader.WillChunkBeLoaded(neighbour_id)) { chunks_to_load.Push(neighbour_id); }
         }
 
-        PlayerChunkData = to_room;
-        OnPlayerChunkChange.Invoke(to_room);
+        PlayerChunkData = to_chunk;
+        OnPlayerChunkChange.Invoke(to_chunk);
 
         // . load the new rooms and unload old ones.
-        LoadChunks(rooms_to_load.ToArray());
-        _ = unloadChunks(rooms_to_unload.ToArray());
+        _ = LoadChunks(chunks_to_load.ToArray());
+        _ = UnloadChunks(chunks_to_unload.ToArray());
     }
 
 
@@ -691,46 +700,20 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
 
 
     // LOAD CHUNKS
-    public async void LoadChunks(string[] rooms_ids)
+    public async Task LoadChunks(string[] rooms_ids)
     {
-        // for each room id we need to find its data and load it
-        foreach (string room_id in rooms_ids)
-        {
-            // we load the room
-            load_chunk(room_id);
-
-            // we wait for X frames
-            for (int i = 0; i < frames_between_loading_rooms; i++) { await System.Threading.Tasks.Task.Yield(); }
-        }
-    }
-    private void load_chunk(string id)
-    {
-        if (!chunks_data.ContainsKey(id))
-        {
-            if (!hide_data_not_found) { Debug.LogWarning("(ChunkEngine - Load) Chunk data not found for id: " + id); }
-            return;
-        }
-        if (loaded_chunks_data.ContainsKey(id))
-        {
-            if (!hide_already_loaded) { Debug.LogWarning("(ChunkEngine - Load) Chunk data already loaded for id: " + id); }
-            return;
-        }
-        ChunkData data = chunks_data[id];
-        ChunkBank.Instance.Load(data);
-        loaded_chunks_data.Add(id, data);
-        if (log_loading) { Debug.Log("(ChunkEngine) Loaded " + id); }
-
-        if (!RoomEngine.Instance.DoorEngine.IsRoomVisible(data.room_id)) { RoomEngine.Instance.DoorEngine.HideRoom(data.room_id); }
-        else { RoomEngine.Instance.DoorEngine.ShowRoom(data.room_id); }
+        ChunkLoadTask task = loader.AskLoadChunks(rooms_ids);
+        while (!task.IsDone) { await Task.Yield(); }
     }
 
     // UNLOAD CHUNKS
-    public async Task UnloadAllChunks() => await unloadChunks(loaded_chunks_data.Keys);
+    public async Task UnloadAllChunks() => await UnloadChunks(loader.LoadedChunkIDs);
     public async Task UnloadChunks(string[] rooms_ids)
     {
-        await unloadChunks(rooms_ids);
+        ChunkUnloadTask task = loader.AskUnloadChunks(rooms_ids);
+        while (!task.IsDone) { await Task.Yield(); }
     }
-    private async Task unloadChunks(ICollection<string> rooms_ids)
+    /* private async Task unloadChunks(ICollection<string> rooms_ids)
     {
         foreach (string id in rooms_ids)
         {
@@ -747,7 +730,7 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
         ChunkBank.Instance.Unload(data);
         loaded_chunks_data.Remove(id);
         if (log_loading) { Debug.Log("(ChunkEngine) Unloaded " + id); }
-    }
+    } */
 
 
 
@@ -889,7 +872,7 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
     {
         foreach (string chunk_id in chunks_ids)
         {
-            if (loaded_chunks_data.ContainsKey(chunk_id)) { return true; }
+            if (loader.IsChunkLoaded(chunk_id)) { return true; }
         }
         return false;
     }
@@ -1206,3 +1189,5 @@ public enum ScoreBiasType
     RoomExit,
     RoomFreed
 }
+
+

@@ -12,6 +12,7 @@ public class DebugManager : Singleton<DebugManager>
 {
     [Header("Debug")]
     [SerializeField] private Transform debug;
+    private Transform debugs_group; // parent of all debugs except FPS
     private List<SingleDebugger> debugs = new List<SingleDebugger>();
     private Dictionary<Type, Debuggable> debuggables = new Dictionary<Type, Debuggable>();
 
@@ -23,8 +24,6 @@ public class DebugManager : Singleton<DebugManager>
     [SerializeField] private string precision = "F0"; // precision of the fps text
     [SerializeField] private bool show_unscaled_fps = false; // if we want to show the unscaled fps or not (djizzi)
 
-    [Header("Settings")]
-    private Setting debug_setting;
 
     [Header("Logs")]
     [SerializeField] private bool log = false; // if we want to log warnings when
@@ -47,6 +46,7 @@ public class DebugManager : Singleton<DebugManager>
         }
 
         // find all debugs in ui debug children
+        debugs_group = debug.Find("group");
         debugs = debug.GetComponentsInChildren<SingleDebugger>(includeInactive: true).ToList();
         debugs = debugs.Where(d => d.gameObject.activeSelf).ToList(); // we get only active debugs
         foreach (SingleDebugger d in debugs)
@@ -56,15 +56,11 @@ public class DebugManager : Singleton<DebugManager>
     }
     protected void Start()
     {
-        // on met le skin en fonction du settings skin
-        debug_setting = SettingsManager.Instance.GetSetting("debug");
-        if (debug_setting == null) { return; }
-        toggle_debug(debug_setting.Value);
-        debug_setting.OnValueChanged += toggle_debug;
+        SettingsManager.Instance.RegisterCallback("debug", on_debug_setting_changed);
     }
     void OnDestroy()
     {
-        if (debug_setting != null) { debug_setting.OnValueChanged -= toggle_debug; }
+        SettingsManager.Instance?.UnregisterCallback("debug", on_debug_setting_changed);
     }
 
     // UPDATE + FPS
@@ -95,10 +91,22 @@ public class DebugManager : Singleton<DebugManager>
     }
 
     // TOGGLE DEBUG
-    private void toggle_debug(float value)
+    private void on_debug_setting_changed(Setting setting)
     {
-        bool enable = (value > 0.5f) ? true : false;
-        debug.gameObject.SetActive(enable);
+        switch (setting.Value)
+        {
+            case 0f:
+                debug.gameObject.SetActive(false);
+                break;
+            case 1f: // only fps
+                debug.gameObject.SetActive(true);
+                debugs_group.gameObject.SetActive(false);
+                break;
+            case 2f: // all debugs
+                debug.gameObject.SetActive(true);
+                debugs_group.gameObject.SetActive(true);
+                break;
+        }
     }
 
     // ADD DEBUGGABLE TO DEBUGGER

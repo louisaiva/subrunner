@@ -56,8 +56,14 @@ public class SettingsManager : MonoBehaviour
     public void RegisterCallback(string settingName, Action<Setting> callback)
     {
         Setting setting = GetSetting(settingName);
-        if (setting == null) { return; }
+        if (setting == null)
+        {
+            Debug.LogWarning($"(SettingsManager) Setting {settingName} not found! Cannot register callback.");
+            return;
+        }
         setting.OnSettingChanged += callback;
+
+        if (log) { Debug.Log($"(SettingsManager) Registered callback for setting {settingName}"); }
 
         // fire the callback immediately with the current value so that the UI is updated at start
         callback.Invoke(setting);

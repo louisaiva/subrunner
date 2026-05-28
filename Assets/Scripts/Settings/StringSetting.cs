@@ -18,6 +18,7 @@ using UnityEngine;
             _value = value;
             OnValueChanged?.Invoke(_value);
             OnStringChanged?.Invoke(ToString());
+            OnSettingChanged?.Invoke(this);
         }
     }
     public override string ToString()
