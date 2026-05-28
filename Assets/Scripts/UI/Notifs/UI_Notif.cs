@@ -17,14 +17,11 @@ public class UI_Notif : MonoBehaviour
     public Item Item = null;
     public File File = null;
 
-    // START
-    private void Awake()
-    {
-        if (transitioner == null) { transitioner = GetComponent<Transitioner>(); }
-    }
-
+    // INIT
     public void Init(Item item)
     {
+        if (transitioner == null) { transitioner = GetComponent<Transitioner>(); }
+
         set_item(item);
 
         // show the notif
@@ -35,6 +32,7 @@ public class UI_Notif : MonoBehaviour
     }
     public void Init(File file)
     {
+        if (transitioner == null) { transitioner = GetComponent<Transitioner>(); }
         set_file(file);
 
         // show the notif

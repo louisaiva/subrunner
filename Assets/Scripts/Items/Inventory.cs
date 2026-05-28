@@ -397,7 +397,7 @@ public class Inventory : MonoBehaviour, ItemStorer
         }
         return null;
     }
-
+    public List<ItemPool> GetItemPools() { return pools; }
 
 
     // ITEM RULE

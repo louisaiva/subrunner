@@ -16,6 +16,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
     public List<Item> Items { get { return stacks.SelectMany(s => s.Items).ToList(); } }
     // public string ItemRule { get { return item_rule; } }
     public virtual int Count { get { return Items.Count; } }
+    public virtual int StackCount { get { return stacks.Count; } }
     public virtual bool HasSpaceLeft { get { return Scalable || stacks.Count < MaxStacks || stacks.Any(s => !s.IsFull); } }
 
 

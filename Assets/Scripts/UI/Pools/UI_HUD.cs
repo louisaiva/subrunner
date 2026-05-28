@@ -3,23 +3,17 @@ using UnityEngine;
 public class UI_HUD : UI_Pool
 {
     public UI_Notifier Notifier;
+    public UI_ItemBar ItemBar;
 
-    private GameObject _life_bar;
-    public GameObject LifeBar
+    protected override void before_adding_to_stack()
     {
-        get
-        {
-            if (_life_bar == null) { _life_bar = transform.Find("life_bar").gameObject; }
-            return _life_bar;
-        }
+        // check if we have a controller
+        if (Controller.Capable == null || Controller.Capable.Inventory == null) { return; }
+        ItemBar.AttachToInventory(Controller.Capable.Inventory);
     }
-    private GameObject _items_bar;
-    public GameObject ItemsBar
+    protected override void after_removed_from_stack()
     {
-        get
-        {
-            if (_items_bar == null) { _items_bar = transform.Find("shortcuts_if").gameObject; }
-            return _items_bar;
-        }
+        // we clear the item bar
+        ItemBar.Clear();
     }
 }

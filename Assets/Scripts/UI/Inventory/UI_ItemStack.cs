@@ -139,7 +139,9 @@ public class UI_ItemStack : UI_ImageSlot, Descriptable, Droppable, ItemReceivabl
 
         // on calcule la taille de l'image
         RectTransform rt = item_image.GetComponent<RectTransform>();
+        // float scale = rt.localScale.x;
         rt.sizeDelta = new Vector2(sprite.rect.width, sprite.rect.height);
+        // rt.localScale = new Vector3(scale, scale, scale);
     }
     protected void clear_ui_item()
     {

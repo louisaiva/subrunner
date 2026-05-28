@@ -123,6 +123,7 @@ MonoBehaviour:
   log_frames: 0
   log_assign: 0
   already_assigned: 1
+  visible_on: 0
 --- !u!1 &3584986913307085163
 GameObject:
   m_ObjectHideFlags: 0
@@ -230,7 +231,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: pckg_front
   <orientation>k__BackingField: D
-  current_capacity: 
   current_anim:
     name: pckg_front.idle_open.D
     sprites_paths:
@@ -257,11 +257,14 @@ MonoBehaviour:
     - hover_open
     lock_orientation: 0
     one_shot: 0
+  never_flip: 0
   log: 0
   log_orientation: 0
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
+  visible_on: 1
 --- !u!1 &6831872210500143280
 GameObject:
   m_ObjectHideFlags: 0
@@ -273,6 +276,8 @@ GameObject:
   - component: {fileID: 2639434519578746112}
   - component: {fileID: 7206343197171121091}
   - component: {fileID: 7629487890036740618}
+  - component: {fileID: 7753409749146594640}
+  - component: {fileID: 2438384168400301997}
   m_Layer: 13
   m_Name: dead_box
   m_TagString: Untagged
@@ -288,13 +293,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6831872210500143280}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2418775393204791573}
-  - {fileID: 355962475273702053}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &7206343197171121091
@@ -348,12 +352,15 @@ MonoBehaviour:
       skin: 
       anim_capacity_priorities: []
       current_capacity: 
-      material_path: 
+      material_name: 
       sorting_layer_id: 0
       order_in_layer: 0
+      never_flip: 0
       layers: []
+      local_position: {x: 0, y: 0}
     inventory:
       item_pools_data: []
+      item_type: 0
     feet_data:
       box_colliders: []
       circle_colliders: []
@@ -383,70 +390,29 @@ MonoBehaviour:
     of cardboard boxes, it reminds me of my childhood
   _grabbed: 0
   _placed: 0
-  _holder: {fileID: 0}
---- !u!1001 &5941705537209918052
-PrefabInstance:
+--- !u!114 &7753409749146594640
+MonoBehaviour:
   m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 2639434519578746112}
-    m_Modifications:
-    - target: {fileID: 1235818638904784760, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
-      propertyPath: data.<id>k__BackingField
-      value: hover
-      objectReference: {fileID: 0}
-    - target: {fileID: 2301345579811965954, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
-      propertyPath: m_Name
-      value: hover
-      objectReference: {fileID: 0}
-    - target: {fileID: 6234543502669162689, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6234543502669162689, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6234543502669162689, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6234543502669162689, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6234543502669162689, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6234543502669162689, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6234543502669162689, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6234543502669162689, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6234543502669162689, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6234543502669162689, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
---- !u!4 &355962475273702053 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6234543502669162689, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
-  m_PrefabInstance: {fileID: 5941705537209918052}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6831872210500143280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b38a876e5f6fba4ab1dde6d23fd0f96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
+  capacity_template_id: hover
+--- !u!114 &2438384168400301997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6831872210500143280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b38a876e5f6fba4ab1dde6d23fd0f96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
+  capacity_template_id: item_iic
