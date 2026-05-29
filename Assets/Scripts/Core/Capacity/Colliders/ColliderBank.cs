@@ -310,6 +310,27 @@ public class ColliderBank : MonoBehaviour
         slog?.LogSpecific($"Pathfinding area is {modifier.area}");
         return modifier.area;
     }
+    public static void LoadColliderData(Collider2D c, ColliderData data)
+    {
+        Debug.Log($"(ColliderBank - LoadColliderData) Loading collider data : {(data == null ? "null" : data.GetDetails())} to collider {c.gameObject.name}");
+
+        // we set gameobject data
+        c.gameObject.layer = data.layerID;
+        c.transform.localPosition = data.local_position;
+
+        // we set the collider data
+        c.offset = data.offset;
+        c.isTrigger = data.is_trigger;
+
+        if (c is BoxCollider2D box_collider)
+        {
+            if (data is BoxData bdata) { box_collider.size = bdata.size; }
+        }
+        else if (c is CircleCollider2D circle_collider)
+        {
+            if (data is CircleData cdata) { circle_collider.radius = cdata.radius; }
+        }
+    }
 
 
     ///

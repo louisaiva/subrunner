@@ -133,7 +133,7 @@ public class Controller : MonoBehaviour
         if (!stack.Contains(capable_id))
         {
             // if the capable is not in the stack, we do nothing
-            if (log) { Debug.Log($"(Controller) Cannot uncontrol capable with id {capable_id} because it is not in the stack !!"); }
+            // if (log) { Debug.Log($"(Controller) Cannot uncontrol capable with id {capable_id} because it is not in the stack !!"); }
             return false;
         }
 
@@ -188,7 +188,6 @@ public class Controller : MonoBehaviour
 
         return true;
     }
-
 
     ///
     //
@@ -347,7 +346,7 @@ public class Controller : MonoBehaviour
     }
     private void refresh_skin_based_parameters(string skin)
     {
-        if (log) { Debug.Log("(Controller) refreshing skin based parameters for skin " + skin + (Capable != null ? $"(on capable {Capable.ID})" : "")); }
+        // if (log) { Debug.Log("(Controller) refreshing skin based parameters for skin " + skin + (Capable != null ? $"(on capable {Capable.ID})" : "")); }
 
         // on refresh le see through pour remettre la tete bien centrée
         see_through.Refresh(skin);
@@ -408,7 +407,7 @@ public class Controller : MonoBehaviour
     // HANDLE DESPAWN
     public void handle_capable_despawned(CapableData data)
     {
-        if (log) { Debug.Log($"(Controller) capable with id {data.id} despawned, uncontrolling it if it was controlled"); }
+        // if (log) { Debug.Log($"(Controller) capable with id {data.id} despawned, uncontrolling it if it was controlled"); }
         Uncontrol(data.id);
     }
 
@@ -451,7 +450,10 @@ public class Controller : MonoBehaviour
         // ? should we fire events here ?
         stack.Clear();
     }
-
+    private void OnDestroy()
+    {
+        Debug.LogWarning($"(Controller) OnDestroy called holy shit that's terrible, fear the Controller.LazyInstance error log muahahah");
+    }
 
     ///
     //
@@ -475,8 +477,9 @@ public class Controller : MonoBehaviour
         saved_data = data;
 
         // load the data & control the initial capable
-        LoadData(data.Duplicate());
-
+        ControllerData duplicated_data = data.Duplicate();
+        if (log) { Debug.Log($"(Controller) Controller data ready to be loaded : {duplicated_data.GetDetails()}"); }
+        LoadData(duplicated_data);
 
         // register to CapableEngine despawn event
         CapableEngine.LazyInstance.OnCapableDespawned += handle_capable_despawned;

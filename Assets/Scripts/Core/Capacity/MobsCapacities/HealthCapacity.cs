@@ -134,7 +134,7 @@ public class HealthCapacity : Capacity
             if (Capable.HasEffect(Effect.CantDie)) { health = MaxHealth; return true; } // we can't die
 
             // trigger OnDie event
-            OnDie?.Invoke(Capable.data);
+            Die();
 
             // if we are part of the capable system we call CapableSystem.SwitchToCorpse(Capable)
             if (CapableBank.Instance.HasCapable(Capable))
@@ -154,12 +154,16 @@ public class HealthCapacity : Capacity
     }
 
     // DIE
-    /* public virtual void Die()
+    public virtual void Die()
     {
+        // we emit some xp
+        if (TryGetSiblingCapacity(out ExpCapacity exp_capacity))
+        {
+            exp_capacity.ReleaseXP();
+        }
 
-        // if (Controller.Capable != Capable) { return; }
-        // Controller.LazyInstance.Uncontrol();
-    } */
+        OnDie?.Invoke(Capable.data);
+    }
 
 
     // HEALING

@@ -282,7 +282,7 @@ public class Perso : Movable, Hacker
     }
 
     // XP
-    public void addXP(int count)
+    /* public void addXP(int count)
     {
         xp += count;
         total_xp += count;
@@ -310,7 +310,7 @@ public class Perso : Movable, Hacker
 
         // on affiche un texte de level up
         FloatingDmgProvider.Instance.TextManager.addFloatingText("LEVEL " + level.ToString(), transform.position + new Vector3(0, 0.5f, 0), "yellow");
-    }
+    } */
 
     // HEAL & DAMAGE CALLBACKS
     public void OnLifeAdded(float life)
@@ -328,6 +328,10 @@ public class Perso : Movable, Hacker
         // we make a little screenshake if perso
         float shake_magnitude = damage / GetCapacity<HealthCapacity>().Health;
         CameraShaker.Instance.Shake(shake_magnitude);
+
+        // we shake the colors of the life bar
+        if (!UI_Manager.Instance.IsOnHUD()) { return; }
+        UI_Manager.Instance.GetPool<UI_HUD>().PersoTookDamage();
     }
     public void OnDie(CapableData capable_data)
     {

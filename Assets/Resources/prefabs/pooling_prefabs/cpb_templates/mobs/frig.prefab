@@ -290,6 +290,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!1 &6094739574941988477
 GameObject:
@@ -380,6 +381,7 @@ GameObject:
   - component: {fileID: 1982530335173329727}
   - component: {fileID: 8817564043264294159}
   - component: {fileID: 81736738766840830}
+  - component: {fileID: 4377749523470368178}
   m_Layer: 23
   m_Name: frig
   m_TagString: IA
@@ -459,7 +461,7 @@ MonoBehaviour:
       skin: 
       anim_capacity_priorities: []
       current_capacity: 
-      material_path: 
+      material_name: 
       sorting_layer_id: 0
       order_in_layer: 0
       never_flip: 0
@@ -499,6 +501,19 @@ MonoBehaviour:
     - bob
     prey_skins: []
   log_actions: 0
+--- !u!114 &4377749523470368178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8595018692463036030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b38a876e5f6fba4ab1dde6d23fd0f96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
+  capacity_template_id: mob_exp
 --- !u!1001 &608473215958954608
 PrefabInstance:
   m_ObjectHideFlags: 0

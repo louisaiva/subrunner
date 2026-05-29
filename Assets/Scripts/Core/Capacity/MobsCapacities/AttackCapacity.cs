@@ -459,6 +459,14 @@ public class AttackCapacity : CooldownCapacity
         base.UnloadData();
     }
 
+    // SAVE DYNAMIC DATA
+    public override void SaveDynamicData()
+    {
+        base.SaveDynamicData();
+        if (data is not AttackData adata) { return; }
+        adata.damage = damage;
+    }
+
     // GET STATIC DATA
     public override CapacityData GetStaticData()
     {

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,9 +16,9 @@ public class UI_WorldSelector : UI_SlottablePool, Scrollable
     public UI_Scroller Scroller => scroller;
 
     // BEFORE SHOWING
-    protected override void before_adding_to_stack()
+    protected override void before_showing()
     {
-        base.before_adding_to_stack();
+        base.before_showing();
 
         // clear the worlds slots if any
         foreach (UI_WorldSlot world_slot in world_slots)
@@ -26,9 +27,10 @@ public class UI_WorldSelector : UI_SlottablePool, Scrollable
         }
         world_slots.Clear();
 
-        // we create the world slots
+        // create the world slots
+        WorldManager.Instance.RefreshExistingWorldsData();
         List<WorldData> existing_worlds_data_list = WorldManager.Instance.ExistingWorlds;
-
+        existing_worlds_data_list.Sort((a, b) => b.last_update_date.CompareTo(a.last_update_date)); // we sort the worlds by last ~~played~~ date
         foreach (WorldData world_data in existing_worlds_data_list)
         {
             UI_WorldSlot world_slot = Instantiate(world_slot_prefab, world_slots_container);

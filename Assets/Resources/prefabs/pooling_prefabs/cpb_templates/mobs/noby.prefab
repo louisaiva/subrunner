@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1154475264749697582}
   - component: {fileID: 7208066328217349858}
   - component: {fileID: 5556932218411784815}
+  - component: {fileID: 284921253093014249}
   m_Layer: 23
   m_Name: noby
   m_TagString: Boss
@@ -28,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3780083747204790414}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -260,6 +261,19 @@ MonoBehaviour:
     - qwin
     - dev
   log_actions: 0
+--- !u!114 &284921253093014249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3780083747204790414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b38a876e5f6fba4ab1dde6d23fd0f96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
+  capacity_template_id: mob_exp
 --- !u!1 &8838388296438177925
 GameObject:
   m_ObjectHideFlags: 0

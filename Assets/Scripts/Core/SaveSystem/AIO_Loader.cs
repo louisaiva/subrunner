@@ -29,13 +29,13 @@ public class AIO_Loader : MonoBehaviour
     private Dictionary<string, Level> loaded_levels = new Dictionary<string, Level>(); // key is level_id, value is the loaded level
 
     [Header("Logs")]
-    [SerializeField] private bool log = false;
+    // [SerializeField] private bool log = false;
     [SerializeField] private bool hide_no_level_warning = false;
-    public Loggable<AIO_Loader> log_load_worldloaded;
+    public Loggable<AIO_Loader> log_loading;
 
     public async Task<Level> LoadAIO_Level_NoWorldLoaded(string world_id, string level_id, bool navmesh_only = false)
     {
-        if (log) { Debug.Log($"(AIO_Loader) Loading level '{level_id}' for world '{world_id}' (No World Loaded)"); }
+        log_loading.Log($"(AIO_Loader) Loading level '{level_id}' for world '{world_id}' (No World Loaded)");
 
         // CLEAR OLD DATA
         await ClearCache_NoWorldLoaded();
@@ -59,19 +59,19 @@ public class AIO_Loader : MonoBehaviour
         CapableEngine.Instance.LoadWorldCapablesData(world_id);
         CapacityEngine.Instance.LoadWorldCapacitiesData(world_id);
 
-        log_load_worldloaded.LogExtended($"Loading Rooms & Chunks datas into the engines from world + level");
+        log_loading.LogExtended($"Loading Rooms & Chunks datas into the engines from world + level");
         List<RoomData> rooms_data = RoomEngine.Instance.LoadRoomsData(world_id, level_data.rooms_ids);
 
         // load the rooms
         List<Chunk> chunks = load_rooms_and_chunks(rooms_data, aio_level.transform, navmesh_only : navmesh_only);
-        if (chunks.Count == 0) { log_load_worldloaded.Warning($"No chunks loaded for level '{level_id}' in world '{world_id}'"); }
+        if (chunks.Count == 0) { log_loading.Warning($"No chunks loaded for level '{level_id}' in world '{world_id}'"); }
 
         return aio_level;
     }
     public Level LoadAIO_Level(string world_id, string level_id, bool navmesh_only = false)
     {
 
-        log_load_worldloaded.Log($"Loading level '{level_id}' for world '{world_id}' (World Loaded)");
+        log_loading.Log($"Loading level '{level_id}' for world '{world_id}' (World Loaded)");
         // if (log) { Debug.Log($"(AIO_Loader) Loading level '{level_id}' for world '{world_id}' (World Loaded)"); }
 
         // CLEAR OLD DATA
@@ -83,26 +83,26 @@ public class AIO_Loader : MonoBehaviour
         LevelData level_data = LevelEngine.LoadWorldLevelData(world_id, level_id);
         if (level_data == null)
         {
-            log_load_worldloaded.Warning($"No level data found for level '{level_id}' in world '{world_id}'");
+            log_loading.Warning($"No level data found for level '{level_id}' in world '{world_id}'");
             // if (!hide_no_level_warning) { Debug.LogWarning($"(AIO_Loader) No level data found for level '{level_id}' in world '{world_id}'"); }
             return null;
         }
 
         // load the level
-        log_load_worldloaded.LogExtended($"Loading level");
+        log_loading.LogExtended($"Loading level");
         Level aio_level = load_level(level_data);
-        log_load_worldloaded.LogExtended($"Level loaded with success !");
+        log_loading.LogExtended($"Level loaded with success !");
 
         // BECAUSE we are in world loaded mode, rooms & capables & capacities data
         // should already be loaded so we don't load them again
 
         // load the rooms
-        log_load_worldloaded.LogExtended($"Getting rooms data from level data");
+        log_loading.LogExtended($"Getting rooms data from level data");
         List<RoomData> rooms_data = RoomEngine.Instance.GetRoomsDataFromIDs(level_data.rooms_ids);
-        log_load_worldloaded.LogExtended($"{rooms_data.Count} rooms data found, loading rooms");
+        log_loading.LogExtended($"{rooms_data.Count} rooms data found, loading rooms");
         List<Chunk> chunks = load_rooms_and_chunks(rooms_data, aio_level.transform, navmesh_only);
-        if (chunks.Count == 0) { log_load_worldloaded.Warning($"No chunks loaded for level '{level_id}' in world '{world_id}'"); }
-        log_load_worldloaded.LogExtended($"Level & Rooms & Chunks loaded with success !");
+        if (chunks.Count == 0) { log_loading.Warning($"No chunks loaded for level '{level_id}' in world '{world_id}'"); }
+        log_loading.LogExtended($"Level & Rooms & Chunks loaded with success !");
 
         return aio_level;
     }
@@ -114,7 +114,7 @@ public class AIO_Loader : MonoBehaviour
         Level new_level = Instantiate(level_prefab, level_parent);
         new_level.data = data;
         new_level.gameObject.name = data.id;
-        if (log) { Debug.Log($"(AIO_Loader) Level '{new_level.ID}' loaded"); }
+        log_loading.Log($"(AIO_Loader) Level '{new_level.ID}' loaded");
         loaded_levels[data.id] = new_level;
         return new_level;
     }
@@ -128,14 +128,14 @@ public class AIO_Loader : MonoBehaviour
         foreach (RoomData data in rooms_data)
         {
             // load the room
-            log_load_worldloaded.LogSpecific($"Loading room '{data.id}'");
-            Room room = load_room(data, rooms_parent, ref chunks);
+            log_loading.LogSpecific($"Loading room '{data.id}'");
+            Room room = load_room(data, rooms_parent, ref chunks, navmesh_only : navmesh_only);
             if (room == null)
             {
-                log_load_worldloaded.Error($"Failed to load room with id '{data.id}'");
+                log_loading.Error($"Failed to load room with id '{data.id}'");
                 continue;
             }
-            log_load_worldloaded.LogSpecific($"Room '{data.id}' loaded successfully");
+            log_loading.LogSpecific($"Room '{data.id}' loaded successfully");
         }
 
 
@@ -149,10 +149,10 @@ public class AIO_Loader : MonoBehaviour
         // load the data
         new_room.data = data;
         new_room.gameObject.name = data.id;
-        log_load_worldloaded.LogVerySpecific($"Room '{data.id}' basic data loaded");
+        log_loading.LogVerySpecific($"Room '{data.id}' basic data loaded");
 
         // build the tilemaps
-        log_load_worldloaded.LogVerySpecific($"Loading its tilemaps");
+        log_loading.LogVerySpecific($"Loading its tilemaps");
         RoomEngine.Instance.TilemapEngine.BuildTilemapsForAIO_Room(new_room);
 
         // and get the chunks of the room
@@ -160,24 +160,24 @@ public class AIO_Loader : MonoBehaviour
         foreach (ChunkData cdata in chunks_data)
         {
             // load the chunk
-            log_load_worldloaded.LogVerySpecific($"Loading chunk '{cdata.id}'");
+            log_loading.LogVerySpecific($"Loading chunk '{cdata.id}'");
             Chunk chunk = load_chunk(cdata, new_room.transform);
             if (chunk == null)
             {
-                log_load_worldloaded.Error($"Failed to load chunk with id '{cdata.id}'");
+                log_loading.Error($"Failed to load chunk with id '{cdata.id}'");
                 continue;
             }
-            log_load_worldloaded.LogVerySpecific($"Chunk '{cdata.id}' loaded successfully");
+            log_loading.LogVerySpecific($"Chunk '{cdata.id}' loaded successfully");
             loaded_chunks.Add(chunk);
 
-            log_load_worldloaded.LogVerySpecific($"Now Loading its capables");
+            log_loading.LogVerySpecific($"Now Loading its capables");
             load_capables(cdata.capables_ids, level_transform.Find("Capables"));
             if (navmesh_only) { continue; } // we don't load movables if we are in navmesh only mode
-            log_load_worldloaded.LogVerySpecific($"Now Loading its movables");
+            log_loading.LogVerySpecific($"Now Loading its movables");
             load_capables(cdata.movables_ids, level_transform.Find("Movables"));
         }
 
-        log_load_worldloaded.LogVerySpecific($"Room '{data.id}' loaded successfully with its tilemaps !");
+        log_loading.LogVerySpecific($"Room '{data.id}' loaded successfully with its tilemaps !");
         loaded_rooms.Add(data.id);
         return new_room;
     }
@@ -195,18 +195,18 @@ public class AIO_Loader : MonoBehaviour
         new_room.ChunkCollider.SetPath(0, data.collider_points.ToArray());
         new_room.ChunkCollider.enabled = true;
 
-        log_load_worldloaded.LogVerySpecific($"Room '{data.id}' basic data loaded + colliders");
+        log_loading.LogVerySpecific($"Room '{data.id}' basic data loaded + colliders");
 
 
         // load the lights
-        log_load_worldloaded.LogVerySpecific($"Loading its lights");
+        log_loading.LogVerySpecific($"Loading its lights");
         ChunkEngine.Instance.LightsEngine.LoadLights_AIO(data.lights_data, data.id, new_room.LightsParent);
 
         // if add_roomgraph_neighbour_node is true, we add a node for each neighbour of the room in the roomgraph
-        log_load_worldloaded.LogVerySpecific(add_roomgraph_neighbour_node, $"Adding neighbour node");
+        log_loading.LogVerySpecific(add_roomgraph_neighbour_node, $"Adding neighbour node");
         if (add_roomgraph_neighbour_node) { Instantiate(neighbour_node_prefab, new_room.transform); }
 
-        log_load_worldloaded.LogVerySpecific($"Room '{data.id}' loaded successfully with its tilemaps and lights !");
+        log_loading.LogVerySpecific($"Room '{data.id}' loaded successfully with its tilemaps and lights !");
         loaded_rooms.Add(data.id);
         return new_room;
     }
@@ -219,10 +219,15 @@ public class AIO_Loader : MonoBehaviour
         foreach (string id in capables_ids)
         {
             if (loaded_capables.Contains(id)) { continue; }
+            if (Controller.Capable != null && id == Controller.Capable.ID)
+            {
+                log_loading.Warning($"Capable with id '{id}' is the currently controlled capable, skipping it to avoid conflicts");
+                continue;
+            }
             Capable capable = CapableEngine.Instance.LoadCapableInstantly(id);
             if (capable == null)
             {
-                Debug.LogWarning($"(AIO_Loader) Capable with id '{id}' not found, skipping it");
+                log_loading.Warning($"Capable with id '{id}' not found, skipping it");
                 continue;
             }
             loaded_capables.Add(id);

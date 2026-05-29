@@ -276,6 +276,11 @@ using UnityEngine;
         {
             if (Logger.LazyInstance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { log_feeding += $"\n - Found matching serialized capable target data with capable ID {capable_data.capable_id}."; }
 
+            if (string.IsNullOrEmpty(capable_data.capable_id))
+            {
+                if (Logger.LazyInstance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { log_feeding += $"\n - But serialized capable target data has no capable ID. We cannot feed this target data to the runtime world data."; Debug.LogWarning(log_feeding); }
+                return;
+            }
             CapableData capdata = CapableEngine.Instance.GetCapableDataFromID(capable_data.capable_id);
             if (capdata is null)
             {
@@ -313,6 +318,8 @@ using UnityEngine;
     /// <param name="state"></param>
     public void ClearAndPopulateRuntimeData(ILocalWorldData world_data)
     {
+        Debug.Log($"(MotorData) Clear & Populate runtime world data for : {GetDetails()}");
+
         // we clear the runtime world data
         world_data.States.Clear();
         world_data.Targets.Clear();
@@ -368,6 +375,7 @@ using UnityEngine;
             if (key_type == null) { continue; }
 
             // we try to get the capable data
+            if (string.IsNullOrEmpty(capable_data.capable_id)) { continue; }
             CapableData capdata = CapableEngine.Instance.GetCapableDataFromID(capable_data.capable_id);
             if (capdata == null) { continue; }
 
@@ -422,7 +430,7 @@ using UnityEngine;
         details += $"    - local world capables : \n";
         foreach (var target in local_world_capables)
         {
-            details += $"      - {target.KeyName} : {target.capable_id} @ {target.Position}\n";
+            details += $"      - {target.KeyName} : targeted capable id :'{target.capable_id}' at position {target.Position}\n";
         }
         return details;
     }

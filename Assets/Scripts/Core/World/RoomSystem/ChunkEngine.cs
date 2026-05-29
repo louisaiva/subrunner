@@ -177,9 +177,7 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
         capables_attach_times.Clear();
 
         // clear sub systems caches
-        // TilemapEngine.ClearTilemaps(log);
         LightsEngine.ClearLights(log);
-        // await DoorEngine.UnloadWorldData(log);
 
         if (log) { Debug.Log($"(ChunkEngine) CHUNK ENGINE SUCCESSFULLY UNLOADED"); }
     }
@@ -689,6 +687,12 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
         _ = LoadChunks(chunks_to_load.ToArray());
         _ = UnloadChunks(chunks_to_unload.ToArray());
     }
+    public void InitPlayerChunk(string player_chunk)
+    {
+        // ! we need to know FOR SURE that the player chunk is the right one before calling this method ?
+        if (!chunks_data.ContainsKey(player_chunk)) { Debug.LogError($"(ChunkEngine) InitPlayerChunk : chunk data not found for id: {player_chunk}"); return; }
+        handle_perso_changed_chunk(null, chunks_data[player_chunk]);
+    }
 
 
     ///
@@ -943,8 +947,7 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
                 string capable_id = capable.GetStaticID();
                 if (added_capable_ids.Contains(capable_id)) { continue; } // already added somewhere
 
-                // . verify not Perso
-                if (capable is Perso) { continue; }
+                if (capable is Perso && capable.transform.parent == null) { continue; } // verify if perso on the main scene, which means it is a debug test perso (outsider of all engines)
 
                 // . verify if not grabbed item
                 if (capable is Item item && item.GetStaticGrabbed()) { continue; }

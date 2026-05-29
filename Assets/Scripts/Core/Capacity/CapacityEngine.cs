@@ -60,6 +60,9 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
     public bool log_loading_extended = false;
     public bool hide_log_no_data_found = false;
 
+    [Header("Logs Saving")]
+    public bool log_saving = false;
+
 
     ///
     //
@@ -254,7 +257,7 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
 
     ///
     //
-    /// LOAD / UNLOAD CAPACITIES 
+    /// LOAD / UNLOAD CAPACITIES / SAVE DYNAMIC DATA
     //
     ///
 
@@ -346,6 +349,19 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
     }
 
 
+    // SAVE LOADED CAPACITIES DYNAMIC DATA
+    public void SaveLoadedCapacitiesDynamicData()
+    {
+        List<Capacity> capacities = CapacityBank.Instance.GetAllLoadedCapacities();
+        foreach (Capacity capacity in capacities)
+        {
+            if (capacity == null) { continue; }
+            capacity.SaveDynamicData();
+        }
+        if (log_saving) { Debug.Log($"(CapacitySystem) Saved dynamic data for {capacities.Count} loaded capacities"); }
+    }
+
+
 
     ///
     //
@@ -423,5 +439,15 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         if (!hide_log_no_data_found) { Debug.LogWarning("(CapacityEngine - GetCapacityData) Capacity data not found for id: " + id); }
         return null;
     }
-
+    public List<CapacityData> GetCapacitiesDataFromIDs(List<string> ids)
+    {
+        List<CapacityData> datas = new List<CapacityData>();
+        for (int i = 0; i < ids.Count; i++)
+        {
+            string id = ids[i];
+            CapacityData data = GetCapacityData(id);
+            if (data != null) { datas.Add(data); }
+        }
+        return datas;
+    }
 }

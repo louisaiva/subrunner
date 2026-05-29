@@ -193,7 +193,7 @@ public class World : BSOD_System<World>
         ///
         //  4. WE LOAD THE CONTROLLER
         /* */
-        load_status = WorldLoadStatus.LoadingPlayerLevel;
+        load_status = WorldLoadStatus.LoadingController;
         ///
         if (log_loading_extended) { Debug.Log($"(World) ----------------------------------- LOADING CONTROLLER : (previous phase duration: {Time.realtimeSinceStartup - phase_time}s)"); }
         phase_time = Time.realtimeSinceStartup;
@@ -229,13 +229,21 @@ public class World : BSOD_System<World>
 
 
         ///
-        //  5. WE SUCCESSFULLY LOADED THE WORLD !
+        //  6. WE SUCCESSFULLY LOADED THE WORLD !
         /* */ load_status = WorldLoadStatus.Loaded;
         ///
         if (log)
         {
             Debug.Log($"(World) ----------------------------------- WORLD LOADED : (in {Time.realtimeSinceStartup - start_time}s{(!log_loading_extended ? ")" : $", previous phase duration: {Time.realtimeSinceStartup - phase_time}s)")}");
         }
+        // we make sure the first chunk loaded are the one of the player
+        string chunk_id = Controller.LazyInstance.data != null ? Controller.LazyInstance.data.player_chunk : null;
+        if (string.IsNullOrEmpty(chunk_id))
+        {
+            if (log) { Debug.LogWarning($"(World) No player chunk defined in controller data, cannot init player chunk."); }
+            return;
+        }
+        else { ChunkEngine.LazyInstance.InitPlayerChunk(chunk_id); }
     }
     private string extract_world_json(string world_id)
     {
@@ -444,6 +452,21 @@ public class World : BSOD_System<World>
     public string icon_path;
     public string icon_name;
     public Color color;
+
+    public void UpdateTime(bool just_created = false)
+    {
+        game_version = Application.version;
+        last_update_date = DateTime.Now.ToString();
+        creation_date = (just_created || string.IsNullOrEmpty(creation_date)) ? last_update_date : creation_date;
+
+        // check if we just created it or we don't have any icon, then we set random color and default icon
+        if (just_created || string.IsNullOrEmpty(icon_path))
+        {
+            color = WorldManager.LazyInstance.GetRandomWorldColor();
+            icon_path = WorldManager.LazyInstance.GetRandomIconPath(out string icon_name);
+            this.icon_name = icon_name;
+        }
+    }
 }
 
 [Serializable] public enum WorldLoadStatus
@@ -452,6 +475,7 @@ public class World : BSOD_System<World>
     LoadingWorld,
     LoadingEngines,
     WaitingFrame,
+    LoadingController,
     LoadingPlayerLevel,
     Loaded,
     Unloading

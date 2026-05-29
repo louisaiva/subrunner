@@ -253,5 +253,5 @@ public class CapacityBank : MonoBehaviour
     {
         return GetLoadedCapacity(data.id);
     }
-
+    public List<Capacity> GetAllLoadedCapacities() { return loaded_capacities; }
 }

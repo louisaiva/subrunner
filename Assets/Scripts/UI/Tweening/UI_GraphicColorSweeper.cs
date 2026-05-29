@@ -12,8 +12,32 @@ public class UI_GraphicColorSweeper : MonoBehaviour
     [SerializeField] private bool one_shot = false; // disables itself after first sweep if true
     private Color _base_color;
     private Sequence? sequence = null;
+    [SerializeField] private List<Graphic> other_graphics_to_sweep;
+    private List<Sequence> other_running_sequences = new List<Sequence>();
 
     [SerializeField] private Loggable<UI_GraphicColorSweeper> log = new Loggable<UI_GraphicColorSweeper>();
+
+    public void Run()
+    {
+        // if we are not enabled, we enable and that's it ! (the sweep will start in the update)
+        if (!enabled)
+        {
+            enabled = true;
+            return;
+        }
+
+        // else we were already enabled, we check if we have a running sequence
+        clean_sequences();
+
+        // we start a new sweep
+        run_sequences();
+        time_until_next_sweep = 0f;
+    }
+    public void Stop()
+    {
+        // we disable, and that's it !
+        enabled = false;
+    }
 
     private void OnEnable()
     {
@@ -21,11 +45,9 @@ public class UI_GraphicColorSweeper : MonoBehaviour
     }
     private void OnDisable()
     {
-        // we stop the sequence if we have one
-        if (sequence != null) { sequence.Value.Stop(); }
-
+        // we stop the sequences
+        clean_sequences();
         time_until_next_sweep = 0f;
-        sequence = null;
         graphic.color = _base_color;
     }
 
@@ -48,7 +70,7 @@ public class UI_GraphicColorSweeper : MonoBehaviour
 
         if (sequence == null)
         {
-            sequence = sweep.RunSweep(_base_color, graphic, ref log);
+            run_sequences();
             time_until_next_sweep = 0f;
             return;
         }
@@ -63,6 +85,26 @@ public class UI_GraphicColorSweeper : MonoBehaviour
             return;
         }
     }
+
+
+    // run / cleaning sequences
+    private void run_sequences()
+    {
+        sequence = sweep.RunSweep(_base_color, graphic, ref log);
+        foreach (Graphic g in other_graphics_to_sweep)
+        {
+            Sequence s = sweep.RunSweep(_base_color, g, ref log);
+            other_running_sequences.Add(s);
+        }
+    }
+    private void clean_sequences()
+    {
+        if (sequence != null) { sequence.Value.Stop(); }
+        foreach (Sequence s in other_running_sequences) { s.Stop(); }
+        other_running_sequences.Clear();
+        sequence = null;
+    }
+
 }
 
 [Serializable] public class ColorSweep

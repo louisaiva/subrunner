@@ -97,51 +97,33 @@ public class XPProvider : Singleton<XPProvider>
     }
 
     // TRIGGERS
-    private void OnParticleTrigger()
+    private List<ParticleCollisionEvent> triggered_particles = new List<ParticleCollisionEvent>();
+    private void OnParticleCollision(GameObject receiver)
     {
-        if (Controller.Perso == null) { return; } // no player, no trigger
+        if (log_triggers) { Debug.Log("(XPProvider) Particles are colliding with : " + receiver.name); }
+
+        // check if receiver has a ExpCapacity
+        if (!receiver.TryGetComponent(out Capable capable)) { return; }
+        if (!capable.TryGetCapacity(out ExpCapacity exp_capacity)) { return; }
 
         // on récupère les particules
-        int triggeredParticles = ParticuleSystem.GetTriggerParticles(ParticleSystemTriggerEventType.Enter, particles);
-
-        if (log_triggers) { Debug.Log("(XPProvider) Triggered particles: " + triggeredParticles); }
-
-        int life_bonus = 0;
-        int xp_bonus = 0;
-
-        // on change la life des particules
-        for (int i = 0; i < triggeredParticles; i++)
+        if (log_triggers)
         {
-            ParticleSystem.Particle p = particles[i];
-
-            // on regarde la couleur de la particule
-            Color color = p.GetCurrentColor(ParticuleSystem);
-            if (color == life_color)
-            {
-                // on ajoute de la life
-                life_bonus += 1;
-            }
-            else
-            {
-                // on ajoute de l'xp
-                xp_bonus += 1;
-            }
-
-            // on change la life de la particule
-            p.remainingLifetime = 0;
-            particles[i] = p;
+            int triggeredParticles = ParticuleSystem.GetCollisionEvents(receiver, triggered_particles);
+            Debug.Log("(XPProvider) Colliding particles: " + triggeredParticles);
         }
 
-        // on applique les changements
-        ParticuleSystem.SetTriggerParticles(ParticleSystemTriggerEventType.Enter, particles);
-
-
-
-        // on ajoute l'xp au player
-        if (xp_bonus > 0) { Controller.Perso.addXP(xp_bonus); }
-
-        // on ajoute de la life au player
-        if (life_bonus > 0) { Controller.Perso.GetCapacity<HealthCapacity>().Heal(life_bonus); }
+        exp_capacity.AddXP(1);
     }
 
+
+    // REGISTER TRIGGERS
+    public void RegisterTrigger(Collider2D collider)
+    {
+        ParticuleSystem.trigger.AddCollider(collider);
+    }
+    public void UnregisterTrigger(Collider2D collider)
+    {
+        ParticuleSystem.trigger.RemoveCollider(collider);
+    }
 }

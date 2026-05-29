@@ -76,6 +76,8 @@ public class UI_Pool : MonoBehaviour
 
         // on fait les actions avant showing
         if (!was_stacked) { before_adding_to_stack(); }
+        before_showing();
+
 
         // on lance l'affichage
         if (log_extended) { Debug.Log($"(UI_Pool - ShowCoroutine) starting show coroutine : {Reference}"); }
@@ -118,6 +120,7 @@ public class UI_Pool : MonoBehaviour
 
         // on removed to stack
         after_removed_from_stack();
+        after_hiding();
 
         // on clear la transition
         current_transition = null;
@@ -142,6 +145,8 @@ public class UI_Pool : MonoBehaviour
         yield return current_transition;
         if (log_extended) { Debug.Log($"(UI_Pool - StackHideCoroutine) hide coroutine succeeded ! : {Reference}"); }
 
+        after_hiding();
+
         // on clear la transition
         current_transition = null;
         Showed = true;
@@ -162,6 +167,7 @@ public class UI_Pool : MonoBehaviour
         }
 
         before_adding_to_stack();
+        before_showing();
 
         // on lance l'affichage
         if (log_extended) { Debug.Log($"(UI_Pool - StackShowCoroutine) starting show coroutine : {Reference}"); }
@@ -275,6 +281,11 @@ public class UI_Pool : MonoBehaviour
     protected virtual void before_adding_to_stack() { }  // not called when a stacked pool is unstacked (this pool get focus again) since it was stacked the whole time
     protected virtual void after_added_to_stack() { } // same, happen after the stack adding
     protected virtual void after_removed_from_stack() { } // same, not called when another pool is stacked on top since this pool is still stacked
+
+
+    // EVENTS
+    protected virtual void before_showing() { }  // always called before showing, even if it was already stacked
+    protected virtual void after_hiding() { } // same, happen after the hiding
 
 
 

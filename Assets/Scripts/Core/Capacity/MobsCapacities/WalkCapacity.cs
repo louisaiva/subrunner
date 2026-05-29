@@ -232,6 +232,8 @@ public class WalkCapacity : Capacity
         if (this.data is not WalkData wdata) { return; }
         wdata.walk_percentage_target = this.walk_percentage_target;
         wdata.is_running = this.is_running;
+        wdata.max_walk_speed = this.max_walk_speed;
+        wdata.max_run_speed = this.max_run_speed;
     }
 
     // GET STATIC DATA

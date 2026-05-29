@@ -69,13 +69,10 @@ public class UI_LifeXPHandler : MonoBehaviour
     }
     private void update_xp_fill()
     {
-
         // on récupère les infos du perso
-        int max_xp = Controller.Perso.xp_to_next_level;
-        float xp = (float) Controller.Perso.xp;
+        float xp_percent = Controller.Perso.GetCapacity<ExpCapacity>().XPPourcent;
 
         // on met à jour la taille du fill
-        float xp_percent = xp / max_xp;
         float xp_width = xp_fill_max_width * xp_percent;
 
         // on met à jour la taille du fill

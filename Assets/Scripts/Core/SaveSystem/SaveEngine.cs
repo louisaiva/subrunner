@@ -61,12 +61,125 @@ public class SaveEngine : MonoBehaviour
     // public Loggable<Capable> log_gsd_capacity;
 
 
+
     ///
     //
-    /// SAVING STATIC OBJECTS
+    /// MAIN ENTRY POINTS
     //
     ///
 
+
+    /// <summary>
+    /// this method is the main saving method at
+    /// runtime. For now it only saves all data to their files,
+    /// but in the future we can split the json saving through a
+    /// specific pipeline that only saves the variables with custom attributes
+    /// that differ from the template one :D -> faster saving time + smaller save file
+    /// </summary>
+    public static void SaveDynamicWorld()
+    {
+        string world_id = WorldManager.StaticSelectedWorld;
+        if (string.IsNullOrEmpty(world_id))
+        {
+            slog?.Error("No world selected, cannot save dynamic world.");
+            return;
+        }
+        slog?.Log($"Saving Dynamic World '{world_id}'");
+
+        // saving the world data
+        WorldData world_data = World.LazyInstance.data;
+        SaveWorldData(world_data);
+        slog?.Log($"Saved world data : '{world_id}'");
+
+        // controller
+        ControllerData controller_data = Controller.LazyInstance.data;
+        SaveControllerData(controller_data, world_id);
+        slog?.Log($"Saved controller data : '{controller_data.controlled_capable_id}'");
+
+        // levels
+        List<string> rooms_ids = new List<string>();
+        int levels_count = world_data.levels_ids != null ? world_data.levels_ids.Count : 0;
+        string tmp_log = "\n";
+        for (int i = 0; i < levels_count; i++)
+        {
+            LevelData level_data = LevelEngine.LazyInstance.GetLevelDataFromID(world_data.levels_ids[i]);
+            SaveLevelData(level_data, world_id);
+            tmp_log += $"- '{level_data.id}' -------------- {level_data.rooms_ids.Count} rooms\n";
+            rooms_ids.AddRange(level_data.rooms_ids);
+        }
+        slog?.Log($"Saved {levels_count} levels :{tmp_log}");
+
+        // rooms
+        List<string> chunks_ids = new List<string>();
+        List<RoomData> rooms_data = RoomEngine.LazyInstance.GetRoomsDataFromIDs(rooms_ids);
+        tmp_log = "\n";
+        for (int i = 0; i < rooms_data.Count; i++)
+        {
+            SaveRoomData(rooms_data[i], world_id);
+            tmp_log += $"- '{rooms_data[i].id}' -------------- {rooms_data[i].chunks_ids.Count} chunks\n";
+            chunks_ids.AddRange(rooms_data[i].chunks_ids);
+        }
+        slog?.Log($"Saved {rooms_data.Count} rooms :{tmp_log}");
+
+        // chunks
+        List<string> capables_ids = new List<string>();
+        List<ChunkData> chunks_data = ChunkEngine.LazyInstance.GetChunksDataFromIDs(chunks_ids);
+        tmp_log = "\n";
+        for (int i = 0; i < chunks_data.Count; i++)
+        {
+            SaveChunkData(chunks_data[i], world_id);
+            tmp_log += $"- '{chunks_data[i].id}' -------------- {chunks_data[i].capables_ids.Count} capables  /  {chunks_data[i].movables_ids.Count} movables\n";
+            capables_ids.AddRange(chunks_data[i].capables_ids);
+            capables_ids.AddRange(chunks_data[i].movables_ids);
+        }
+        slog?.Log($"Saved {chunks_data.Count} chunks :{tmp_log}");
+
+
+        // now we save the dynamic data of capables & capacities
+        // so the data we are saving is up to date
+        slog?.Log($"Saving dynamic data of loaded capables and capacities...");
+        CapableEngine.LazyInstance.SaveLoadedCapablesDynamicData();
+        CapacityEngine.LazyInstance.SaveLoadedCapacitiesDynamicData();
+        slog?.Log($"Dynamic data of loaded capables / capacities updated :D");
+
+        // capables
+        // we need to do a while loop until the capables_ids list is real empty
+        // bcz there can be capable in a capable in a capable in a capable etc etc etc
+        // so the max_iterations of the while loop is the highest intrication depth of
+        // capables in the world, but we limit it to 10 just in case (should never happen)
+        List<string> capacities_ids = new List<string>();
+        int iterations = 0;
+        int total_capables = 0;
+        while (capables_ids.Count > 0 && iterations < 10)
+        {
+            iterations++;
+            tmp_log = "\n";
+            List<CapableData> capables_data = CapableEngine.LazyInstance.GetCapablesDataFromIDs(capables_ids);
+            capables_ids.Clear();
+            for (int i = 0; i < capables_data.Count; i++)
+            {
+                SaveCapableData(capables_data[i], world_id);
+                tmp_log += $"- '{capables_data[i].id}' -------------- {(capables_data[i].capacities_ids != null ? capables_data[i].capacities_ids.Count : 0)} capacities  /  {(capables_data[i].inventory != null ? capables_data[i].inventory.ItemsCount() : 0)} items\n";
+                if (capables_data[i].capacities_ids != null) { capacities_ids.AddRange(capables_data[i].capacities_ids); }
+                if (capables_data[i].inventory != null) { capables_ids.AddRange(capables_data[i].inventory.GetAllItemsIds()); }
+            }
+            slog?.Log($"Saved {capables_data.Count} capables ----- iteration {iterations} :{tmp_log}");
+            total_capables += capables_data.Count;
+        }
+        slog?.Log($"Saved total {total_capables} capables in {iterations} iterations.");
+
+        // capacities
+        List<CapacityData> capacities_data = CapacityEngine.LazyInstance.GetCapacitiesDataFromIDs(capacities_ids);
+        tmp_log = "\n";
+        for (int i = 0; i < capacities_data.Count; i++)
+        {
+            SaveCapacityData(capacities_data[i], world_id);
+            tmp_log += $"- '{capacities_data[i].id}'\n";
+        }
+        slog?.Log($"Saved {capacities_data.Count} capacities :{tmp_log}");
+
+        slog?.Log($"Finished dynamic saving of world '{world_id}' !");
+    }
     public static void SaveAIOLevel(Level level, string world_id, bool save_rooms = true, bool save_capables = true)
     {
         // get the level data
@@ -103,6 +216,17 @@ public class SaveEngine : MonoBehaviour
 
         slog?.Log($"Finished saving AIO level '{level.ID}' of world '{world_id}'");
     }
+
+
+
+
+
+    ///
+    //
+    /// SAVING STATIC OBJECTS
+    //
+    ///
+
     public static void SaveRoom(Room room, string world_id)
     {
         s_log_rooms?.Log($"Saving room '{room.ID}' in world '{world_id}'");
@@ -149,7 +273,6 @@ public class SaveEngine : MonoBehaviour
 
 
 
-
     ///
     //
     /// SAVING DATA TO FILES
@@ -159,25 +282,19 @@ public class SaveEngine : MonoBehaviour
     public static void SaveWorldData(WorldData data)
     {
         bool just_created = WorldManager.EnsureWorldDataHierarchy(data.id);
-
-        data.game_version = Application.version;
-        data.last_update_date = DateTime.Now.ToString();
-        data.creation_date = (just_created || string.IsNullOrEmpty(data.creation_date)) ? data.last_update_date : data.creation_date;
-
-        // check if we just created it or we don't have any icon, then we set random color and default icon
-        if (just_created || string.IsNullOrEmpty(data.icon_path))
-        {
-            data.color = WorldManager.LazyInstance.GetRandomWorldColor();
-            data.icon_path = WorldManager.LazyInstance.GetRandomIconPath(out string icon_name);
-            data.icon_name = icon_name;
-        }
+        data.UpdateTime(just_created);
 
         // save the current WorldData to a json file
         string json = JsonUtility.ToJson(data, true);
-        AppManager.SaveJsonToWorldFolder(data.id, "world_data.json", json, log_static);
+        string path = "world_data.json";
+        s_log_rooms?.Log($"Saving WORLD data to path: {path}\n{json}");
+        AppManager.SaveJsonToWorldFolder(data.id, path, json, log_static);
     }
     public static void SaveControllerData(ControllerData data, string world_id)
     {
+        // updating controller with the player level/room/chunk before saving
+        data.UpdatePlayerLevelRoomChunk(slog);
+
         // save the current ControllerData to a json file
         string json = JsonUtility.ToJson(data, true);
         string path = "controller.json";

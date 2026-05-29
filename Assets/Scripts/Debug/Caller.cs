@@ -31,6 +31,7 @@ public class Caller : MonoBehaviour
     public void QuitApp() => AppManager.Instance?.Exit();
     public void BackToTitleScreen() => SceneLoader.Instance?.GoBackToMainMenu();
     public void LoadGame() => SceneLoader.Instance?.LoadGame();
+    public void SaveWorld() => SaveEngine.SaveDynamicWorld();
 
 
     // WORLD MANAGER

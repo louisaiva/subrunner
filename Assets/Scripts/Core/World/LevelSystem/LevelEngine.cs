@@ -233,6 +233,26 @@ public class LevelEngine : BSOD_System<LevelEngine>
     {
         return world_levels.Keys.ToList();
     }
+    public LevelData GetLevelDataFromID(string level_id)
+    {
+        if (!levels_data.ContainsKey(level_id))
+        {
+            if (!hide_no_level_warning) { Debug.LogWarning("(LevelEngine - GetLevelDataFromID) Level data not found for id: " + level_id); }
+            return null;
+        }
+        return levels_data[level_id];
+    }
+    public LevelData GetRoomLevelData(string room_id)
+    {
+        Level level = GetLevelOfRoom(room_id);
+        if (level == null) { return null; }
+        return level.data;
+    }
+    public bool TryGetRoomLevel(string room_id, out LevelData level_data)
+    {
+        level_data = GetRoomLevelData(room_id);
+        return level_data != null;
+    }
 
     // STATIC GETTERS
     public static List<LevelData> LoadWorldLevelsData(string world_id)

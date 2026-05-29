@@ -358,5 +358,5 @@ public class CapableBank : MonoBehaviour
         // -> means we check capables_in_bank because it contains all capables instantiated ever !
         return capables_in_bank.Contains(capable);
     }
-
+    public List<Capable> GetAllLoadedCapables() { return loaded_capables; }
 }

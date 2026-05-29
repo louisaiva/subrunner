@@ -60,6 +60,9 @@ public class CapableEngine : BSOD_System<CapableEngine>
     public bool log_loading_extended = false;
     public bool log_visibility = false;
     public bool hide_log_no_data_found = false;
+
+    [Header("Logs Saving")]
+    public bool log_saving = false;
     
 
 
@@ -976,11 +979,17 @@ public class CapableEngine : BSOD_System<CapableEngine>
     }
 
 
+
+
+    ///
+    //
+    /// UPDATE & UPDATING DATA
+    //
+    ///
+
     // UPDATE
     private float _update_positions_timer = 0f;
     private float update_positions_interval = 1f;
-
-
     private void Update()
     {
         if (!world_data_loaded) { return; }
@@ -1015,6 +1024,17 @@ public class CapableEngine : BSOD_System<CapableEngine>
     }
 
 
+    // SAVE LOADED CAPABLE DYNAMIC DATA
+    public void SaveLoadedCapablesDynamicData()
+    {
+        List<Capable> capables = CapableBank.LazyInstance.GetAllLoadedCapables();
+        foreach (Capable capable in capables)
+        {
+            if (capable == null) { continue; }
+            capable.SaveDynamicData();
+        }
+        if (log_saving) { Debug.Log($"(CapableSystem) Saved dynamic data for {capables.Count} loaded capables"); }
+    }
 
 
 

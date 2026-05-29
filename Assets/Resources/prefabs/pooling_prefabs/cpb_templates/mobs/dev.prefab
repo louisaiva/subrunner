@@ -120,6 +120,7 @@ MonoBehaviour:
   log_frames: 0
   log_assign: 0
   already_assigned: 0
+  visible_on: 0
 --- !u!1 &2816258991335957356
 GameObject:
   m_ObjectHideFlags: 0
@@ -327,6 +328,7 @@ MonoBehaviour:
   log_frames: 0
   log_assign: 0
   already_assigned: 0
+  visible_on: 0
 --- !u!1 &3119456570896208216
 GameObject:
   m_ObjectHideFlags: 0
@@ -447,6 +449,7 @@ MonoBehaviour:
   log_frames: 0
   log_assign: 0
   already_assigned: 0
+  visible_on: 0
 --- !u!1 &4927348604666298117
 GameObject:
   m_ObjectHideFlags: 0
@@ -654,7 +657,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: dev
   <orientation>k__BackingField: D
-  current_capacity: 
   current_anim:
     name: 
     sprites_paths: []
@@ -697,11 +699,14 @@ MonoBehaviour:
     - die
     lock_orientation: 1
     one_shot: 0
+  never_flip: 0
   log: 0
   log_orientation: 0
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
+  visible_on: 1
 --- !u!1 &6094739574941988477
 GameObject:
   m_ObjectHideFlags: 0
@@ -890,6 +895,7 @@ MonoBehaviour:
   log_frames: 0
   log_assign: 0
   already_assigned: 0
+  visible_on: 0
 --- !u!1 &8595018692463036030
 GameObject:
   m_ObjectHideFlags: 0
@@ -901,6 +907,7 @@ GameObject:
   - component: {fileID: 1982530335173329727}
   - component: {fileID: 8817564043264294159}
   - component: {fileID: 8940805219290677501}
+  - component: {fileID: 8553020144775735229}
   m_Layer: 23
   m_Name: dev
   m_TagString: Dev
@@ -982,9 +989,10 @@ MonoBehaviour:
       skin: 
       anim_capacity_priorities: []
       current_capacity: 
-      material_path: 
+      material_name: 
       sorting_layer_id: 0
       order_in_layer: 0
+      never_flip: 0
       layers: []
       local_position: {x: 0, y: 0}
     inventory:
@@ -1026,6 +1034,19 @@ MonoBehaviour:
     - zombo
     - qwin
   log_actions: 0
+--- !u!114 &8553020144775735229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8595018692463036030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b38a876e5f6fba4ab1dde6d23fd0f96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
+  capacity_template_id: mob_exp
 --- !u!1001 &608473215958954608
 PrefabInstance:
   m_ObjectHideFlags: 0

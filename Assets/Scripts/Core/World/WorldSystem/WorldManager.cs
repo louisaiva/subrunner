@@ -29,7 +29,7 @@ public class WorldManager : MonoBehaviour
 
         load_world_icons_paths();
 
-        load_existing_worlds_data();
+        RefreshExistingWorldsData();
     }
 
 
@@ -118,7 +118,7 @@ public class WorldManager : MonoBehaviour
     // CHECK EXISTING WORLDS
     private Dictionary<string, WorldData> existing_worlds_data = new Dictionary<string, WorldData>();
     public List<WorldData> ExistingWorlds { get { return new List<WorldData>(existing_worlds_data.Values); } }
-    private void load_existing_worlds_data()
+    public void RefreshExistingWorldsData()
     {
         existing_worlds_data.Clear();
 
@@ -156,6 +156,7 @@ public class WorldManager : MonoBehaviour
             if (log_world_data_loading_on_awake) { Debug.Log($"(WorldManager) Loaded world data for world_id: {world_id} from path: {world_data_json_path}\n\n{json}"); }
         }
     }
+
 
     // SELECT WORLD
     public void SelectWorld(WorldData world_data)
@@ -318,7 +319,7 @@ public class WorldManager : MonoBehaviour
     public void CreateNewWorld()
     {
         // we ask a popup to enter the world name
-        UI_Manager.Instance.OpenInputPopup("Enter world name", "world", CreateNewWorld);
+        UI_Manager.Instance.OpenInputPopup("Enter world name", "world", CreateNewWorld, dont_auto_close: true); // we do manual closing after it is done
     }
     public void CreateNewWorld(string world_name)
     {
@@ -349,6 +350,8 @@ public class WorldManager : MonoBehaviour
         SaveEngine.SaveControllerData(controller_data, world_name);
 
         if (log_create) { Debug.Log($"(WorldManager) Created new world with world_id: {world_name}"); }
+        UI_Manager.Instance.CloseInputPopup();
+
         if (!auto_load_on_creation) { return; }
         // we select & load the new world
         SelectWorld(new_data);

@@ -159,15 +159,15 @@ public class Door : Capable, Interactable, Openable
     {
         base.Update();
 
-        if (Controller.LazyInstance == null) { return; }
-
         // on met à jour l'orientation de la porte en fonction de la position du perso
         updateOrientation();
     }
     protected void updateOrientation()
     {
+        if (Controller.Capable == null) { return; }
+        
         // on récupère le vecteur entre la porte et le perso
-        Vector2 perso_direction = Controller.LazyInstance.transform.position - transform.position;
+        Vector2 perso_direction = Controller.Capable.transform.position - transform.position;
 
         // l'orientation de la porte tourne toujours le dos au perso !!
         // c'est pour avoir les flèches dans le bon sens

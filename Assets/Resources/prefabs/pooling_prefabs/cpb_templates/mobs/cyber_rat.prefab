@@ -82,6 +82,7 @@ GameObject:
   - component: {fileID: 3884268841172835077}
   - component: {fileID: 7206343197171121091}
   - component: {fileID: 8231662095987882839}
+  - component: {fileID: 9045639320961022118}
   m_Layer: 23
   m_Name: cyber_rat
   m_TagString: Rat
@@ -357,6 +358,19 @@ MonoBehaviour:
     - nobody
     - spider
   log_actions: 0
+--- !u!114 &9045639320961022118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6831872210500143280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b38a876e5f6fba4ab1dde6d23fd0f96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
+  capacity_template_id: mob_exp
 --- !u!1001 &1269164092969273817
 PrefabInstance:
   m_ObjectHideFlags: 0

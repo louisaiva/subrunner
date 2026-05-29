@@ -16,6 +16,41 @@ using UnityEngine;
     // last spawn
     public string last_sofa_id;
 
+    // UpdatePlayerLevelRoomChunk
+    public void UpdatePlayerLevelRoomChunk(Loggable<SaveEngine> slog = null)
+    {
+        if (!ChunkEngine.HasInstance)
+        {
+            slog?.Warning("No ChunkEngine instance, cannot update player level/room/chunk in controller data.");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(controlled_capable_id))
+        {
+            slog?.Warning("No controlled capable id in controller data, cannot update player level/room/chunk.");
+            return;
+        }
+
+        if (!ChunkEngine.LazyInstance.TryGetCapableChunk(controlled_capable_id, out ChunkData chunk))
+        {
+            slog?.Warning($"Could not find chunk for capable id '{controlled_capable_id}', cannot update player level/room/chunk in controller data.");
+            return;
+        }
+
+        player_chunk = chunk.id;
+        player_room = chunk.room_id;
+
+        // get level of room
+        if (!LevelEngine.LazyInstance.TryGetRoomLevel(player_room, out LevelData level))
+        {
+            slog?.Warning($"Could not find level for room id '{player_room}', cannot update player level in controller data.");
+            return;
+        }
+
+        player_level = level.id;
+        slog?.Log($"Updated player level/room/chunk in controller data : level '{player_level}', room '{player_room}', chunk '{player_chunk}'.");
+    }
+
     // DUPLICATE
     public ControllerData Duplicate()
     {

@@ -38,8 +38,8 @@ public class DoorEngine : MonoBehaviour
         ChunkEngine.Instance.OnPlayerChunkChange += UpdateRoomsVisibility;
         if (log) { Debug.Log($"(DoorEngine) Registered callbacks to CapableBank and RoomEngine events"); }
 
-        UpdateRoomsVisibility();
-        if (log) { Debug.Log($"(DoorEngine) Updated rooms visibility"); }
+        // UpdateRoomsVisibility();
+        // if (log) { Debug.Log($"(DoorEngine) Updated rooms visibility"); }
 
         if (log) { Debug.Log($"(DoorEngine) DOOR ENGINE SUCCESSFULLY LOADED : {world_id}"); }
     }

@@ -470,11 +470,15 @@ public class UI_Manager : Singleton<UI_Manager>
 
 
     // UI POPUPS
-    public void OpenInputPopup(string title, string placeholder, System.Action<string> on_validate)
+    public void OpenInputPopup(string title, string placeholder, System.Action<string> on_validate, bool dont_auto_close = false)
     {
         // set the input slot callback
         UI_InputText input = GetPool<UI_PopupInputText>().InputText;
-        input.RegisterInput(title, placeholder, new List<System.Action<string>> { on_validate, (string x) => { CloseInputPopup(x); } });
+
+        // gather actions
+        List<System.Action<string>> actions = new List<System.Action<string>> { on_validate };
+        if (!dont_auto_close) { actions.Add((string x) => { CloseInputPopup(x); }); }
+        input.RegisterInput(title, placeholder, actions);
 
         // show the stacked simple_input pool
         StackPool("popup_text");

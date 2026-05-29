@@ -81,6 +81,7 @@ GameObject:
   - component: {fileID: 4243531793187179843}
   - component: {fileID: 8817564043264294159}
   - component: {fileID: 8074454940356753118}
+  - component: {fileID: 4916855751896543106}
   m_Layer: 23
   m_Name: zombo
   m_TagString: Zombo
@@ -96,7 +97,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8595018692463036030}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -331,6 +332,19 @@ MonoBehaviour:
     - npc
     - dev
   log_actions: 0
+--- !u!114 &4916855751896543106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8595018692463036030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b38a876e5f6fba4ab1dde6d23fd0f96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
+  capacity_template_id: mob_exp
 --- !u!1001 &947302410435832234
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -24,8 +24,8 @@ public class UI_WorldBuilderPool : UI_SlottablePool, Descriptable
         
         world_slot.Initialize(WorldManager.Instance.SelectedWorldData);
         world_folder_caller.world_id = WorldManager.Instance.SelectedWorld;
-        RefreshLevelSlots();
     }
+    protected override void before_showing() { RefreshLevelSlots(); }
     public void RefreshLevelSlots()
     {
         // clear the levels slots if any
