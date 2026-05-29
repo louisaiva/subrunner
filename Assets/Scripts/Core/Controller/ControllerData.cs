@@ -5,6 +5,7 @@ using UnityEngine;
 [Serializable] public class ControllerData
 {
     // capable stack
+    public string capable_template;
     public string controlled_capable_id;
     public List<string> stack_capable_ids;
 
@@ -56,6 +57,7 @@ using UnityEngine;
     {
         return new ControllerData
         {
+            capable_template = this.capable_template,
             controlled_capable_id = this.controlled_capable_id,
             stack_capable_ids = new List<string>(this.stack_capable_ids),
             player_level = this.player_level,
@@ -68,7 +70,8 @@ using UnityEngine;
     // GET DETAILS
     public string GetDetails()
     {
-        string details = $" - controlled capable id : {controlled_capable_id}\n" +
+        string details = $" - capable template : {capable_template}\n" +
+                         $" - controlled capable id : {controlled_capable_id}\n" +
                          $" - stack capable ids : {string.Join(", ", stack_capable_ids)}\n" +
                          $" - player level : {player_level}\n" +
                          $" - player room : {player_room}\n" +

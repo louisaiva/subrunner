@@ -221,6 +221,23 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         world_capacities_data.Add(new_data.id, new_data);
         return new_data;
     }
+    private CapacityData DuplicateExistingCapacity(string existing_id)
+    {
+        // we get the base data
+        if (!world_capacities_data.ContainsKey(existing_id))
+        {
+            if (!hide_log_no_data_found) { Debug.LogWarning("(CapacityEngine - DuplicateExistingCapacity) Existing capacity data not found for id: " + existing_id); }
+            return null;
+        }
+
+        CapacityData base_data = world_capacities_data[existing_id];
+        CapacityData new_data = base_data.Duplicate() as CapacityData;
+        new_data.id = World.Instance.GenerateUniqueID(base_data.id); // automatically register the new id
+
+        // we add the new_data to the data list
+        world_capacities_data.Add(new_data.id, new_data);
+        return new_data;
+    }
 
     // SPAWN CAPACITIES
     public CapacityData SpawnCapacity(string template_id, CapableData cdata)
@@ -233,11 +250,35 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
             return null;
         }
 
+        set_owner_and_capacity_ids(template_id, data, cdata);
+        if (log_spawning) { Debug.Log($"(CapacityEngine - Spawn) New Capacity '{data.id}' was created from template '{template_id}' and assigned to '{cdata.id}'"); }
+
+        // we return the capacity data
+        return data;
+    }
+    public CapacityData SpawnCapacityFromExistingOne(string cap_id, CapableData cdata)
+    {
+        // we duplicate the data + generate unique id
+        CapacityData data = DuplicateExistingCapacity(cap_id);
+        if (data == null)
+        {
+            if (log_spawning) { Debug.LogWarning($"(CapacityEngine - Spawn) Failed to spawn capacity from existing capacity '{cap_id}' for '{cdata.id}' because existing capacity was not found"); }
+            return null;
+        }
+
+        set_owner_and_capacity_ids(cap_id, data, cdata);
+        if (log_spawning) { Debug.Log($"(CapacityEngine - Spawn) New Capacity '{data.id}' was created from existing capacity '{cap_id}' and assigned to '{cdata.id}'"); }
+
+        // we return the capacity data
+        return data;
+    }
+    private void set_owner_and_capacity_ids(string base_capacity_id, CapacityData data, CapableData cdata)
+    {
         // we change the capacity id in the capable data
         for (int i = 0; i < cdata.capacities_ids.Count; i++)
         {
             // check if same id
-            if (cdata.capacities_ids[i] != template_id) { continue; }
+            if (cdata.capacities_ids[i] != base_capacity_id) { continue; }
 
             // else change the id to new capacity id
             cdata.capacities_ids[i] = data.id;
@@ -246,13 +287,7 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
 
         // finally we set the capacity owner id to the capable id
         data.owner_id = cdata.id;
-
-        if (log_spawning) { Debug.Log($"(CapacityEngine - Spawn) New Capacity '{data.id}' was created from template '{template_id}' and assigned to '{cdata.id}'"); }
-
-        // we return the capacity data
-        return data;
     }
-
 
 
     ///

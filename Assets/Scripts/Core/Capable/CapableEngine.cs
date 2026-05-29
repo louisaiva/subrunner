@@ -433,7 +433,39 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
         return new_data;
     }
-    
+    public CapableData DuplicateExistingData(string existing_id)
+    {
+        // we get the base data
+        if (!world_capables_data.ContainsKey(existing_id))
+        {
+            if (!hide_log_no_data_found || log_duplicating) { Debug.LogWarning("(CapableSystem - DuplicateExistingData) Existing capable data not found for id: " + existing_id); }
+            return null;
+        }
+
+        // 1. we duplicate the data into new data
+        ICapableData base_data = world_capables_data[existing_id];
+        CapableData new_data = base_data.Duplicate() as CapableData;
+        new_data.id = World.Instance.GenerateUniqueID(base_data.id);
+
+        // generate a hash
+        generate_runtime_id(new_data.id);
+
+        // we add the new_data to the world data list
+        world_capables_data.Add(new_data.id, new_data);
+
+        // 2. we spawn capacities from this new data
+        for (int i = 0; i < new_data.capacities_ids.Count; i++)
+        {
+            string capa_template = new_data.capacities_ids[i];
+            CapacityEngine.Instance.SpawnCapacityFromExistingOne(capa_template, new_data); // this replace the capacity id in the entity data
+        }
+
+        if (log_duplicating) { Debug.Log($"(CapableEngine) Duplicated existing data for id {existing_id} to {new_data.id} \n {new_data.GetDetails()}"); }
+
+
+        return new_data;
+    }
+
     /// <summary>
     /// This method DO NOT add the capable data to the world !
     /// But np it duplicates the data

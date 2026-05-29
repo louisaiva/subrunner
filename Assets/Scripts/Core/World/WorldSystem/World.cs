@@ -237,13 +237,14 @@ public class World : BSOD_System<World>
             Debug.Log($"(World) ----------------------------------- WORLD LOADED : (in {Time.realtimeSinceStartup - start_time}s{(!log_loading_extended ? ")" : $", previous phase duration: {Time.realtimeSinceStartup - phase_time}s)")}");
         }
         // we make sure the first chunk loaded are the one of the player
-        string chunk_id = Controller.LazyInstance.data != null ? Controller.LazyInstance.data.player_chunk : null;
+        /* string chunk_id = Controller.LazyInstance.data != null ? Controller.LazyInstance.data.player_chunk : null;
         if (string.IsNullOrEmpty(chunk_id))
         {
             if (log) { Debug.LogWarning($"(World) No player chunk defined in controller data, cannot init player chunk."); }
             return;
         }
-        else { ChunkEngine.LazyInstance.InitPlayerChunk(chunk_id); }
+        else { ChunkEngine.LazyInstance.InitPlayerChunk(chunk_id); } */
+        ChunkEngine.LazyInstance.RefreshPlayerChunk(Controller.Capable);
     }
     private string extract_world_json(string world_id)
     {
@@ -363,7 +364,7 @@ public class World : BSOD_System<World>
         {
             generated_ids_counters[prefix] = 0;
             if (log_id_generation) { Debug.Log($"(World) Registered unique ID: {id} (prefix: {prefix}, suffix: {suffix}) -- new prefix, counter initialized to 0."); }
-            return;
+            // return; // ! we don't return here because maybe the suffix is greater than 0 so we need to update it
         }
 
         // otherwise we already have some ids with this prefix, we check if the suffix int is greater than the current max suffix for this prefix

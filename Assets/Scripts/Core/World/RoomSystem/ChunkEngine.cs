@@ -687,6 +687,17 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
         _ = LoadChunks(chunks_to_load.ToArray());
         _ = UnloadChunks(chunks_to_unload.ToArray());
     }
+    public void RefreshPlayerChunk(Capable capable)
+    {
+        // we find the best chunk for the capable's position and set it as the player chunk
+        Vector2 capable_position = capable.data.Position;
+        ChunkData chunk = GetChunkAtPosition(capable_position);
+        if (chunk == null) { return; }
+        Debug.Log($"(ChunkEngine) RefreshPlayerChunk found chunk '{(chunk != null ? chunk.id : "null")}' for capable '{capable.data.id}' at position '{capable_position}'");
+
+        // handle perso changed
+        handle_perso_changed_chunk(null, chunk);
+    }
     public void InitPlayerChunk(string player_chunk)
     {
         // ! we need to know FOR SURE that the player chunk is the right one before calling this method ?
@@ -811,6 +822,17 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
     public List<ChunkData> GetNeighboursData(ChunkData room)
     {
         List<ChunkData> neigh_datas = new List<ChunkData>();
+
+        if (room == null)
+        {
+            if (log_neighbours) { Debug.LogWarning("(ChunkEngine - GetNeighboursData) Room data is null, can't get neighbours"); }
+            return neigh_datas;
+        }
+        if (room.neighbours_ids == null)
+        {
+            if (log_neighbours) { Debug.LogWarning($"(ChunkEngine - GetNeighboursData) Room {room.id} has no neighbours ids, can't get neighbours"); }
+            return neigh_datas;
+        }
 
         string log = "";
         for (int i = 0; i < room.neighbours_ids.Count; i++)

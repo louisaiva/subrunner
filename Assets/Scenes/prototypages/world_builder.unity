@@ -11321,7 +11321,7 @@ MonoBehaviour:
   chunk_distance: 2
   log_awake_data: 1
   log_ticks: 0
-  log_chunk_transfers: 0
+  log_chunk_transfers: 1
   log_loaded_area_transfers: 0
   log_best_match_calcul: 0
   log_spatial_queries: 0
@@ -17092,7 +17092,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::World
   load_status: 0
-  world_id: b14
+  world_id: b8
   data:
     game_version: 1.5.1a
     creation_date: 29/05/2026 15:23:53
@@ -17103,7 +17103,7 @@ MonoBehaviour:
   fallback_spawn_point: {fileID: 0}
   log: 1
   log_loading_extended: 1
-  log_id_generation: 0
+  log_id_generation: 1
 --- !u!114 &155458651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44349,7 +44349,7 @@ MonoBehaviour:
   log_item_switching: 0
   hide_log_ownership_validation: 1
   log_loading: 1
-  log_loading_extended: 1
+  log_loading_extended: 0
   log_visibility: 0
   hide_log_no_data_found: 1
   log_saving: 0
@@ -196275,6 +196275,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Controller
   data:
+    capable_template: 
     controlled_capable_id: bob
     stack_capable_ids: []
     player_level: 

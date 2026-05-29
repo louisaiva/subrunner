@@ -346,7 +346,7 @@ public class WorldManager : MonoBehaviour
         SaveEngine.SaveWorldData(new_data);
 
         // and we create and save a default ControllerData for the world
-        ControllerData controller_data = new ControllerData() { controlled_capable_id = "bob", stack_capable_ids = new List<string>() };
+        ControllerData controller_data = new ControllerData() { capable_template = "bob", stack_capable_ids = new List<string>() };
         SaveEngine.SaveControllerData(controller_data, world_name);
 
         if (log_create) { Debug.Log($"(WorldManager) Created new world with world_id: {world_name}"); }

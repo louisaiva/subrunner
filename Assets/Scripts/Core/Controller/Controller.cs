@@ -112,6 +112,7 @@ public class Controller : MonoBehaviour
         if (controlled_capable != null) { stack.Push(controlled_capable.ID); }
         control(capable_id);
         OnCapableAddedToStack?.Invoke(controlled_capable.ID);
+
         return true;
     }
     public bool Uncontrol(bool control_next_in_stack = true)
@@ -225,6 +226,10 @@ public class Controller : MonoBehaviour
         controlled_capable = capable;
         if (log) { Debug.Log("(Controller) ++++++++++++++++++++++++++++ NOW CONTROLING " + controlled_capable.ID); }
         OnCapableControlled?.Invoke(controlled_capable);
+
+
+        // we refresh the player chunk through ChunkEngine
+        ChunkEngine.LazyInstance.RefreshPlayerChunk(capable);
 
         // on informe le debug manager qu'on controle un nouveau capable
         DebugManager.Instance.AddDebuggable(controlled_capable, "controller");
@@ -416,11 +421,40 @@ public class Controller : MonoBehaviour
     {
         if (Perso != null) { return; } // if we already control a perso, we do nothing
 
-        // we unload the data
+        // we duplicate the data so we have one :D
+        ControllerData new_data = data.Duplicate();
+
+        // we unload the data (this.data will == null)
         UnloadData();
 
-        // then we load it again to respawn the perso
-        LoadData(saved_data.Duplicate(), tp: false);
+        // we get the controlled capable data so we can modify few things (heal max, apply respawn point, etc)
+        // ! important : we duplicate EXISTING DATA so the capable will receive new id otherwise we will have 2 capables
+        // ! sharing the same id (and a controlled id which is even worse)
+        CapableData capable = CapableEngine.LazyInstance.DuplicateExistingData(new_data.controlled_capable_id);
+        if (capable == null)
+        {
+            Debug.LogError($"(Controller) Cannot respawn perso because the saved controller data has a controlled capable id that doesn't exist !!");
+            return;
+        }
+        new_data.controlled_capable_id = capable.id;
+
+        // set position to 0,0
+        capable.position = Vector3.zero;
+
+        // we get the capacity ids
+        List<CapacityData> capacities_data = CapacityEngine.LazyInstance.GetCapacitiesDataFromIDs(capable.capacities_ids);
+        foreach (CapacityData capa_data in capacities_data)
+        {
+            if (capa_data is HealthCapacityData health_data)
+            {
+                // we heal the perso to max
+                health_data.health = health_data.max_health;
+                break;
+            }
+        }
+
+        // then we load the controller data again, which will load the capable data we just modified
+        LoadData(new_data, tp: false);
     }
 
 
@@ -461,7 +495,6 @@ public class Controller : MonoBehaviour
     //
     ///
 
-    private ControllerData saved_data; // we keep a reference to the last loaded data for respawning
     public async Awaitable LoadWorldData(string world_id, bool log)
     {
         if (log) { Debug.Log($"(Controller) Loading controller data for world with id '{world_id}' ..."); }
@@ -474,12 +507,10 @@ public class Controller : MonoBehaviour
             Debug.LogError($"(Controller) Failed to load controller data for world with id '{world_id}' !!");
             return;
         }
-        saved_data = data;
 
         // load the data & control the initial capable
-        ControllerData duplicated_data = data.Duplicate();
-        if (log) { Debug.Log($"(Controller) Controller data ready to be loaded : {duplicated_data.GetDetails()}"); }
-        LoadData(duplicated_data);
+        if (log) { Debug.Log($"(Controller) Controller data ready to be loaded : {data.GetDetails()}"); }
+        LoadData(data);
 
         // register to CapableEngine despawn event
         CapableEngine.LazyInstance.OnCapableDespawned += handle_capable_despawned;
@@ -504,10 +535,18 @@ public class Controller : MonoBehaviour
         this.data = data;
         stack.Clear();
 
-        // load the controlled capable
-        if (!Control(data.controlled_capable_id))
+        string capable_id = data.controlled_capable_id;
+        if (string.IsNullOrEmpty(capable_id)) { capable_id = data.capable_template; }
+        if (string.IsNullOrEmpty(capable_id))
         {
-            Debug.LogError($"(Controller) Failed to control controller capable : '{data.controlled_capable_id}'");
+            Debug.LogError($"(Controller) No capable id defined in controller data !!");
+            return;
+        }
+
+        // load the controlled capable
+        if (!Control(capable_id))
+        {
+            Debug.LogError($"(Controller) Failed to control controller capable : '{capable_id}'");
             return;
         }
 
@@ -518,9 +557,9 @@ public class Controller : MonoBehaviour
         // load the capable stack
         if (data.stack_capable_ids != null)
         {
-            foreach (string capable_id in data.stack_capable_ids)
+            foreach (string id in data.stack_capable_ids)
             {
-                if (!string.IsNullOrEmpty(capable_id)) { stack.Push(capable_id); }
+                if (!string.IsNullOrEmpty(id)) { stack.Push(id); }
             }
         }
 
