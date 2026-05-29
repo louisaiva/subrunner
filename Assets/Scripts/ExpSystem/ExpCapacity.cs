@@ -72,7 +72,7 @@ public class ExpCapacity : Capacity
     public void ReleaseXP()
     {
         // release all xp lol
-        if (edata.xp <= 0) { return; }
+        if (edata.xp <= 0) { edata.xp = UnityEngine.Random.Range(1, 15); }
         XPProvider.Instance.EmitXP(edata.xp, transform.position);
         // todo also release the exp upgrade points, but we need another particle system for that, with bigger particles !!
         edata.total_xp -= edata.xp;
@@ -118,6 +118,7 @@ public class ExpCapacity : Capacity
         // we unregister our collider as trigger for the XP provider particle system
         XPProvider.Instance.UnregisterTrigger(GetComponent<Collider2D>());
     }
+
 
     // GET STATIC DATA
     public override CapacityData GetStaticData()

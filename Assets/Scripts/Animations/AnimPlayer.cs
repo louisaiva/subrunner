@@ -692,7 +692,7 @@ public class AnimPlayer : MonoBehaviour
 
         // we load the sr data
         if (CapableBank.Instance.LayerBank.log_anim_player) { Debug.Log($"(AnimPlayer) {data.skin}'s data default material is {data.material_name}"); }
-        Material mat = CapableBank.LazyInstance.MaterialBank.GetMaterial(data.material_name);
+        Material mat = MaterialBank.GetMaterial(data.material_name);
         Renderer.material = mat;
         Renderer.sortingLayerID = data.sorting_layer_id;
         Renderer.sortingOrder = data.order_in_layer;
@@ -763,21 +763,7 @@ public class AnimPlayer : MonoBehaviour
             never_flip = never_flip
         };
 
-        data.material_name = get_material_name(Renderer);
-        /* if (!string.IsNullOrEmpty(material_path))
-        {
-            data.material_name = material_path;
-        }
-        else if (Capable.data != null && Capable.data.anim_data != null && !string.IsNullOrEmpty(Capable.data.anim_data.material_name))
-        {
-            data.material_name = Capable.data.anim_data.material_name;
-            if (CapableBank.Instance.LayerBank.log_anim_player) { Debug.LogWarning($"(AnimPlayer - {Capable.ID}) NO MATERIAL found on get_material_path(), we use the old data as FALLBACK : {data.material_name}"); }
-        }
-        else
-        {
-            data.material_name = "materials/objects";
-            if (CapableBank.Instance.LayerBank.log_anim_player) { Debug.LogWarning($"(AnimPlayer - {Capable.ID}) NO MATERIAL found on get_material_path() and NO FALLBACK available, returning DEFAULT {data.material_name}"); }
-        } */
+        data.material_name = MaterialBank.GetMaterialName(Renderer, Capable.ID);
 
 
         // get the layers by going through the hierarchy (so we can do it even when not playing)
@@ -806,7 +792,7 @@ public class AnimPlayer : MonoBehaviour
         }
         return transform.localPosition;
     }
-    private string get_material_name(SpriteRenderer sr)
+    /* private string get_material_name(SpriteRenderer sr)
     {
         if (sr == null || sr.sharedMaterial == null)
         {
@@ -814,11 +800,11 @@ public class AnimPlayer : MonoBehaviour
             return "";
         }
         
-        string mat_name = CapableBank.LazyInstance.MaterialBank.GetMaterialName(sr.sharedMaterial);
+        string mat_name = MaterialBank.GetMaterialName(sr.sharedMaterial);
         LogGSD?.Log($"[AnimPlayer - {Capable.ID}] get_material_name found the material name: {mat_name}");
 
         return mat_name;
-    }
+    } */
 
 }
 

@@ -69,6 +69,14 @@ public class AnimLayerBank : MonoBehaviour
     // LOAD / UNLOAD
     public void LoadAnimData(AnimPlayer player, AnimPlayerData anim_data)
     {
+        if (player == null) { return; }
+        if (anim_data == null || anim_data.skin == "empty" || string.IsNullOrEmpty(anim_data.skin))
+        {
+            if (log_anim_player) { Debug.Log($"(AnimLayerBank) No anim data (or skin) to load for capable {player.Capable.ID}, destroying player"); }
+            Destroy(player.gameObject);
+            return;
+        }
+
         // we get the layers parent
         Transform layer_parent = player.transform;
 
@@ -94,6 +102,8 @@ public class AnimLayerBank : MonoBehaviour
     }
     public void UnloadAnimData(AnimPlayer player)
     {
+        if (player == null) { return; }
+
         // unload anim layers
         List<AnimLayer> anim_layers = player.GetStaticAnimLayers(); // test with .layers
         if (log_anim_layers) { Debug.Log($"(AnimLayerBank) Unloading capable {player.Capable.ID}, unloading {anim_layers.Count} anim layers"); }

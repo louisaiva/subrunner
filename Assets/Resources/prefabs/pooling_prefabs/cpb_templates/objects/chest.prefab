@@ -305,8 +305,6 @@ MonoBehaviour:
   log: 0
   activate_all_capacities_logs_on_awake: 0
   log_static_data: 0
-  log_interact_kf: 0
-  log_buttons_registering: 0
   interactors: []
 --- !u!114 &1590868522181584201
 MonoBehaviour:
@@ -338,15 +336,7 @@ MonoBehaviour:
   capacity: 12
   scalable: 0
   item_rule: '!virtual'
-  items:
-  - item_id: apple
-    quantity: 5
-  - item_id: shoes
-    quantity: 1
-  - item_id: katana
-    quantity: 1
-  - item_id: bone
-    quantity: 16
+  items: []
 --- !u!1 &6399019400784557793
 GameObject:
   m_ObjectHideFlags: 0

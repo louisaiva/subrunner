@@ -78,7 +78,26 @@
     },
     "feet_data": {
         "box_colliders": [],
-        "circle_colliders": []
+        "circle_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 29,
+                "pathfinding_area": -1,
+                "shadow_caster_data": {
+                    "cast_and_self": false,
+                    "used_layers": []
+                },
+                "is_trigger": true,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.5
+                },
+                "radius": 0.75
+            }
+        ]
     },
     "capacities_ids": [
         "npc_spawn",

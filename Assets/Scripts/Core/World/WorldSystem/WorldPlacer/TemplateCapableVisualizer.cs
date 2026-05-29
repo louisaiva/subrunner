@@ -12,6 +12,7 @@ public class TemplateCapableVisualizer : MonoBehaviour
 
 
     [Header("Components")]
+    [SerializeField] private SpriteRenderer sr;
     [SerializeField] private AnimPlayer player;
     [SerializeField] private Transform feet;
 
@@ -31,12 +32,15 @@ public class TemplateCapableVisualizer : MonoBehaviour
         this.template = template;
 
         // then we load the feet & anim data
-        load_anim_data(data.anim_data);
+        if (data.anim_data != null && !string.IsNullOrEmpty(data.anim_data.skin)) { load_anim_data(data.anim_data); }
+        else if ( has_sprite_capacity(data, out SpriteData sr_data) ) { load_sprite_data(sr_data); }
         load_feet_data(data.feet_data);
 
         // then we start following the mouse :D
         log.Log($"Initialized with template {template}, we got the data : \n{data.GetDetails()}");
     }
+
+
     public void Clear()
     {
         // we clear feet
@@ -122,6 +126,9 @@ public class TemplateCapableVisualizer : MonoBehaviour
     }
     private void load_anim_data(AnimPlayerData anim_data)
     {
+        sr.gameObject.SetActive(false);
+        player.gameObject.SetActive(true);
+
         // filter the data a little bit
         anim_data.sorting_layer_id = SortingLayer.NameToID("up");
         anim_data.order_in_layer = 2;
@@ -141,7 +148,38 @@ public class TemplateCapableVisualizer : MonoBehaviour
 
         player.Show();
     }
+    private void load_sprite_data(SpriteData sr_data)
+    {
+        player.Hide();
+        player.gameObject.SetActive(false);
 
+        // filter the data a little bit
+        sr.sortingLayerID = SortingLayer.NameToID("up");
+        sr.adaptiveModeThreshold = 2;
+        sr.material = MaterialBank.GetMaterial("outline_transparent_material");
+
+        // we only want the simple sprite renderer to visualize it
+        sr.sprite = sr_data.sprite;
+        sr.gameObject.SetActive(true);
+    }
+    private bool has_sprite_capacity(CapableData data, out SpriteData sr_data)
+    {
+        sr_data = null;
+        if (data.capacities_ids == null) { return false; }
+        if (data.capacities_ids.Count == 0) { return false; }
+        for (int i = 0; i < data.capacities_ids.Count; i++)
+        {
+            // get the capacity data
+            CapacityData cap_data = CapacityEngine.LazyInstance.GetTemplateData(data.capacities_ids[i]);
+            if (cap_data == null) { continue; }
+            if (cap_data is SpriteData sdata)
+            {
+                sr_data = sdata;
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 public enum CapablePlacementStatus

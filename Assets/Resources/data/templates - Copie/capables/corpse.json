@@ -1,0 +1,119 @@
+﻿{
+    "<id>k__BackingField": "corpse",
+    "kind": "Corpse",
+    "position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": -1.0
+    },
+    "layer": 13,
+    "tag": "Untagged",
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "bones",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 5,
+                "capacity_playing": "",
+                "capacities": [
+                    "die"
+                ],
+                "lock_orientation": true,
+                "one_shot": false
+            }
+        ],
+        "current_capacity": "",
+        "material_name": "beings",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "never_flip": false,
+        "layers": [],
+        "local_position": {
+            "x": 0.0,
+            "y": 0.0
+        }
+    },
+    "inventory": {
+        "item_pools_data": [
+            {
+                "item_type": 0,
+                "stacks_data": [],
+                "pool_id": "stuff",
+                "max_stacks": 6,
+                "min_stacks": 6,
+                "scalable": true,
+                "item_rule": ""
+            }
+        ],
+        "item_type": 0
+    },
+    "feet_data": {
+        "box_colliders": [],
+        "circle_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 25,
+                "pathfinding_area": -1,
+                "shadow_caster_data": {
+                    "cast_and_self": false,
+                    "used_layers": []
+                },
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "radius": 0.09000000357627869
+            },
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 13,
+                "pathfinding_area": -1,
+                "shadow_caster_data": {
+                    "cast_and_self": false,
+                    "used_layers": []
+                },
+                "is_trigger": true,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "radius": 1.0
+            }
+        ]
+    },
+    "capacities_ids": [
+        "hover",
+        "item_iic"
+    ],
+    "effects": [],
+    "effects_ttl": [],
+    "reference": "category:item",
+    "color": {
+        "r": 1.0,
+        "g": 0.9215686321258545,
+        "b": 0.01568627543747425,
+        "a": 1.0
+    },
+    "max_qty": 1,
+    "item_description": "description of the item",
+    "is_grabbed": true
+}

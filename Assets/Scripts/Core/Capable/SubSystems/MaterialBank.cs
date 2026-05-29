@@ -6,6 +6,15 @@ using UnityEngine;
 
 public class MaterialBank : MonoBehaviour
 {
+    private static MaterialBank _instance;
+    private static MaterialBank instance
+    {
+        get
+        {
+            if (_instance == null) { _instance = FindFirstObjectByType<MaterialBank>(FindObjectsInactive.Include); }
+            return _instance;
+        }
+    }
 
     [Header("Material Bank")]
     [SerializeField] private MaterialsPaths paths = new MaterialsPaths();
@@ -18,6 +27,9 @@ public class MaterialBank : MonoBehaviour
 
     [Header("Logs")]
     [SerializeField] private Loggable<MaterialBank> log_loading;
+    private static Loggable<MaterialBank> LogLoading => instance.log_loading;
+    private static Loggable<MaterialBank> LogGetMaterial => instance.log_get_material;
+    [SerializeField] private Loggable<MaterialBank> log_get_material;
 
 
     ///
@@ -114,41 +126,55 @@ public class MaterialBank : MonoBehaviour
     //
     ///
 
-    public string GetMaterialName(Material material)
+    public static string GetMaterialName(Material material)
     {
         string material_name = material.name.Replace("(Instance)", "").Trim();
 
         // check if we have the name in cache
-        if (Application.isPlaying && !paths.HasID(material_name))
+        if (Application.isPlaying && !instance.paths.HasID(material_name))
         {
-            log_loading.Warning($"The material with name : {material.name} was not found in paths even with trimmed name '{material_name}', returning default name");
-            return default_material.name;
+            LogGetMaterial.Warning($"The material with name : {material.name} was not found in paths even with trimmed name '{material_name}', returning default name");
+            return instance.default_material.name;
         }
         else if (!Application.isPlaying)
         {
-            log_loading.LogExtended($"[EDITOR] Getting material name for material: {material.name}, trimmed name: {material_name}");
+            LogGetMaterial.LogExtended($"[EDITOR] Getting material name for material: {material.name}, trimmed name: {material_name}");
         }
         return material_name;
     }
-    public Material GetMaterial(string id)
+    public static Material GetMaterial(string id)
     {
         if (string.IsNullOrEmpty(id))
         {
-            log_loading.Warning($"GetMaterial called with null or empty id, returning default material");
-            return default_material;
+            LogGetMaterial.Warning($"GetMaterial called with null or empty id, returning default material");
+            return instance.default_material;
         }
 
         // try to find the material in cache
-        if (materials.TryGetValue(id, out Material material))
+        if (instance.materials.TryGetValue(id, out Material material))
         {
-            log_loading.LogSpecific($"Found material with id: {id} in cache");
+            LogGetMaterial.LogSpecific($"Found material with id: {id} in cache");
             return material;
         }
 
-        log_loading.Error($"Material with id: {id} not found in cache, returning default material");
-        return default_material;
+        LogGetMaterial.Error($"Material with id: {id} not found in cache, returning default material");
+        return instance.default_material;
     }
 
+    // MATERIAL GETTER
+    public static string GetMaterialName(SpriteRenderer sr, string debug_cap_id = "not specified")
+    {
+        if (sr == null || sr.sharedMaterial == null)
+        {
+            LogGetMaterial.Error($"[capable : '{debug_cap_id}'] The SpriteRenderer or its material is null, returning empty material name");
+            return "";
+        }
+
+        string mat_name = GetMaterialName(sr.sharedMaterial);
+        LogGetMaterial.Log($"[capable : '{debug_cap_id}'] get_material_name found the material name: {mat_name}");
+
+        return mat_name;
+    }
 }
 
 [Serializable] public class MaterialsPaths

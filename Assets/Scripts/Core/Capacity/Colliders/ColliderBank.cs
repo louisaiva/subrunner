@@ -312,7 +312,7 @@ public class ColliderBank : MonoBehaviour
     }
     public static void LoadColliderData(Collider2D c, ColliderData data)
     {
-        Debug.Log($"(ColliderBank - LoadColliderData) Loading collider data : {(data == null ? "null" : data.GetDetails())} to collider {c.gameObject.name}");
+        // Debug.Log($"(ColliderBank - LoadColliderData) Loading collider data : {(data == null ? "null" : data.GetDetails())} to collider {c.gameObject.name}");
 
         // we set gameobject data
         c.gameObject.layer = data.layerID;

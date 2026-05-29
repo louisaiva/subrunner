@@ -320,11 +320,14 @@ public class DoorEngine : MonoBehaviour
             capable.AnimPlayer.Hide();
             return;
         }
-        
-        bool capable_visible = capable.AnimPlayer.IsVisible();
-        bool room_visible = visible_rooms.Contains(room_data);
-        if (capable_visible && !room_visible) { capable.AnimPlayer.Hide(); }
-        else if (!capable_visible && room_visible) { capable.AnimPlayer.Show(); }
+
+        if (capable.AnimPlayer != null)
+        {
+            bool capable_visible = capable.AnimPlayer.IsVisible();
+            bool room_visible = visible_rooms.Contains(room_data);
+            if (capable_visible && !room_visible) { capable.AnimPlayer.Hide(); }
+            else if (!capable_visible && room_visible) { capable.AnimPlayer.Show(); }
+        }
     }
 
 

@@ -318,7 +318,6 @@ using UnityEngine;
     /// <param name="state"></param>
     public void ClearAndPopulateRuntimeData(ILocalWorldData world_data)
     {
-        Debug.Log($"(MotorData) Clear & Populate runtime world data for : {GetDetails()}");
 
         // we clear the runtime world data
         world_data.States.Clear();

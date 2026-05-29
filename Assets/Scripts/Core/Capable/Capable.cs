@@ -600,12 +600,6 @@ public class Capable : MonoBehaviour, Debuggable
     }
     protected FeetData get_static_feet_data()
     {
-        if (Feet == null)
-        {
-            LogGSD?.Warning($"No feet transform found, returning null for feet data");
-            return null;
-        }
-
         FeetData feet_data = new FeetData
         {
             box_colliders = new List<BoxData>(),
@@ -613,7 +607,15 @@ public class Capable : MonoBehaviour, Debuggable
         };
 
         // we go through all colliders in the body and save their data
-        List<Collider2D> colliders = new List<Collider2D>(Feet.GetComponentsInChildren<Collider2D>(includeInactive: true));
+        List<Collider2D> colliders = new List<Collider2D>();
+        if (Feet != null) { colliders.AddRange(Feet.GetComponentsInChildren<Collider2D>(includeInactive: true)); }
+        else
+        {
+            // we gather all colliders on the main gameobject
+            colliders.AddRange(GetComponents<Collider2D>());
+        }
+        if (colliders.Count == 0) { return null; }
+
         LogGSD?.LogSpecific($"[get_static_feet_data] Found {colliders.Count} colliders in feet, getting their data");
         foreach (Collider2D collider in colliders)
         {

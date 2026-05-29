@@ -1,0 +1,39 @@
+﻿{
+    "<id>k__BackingField": "dev_health",
+    "<owner_id>k__BackingField": "dev",
+    "kind": "HealthCapacity",
+    "local_position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "layer": 23,
+    "tag": "Dev",
+    "health": 40.0,
+    "max_health": 40,
+    "regen_health": 0.0,
+    "hurted_animation": "hurted",
+    "box_colliders": [
+        {
+            "local_position": {
+                "x": 0.0,
+                "y": 0.3709999918937683
+            },
+            "layerID": 23,
+            "pathfinding_area": -1,
+            "shadow_caster_data": {
+                "cast_and_self": false,
+                "used_layers": []
+            },
+            "is_trigger": true,
+            "offset": {
+                "x": 0.017057806253433229,
+                "y": 0.0
+            },
+            "size": {
+                "x": 0.4218003749847412,
+                "y": 0.6844788789749146
+            }
+        }
+    ],
+    "circle_colliders": []
+}

@@ -30,6 +30,7 @@ public class Capacity : MonoBehaviour
         get
         {
             if (!Loaded) { return "unloaded_capacity"; }
+            if (string.IsNullOrEmpty(data.id)) { return name; }
             return data.id;
         }
     }

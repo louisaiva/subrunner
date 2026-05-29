@@ -1,0 +1,91 @@
+﻿{
+    "<id>k__BackingField": "package_leftover",
+    "kind": "Item",
+    "position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": -1.0
+    },
+    "layer": 13,
+    "tag": "Untagged",
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "pckg_front",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle_open",
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "hover_open"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            }
+        ],
+        "current_capacity": "",
+        "material_name": "objects",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "never_flip": false,
+        "layers": [
+            {
+                "skin": "pckg_back",
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.4166666567325592
+                },
+                "local_rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "material_name": "objects",
+                "sorting_layer_id": -667374433,
+                "order_in_layer": 0,
+                "never_flip": false,
+                "follow_duration": false
+            }
+        ],
+        "local_position": {
+            "x": 0.0,
+            "y": 0.0
+        }
+    },
+    "inventory": {
+        "item_pools_data": [],
+        "item_type": 0
+    },
+    "feet_data": {
+        "box_colliders": [],
+        "circle_colliders": []
+    },
+    "capacities_ids": [
+        "hover",
+        "item_iic"
+    ],
+    "effects": [],
+    "effects_ttl": [],
+    "reference": "leftover:package",
+    "color": {
+        "r": 1.0,
+        "g": 0.9215686321258545,
+        "b": 0.01568627543747425,
+        "a": 1.0
+    },
+    "max_qty": 16,
+    "item_description": "some rests of a package, maybe it can be useful ? i like the smell of cardboard boxes, it reminds me of my childhood",
+    "is_grabbed": true
+}

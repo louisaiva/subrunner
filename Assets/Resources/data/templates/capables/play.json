@@ -1,0 +1,123 @@
+﻿{
+    "<id>k__BackingField": "play",
+    "kind": "Computer",
+    "position": {
+        "x": -3.125,
+        "y": 10.0
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": -1.0
+    },
+    "layer": 29,
+    "tag": "Untagged",
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "play",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "hover"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 3,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle_on"
+                ],
+                "lock_orientation": true,
+                "one_shot": false
+            },
+            {
+                "priority": 3,
+                "capacity_playing": "",
+                "capacities": [
+                    "hacked"
+                ],
+                "lock_orientation": true,
+                "one_shot": false
+            },
+            {
+                "priority": 4,
+                "capacity_playing": "",
+                "capacities": [
+                    "onnin",
+                    "offin"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            }
+        ],
+        "current_capacity": "",
+        "material_name": "objects",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "never_flip": false,
+        "layers": [],
+        "local_position": {
+            "x": 0.0,
+            "y": 0.0
+        }
+    },
+    "inventory": {
+        "item_pools_data": [
+            {
+                "item_type": 0,
+                "stacks_data": [],
+                "pool_id": "stuff",
+                "max_stacks": 6,
+                "min_stacks": 6,
+                "scalable": true,
+                "item_rule": ""
+            }
+        ],
+        "item_type": 0
+    },
+    "feet_data": {
+        "box_colliders": [
+            {
+                "local_position": {
+                    "x": -3.125,
+                    "y": 10.0
+                },
+                "layerID": 29,
+                "pathfinding_area": 1,
+                "shadow_caster_data": {
+                    "cast_and_self": false,
+                    "used_layers": []
+                },
+                "is_trigger": false,
+                "offset": {
+                    "x": -0.10244119167327881,
+                    "y": 0.18792247772216798
+                },
+                "size": {
+                    "x": 1.2066271305084229,
+                    "y": 0.37584495544433596
+                }
+            }
+        ],
+        "circle_colliders": []
+    },
+    "capacities_ids": [
+        "connect",
+        "hover",
+        "on_off"
+    ],
+    "effects": [],
+    "effects_ttl": []
+}

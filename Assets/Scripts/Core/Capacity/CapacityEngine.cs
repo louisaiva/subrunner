@@ -485,4 +485,10 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         }
         return datas;
     }
+
+    public CapacityData GetTemplateData(string id)
+    {
+        if (!templates_capacities_data.TryGetValue(id, out CapacityData data)) { return null; }
+        return data;
+    }
 }

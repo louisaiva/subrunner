@@ -1,0 +1,90 @@
+﻿{
+    "<id>k__BackingField": "cpu_melt",
+    "kind": "Item",
+    "position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": -1.0
+    },
+    "layer": 24,
+    "tag": "Item",
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "empty",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "idle",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "hover"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            }
+        ],
+        "current_capacity": "",
+        "material_name": "objects",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "never_flip": false,
+        "layers": [],
+        "local_position": {
+            "x": 0.0,
+            "y": 0.0
+        }
+    },
+    "inventory": {
+        "item_pools_data": [],
+        "item_type": 0
+    },
+    "feet_data": {
+        "box_colliders": [],
+        "circle_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 25,
+                "pathfinding_area": -1,
+                "shadow_caster_data": {
+                    "cast_and_self": false,
+                    "used_layers": []
+                },
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.10000000149011612
+                },
+                "radius": 0.09000000357627869
+            }
+        ]
+    },
+    "capacities_ids": [
+        "hover"
+    ],
+    "effects": [],
+    "effects_ttl": [],
+    "reference": "exploit:cpu_melt",
+    "color": {
+        "r": 0.9333333373069763,
+        "g": 0.475734680891037,
+        "b": 0.4078431725502014,
+        "a": 1.0
+    },
+    "max_qty": 1,
+    "item_description": "Accelerates the targeted cpu until it reaches ULTRA HIGH temperature. Will burn it completely, causing high damage to its possessor. Careful : explosive. Very slow.",
+    "is_grabbed": true
+}

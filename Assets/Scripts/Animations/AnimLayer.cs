@@ -216,7 +216,7 @@ public class AnimLayer : MonoBehaviour
         transform.localEulerAngles = layer_data.local_rotation;
 
         // load sr data
-        Material mat = CapableBank.LazyInstance.MaterialBank.GetMaterial(layer_data.material_name);
+        Material mat = MaterialBank.GetMaterial(layer_data.material_name);
         sr.material = mat;
         sr.sortingLayerID = layer_data.sorting_layer_id;
         sr.sortingOrder = layer_data.order_in_layer;
@@ -262,25 +262,11 @@ public class AnimLayer : MonoBehaviour
             order_in_layer = sr.sortingOrder
         };
 
-        data.material_name = get_material_name(Renderer);
+        data.material_name = MaterialBank.GetMaterialName(Renderer, name);
 
         return data;
     }
 
-    // MATERIAL GETTER
-    private string get_material_name(SpriteRenderer sr)
-    {
-        if (sr == null || sr.sharedMaterial == null)
-        {
-            Capable.LogGSD?.Error($"[AnimLayer - {leader.Capable.ID}] The SpriteRenderer or its material is null, returning empty material name");
-            return "";
-        }
-
-        string mat_name = CapableBank.LazyInstance.MaterialBank.GetMaterialName(sr.sharedMaterial);
-        Capable.LogGSD?.Log($"[AnimLayer - {leader.Capable.ID}] get_material_name found the material name: {mat_name}");
-
-        return mat_name;
-    }
 }
 
 

@@ -202,10 +202,10 @@ public class Controller : MonoBehaviour
         // ensure the capable is loaded
         if (!CapableBank.LazyInstance.TryGetLoadedCapable(capable_id, out Capable capable))
         {
-            capable = CapableEngine.LazyInstance.LoadCapableInstantly(data.controlled_capable_id);
+            capable = CapableEngine.LazyInstance.LoadCapableInstantly(capable_id);
             if (capable == null)
             {
-                Debug.LogError($"(Controller) Could not load instantly capable '{data.controlled_capable_id}' so we won't control it oopsie");
+                Debug.LogError($"(Controller) Could not load instantly capable '{capable_id}' so we won't control it oopsie");
                 return false;
             }
         }
@@ -224,7 +224,8 @@ public class Controller : MonoBehaviour
 
         // we control the new capable
         controlled_capable = capable;
-        if (log) { Debug.Log("(Controller) ++++++++++++++++++++++++++++ NOW CONTROLING " + controlled_capable.ID); }
+        data.controlled_capable_id = capable.ID;
+        Debug.Log("(Controller) ++++++++++++++++++++++++++++ NOW CONTROLING " + controlled_capable.ID);
         OnCapableControlled?.Invoke(controlled_capable);
 
 
@@ -254,7 +255,7 @@ public class Controller : MonoBehaviour
 
         // uncontrol the capable
         OnCapableUncontrolled?.Invoke(controlled_capable);
-        if (log) { Debug.Log("(Controller) ---------------------------- DONE CONTROLING " + controlled_capable.ID); }
+        Debug.Log("(Controller) ---------------------------- DONE CONTROLING " + controlled_capable.ID);
         controlled_capable = null;
     }
 
@@ -299,6 +300,13 @@ public class Controller : MonoBehaviour
             // on bascule en pool UI_Device
             UI_Manager.Instance.GetPool("device").GetComponent<UI_Device>().SetDevice(device);
             UI_Manager.Instance.SwitchTo("device", override_transition: true);
+        }
+
+        // check exp
+        if (capa.TryGetCapacity(out ExpCapacity exp_capa) && exp_capa.edata.upgrade_points > 0)
+        {
+            // Debug.Log("(ExpCapacity) Player has " + exp_capa.edata.upgrade_points + $" upgrade points to spend ! (when loading {capa.ID})");
+            UI_Manager.Instance.GetPool<UI_HUD>().PersoLeveledUP(exp_capa.edata.level, exp_capa.edata.upgrade_points);
         }
     }
     private void uncontrol_capacities(Capable capa)
@@ -356,51 +364,6 @@ public class Controller : MonoBehaviour
         // on refresh le see through pour remettre la tete bien centrée
         see_through.Refresh(skin);
     }
-
-    // ui helpers
-    /* private void attach_item_pools_to_ui(Inventory inventory, string capable_id = "unknown")
-    {
-        if (inventory == null) { return; }
-
-        // on récupère les ui_item_pools du ui_inventoryMenu
-        UI_InventoryMenu inventory_menu = UI_Manager.Instance.GetPool<UI_InventoryMenu>();
-        List<UI_ItemPool> ui_pools = inventory_menu.GetItemPools();
-
-        // we go through all ui_pools found in the menu
-        for (int i = 0; i < ui_pools.Count; ++i)
-        {
-            UI_ItemPool ui_pool = ui_pools[i];
-            if (ui_pool == null) { continue; }
-
-            // on regarde si on a un item pool dans l'inventaire qui a la même pool_id
-            ItemPool pool = inventory.GetItemPool(ui_pool.PoolID);
-            if (pool == null)
-            {
-                // if we don't have an item pool for this ui pool, we skip it
-                if (log_ui_attachment) { Debug.LogWarning($"(Controller) No ItemPool found for UI_ItemPool with id {ui_pool.PoolID} in inventory of capable '{capable_id}'! Skipping UI attachment for this pool."); }
-                continue;
-            }
-
-            if (log_ui_attachment) { Debug.Log($"(Controller) Attaching ItemPool with id {pool.PoolID} to UI_ItemPool {ui_pool.name} for capable '{capable_id}'."); }
-
-            // on attache la pool à l'ui pool
-            ui_pool.AttachToPool(pool);
-        }
-
-        // enable inventory log if wanted
-        if (enable_controller_inventory_logs) { inventory.EnableLogs(); }
-    }
-    private void unattach_ui_item_pools()
-    {
-        // on récupère les ui_item_pools du ui_inventoryMenu
-        UI_InventoryMenu inventory_menu = UI_Manager.Instance.GetPool<UI_InventoryMenu>();
-        List<UI_ItemPool> ui_pools = inventory_menu.GetItemPools();
-
-        // on détache tous les ui pools de leur pool
-        for (int i = 0; i < ui_pools.Count; ++i) { ui_pools[i].DetachFromPool(); }
-
-        if (log_ui_attachment) { Debug.Log($"(Controller) Unattached all UI_ItemPools from their ItemPools."); }
-    } */
 
 
     ///

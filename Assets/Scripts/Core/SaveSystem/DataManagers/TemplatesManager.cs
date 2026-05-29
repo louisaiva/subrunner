@@ -136,6 +136,18 @@ public class TemplatesManager : MonoBehaviour
         {
             TemplateCapacityReference template_capacity_ref = template_capacity_refs[i];
             if (template_capacity_ref == null) { continue; }
+
+            // add the rest of the templates
+            if (template_capacity_ref.capacity_template_ids != null && template_capacity_ref.capacity_template_ids.Count > 0)
+            {
+                foreach (string capacity in template_capacity_ref.capacity_template_ids)
+                {
+                    if (string.IsNullOrEmpty(capacity)) { continue; }
+                    data.capacities_ids.Add(capacity);
+                }
+            }
+
+            // add the main template
             string template = template_capacity_ref.capacity_template_id;
             if (template == null) { continue; }
             if (string.IsNullOrEmpty(template)) { continue; }
