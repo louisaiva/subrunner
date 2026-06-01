@@ -356,6 +356,9 @@ public class SaveEngine : MonoBehaviour
     /// <param name="world_id"></param>
     public static void CleanWorldSave(string world_id)
     {
+        // we get the controller id
+        ControllerData controller_data = Controller.LoadWorldControllerData(world_id);
+        string controller_id = controller_data != null ? controller_data.controlled_capable_id : null;
 
         // we load all the levels of the world
         List<LevelData> levels_data = LevelEngine.LoadWorldLevelsData(world_id);
@@ -426,10 +429,31 @@ public class SaveEngine : MonoBehaviour
             deleted_chunks++;
             slog_clean?.LogExtended($"Deleted '{file_name}' chunk save file: {path}");
         }
+        List<string> controlled_capacities_ids = new List<string>();
         foreach (string path in capables_paths)
         {
             string file_name = Path.GetFileNameWithoutExtension(path);
             if (capables_in_levels.Contains(file_name)) { continue; }
+
+            // verify that we are not deleting the controlled capable, and if yes reset its position to 0,0
+            if (!string.IsNullOrEmpty(controller_id) && file_name == controller_id)
+            {
+                string json = AppManager.ReadFile(path, log_static);
+                CapableData data = JsonUtility.FromJson<CapableData>(json);
+                if (data != null)
+                {
+                    // reset position
+                    data.position = Vector2.zero;
+                    string new_json = JsonUtility.ToJson(data, true);
+                    SaveCapableData(data, world_id);
+                    slog_clean?.Warning($"Reset position of controlled capable '{file_name}' to 0,0 instead of deleting it.");
+
+                    // gather its capacities to not delete them
+                    if (data.capacities_ids != null) { controlled_capacities_ids.AddRange(data.capacities_ids); }
+                    continue;
+                }
+            }
+
             AppManager.DeleteFile(path, log_static);
             deleted_capables++;
             slog_clean?.LogExtended($"Deleted '{file_name}' capable save file: {path}");
@@ -438,6 +462,7 @@ public class SaveEngine : MonoBehaviour
         {
             string file_name = Path.GetFileNameWithoutExtension(path);
             if (capacities_in_levels.Contains(file_name)) { continue; }
+            if (controlled_capacities_ids.Contains(file_name)) { continue; }
             AppManager.DeleteFile(path, log_static);
             deleted_capacities++;
             slog_clean?.LogExtended($"Deleted '{file_name}' capacity save file: {path}");

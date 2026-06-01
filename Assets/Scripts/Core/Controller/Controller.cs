@@ -463,13 +463,8 @@ public class Controller : MonoBehaviour
         if (log) { Debug.Log($"(Controller) Loading controller data for world with id '{world_id}' ..."); }
 
         // get the controller data
-        string json = AppManager.LoadJsonFromWorldFolder(world_id, "controller.json");
-        ControllerData data = JsonUtility.FromJson<ControllerData>(json);
-        if (data == null)
-        {
-            Debug.LogError($"(Controller) Failed to load controller data for world with id '{world_id}' !!");
-            return;
-        }
+        ControllerData data = LoadWorldControllerData(world_id);
+        if (data == null) { return; }
 
         // load the data & control the initial capable
         if (log) { Debug.Log($"(Controller) Controller data ready to be loaded : {data.GetDetails()}"); }
@@ -538,5 +533,16 @@ public class Controller : MonoBehaviour
         ClearStack();
     }
 
-
+    // STATIC METHODS
+    public static ControllerData LoadWorldControllerData(string world_id)
+    {
+        string json = AppManager.LoadJsonFromWorldFolder(world_id, "controller.json");
+        ControllerData data = JsonUtility.FromJson<ControllerData>(json);
+        if (data == null)
+        {
+            Debug.LogError($"(Controller) Failed to load controller data for world with id '{world_id}' !!");
+            return null;
+        }
+        return data;
+    }
 }

@@ -966,10 +966,11 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
             // we try to add the capable ids to the room data
             foreach (Capable capable in overlapping_capables)
             {
-                string capable_id = capable.GetStaticID();
+                string capable_id = capable.ID;
+
                 if (added_capable_ids.Contains(capable_id)) { continue; } // already added somewhere
 
-                if (capable is Perso && capable.transform.parent == null) { continue; } // verify if perso on the main scene, which means it is a debug test perso (outsider of all engines)
+                if (capable is Perso && capable.transform.parent == null) { continue; } // debug only
 
                 // . verify if not grabbed item
                 if (capable is Item item && item.GetStaticGrabbed()) { continue; }
@@ -995,6 +996,14 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
             log += "\n";
         }
         log += "\n";
+
+
+        /* if (controlled_capable != null && !controlled_capable_grabbed)
+        {
+            log += $"{controlled_capable.ID} is the controller, was not grabbed, resetting its position to 0,0";
+            controlled_capable.transform.position = Vector2.zero;
+        } */
+
 
         grab_log?.Log($"[ChunkEngine] Total Capables grabbed : {added_capable_ids.Count}\n{log}");
     }

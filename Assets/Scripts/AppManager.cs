@@ -306,6 +306,20 @@ public class AppManager : MonoBehaviour
             Debug.LogWarning($"(AppManager) Failed to delete file: {path} because the file was not found.");
         }
     }
+    public static string ReadFile(string path, bool log = false)
+    {
+        if (System.IO.File.Exists(path))
+        {
+            string content = System.IO.File.ReadAllText(path);
+            if (log) { Debug.Log($"(AppManager) Read file : {path}\nContent:\n{content}"); }
+            return content;
+        }
+        else if (log)
+        {
+            Debug.LogWarning($"(AppManager) Failed to read file: {path} because the file was not found.");
+        }
+        return null;
+    }
 }
 
 public enum FileNotFound
