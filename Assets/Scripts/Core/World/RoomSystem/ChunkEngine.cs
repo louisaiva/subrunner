@@ -94,6 +94,7 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
 
     [Header("Specific logs")]
     public bool log_chunk_distance = false;
+    public bool log_ignore_triggers_timings = false;
 
     [Header("Room Logs")]
     public bool log_tilemaps_loading = false;
@@ -440,9 +441,18 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
     }
     public bool ShouldIgnoreRoomTrigger(string id)
     {
-        if (!capables_attach_times.TryGetValue(id, out float attach_time)) { return false; }
-        if (Time.time - attach_time > no_trigger_after_attach_duration) { return false; }
-        capables_attach_times.Remove(id);
+        if (!capables_attach_times.TryGetValue(id, out float attach_time))
+        {
+            if (log_ignore_triggers_timings) { Debug.Log($"(ChunkEngine) ShouldIgnoreRoomTrigger : capable {id} NO ATTACH TIME"); }
+            return false;
+        }
+        if (Time.time - attach_time > no_trigger_after_attach_duration)
+        {
+            if (log_ignore_triggers_timings) { Debug.Log($"(ChunkEngine) ShouldIgnoreRoomTrigger : capable {id} EXPIRED SO WE CAN TRIGGER ROOM TRIGGERS FOR IT AGAIN"); }
+            capables_attach_times.Remove(id);
+            return false;
+        }
+        if (log_ignore_triggers_timings) { Debug.Log($"(ChunkEngine) ShouldIgnoreRoomTrigger : capable {id} is still in attach time, we ignore room triggers for it"); }
         return true;
     }
 
@@ -697,12 +707,6 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
 
         // handle perso changed
         handle_perso_changed_chunk(null, chunk);
-    }
-    public void InitPlayerChunk(string player_chunk)
-    {
-        // ! we need to know FOR SURE that the player chunk is the right one before calling this method ?
-        if (!chunks_data.ContainsKey(player_chunk)) { Debug.LogError($"(ChunkEngine) InitPlayerChunk : chunk data not found for id: {player_chunk}"); return; }
-        handle_perso_changed_chunk(null, chunks_data[player_chunk]);
     }
 
 

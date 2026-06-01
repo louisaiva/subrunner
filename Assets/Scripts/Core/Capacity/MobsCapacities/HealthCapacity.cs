@@ -148,6 +148,7 @@ public class HealthCapacity : Capacity
             // we call DieCapacity if it exists, else we just set health to 0
             // Capable.GetCapacity<DieCapacity>()?.Use(Capable);
             health = 0f;
+            Debug.LogError($"(HealthCapacity - TakeDamage) {name} died but could not turn to corpse, (loaded : {Capable.Loaded} / id : {Capable.ID})");
         }
 
         return true;

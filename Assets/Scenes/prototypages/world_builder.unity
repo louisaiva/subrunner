@@ -10734,7 +10734,7 @@ MonoBehaviour:
   chunk_distance: 2
   log_awake_data: 1
   log_ticks: 0
-  log_chunk_transfers: 0
+  log_chunk_transfers: 1
   log_loaded_area_transfers: 0
   log_best_match_calcul: 0
   log_spatial_queries: 0
@@ -10743,6 +10743,7 @@ MonoBehaviour:
   log_dynamic_room_assignement: 0
   hide_log_no_room_of_capable_found: 1
   log_chunk_distance: 0
+  log_ignore_triggers_timings: 0
   log_tilemaps_loading: 0
   log_colliders: 0
   log_enter_exit: 0
@@ -15940,9 +15941,9 @@ MonoBehaviour:
     icon_name: ui_icons_17
     color: {r: 0.90588236, g: 0.47864768, b: 0.38823533, a: 1}
   fallback_spawn_point: {fileID: 0}
-  log: 1
-  log_loading_extended: 1
-  log_id_generation: 1
+  log: 0
+  log_loading_extended: 0
+  log_id_generation: 0
 --- !u!114 &155458651
 MonoBehaviour:
   m_ObjectHideFlags: 0
