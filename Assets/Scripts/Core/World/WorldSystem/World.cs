@@ -468,6 +468,25 @@ public class World : BSOD_System<World>
             this.icon_name = icon_name;
         }
     }
+    public int CompareTime(WorldData other)
+    {
+        return CompareTime(this.last_update_date, other.last_update_date);
+    }
+    public static int CompareTime(string a_date, string b_date)
+    {
+        if (string.IsNullOrEmpty(a_date) || string.IsNullOrEmpty(b_date)) { return 0; }
+        try
+        {
+            DateTime this_date = DateTime.ParseExact(a_date, "dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+            DateTime other = DateTime.ParseExact(b_date, "dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+            return this_date.CompareTo(other);
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning($"(WorldData) Failed to compare dates: invalid date format -- this last_update_date: {a_date}, other_date: {b_date} -- exception: {e.Message}");
+            return 0;
+        }
+    }
 }
 
 [Serializable] public enum WorldLoadStatus

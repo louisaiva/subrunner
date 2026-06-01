@@ -40,10 +40,10 @@ public class UI_WorldSlot : UI_EventButton, Descriptable
         if (world_data == null) { return "No world data."; }
 
         string description = "";
-        description += $"Save version : <b>{world_data.game_version}</b>\n";
+        description += $"<b>subrunner {world_data.game_version}</b>\n";
         description += "\n\n";
-        description += $"<b>Created :</b> {world_data.creation_date}\n";
-        description += $"<b>Modified :</b> {world_data.last_update_date}\n";
+        description += $"modified : <b>{world_data.last_update_date}</b>\n";
+        description += $"created : <b>{world_data.creation_date}</b>\n";
         description += "\n\n\n";
         description += $"<b>Levels</b> : ";
 

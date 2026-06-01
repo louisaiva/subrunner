@@ -37,6 +37,11 @@ public class CameraFollow : Singleton<CameraFollow>
     // SIMPLE TARGET ENABLER
     public void EnableSimpleController() { using_simple_target = true; }
     public void DisableSimpleController() { using_simple_target = false; }
+    public void ResetSimpleControllerToCenter()
+    {
+        if (simple_target == null) { return; }
+        simple_target.transform.position = new Vector3(0, 0, simple_target.transform.position.z);        
+    }
 
     // CAPABLE TARGET SETTER
     public void ChangeCapableTarget(Capable new_target, bool tp = false)

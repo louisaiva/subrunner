@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b504b78d5e32465408419f8d61a3fb79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Writer
-  caracters_per_sec: 100
+  caracters_per_sec: 250
   slow_caractere_delay: 0.1
   pause_caractere_delay: 0.5
   log_writing: 0
@@ -577,6 +577,7 @@ MonoBehaviour:
   slots_parents:
   - {fileID: 3036331589039489815}
   - {fileID: 4554549092564899506}
+  deep_search: 0
 --- !u!114 &1070388921569229063
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -593,8 +594,6 @@ MonoBehaviour:
   Showed: 0
   Stacked: 0
   Settings: {fileID: 11400000, guid: da7c735475243e04798a5e9dd50c4c51, type: 2}
-  angle_threshold: 45
-  angle_multiplicator: 0
   ui_elements:
   - {fileID: 8351562765810058805}
   - {fileID: 3729714555665513387}

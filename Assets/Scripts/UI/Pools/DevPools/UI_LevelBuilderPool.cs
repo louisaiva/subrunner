@@ -13,7 +13,7 @@ public class UI_LevelBuilderPool : UI_SlottablePool, Descriptable
     }
 
     // ENABLING
-    protected override void after_added_to_stack()
+    protected override void before_adding_to_stack()
     {
         WorldBuilder.LevelBuilder?.gameObject.SetActive(true);
     }

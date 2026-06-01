@@ -30,7 +30,7 @@ public class UI_WorldSelector : UI_SlottablePool, Scrollable
         // create the world slots
         WorldManager.Instance.RefreshExistingWorldsData();
         List<WorldData> existing_worlds_data_list = WorldManager.Instance.ExistingWorlds;
-        existing_worlds_data_list.Sort((b, a) => b.last_update_date.CompareTo(a.last_update_date)); // we sort the worlds by last ~~played~~ date
+        existing_worlds_data_list.Sort((a, b) => b.CompareTime(a)); // we sort the worlds by last ~~played~~ date
         foreach (WorldData world_data in existing_worlds_data_list)
         {
             UI_WorldSlot world_slot = Instantiate(world_slot_prefab, world_slots_container);

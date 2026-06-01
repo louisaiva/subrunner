@@ -2,7 +2,7 @@ using UnityEngine.EventSystems;
 
 public class UI_ExitButton : UI_EventButton, Descriptable
 {
-    public string Name => "exit";
+    public string Name => "close";
     public string Description => "";
 
     // POINTER HANDLER

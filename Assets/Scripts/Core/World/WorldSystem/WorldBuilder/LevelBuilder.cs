@@ -168,6 +168,7 @@ public class LevelBuilder : MonoBehaviour
         make_rooms_grab_all_doors();
         make_rooms_grab_all_lights();
 
+        CameraFollow.Instance.ResetSimpleControllerToCenter();
         CameraFollow.Instance.EnableSimpleController();
     }
     private void OnDisable()
