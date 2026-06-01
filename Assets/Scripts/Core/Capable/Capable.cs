@@ -199,6 +199,11 @@ public class Capable : MonoBehaviour, Debuggable
     }
 
 
+    // CONTROLLER EVENTS
+    public virtual void OnControlled() { }
+    public virtual void OnUncontrolled() { }
+
+
     // CAPACITIES REGISTERING
     public void RegisterCapacity(Capacity capa)
     {

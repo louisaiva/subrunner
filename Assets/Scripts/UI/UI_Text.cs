@@ -44,7 +44,7 @@ public class UI_Text : UI_Slot
 
 
     // MAIN CLICK FUNCTIONS
-    public void play()
+    /* public void play()
     {
         // transform.parent.parent.GetComponent<UI_PauseMenu>().hide();
         UI_Manager.Instance.SwitchToHUD();
@@ -89,7 +89,7 @@ public class UI_Text : UI_Slot
     public void credits()
     {
         UI_Manager.Instance.SwitchTo("credits");
-    }
+    } */
 
     // interface functions
     public override void OnPointerEnter(PointerEventData eventData)

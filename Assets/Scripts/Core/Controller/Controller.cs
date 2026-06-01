@@ -226,6 +226,7 @@ public class Controller : MonoBehaviour
         controlled_capable = capable;
         data.controlled_capable_id = capable.ID;
         Debug.Log("(Controller) ++++++++++++++++++++++++++++ NOW CONTROLING " + controlled_capable.ID);
+        controlled_capable.OnControlled();
         OnCapableControlled?.Invoke(controlled_capable);
 
 
@@ -255,6 +256,7 @@ public class Controller : MonoBehaviour
 
         // uncontrol the capable
         OnCapableUncontrolled?.Invoke(controlled_capable);
+        controlled_capable.OnUncontrolled();
         Debug.Log("(Controller) ---------------------------- DONE CONTROLING " + controlled_capable.ID);
         controlled_capable = null;
     }

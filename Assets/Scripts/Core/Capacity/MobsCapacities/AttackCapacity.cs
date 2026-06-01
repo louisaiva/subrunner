@@ -339,7 +339,12 @@ public class AttackCapacity : CooldownCapacity
         health_capa.TakeDamage(dealt_damage, knockback);
 
         // check if enemy is dead
-        if (!health_capa.Alive) { kills += 1; return true; }
+        if (!health_capa.Alive)
+        {
+            kills += 1;
+            DieEngine.Instance.Die(enemy, bearer);
+            return true;
+        }
         return false;
     }
 

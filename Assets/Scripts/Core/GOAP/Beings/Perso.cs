@@ -7,36 +7,6 @@ public class Perso : Movable, Hacker
     public static int Deaths = 0; // nombre de morts du perso
     public override ConnectCapacity Connector => Device?.Connector;
 
-    [Header("PERSO")]
-    // exploits (xp)
-    public int level = 1;
-    public int xp = 0;
-    public int total_xp = 0;
-    public int xp_to_next_level = 100;
-
-    // [Header("SKILLS")]
-    // public SkillManager skillManager;
-    
-
-    [Header("METAMORPH")]
-    [SerializeField] private List<string> metamorph_skins = new List<string>() { "bob", "cat", "zombo", "robot", "apple", "fridge", "small_laptop" };
-
-
-    /* [Header("Items")]
-    public ItemManager ItemManager
-    {
-        get
-        {
-            if (_itemManager == null)
-            {
-                _itemManager = GameObject.Find("/game/item_manager").GetComponent<ItemManager>();
-            }
-            return _itemManager;
-        }
-    }
-    private ItemManager _itemManager; */
-
-
     [Header("Devices")]
     public Laptop _laptop = null; // laptop item in our inventory on the "laptop" slot
     public Laptop Laptop
@@ -116,25 +86,47 @@ public class Perso : Movable, Hacker
     public Action<Device> OnDeviceGranted { get; set; } = delegate { };
 
 
-
-    // AWAKE
-    /* protected override void Awake()
+    // CONTROL
+    private bool callbacks_set = false;
+    public override void OnControlled()
     {
-        base.Awake();
+        // met les callbacks de notif
+        UI_Manager.Instance.GetPool("hud").GetComponent<UI_HUD>().Notifier.SetCallbacks(this);
 
-        // set des logs
-        OnDeviceGranted += (Device new_device) =>
-        {
-            /* if (debug) {  Debug.Log($"(Perso) new device set : {(new_device is Laptop laptop ? laptop.Reference : new_device.name)}"); /* } 
-        };
-        OnDeviceRemoved += (Device old_device) =>
-        {
-            /* if (debug) {  
-            Debug.Log($"(Perso) Device removed: {(old_device is Laptop laptop ? laptop.Reference : old_device.name)}"); /* } 
-        };
-    } */
+        // mets les callbacks de settings
+        SettingsManager.Instance.RegisterCallback("skin", set_skin);
+        SettingsManager.Instance.RegisterCallback("ghost", set_ghost);
 
+        // callbacks de health capacity
+        HealthCapacity health_capacity = GetCapacity<HealthCapacity>();
+        health_capacity.OnTakeDamage += OnDamageTaken;
+        health_capacity.OnHeal += OnLifeAdded;
+        health_capacity.OnDie += OnDie;
 
+        callbacks_set = true;
+    }
+    public override void OnUncontrolled()
+    {
+        // enleve les callbacks de notif
+        UI_Manager.Instance?.GetPool<UI_HUD>()?.Notifier.RemoveCallbacks(this);
+
+        // remove callbacks
+        SettingsManager.Instance.UnregisterCallback("skin", set_skin);
+        SettingsManager.Instance.UnregisterCallback("ghost", set_ghost);
+
+        // callbacks de health capacity
+        HealthCapacity health_capacity = GetCapacity<HealthCapacity>();
+        health_capacity.OnTakeDamage -= OnDamageTaken;
+        health_capacity.OnHeal -= OnLifeAdded;
+        health_capacity.OnDie -= OnDie;
+
+        callbacks_set = false;
+    }
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        if (callbacks_set) { OnUncontrolled(); }
+    }
 
     ///
     //
@@ -142,175 +134,50 @@ public class Perso : Movable, Hacker
     //
     ///
 
-
-    // CALLBACKS
-    private void set_callbacks()
-    {
-        // met les callbacks de notif
-        UI_Manager.Instance.GetPool("hud").GetComponent<UI_HUD>().Notifier.SetCallbacks(this);
-
-        // on met le callback de pour afficher ui_hacking
-        /* UI_Hacking hacking_pool = UI_Manager.Instance.GetPool("hacking").GetComponent<UI_Hacking>();
-        OnDeviceGranted += hacking_pool.HandleDeviceGranted;
-        OnDeviceRemoved += hacking_pool.HandleDeviceRemoved;
-
-        // callbacks de ui_running hacks viewer
-        UI_RunningHacksViewer running_hacks_viewer = hacking_pool.transform.GetComponentInChildren<UI_RunningHacksViewer>(includeInactive: true);
-        OnDeviceGranted += running_hacks_viewer.HandleDeviceGranted;
-        OnDeviceRemoved += running_hacks_viewer.HandleDeviceRemoved;
-
-        // et du cores viewer
-        UI_CoresViewer cores_viewer = hacking_pool.transform.GetComponentInChildren<UI_CoresViewer>(includeInactive: true);
-        OnDeviceGranted += cores_viewer.HandleDeviceGranted;
-        OnDeviceRemoved += cores_viewer.HandleDeviceRemoved; */
-
-        // callbacks de health capacity
-        HealthCapacity health_capacity = GetCapacity<HealthCapacity>();
-        health_capacity.OnTakeDamage += OnDamageTaken;
-        health_capacity.OnHeal += OnLifeAdded;
-        health_capacity.OnDie += OnDie;
-    }
-    private void remove_callbacks()
-    {
-        // enleve les callbacks de notif
-        UI_Manager.Instance?.GetPool<UI_HUD>()?.Notifier.RemoveCallbacks(this);
-
-        // on enleve les callbacks de pour afficher ui_hacking
-        /* UI_Hacking hacking_pool = UI_Manager.Instance.GetPool<UI_Hacking>();
-        OnDeviceGranted -= hacking_pool.HandleDeviceGranted;
-        OnDeviceRemoved -= hacking_pool.HandleDeviceRemoved;
-
-        // callbacks de ui_running hacks viewer
-        UI_RunningHacksViewer running_hacks_viewer = hacking_pool.transform.GetComponentInChildren<UI_RunningHacksViewer>(includeInactive: true);
-        OnDeviceGranted -= running_hacks_viewer.HandleDeviceGranted;
-        OnDeviceRemoved -= running_hacks_viewer.HandleDeviceRemoved;
-        
-        // et du cores viewer
-        UI_CoresViewer cores_viewer = hacking_pool.transform.GetComponentInChildren<UI_CoresViewer>(includeInactive: true);
-        OnDeviceGranted -= cores_viewer.HandleDeviceGranted;
-        OnDeviceRemoved -= cores_viewer.HandleDeviceRemoved; */
-
-        // callbacks de health capacity
-        HealthCapacity health_capacity = GetCapacity<HealthCapacity>();
-        health_capacity.OnTakeDamage -= OnDamageTaken;
-        health_capacity.OnHeal -= OnLifeAdded;
-        health_capacity.OnDie -= OnDie;
-    }
-
     // METAMORPH & GHOST
-    public void Metamorph()
+    private void set_skin(Setting skin_setting)
     {
-        // checks which skins we have
-        string skin = AnimPlayer.Skin;
-
-        // checks if we are a ghost
-        if (skin == "ghost") { ToggleGhost(); }
-
-        // we roll through the list
-        int index = metamorph_skins.IndexOf(skin);
-        if (index == metamorph_skins.Count - 1)
-        {
-            index = 0; // if we are at the end, we go back to the start
-        }
-        else
-        {
-            index += 1; // otherwise we go to the next skin
-        }
-
-        // we set the new skin
-        AnimPlayer.Skin = metamorph_skins[index];
+        set_skin(skin_setting.ToString());
     }
-    public void SetSkin(Setting skin_setting)
+    private void set_skin(string skin_name)
     {
-        SetSkin(skin_setting.ToString());
-    }
-    public void SetSkin(string skin_name)
-    {
-        // checks which skins we have
-        string skin = AnimPlayer.Skin;
-
-        // checks if we are a ghost
-        set_ghost(false);
+        disable_ghost();
 
         // we set the new skin
         AnimPlayer.Skin = skin_name;
     }
-    public void ToggleGhost()
+    private void set_ghost(Setting ghost_setting)
     {
-        if (AnimPlayer.Skin != "ghost")
-        {
-            // on change le skin
-            AnimPlayer.Skin = "ghost";
-
-            // on applique l'Effect Ghost & Invisible
-            AddEffect(Effect.Ghost, -888f);
-            AddEffect(Effect.Invisible, -888f);
-        }
-        else
-        {
-            // on remet le skin de base
-            if (SettingsManager.Instance.GetSetting("skin") is StringSetting skin_setting)
-            {
-                AnimPlayer.Skin = skin_setting.ToString();
-            }
-            else { AnimPlayer.Skin = "bob"; }
-
-            // on enleve l'Effect Ghost & Invisible
-            RemoveEffect(Effect.Ghost);
-            RemoveEffect(Effect.Invisible);
-        }
-
-        // sets the SettingsManager ghost setting
-        if (SettingsManager.Instance.GetSetting("ghost") != null)
-        {
-            SettingsManager.Instance.SetSettingWithoutNotifying("ghost", AnimPlayer.Skin == "ghost" ? 1f : 0f);
-        }
+        bool is_ghost = ghost_setting.Value >= 0.5f;  
+        if (is_ghost && AnimPlayer.Skin != "ghost") { enable_ghost(); }
+        else if (!is_ghost && AnimPlayer.Skin == "ghost") { disable_ghost(); }
     }
-    private void set_ghost(Setting ghost_setting) { set_ghost(ghost_setting.Value >= 0.5f); }
-    private void set_ghost(bool activate=false) { set_ghost(activate ? 1f : 0f); }
-    private void set_ghost(float value)
+    public void enable_ghost()
     {
-        bool is_ghost = value >= 0.5f;  
-        if (is_ghost && AnimPlayer.Skin != "ghost")
-        {
-            ToggleGhost();
-        }
-        else if (!is_ghost && AnimPlayer.Skin == "ghost")
-        {
-            ToggleGhost();
-        }
+        // on change le skin
+        AnimPlayer.Skin = "ghost";
+
+        // on applique l'Effect Ghost & Invisible
+        AddEffect(Effect.Ghost, -888f);
+        AddEffect(Effect.Invisible, -888f);
+
+        SettingsManager.Instance.SetSettingWithoutNotifying("ghost", 1f);
     }
-
-    // XP
-    /* public void addXP(int count)
+    public void disable_ghost()
     {
-        xp += count;
-        total_xp += count;
-        if (xp >= xp_to_next_level)
+        // on change le skin
+        if (SettingsManager.Instance.GetSetting("skin") is StringSetting skin_setting)
         {
-            levelUp();
+            AnimPlayer.Skin = skin_setting.ToString();
         }
+        else { AnimPlayer.Skin = "bob"; }
+
+        // on enleve l'Effect Ghost & Invisible
+        RemoveEffect(Effect.Ghost);
+        RemoveEffect(Effect.Invisible);
+
+        SettingsManager.Instance.SetSettingWithoutNotifying("ghost", 0f);
     }
-    private void levelUp()
-    {
-        level += 1;
-        xp = 0;
-        xp_to_next_level = (int)(xp_to_next_level * 1.5f);
-
-        Debug.Log("LEVEL UP ! level " + level);
-
-        // on ouvre le level up menu
-        UI_Manager.Instance.SwitchTo("level_up", force: true);
-
-        // on augmente x1.5 l'attaque
-        if (HasCapacity("attack"))
-        {
-            transform.Find("attack").GetComponent<AttackCapacity>().damage *= 1.5f;
-        }
-
-        // on affiche un texte de level up
-        FloatingDmgProvider.Instance.TextManager.addFloatingText("LEVEL " + level.ToString(), transform.position + new Vector3(0, 0.5f, 0), "yellow");
-    } */
 
     // HEAL & DAMAGE CALLBACKS
     public void OnLifeAdded(float life)
@@ -343,51 +210,9 @@ public class Perso : Movable, Hacker
         // on affiche un floating text
         FloatingDmgProvider.Instance.TextManager.addFloatingText("YOU DIED", transform.position + new Vector3(0, 0.5f, 0), "red");
 
-        // on désactive le Controller & PersoInputsController
-        // Controller.LazyInstance.Uncontrol(ID);
-        // Controller.LazyInstance.PIC.DisableInputs();
-
-
         // on switch au game_over panel
         UI_Manager.Instance.SwitchTo("game_over",force:true,override_transition:true);
-
-        // on désactive plein de choses
-        // Destroy(GetComponent<SeeThroughHandler>());
-        // Destroy(transform.Find("body").GetComponent<ParticleSystemForceField>());
-
-        // remove_callbacks();
-
     }
-
-
-
-
-
-    ///
-    //
-    /// DATA MANAGEMENT
-    //
-    ///
-
-    public override void LoadData(CapableData data)
-    {
-        base.LoadData(data);
-
-        // mets les callbacks
-        set_callbacks();
-        SettingsManager.Instance.RegisterCallback("skin", SetSkin);
-        SettingsManager.Instance.RegisterCallback("ghost_mode", set_ghost);
-    }
-    public override void UnloadData()
-    {
-        // remove callbacks
-        SettingsManager.Instance.UnregisterCallback("skin", SetSkin);
-        SettingsManager.Instance.UnregisterCallback("ghost_mode", set_ghost);
-        remove_callbacks();
-
-        base.UnloadData();
-    }
-
 }
 
 public class PersoData : CapableData

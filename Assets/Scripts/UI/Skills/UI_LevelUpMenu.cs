@@ -27,10 +27,10 @@ public class UI_LevelUpMenu : UI_Pool
     
 
     // ENABLING
-    protected override IEnumerator enable_coroutine()
+    /* protected override IEnumerator enable_coroutine()
     {
         // update the level text
-        level_text.text = "LEVEL " + GameObject.Find("/perso").GetComponent<Perso>().level.ToString();
+        // level_text.text = "LEVEL " + GameObject.Find("/perso").GetComponent<Perso>().level.ToString();
 
         yield return new WaitForSecondsRealtime(delay_before_activating_buttons);
 
@@ -42,5 +42,5 @@ public class UI_LevelUpMenu : UI_Pool
         // on désactive le navigator
         slottable.Disable();
         yield break;
-    }
+    } */
 }
