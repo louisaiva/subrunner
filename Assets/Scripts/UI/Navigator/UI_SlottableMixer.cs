@@ -91,6 +91,7 @@ public class UI_SlottableMixer : UI_Slottable, Awakable
         // on ajoute tous les slots de tous les slottables
         for (int i = 0; i < slottables.Count; i++)
         {
+            if (log) { Debug.Log($"(UI_SlottableMixer) {name} getting slots from slottable {i} : {slottables[i].name}"); }
             slots.AddRange(slottables[i].GetSlots());
         }
 

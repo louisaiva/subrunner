@@ -25,7 +25,12 @@ public class UI_Descriptor : MonoBehaviour
 
     // ON ENABLE / DISABLE
     protected void OnEnable() { register_callbacks(); }
-    protected void OnDisable() { unregister_callbacks(); }
+    protected void OnDisable()
+    {
+        unregister_callbacks();
+        name_desc.Clear();
+        data_desc.Clear();
+    }
 
 
     // CALLBACKS REGISTER

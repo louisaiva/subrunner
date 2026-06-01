@@ -220,4 +220,21 @@ public class UI_Writer : MonoBehaviour
         if (log_writing) { Debug.Log($"(UI_Writer) calculating chars per frame : {caracters_per_sec * Time.unscaledDeltaTime} cpf"); }
         return caracters_per_sec * Time.unscaledDeltaTime;
     }
+
+    // CLEAR
+    public void Clear()
+    {
+        if (writing_coroutine != null)
+        {
+            StopCoroutine(writing_coroutine);
+            writing_coroutine = null;
+        }
+        current_raw_writing = "";
+        target_writing = "";
+        pause_indexes = new List<int>();
+        dot_indexes = new List<int>();
+        cursor = 0;
+        label.text = "";
+    }
+
 }

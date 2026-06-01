@@ -10,7 +10,6 @@ public class UI_InventoryMenu : UI_Pool
     [SerializeField] private bool log_ui_attachment = false;
     [SerializeField] private bool log_specific_get_item_pools = false;
 
-    private List<GameObject> saved_slots = new List<GameObject>();
     [Header("Inventory Menu Components")]
     [SerializeField] private Transform no_inventory_panel;
 
@@ -23,10 +22,17 @@ public class UI_InventoryMenu : UI_Pool
 
     [Header("Components")]
     public UI_SlottableMixer slottable_mixer;
+    private UI_ParentBasedSlottable parent_based_slottable;
 
     // AWAKE START
+    private List<GameObject> saved_slots = new List<GameObject>();
+    private List<Transform> saved_parent_based_slottable_parents = new List<Transform>();
     protected override void Awake()
     {
+        // we save the current parents of the parent based slottables in saved_parent_based_slottable_parents
+        parent_based_slottable = GetComponent<UI_ParentBasedSlottable>();
+        if (parent_based_slottable != null) { saved_parent_based_slottable_parents = new List<Transform>(parent_based_slottable.SlotsParents); }
+
         // we save the current ui_elements state in saved_state
         saved_slots = new List<GameObject>(ui_elements);
         base.Awake();
@@ -114,8 +120,16 @@ public class UI_InventoryMenu : UI_Pool
     {
         // vérifie si on a des items dans notre inventaire
         ui_elements.Clear();
-        if (Controller.Perso == null || Controller.Perso.Inventory.Count == 0) { ui_elements.Add(no_inventory_panel.gameObject); }
-        else { ui_elements.AddRange(saved_slots); }
+        if (Controller.Perso == null || Controller.Perso.Inventory.Count == 0)
+        {
+            ui_elements.Add(no_inventory_panel.gameObject);
+            parent_based_slottable.SlotsParents = new List<Transform>() { no_inventory_panel };
+        }
+        else
+        {
+            ui_elements.AddRange(saved_slots);
+            parent_based_slottable.SlotsParents = new List<Transform>(saved_parent_based_slottable_parents);
+        }
 
         // on affiche les items pool & indicators et on les refresh
         List<GameObject> manually_shown = get_all_uis_with_item_pools();
@@ -133,7 +147,7 @@ public class UI_InventoryMenu : UI_Pool
     protected override IEnumerator enable_coroutine()
     {
         // on active le navigator si on a des items
-        if (Controller.Perso == null || Controller.Perso.Inventory.Count == 0) { yield break; }
+        // if (Controller.Perso == null || Controller.Perso.Inventory.Count == 0) { yield break; }
         slottable_mixer.Enable(ingame: false);
         yield break;
     }
