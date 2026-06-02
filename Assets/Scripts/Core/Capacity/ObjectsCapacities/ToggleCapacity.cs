@@ -35,7 +35,7 @@ public class ToggleCapacity : Capacity
     // AWAKE
     private void Start()
     {
-        if (player == null) { player = Capable.AnimPlayer; }
+        if (player == null) { player = Visual as AnimPlayer; }
         if (hover == null) { hover = Capable.GetCapacity<HoverCapacity>(); }
         if (interactable == null)
         {
@@ -51,7 +51,7 @@ public class ToggleCapacity : Capacity
     public void TurnON()
     {
         // we switch idle animation
-        player.AddToPile(idle_on_anim);
+        player?.AddToPile(idle_on_anim);
 
         // we switch hover animation
         if (hover != null) { hover.ChangeAnimation(hover_on_anim); }
@@ -65,7 +65,7 @@ public class ToggleCapacity : Capacity
     public void TurnOFF()
     {
         // we switch idle animation
-        player.StopPlaying(idle_on_anim);
+        player?.StopPlaying(idle_on_anim);
 
         // we switch hover animation
         if (hover != null) { hover.ChangeAnimation(hover_off_anim); }

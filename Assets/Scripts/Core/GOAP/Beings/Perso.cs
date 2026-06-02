@@ -134,6 +134,8 @@ public class Perso : Movable, Hacker
     //
     ///
 
+    private AnimPlayer AnimPlayer => Visual as AnimPlayer;
+
     // METAMORPH & GHOST
     private void set_skin(Setting skin_setting)
     {
@@ -142,6 +144,7 @@ public class Perso : Movable, Hacker
     private void set_skin(string skin_name)
     {
         disable_ghost();
+
 
         // we set the new skin
         AnimPlayer.Skin = skin_name;

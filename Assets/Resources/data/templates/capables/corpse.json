@@ -11,40 +11,11 @@
     },
     "layer": 13,
     "tag": "Untagged",
-    "anim_data": {
-        "skin_kind": "",
-        "skin": "bones",
-        "anim_capacity_priorities": [
-            {
-                "priority": 0,
-                "capacity_playing": "",
-                "capacities": [
-                    "idle"
-                ],
-                "lock_orientation": false,
-                "one_shot": false
-            },
-            {
-                "priority": 5,
-                "capacity_playing": "",
-                "capacities": [
-                    "die"
-                ],
-                "lock_orientation": true,
-                "one_shot": false
-            }
-        ],
-        "current_capacity": "",
-        "material_name": "beings",
-        "sorting_layer_id": -667374433,
-        "order_in_layer": 0,
-        "never_flip": false,
-        "layers": [],
-        "local_position": {
-            "x": 0.0,
-            "y": 0.0
-        }
-    },
+    "capacities_ids": [
+        "corpse_anim",
+        "hover",
+        "item_iic"
+    ],
     "inventory": {
         "item_pools_data": [
             {
@@ -100,10 +71,6 @@
             }
         ]
     },
-    "capacities_ids": [
-        "hover",
-        "item_iic"
-    ],
     "effects": [],
     "effects_ttl": [],
     "reference": "category:item",

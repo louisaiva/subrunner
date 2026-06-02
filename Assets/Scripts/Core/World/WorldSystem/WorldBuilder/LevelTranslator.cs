@@ -432,7 +432,7 @@ public class LevelTranslator : MonoBehaviour
             string template = door_visu.is_vertical ? "steel_door" : "steel_door_LR";
             // door = Instantiate(door_prefab, capables_parent);
             door = (Door) CapableEngine.Instance.LoadCapableInstantly(template);
-            door.AnimPlayer.Show();
+            door.Visual.Show();
             door.transform.SetParent(capables_parent);
             door.name = $"{template}-{doors_placed.Count}";
 

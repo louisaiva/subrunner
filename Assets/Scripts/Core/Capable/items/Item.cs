@@ -267,26 +267,26 @@ public class Item : Movable, EndlessInteractable
         transform.localScale = Vector3.one;
         if (!Placed && Grabbed)
         {
-            AnimPlayer.Hide();
+            Visual?.Hide();
             if (Inventory != null)
             {
                 List<Item> items = Inventory.Items;
                 for (int i = 0; i < items.Count; i++)
                 {
-                    items[i].AnimPlayer.Hide();
+                    items[i].Visual?.Hide();
                 }
             }
         }
         else
         {
-            AnimPlayer.Show();
+            Visual?.Show();
             if (Inventory != null)
             {
                 List<Item> items = Inventory.Items;
                 for (int i = 0; i < items.Count; i++)
                 {
                     if (!items[i].Placed) { continue; }
-                    items[i].AnimPlayer.Show();
+                    items[i].Visual?.Show();
                 }
             }
         }
@@ -453,12 +453,12 @@ public class ItemData : CapableData
         tag = capdata.tag;
 
         // anim data
-        if (capdata.anim_data != null)
+        /* if (acdata != null)
         {
-            AnimPlayerData new_anim_data = capdata.anim_data.Duplicate();
+            AnimPlayerData new_anim_data = acdata.Duplicate();
             new_anim_data.anim_capacity_priorities = this.anim_data.anim_capacity_priorities; // we keep the same anim capa priorities as the corpse template (ex : corpse anim capa priorities will be different from player anim capa priorities for example, because we want the corpse to play the "die" animation which has a higher priority than the "walk" animation for example, while for the player we want the "walk" animation to have a higher priority than the "die" animation for example)
             anim_data = new_anim_data;
-        }
+        } */
 
         if (template is null)
         {

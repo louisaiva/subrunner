@@ -79,8 +79,9 @@ GameObject:
   - component: {fileID: 4557548938234173875}
   - component: {fileID: 6570263491771254946}
   - component: {fileID: 78655778427753747}
+  - component: {fileID: 173131238316611364}
   m_Layer: 23
-  m_Name: anim_player
+  m_Name: cat_anim
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -224,6 +225,27 @@ MonoBehaviour:
   log_pile: 0
   log_material: 0
   visible_on: 1
+--- !u!114 &173131238316611364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5353251917081135242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90c2c539dbbc8784fb9abc95ffa6ada3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimCapacity
+  data:
+    <id>k__BackingField: 
+    <owner_id>k__BackingField: 
+    kind: 
+    local_position: {x: 0, y: 0}
+    layer: 0
+    tag: 
+  log: 0
+  _anim_player: {fileID: 0}
 --- !u!1 &6831872210500143280
 GameObject:
   m_ObjectHideFlags: 0

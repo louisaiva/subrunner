@@ -28,6 +28,7 @@ public class OpenCapacity : Capacity
     public string hover_open_anim = "hover";
     public string idle_open_anim = "idle_open";
 
+    private AnimPlayer AnimPlayer => Visual as AnimPlayer;
     private CloseCapacity _close_capacity;
     private CloseCapacity close_capacity
     {
@@ -51,7 +52,7 @@ public class OpenCapacity : Capacity
         // on joue l'animation
         if (play_anim_and_sound)
         {
-            Capable.AnimPlayer.Play(open_anim, duration_override: opening_duration);
+            AnimPlayer.Play(open_anim, duration_override: opening_duration);
 
             // on joue le son
             AudioEngine.Instance.Play("open", Capable.Skin, Capable.gameObject);
@@ -79,7 +80,7 @@ public class OpenCapacity : Capacity
         openable.is_moving = false;
 
         // on joue l'animation
-        Capable.AnimPlayer.AddToPile(idle_open_anim);
+        AnimPlayer.AddToPile(idle_open_anim);
         GetSiblingCapacity<HoverCapacity>()?.ChangeAnimation(hover_open_anim);
 
         if (log) { Debug.Log(Capable.ID + " is open !"); }
@@ -112,9 +113,9 @@ public class OpenCapacity : Capacity
 
 
     // LOAD / UNLOAD DATA
-    public override void LoadData(CapacityData data)
+    public override void LoadData(CapacityData data, CapableData owner)
     {
-        base.LoadData(data);
+        base.LoadData(data, owner);
 
         if (data is not OpenCapacityData open_data) { return; }
         this.opening_duration = open_data.opening_duration;

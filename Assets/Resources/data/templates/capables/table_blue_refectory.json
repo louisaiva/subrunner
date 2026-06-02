@@ -11,21 +11,11 @@
     },
     "layer": 29,
     "tag": "Untagged",
-    "anim_data": {
-        "skin_kind": "",
-        "skin": "",
-        "anim_capacity_priorities": [],
-        "current_capacity": "",
-        "material_name": "",
-        "sorting_layer_id": 0,
-        "order_in_layer": 0,
-        "never_flip": false,
-        "layers": [],
-        "local_position": {
-            "x": 0.0,
-            "y": 0.0
-        }
-    },
+    "capacities_ids": [
+        "table_blue_refectory_bottom_sr",
+        "table_blue_refectory_mid_sr",
+        "table_blue_refectory_up_sr"
+    ],
     "inventory": {
         "item_pools_data": [],
         "item_type": 0
@@ -98,11 +88,6 @@
         ],
         "circle_colliders": []
     },
-    "capacities_ids": [
-        "table_blue_refectory_bottom_sr",
-        "table_blue_refectory_mid_sr",
-        "table_blue_refectory_up_sr"
-    ],
     "effects": [],
     "effects_ttl": []
 }

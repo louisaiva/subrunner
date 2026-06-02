@@ -45,12 +45,13 @@ public class Capable : MonoBehaviour, Debuggable
             if (value != Vector2.zero)
             {
                 orientation = value.normalized;
-                AnimPlayer.SetOrientation(orientation);
+                // AnimPlayer.SetOrientation(orientation);
+                (Visual as AnimPlayer)?.SetOrientation(orientation);
             }
         }
     }
     public void ClearInputs() { inputs = Vector2.zero; } // does the same than Orientation = Vector2.zero; but more optimized
-    public string Skin => (AnimPlayer == null) ? "none" : AnimPlayer.Skin;
+    public string Skin => Visual?.Skin ?? string.Empty;
 
     [Header("Capacities")]
     [SerializeField] private List<Capacity> capacities = new List<Capacity>();
@@ -66,7 +67,7 @@ public class Capable : MonoBehaviour, Debuggable
     protected bool going_to_be_destroyed = false;
 
     // anim player
-    private AnimPlayer _anim_player = null;
+    /* private AnimPlayer _anim_player = null;
     public AnimPlayer AnimPlayer
     {
         get
@@ -79,6 +80,28 @@ public class Capable : MonoBehaviour, Debuggable
             return _anim_player;
         }
         private set { _anim_player = value; }
+    } */
+    private Visualizable _visual = null;
+    public Visualizable Visual
+    {
+        get
+        {
+            if (_visual == null)
+            {
+                if (TryGetCapacity<VisualCapacity>(out var visu_capa)) { _visual = visu_capa.Visual; }
+                else if (TryGetCapacity<AnimCapacity>(out var anim_capa)) { _visual = anim_capa.Visual; }
+            }
+            return _visual;
+        }
+    }
+    public AnimPlayer AnimPlayer
+    {
+        get
+        {
+            if (Visual is AnimPlayer anim_player) { return anim_player; }
+            Debug.LogError($"(Capable - AnimPlayer) Trying to get AnimPlayer from capable '{ID}' (loaded ? {Loaded}) but its visual is not an AnimPlayer");
+            return null;
+        }
     }
 
     // feet
@@ -423,7 +446,7 @@ public class Capable : MonoBehaviour, Debuggable
         text += "type : " + GetType().Name.ToLower() + "\n";
         text += "skin : " + Skin + "\n\n";
         text += $"position :\n>>> x : {transform.position.x.ToString("F2")}\n>>> y : {transform.position.y.ToString("F2")}\n";
-        text += "orientation : " + AnimPlayer.orientation + $"\n>>> x : {orientation.x.ToString("F2")}\n>>> y : {orientation.y.ToString("F2")}\n";
+        text += "orientation : " + (Visual as AnimPlayer)?.orientation + $"\n>>> x : {orientation.x.ToString("F2")}\n>>> y : {orientation.y.ToString("F2")}\n";
 
         text += "\ncapacities : " + capacities.Count + "\n";
         List<string> capa_names = capacities.Select(c => c.name).ToList();
@@ -461,9 +484,9 @@ public class Capable : MonoBehaviour, Debuggable
         if (!string.IsNullOrEmpty(data.tag)) { gameObject.tag = data.tag; }
 
         // we set the orientation
-        this.Orientation = data.orientation;
+        this.Orientation = data.orientation; // ! this won't update the AnimPlayer orientation...
 
-        // ! the colliders & anim data are loaded directly from CapableBank since we pool them
+        // ! the feet colliders are loaded directly from CapableBank since we pool them
 
         // we load the inventory (and so the items)
         if (Inventory != null)
@@ -478,12 +501,12 @@ public class Capable : MonoBehaviour, Debuggable
             AddEffect(data.effects[i], data.effects_ttl[i]);
         }
 
+        // we fire the data loaded event
+        data.OnLoaded(this);
+
         // we load the capacities
         if (CapableEngine.Instance.log_loading_extended) { Debug.Log($"(Capable - LoadData) Calling CapacitySystem loading for capacities : {string.Join(" ", data.capacities_ids)}"); }
         this.capacities = CapacityEngine.Instance.LoadCapacities(data.capacities_ids, this);
-
-        // we fire the data loaded event
-        data.OnLoaded(this);
     }
     public virtual void UnloadData()
     {
@@ -514,8 +537,6 @@ public class Capable : MonoBehaviour, Debuggable
         // we save some general data
         this.data.position = this.transform.position;
 
-        // we save the anim player
-        AnimPlayer?.SaveDynamicPlayerData(this.data.anim_data);
 
         // we save the inventory (and so the items)
         Inventory?.SaveDynamicInventoryData();
@@ -563,8 +584,8 @@ public class Capable : MonoBehaviour, Debuggable
 
 
         // we set the anim data
-        LogGSD?.LogExtended($"Getting anim player data");
-        static_data.anim_data = AnimPlayer?.GetStaticAnimData();
+        // LogGSD?.LogExtended($"Getting anim player data");
+        // static_data.anim_data = AnimPlayer?.GetStaticAnimData();
 
         // we set the inventory
         LogGSD?.LogExtended($"Getting inventory data");
@@ -590,12 +611,12 @@ public class Capable : MonoBehaviour, Debuggable
     protected List<string> get_static_capacity_ids()
     {
         List<string> capacities_ids = new List<string>();
+        List<Capacity> capacities = GetStaticCapacities();
 
         // we go through all children and check if we have capacities
-        for (int i = 0; i < transform.childCount; i++)
+        for (int i = 0; i < capacities.Count; i++)
         {
-            Transform child = transform.GetChild(i);
-            Capacity capa = child.GetComponent<Capacity>();
+            Capacity capa = capacities[i];
             if (capa == null) { continue; }
             if (capa.data.id == "") { capa.data.id = capa.name; }
             capacities_ids.Add(capa.data.id);
@@ -647,7 +668,20 @@ public class Capable : MonoBehaviour, Debuggable
     }
     public List<Capacity> GetStaticCapacities()
     {
-        return GetComponentsInChildren<Capacity>(includeInactive: true).ToList();
+        List<Capacity> capacities = new List<Capacity>();
+
+        // we get the capacities on ourself
+        capacities.AddRange(GetComponents<Capacity>());
+
+        // we go through all children and check if we have capacities
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            Transform child = transform.GetChild(i);
+            Capacity capa = child.GetComponent<Capacity>();
+            if (capa == null) { continue; }
+            capacities.Add(capa);
+        }
+        return capacities;
     }
 }
 

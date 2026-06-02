@@ -10,9 +10,9 @@ public class ColliderCapacity : Capacity
     private List<BoxCollider2D> box_colliders = new List<BoxCollider2D>();
 
     // LOAD / UNLOAD DATA
-    public override void LoadData(CapacityData data)
+    public override void LoadData(CapacityData data, CapableData owner)
     {
-        base.LoadData(data);
+        base.LoadData(data, owner);
 
         if (data is not ColliderCapacityData ccdata) { return; }
 

@@ -11,58 +11,9 @@
     },
     "layer": 24,
     "tag": "Item",
-    "anim_data": {
-        "skin_kind": "",
-        "skin": "vacuum",
-        "anim_capacity_priorities": [
-            {
-                "priority": 0,
-                "capacity_playing": "",
-                "capacities": [
-                    "idle"
-                ],
-                "lock_orientation": false,
-                "one_shot": false
-            },
-            {
-                "priority": 1,
-                "capacity_playing": "",
-                "capacities": [
-                    "hover"
-                ],
-                "lock_orientation": false,
-                "one_shot": false
-            }
-        ],
-        "current_capacity": "",
-        "material_name": "objects",
-        "sorting_layer_id": -667374433,
-        "order_in_layer": 0,
-        "never_flip": false,
-        "layers": [
-            {
-                "skin": "vacuum_ground",
-                "local_position": {
-                    "x": 0.0,
-                    "y": 0.0
-                },
-                "local_rotation": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "material_name": "objects",
-                "sorting_layer_id": -31225397,
-                "order_in_layer": 10,
-                "never_flip": false,
-                "follow_duration": true
-            }
-        ],
-        "local_position": {
-            "x": 0.0,
-            "y": 0.0
-        }
-    },
+    "capacities_ids": [
+        "hover"
+    ],
     "inventory": {
         "item_pools_data": [],
         "item_type": 0
@@ -93,9 +44,6 @@
         ],
         "circle_colliders": []
     },
-    "capacities_ids": [
-        "hover"
-    ],
     "effects": [],
     "effects_ttl": [],
     "reference": "tool:vacuum",

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 6192736764969982114}
   - component: {fileID: 5774900213290669037}
   - component: {fileID: 8603981721986509894}
+  - component: {fileID: 7102874930100558605}
   m_Layer: 24
   m_Name: katana
   m_TagString: Item
@@ -244,6 +245,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
   capacity_template_id: hover
+  capacity_template_ids: []
 --- !u!114 &8603981721986509894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -257,6 +259,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
   capacity_template_id: item_iic
+  capacity_template_ids: []
+--- !u!114 &7102874930100558605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1585086034924696582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90c2c539dbbc8784fb9abc95ffa6ada3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimCapacity
+  data:
+    <id>k__BackingField: katana_anim
+    <owner_id>k__BackingField: 
+    kind: 
+    local_position: {x: 0, y: 0}
+    layer: 0
+    tag: 
+  log: 0
+  _anim_player: {fileID: 0}
 --- !u!1 &4492977600399552964
 GameObject:
   m_ObjectHideFlags: 0

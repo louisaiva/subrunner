@@ -8,6 +8,9 @@ public class Vacuum : Item, Usable
 
     public void Use(Capable user)
     {
+        AnimPlayer AnimPlayer = Visual as AnimPlayer;
+        if (AnimPlayer == null) { Debug.LogWarning("Vacuum has no AnimPlayer!"); return; }
+
         AnimPlayer.Show();
         on = !on;
         if (on)

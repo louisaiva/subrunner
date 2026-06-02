@@ -605,8 +605,9 @@ GameObject:
   - component: {fileID: 1559166179820641757}
   - component: {fileID: 3484788191966803862}
   - component: {fileID: 3796505688560958322}
+  - component: {fileID: 6572437910330265449}
   m_Layer: 0
-  m_Name: anim_player
+  m_Name: forge3D_anim
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -754,6 +755,27 @@ MonoBehaviour:
   log_pile: 0
   log_material: 0
   visible_on: 1
+--- !u!114 &6572437910330265449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6659493778076281538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90c2c539dbbc8784fb9abc95ffa6ada3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimCapacity
+  data:
+    <id>k__BackingField: 
+    <owner_id>k__BackingField: 
+    kind: 
+    local_position: {x: 0, y: 0}
+    layer: 0
+    tag: 
+  log: 0
+  _anim_player: {fileID: 0}
 --- !u!1 &7604491874015979085
 GameObject:
   m_ObjectHideFlags: 0
@@ -1144,7 +1166,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9041039232457599220}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

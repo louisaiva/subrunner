@@ -9,6 +9,8 @@ public class SitCapacity : Capacity
     private Coroutine zap_coroutine;
     private Coroutine sit_stand_coroutine;
 
+    private AnimPlayer AnimPlayer => Visual as AnimPlayer;
+
 
 
     // SIT & STAND
@@ -133,9 +135,9 @@ public class SitCapacity : Capacity
 
 
     // LOAD / UNLOAD DATA
-    public override void LoadData(CapacityData data)
+    public override void LoadData(CapacityData data, CapableData owner)
     {
-        base.LoadData(data);
+        base.LoadData(data, owner);
         
         current_sofa = null;
     }

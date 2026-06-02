@@ -46,6 +46,7 @@ SortingGroup:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
 --- !u!1 &2900277929405584882
 GameObject:
   m_ObjectHideFlags: 0
@@ -81,6 +82,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &58915507701175610
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -126,6 +128,7 @@ SpriteRenderer:
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: -1563095262, guid: 744083103c3e3a64c821160c383dfa45, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -135,7 +138,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 1
 --- !u!114 &9068619082514639796
 MonoBehaviour:
@@ -159,9 +161,13 @@ MonoBehaviour:
     loop: 1
     speed: 1
     flipX: 0
-  update_each_frame: 1
+  follow_duration: 0
+  never_flip: 0
   log: 0
   log_frames: 0
+  log_assign: 0
+  already_assigned: 0
+  visible_on: 0
 --- !u!1 &3926307753535503465
 GameObject:
   m_ObjectHideFlags: 0
@@ -197,6 +203,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1959296888494120472
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -242,6 +249,7 @@ SpriteRenderer:
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 2008690080, guid: 14fa1dcbbd007d04a878239475de9844, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -251,7 +259,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 1
 --- !u!114 &5728114558119082949
 MonoBehaviour:
@@ -275,9 +282,13 @@ MonoBehaviour:
     loop: 1
     speed: 1
     flipX: 0
-  update_each_frame: 1
+  follow_duration: 0
+  never_flip: 0
   log: 0
   log_frames: 0
+  log_assign: 0
+  already_assigned: 0
+  visible_on: 0
 --- !u!1 &3942014845881588173
 GameObject:
   m_ObjectHideFlags: 0
@@ -313,6 +324,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3895761462645275030
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -358,6 +370,7 @@ SpriteRenderer:
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 102181157, guid: ffd008732910c1d46b50f2f8a7691cd4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -367,7 +380,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 1
 --- !u!114 &2670965610511403576
 MonoBehaviour:
@@ -391,9 +403,13 @@ MonoBehaviour:
     loop: 1
     speed: 1
     flipX: 0
-  update_each_frame: 1
+  follow_duration: 0
+  never_flip: 0
   log: 0
   log_frames: 0
+  log_assign: 0
+  already_assigned: 0
+  visible_on: 0
 --- !u!1 &7516301856110035524
 GameObject:
   m_ObjectHideFlags: 0
@@ -408,6 +424,7 @@ GameObject:
   - component: {fileID: 4427596815249989793}
   - component: {fileID: 5491889510270157173}
   - component: {fileID: 4559125228339760668}
+  - component: {fileID: 1625041572322497256}
   m_Layer: 29
   m_Name: module_station
   m_TagString: Untagged
@@ -424,7 +441,7 @@ Transform:
   m_GameObject: {fileID: 7516301856110035524}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.313999, y: 5.889, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -437,6 +454,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3559215865483671026
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -482,6 +500,7 @@ SpriteRenderer:
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: -1468648538, guid: c4c96ff63db1b8b48a740dfb3fd27ba2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_FlipX: 0
@@ -491,7 +510,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 1
 --- !u!114 &7768243184324143728
 MonoBehaviour:
@@ -506,7 +524,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: station
-  current_capacity: 
+  <orientation>k__BackingField: D
   current_anim:
     name: 
     sprites_paths: []
@@ -537,11 +555,14 @@ MonoBehaviour:
     - offin
     lock_orientation: 1
     one_shot: 1
+  never_flip: 0
   log: 0
   log_orientation: 0
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
+  visible_on: 1
 --- !u!114 &4427596815249989793
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -616,19 +637,68 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdd108960b484694b9ec1a5af53951ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ServerRack
+  data:
+    <id>k__BackingField: 
+    kind: 
+    position: {x: 0, y: 0}
+    orientation: {x: 0, y: 0}
+    layer: 0
+    tag: 
+    anim_data:
+      skin_kind: 
+      skin: 
+      anim_capacity_priorities: []
+      current_capacity: 
+      material_name: 
+      sorting_layer_id: 0
+      order_in_layer: 0
+      never_flip: 0
+      layers: []
+      local_position: {x: 0, y: 0}
+    inventory:
+      item_pools_data: []
+      item_type: 0
+    feet_data:
+      box_colliders: []
+      circle_colliders: []
+    capacities_ids: []
+    effects: 
+    effects_ttl: []
   inputs: {x: 0, y: 0}
   orientation: {x: 0, y: -1}
   capacities: []
   effects: 
   effects_timetolive: []
-  debug: 0
+  log: 0
   activate_all_capacities_logs_on_awake: 0
+  log_static_data: 0
   log_keys: 0
   disks: []
   is_on: 0
   is_moving: 0
   power_off_delay: 1
   interactors: []
+--- !u!114 &1625041572322497256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7516301856110035524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90c2c539dbbc8784fb9abc95ffa6ada3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimCapacity
+  data:
+    <id>k__BackingField: blue_module_station_anim
+    <owner_id>k__BackingField: 
+    kind: 
+    local_position: {x: 0, y: 0}
+    layer: 0
+    tag: 
+  log: 0
+  _anim_player: {fileID: 0}
 --- !u!1001 &4592497441304863529
 PrefabInstance:
   m_ObjectHideFlags: 0

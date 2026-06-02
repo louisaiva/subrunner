@@ -11,103 +11,15 @@
     },
     "layer": 29,
     "tag": "Untagged",
-    "anim_data": {
-        "skin_kind": "",
-        "skin": "forge3D",
-        "anim_capacity_priorities": [
-            {
-                "priority": 0,
-                "capacity_playing": "idle",
-                "capacities": [
-                    "idle"
-                ],
-                "lock_orientation": false,
-                "one_shot": false
-            },
-            {
-                "priority": 1,
-                "capacity_playing": "",
-                "capacities": [
-                    "hover"
-                ],
-                "lock_orientation": false,
-                "one_shot": false
-            },
-            {
-                "priority": 1,
-                "capacity_playing": "",
-                "capacities": [
-                    "turn_on",
-                    "turn_off"
-                ],
-                "lock_orientation": true,
-                "one_shot": true
-            },
-            {
-                "priority": 1,
-                "capacity_playing": "",
-                "capacities": [
-                    "idle_on"
-                ],
-                "lock_orientation": false,
-                "one_shot": false
-            },
-            {
-                "priority": 1,
-                "capacity_playing": "",
-                "capacities": [
-                    "craft"
-                ],
-                "lock_orientation": false,
-                "one_shot": false
-            }
-        ],
-        "current_capacity": "",
-        "material_name": "objects",
-        "sorting_layer_id": -667374433,
-        "order_in_layer": 0,
-        "never_flip": false,
-        "layers": [
-            {
-                "skin": "forge3D_base",
-                "local_position": {
-                    "x": 0.0,
-                    "y": 0.5426666736602783
-                },
-                "local_rotation": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "material_name": "objects",
-                "sorting_layer_id": -667374433,
-                "order_in_layer": 0,
-                "never_flip": false,
-                "follow_duration": false
-            },
-            {
-                "skin": "forge3D_wall",
-                "local_position": {
-                    "x": 0.0,
-                    "y": 0.0010000000474974514
-                },
-                "local_rotation": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "material_name": "objects",
-                "sorting_layer_id": -667374433,
-                "order_in_layer": 0,
-                "never_flip": false,
-                "follow_duration": false
-            }
-        ],
-        "local_position": {
-            "x": -0.125,
-            "y": -0.0833333358168602
-        }
-    },
+    "capacities_ids": [
+        "forge3D_anim",
+        "forge3D_hover",
+        "forge3D_sorter",
+        "forge3D_iic",
+        "forge3D_open",
+        "forge3D_close",
+        "forge3D_craft"
+    ],
     "inventory": {
         "item_pools_data": [],
         "item_type": 0
@@ -235,14 +147,6 @@
             }
         ]
     },
-    "capacities_ids": [
-        "forge3D_hover",
-        "forge3D_sorter",
-        "forge3D_iic",
-        "forge3D_open",
-        "forge3D_close",
-        "forge3D_craft"
-    ],
     "effects": [],
     "effects_ttl": []
 }

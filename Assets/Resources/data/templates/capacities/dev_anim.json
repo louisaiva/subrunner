@@ -1,0 +1,136 @@
+﻿{
+    "<id>k__BackingField": "dev_anim",
+    "<owner_id>k__BackingField": "dev",
+    "kind": "AnimCapacity",
+    "local_position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "layer": 23,
+    "tag": "Untagged",
+    "skin": "dev",
+    "material_name": "beings",
+    "sorting_layer_id": -667374433,
+    "order_in_layer": 0,
+    "anim_capacity_priorities": [
+        {
+            "priority": 0,
+            "capacity_playing": "",
+            "capacities": [
+                "idle"
+            ],
+            "lock_orientation": false,
+            "one_shot": false
+        },
+        {
+            "priority": 1,
+            "capacity_playing": "",
+            "capacities": [
+                "walk",
+                "run"
+            ],
+            "lock_orientation": false,
+            "one_shot": false
+        },
+        {
+            "priority": 3,
+            "capacity_playing": "",
+            "capacities": [
+                "attack"
+            ],
+            "lock_orientation": true,
+            "one_shot": true
+        },
+        {
+            "priority": 4,
+            "capacity_playing": "",
+            "capacities": [
+                "hurted",
+                "eat"
+            ],
+            "lock_orientation": true,
+            "one_shot": true
+        },
+        {
+            "priority": 5,
+            "capacity_playing": "",
+            "capacities": [
+                "die"
+            ],
+            "lock_orientation": true,
+            "one_shot": false
+        }
+    ],
+    "current_capacity": "",
+    "never_flip": false,
+    "layers": [
+        {
+            "skin": "dev_face",
+            "local_position": {
+                "x": 0.0,
+                "y": -0.00009999999747378752
+            },
+            "local_rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "material_name": "beings",
+            "sorting_layer_id": -667374433,
+            "order_in_layer": 0,
+            "never_flip": false,
+            "follow_duration": false
+        },
+        {
+            "skin": "dev_hair",
+            "local_position": {
+                "x": 0.0,
+                "y": -0.00019999999494757503
+            },
+            "local_rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "material_name": "beings",
+            "sorting_layer_id": -667374433,
+            "order_in_layer": 0,
+            "never_flip": false,
+            "follow_duration": false
+        },
+        {
+            "skin": "dev_hat",
+            "local_position": {
+                "x": 0.0,
+                "y": -0.0003000000142492354
+            },
+            "local_rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "material_name": "beings",
+            "sorting_layer_id": -667374433,
+            "order_in_layer": 0,
+            "never_flip": false,
+            "follow_duration": false
+        },
+        {
+            "skin": "dev_kb",
+            "local_position": {
+                "x": 0.0,
+                "y": -0.00039999998989515007
+            },
+            "local_rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "material_name": "beings",
+            "sorting_layer_id": -667374433,
+            "order_in_layer": 0,
+            "never_flip": false,
+            "follow_duration": false
+        }
+    ]
+}

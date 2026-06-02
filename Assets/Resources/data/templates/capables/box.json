@@ -11,76 +11,11 @@
     },
     "layer": 24,
     "tag": "Item",
-    "anim_data": {
-        "skin_kind": "",
-        "skin": "pckg_front",
-        "anim_capacity_priorities": [
-            {
-                "priority": 0,
-                "capacity_playing": "",
-                "capacities": [
-                    "idle"
-                ],
-                "lock_orientation": false,
-                "one_shot": false
-            },
-            {
-                "priority": 1,
-                "capacity_playing": "",
-                "capacities": [
-                    "hover"
-                ],
-                "lock_orientation": false,
-                "one_shot": false
-            },
-            {
-                "priority": 1,
-                "capacity_playing": "",
-                "capacities": [
-                    "idle_open"
-                ],
-                "lock_orientation": false,
-                "one_shot": false
-            },
-            {
-                "priority": 1,
-                "capacity_playing": "",
-                "capacities": [
-                    "interact"
-                ],
-                "lock_orientation": true,
-                "one_shot": true
-            }
-        ],
-        "current_capacity": "",
-        "material_name": "objects",
-        "sorting_layer_id": -667374433,
-        "order_in_layer": 0,
-        "never_flip": false,
-        "layers": [
-            {
-                "skin": "pckg_back",
-                "local_position": {
-                    "x": 0.0,
-                    "y": 0.4166666567325592
-                },
-                "local_rotation": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "material_name": "objects",
-                "sorting_layer_id": -667374433,
-                "order_in_layer": 0,
-                "never_flip": false,
-                "follow_duration": false
-            }
-        ],
-        "local_position": {
-            "x": 0.0,
-            "y": 0.0
-        }
-    },
+    "capacities_ids": [
+        "box_anim",
+        "box_iic",
+        "hover"
+    ],
     "inventory": {
         "item_pools_data": [
             {
@@ -118,10 +53,6 @@
             }
         ]
     },
-    "capacities_ids": [
-        "box_iic",
-        "hover"
-    ],
     "effects": [],
     "effects_ttl": []
 }

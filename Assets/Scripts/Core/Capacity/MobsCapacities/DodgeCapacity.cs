@@ -17,11 +17,14 @@ public class DodgeCapacity : CooldownCapacity
     // USE
     public override void Use(Capable user)
     {
+        AnimPlayer user_player = user.Visual as AnimPlayer;
+        if (user_player == null) { return; }
+
         // we check if we are already dodging
-        if (user.AnimPlayer.IsShowing("dodge")) { return; }
+        if (user_player.IsShowing("dodge")) { return; }
 
         // we play the animation
-        Anim anim = user.AnimPlayer.Play("dodge", duration_override: dodge_duration);
+        Anim anim = user_player.Play("dodge", duration_override: dodge_duration);
         if (log) { Debug.Log("(DodgeCapacity) dodge launched for " + user.ID + ", anim found is " + (anim != null ? anim.name : "null")); }
         if (anim == null) { return; }
 
@@ -64,15 +67,14 @@ public class DodgeCapacity : CooldownCapacity
 
 
     // LOAD / UNLOAD DATA
-    public override void LoadData(CapacityData data)
+    public override void LoadData(CapacityData data, CapableData owner)
     {
+        base.LoadData(data, owner);
         if (data is not DodgeData ddata) { return; }
 
         // we load the static data
         dodge_magnitude = ddata.dodge_magnitude;
         dodge_duration = ddata.dodge_duration;
-
-        base.LoadData(data);
     }
 
     // GET STATIC DATA

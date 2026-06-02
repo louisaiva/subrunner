@@ -11,7 +11,7 @@ using UnityEditor;
 #endif
 
 [RequireComponent(typeof(SpriteRenderer))]
-public class AnimPlayer : MonoBehaviour
+public class AnimPlayer : MonoBehaviour, Visualizable
 {
 
     [Header("Components")]
@@ -53,6 +53,8 @@ public class AnimPlayer : MonoBehaviour
 
     [Header("Orientation")]
     [field:SerializeField] public string orientation { get; private set; } = "D";
+
+    public Visualizable Visual => this;
     public Action<string> OnOrientationChanged = delegate { };
 
 
@@ -67,10 +69,12 @@ public class AnimPlayer : MonoBehaviour
 
     [Header("Anim Capacity Priorities")]
     [SerializeField] private List<AnimCapacityPriority> anim_capacity_priorities = new();
+    public List<AnimCapacityPriority> ACPs => anim_capacity_priorities;
     private AnimCapacityPriority current_capacity_priority = null;
 
     [Header("Parameters")]
     [SerializeField] private bool never_flip = false;
+    public bool NeverFlip { get => never_flip; }
 
     [Header("Logs")]
     public bool log = false;
@@ -670,7 +674,7 @@ public class AnimPlayer : MonoBehaviour
 
     // LOAD DATA
     private LocalKeyword? visibleKeyword;
-    public void LoadPlayerData(AnimPlayerData data)
+    public void LoadPlayerData(AnimData data)
     {
         if (CapableBank.Instance.LayerBank.log_anim_layers) { Debug.Log($"(AnimPlayer) {name}'s loading data : {(data != null ? data.GetDetails() : "null")}"); }
 
@@ -704,7 +708,7 @@ public class AnimPlayer : MonoBehaviour
         }
         else { visibleKeyword = null; }
         visible_on = true;
-        Hide();
+        // Hide();
 
         // and parameters
         never_flip = data.never_flip;
@@ -728,83 +732,13 @@ public class AnimPlayer : MonoBehaviour
     }
 
     // SAVE DATA
-    public void SaveDynamicPlayerData(AnimPlayerData data)
+    public void SaveDynamicPlayerData(AnimData data)
     {
         // we save data
         data.current_capacity = current_capacity;
     }
 
 
-    // GET STATIC DATA
-
-    /// <summary>
-    /// just as other GetStaticData() methods (ie Capable's one), this method
-    /// is not meant to be run in a BUILD !!! IT WON T WORK because it does not
-    /// update the anim_data, it creates a new data based from actual static
-    /// variables states of the object. if run inside a build, it could overwrite
-    /// some data such as material paths which would break the save.
-    /// </summary>
-    /// <returns></returns>
-    public AnimPlayerData GetStaticAnimData()
-    {
-        // get basic player data
-        AnimPlayerData data = new AnimPlayerData
-        {
-            skin = skin,
-            anim_capacity_priorities = anim_capacity_priorities,
-
-            sorting_layer_id = Renderer.sortingLayerID,
-            order_in_layer = Renderer.sortingOrder,
-
-            // and local position
-            local_position = get_static_local_position(),
-
-            // and parameters
-            never_flip = never_flip
-        };
-
-        data.material_name = MaterialBank.GetMaterialName(Renderer, Capable.ID);
-
-
-        // get the layers by going through the hierarchy (so we can do it even when not playing)
-        List<AnimLayerData> layers_data = new List<AnimLayerData>();
-        for (int i = 0; i < transform.childCount; i++)
-        {
-            Transform layer_transform = transform.GetChild(i);
-            AnimLayer anim_layer = layer_transform.GetComponent<AnimLayer>();
-            if (anim_layer == null) { continue; }
-            layers_data.Add(anim_layer.GetStaticData());
-        }
-
-        data.layers = layers_data;
-        return data;
-    }
-    private Vector2 get_static_local_position()
-    {
-        if (GetComponent<Capable>() != null)
-        {
-            return Vector2.zero;
-            // if we have a capable on it, it means we are at the top of the capable hierarchy,
-            // so our local pos is a world pos in fact. that's why we return zero, because when
-            // the capable will be constructed by the CapableBank, it will receive an "anim_player"
-            // transform which is a direct child of the capable. and so if we return the world pos
-            // it will move the anim player FFAAAAR AWAY from the capable, which is not what we want !
-        }
-        return transform.localPosition;
-    }
-    /* private string get_material_name(SpriteRenderer sr)
-    {
-        if (sr == null || sr.sharedMaterial == null)
-        {
-            LogGSD?.Error($"[AnimPlayer - {Capable.ID}] The SpriteRenderer or its material is null, returning empty material name");
-            return "";
-        }
-        
-        string mat_name = MaterialBank.GetMaterialName(sr.sharedMaterial);
-        LogGSD?.Log($"[AnimPlayer - {Capable.ID}] get_material_name found the material name: {mat_name}");
-
-        return mat_name;
-    } */
 
 }
 
@@ -835,88 +769,3 @@ public class AnimPlayer : MonoBehaviour
     }
 }
 
-
-// ANIMATIONS
-[Serializable] public class AnimPlayerData
-{
-    public string skin_kind;
-    public string skin;
-    public List<AnimCapacityPriority> anim_capacity_priorities;
-    public string current_capacity; // runtime only
-
-    // player sr data
-    public string material_name;
-    public int sorting_layer_id;
-    public int order_in_layer;
-    public bool never_flip;
-
-    // layers
-    public List<AnimLayerData> layers;
-
-    // position
-    public Vector2 local_position;
-
-
-    // GET & DUPLICATE
-    public AnimPlayerData Duplicate()
-    {
-        AnimPlayerData new_data = new AnimPlayerData
-        {
-            skin = this.skin,
-            current_capacity = this.current_capacity,
-            local_position = this.local_position,
-            material_name = this.material_name,
-            sorting_layer_id = this.sorting_layer_id,
-            order_in_layer = this.order_in_layer,
-            never_flip = this.never_flip,
-        };
-
-        // duplicate anim_capacity_priorities
-        if (this.anim_capacity_priorities != null)
-        {
-            new_data.anim_capacity_priorities = new List<AnimCapacityPriority>();
-            foreach (AnimCapacityPriority acp in this.anim_capacity_priorities)
-            {
-                new_data.anim_capacity_priorities.Add(acp.Duplicate());
-            }
-        }
-        else { new_data.anim_capacity_priorities = null; }
-
-        // duplicate layers
-        if (this.layers != null)
-        {
-            new_data.layers = new List<AnimLayerData>();
-            foreach (AnimLayerData ald in this.layers)
-            {
-                new_data.layers.Add(ald.Duplicate());
-            }
-        }
-        else { new_data.layers = null; }
-
-        return new_data;
-    }
-    public string GetDetails()
-    {
-        string details = $"anim_data :\n";
-        details += $"     - skin : {skin}\n";
-        details += $"     - current_capacity : {current_capacity}\n";
-        if (anim_capacity_priorities != null) { details += $"     - anim_capacity_priorities : {anim_capacity_priorities.Count} priorities\n"; }
-        else { details += $"     - anim_capacity_priorities : null\n"; }
-        details += $"     - local_position : {local_position}\n";
-        details += $"     - material_name : {material_name}\n";
-        details += $"     - sorting_layer_id : {sorting_layer_id}\n";
-        details += $"     - order_in_layer : {order_in_layer}\n";
-        details += $"     - never_flip : {never_flip}\n";
-
-        if (layers == null || layers.Count == 0) { details += $"     - layers : no layers\n"; }
-        else
-        {
-            details += $"     - layers : {layers.Count} layers\n";
-            for (int i = 0; i < layers.Count; i++)
-            {
-                details += $"          - layer {i} : " + layers[i].GetDetails() + "\n";
-            }
-        }
-        return details;
-    }
-}

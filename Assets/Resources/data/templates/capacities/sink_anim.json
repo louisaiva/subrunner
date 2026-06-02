@@ -1,0 +1,65 @@
+﻿{
+    "<id>k__BackingField": "sink_anim",
+    "<owner_id>k__BackingField": "no_capable_id",
+    "kind": "AnimCapacity",
+    "local_position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "layer": 29,
+    "tag": "Untagged",
+    "skin": "sink_front",
+    "material_name": "objects",
+    "sorting_layer_id": -667374433,
+    "order_in_layer": 0,
+    "anim_capacity_priorities": [
+        {
+            "priority": 0,
+            "capacity_playing": "",
+            "capacities": [
+                "idle"
+            ],
+            "lock_orientation": false,
+            "one_shot": false
+        },
+        {
+            "priority": 0,
+            "capacity_playing": "",
+            "capacities": [
+                "hover"
+            ],
+            "lock_orientation": false,
+            "one_shot": false
+        },
+        {
+            "priority": 0,
+            "capacity_playing": "",
+            "capacities": [
+                "flowing"
+            ],
+            "lock_orientation": false,
+            "one_shot": false
+        }
+    ],
+    "current_capacity": "",
+    "never_flip": false,
+    "layers": [
+        {
+            "skin": "sink_back",
+            "local_position": {
+                "x": 0.0,
+                "y": 0.625
+            },
+            "local_rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "material_name": "objects",
+            "sorting_layer_id": -667374433,
+            "order_in_layer": 0,
+            "never_flip": false,
+            "follow_duration": false
+        }
+    ]
+}

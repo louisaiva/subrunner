@@ -53,7 +53,6 @@ public class AttackCapacity : CooldownCapacity
     [Header("Components")]
     private SpriteBank bank;
     private SpriteRenderer sr;
-    private AnimPlayer anim_player;
     private PolygonCollider2D pc;
 
 
@@ -91,8 +90,13 @@ public class AttackCapacity : CooldownCapacity
     {
         // we set the bearer and its components
         bearer = capable;
-        anim_player = bearer.AnimPlayer;
-        sr = bearer.AnimPlayer.Renderer;
+        AnimPlayer anim_player = bearer?.Visual as AnimPlayer;
+        if (anim_player == null)
+        {
+            Debug.LogWarning("(AttackCapacity) No AnimPlayer found on bearer, can't use attack capacity");
+            return;
+        }
+        sr = anim_player.Renderer;
         if (anim_player.IsShowing("attack")) { return; } // we check if we are already attacking
 
         // we update damage value if capable is Perso
@@ -125,12 +129,30 @@ public class AttackCapacity : CooldownCapacity
 
     // COLLISION ENTER
     private void OnTriggerEnter2D(Collider2D other)
-    {
+    {        
         if (log_colliders) { Debug.Log("(AttackCapacity) Collider entered: " + other.name); }
 
         // we check if we are attacking
-        if (!IsAttacking) { return; }
-        if (!bearer.AnimPlayer.IsShowing("attack")) { return; }
+        if (!IsAttacking)
+        {
+            if (log_colliders) { Debug.Log("(AttackCapacity) Not attacking, we ignore the collider"); }
+            return;
+        }
+        if (bearer == null)
+        {
+            if (log_colliders) { Debug.Log("(AttackCapacity) no bearer"); }
+            return;
+        }
+        if (bearer.Visual is not AnimPlayer anim_player)
+        {
+            if (log_colliders) { Debug.Log("(AttackCapacity) No AnimPlayer found on bearer, can't check attack animation"); }
+            return;
+        }
+        if (!anim_player.IsShowing("attack"))
+        {
+            if (log_colliders) { Debug.Log("(AttackCapacity) Not playing attack animation, we ignore the collider"); }
+            return;
+        }
 
         // we check if the pc is enabled
         if (!pc.enabled) { return; }
@@ -190,6 +212,8 @@ public class AttackCapacity : CooldownCapacity
         base.Update();
 
         if (!IsAttacking) { return; }
+        if (bearer == null) { return; }
+        if (bearer.Visual is not AnimPlayer anim_player) { return; }
         if (!anim_player.IsShowing("attack"))
         {
             // checks if we are still attacking & the animation is not the attack animation anymore
@@ -306,11 +330,12 @@ public class AttackCapacity : CooldownCapacity
     {
         IsAttacking = false;
         hitted_health_capa.Clear();
-        if (bearer != null)
-        {
-            bearer.RemoveEffect(Effect.Unstoppable);
-            bearer.AnimPlayer.StopPlaying("attack");
-        }
+
+        if (bearer == null) { return; }
+        bearer.RemoveEffect(Effect.Unstoppable);
+        
+        if (bearer.Visual is not AnimPlayer anim_player) { return; }
+        anim_player.StopPlaying("attack");
     }
 
 
@@ -432,8 +457,9 @@ public class AttackCapacity : CooldownCapacity
 
 
     // LOAD / UNLOAD DATA
-    public override void LoadData(CapacityData data)
+    public override void LoadData(CapacityData data, CapableData owner)
     {
+        base.LoadData(data, owner);
         if (data is not AttackData adata) { return; }
 
         // we load the static data
@@ -452,8 +478,6 @@ public class AttackCapacity : CooldownCapacity
 
         // and damage
         damage = adata.damage;
-
-        base.LoadData(data);
     }
     public override void UnloadData()
     {

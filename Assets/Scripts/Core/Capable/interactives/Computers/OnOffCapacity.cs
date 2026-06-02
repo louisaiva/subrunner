@@ -42,16 +42,18 @@ public class OnOffCapacity : Capacity
     protected virtual IEnumerator power_on()
     {
         if (log) { Debug.Log("(Computer) " + Capable.name + " is powering on"); }
+        AnimPlayer anim_player = Visual as AnimPlayer;
+        if (anim_player == null) { Debug.LogWarning("OnOffCapacity requires an AnimPlayer to work properly."); yield break; }
 
         // on allume l'ordi
         Onnable.IsOn = false;
         Onnable.IsMoving = true;
-        AnimPlayer.Play(powering_on_animation);
-        AnimPlayer.AddToPile(idle_on_animation);
-        if (idle_off_animation != "idle") { AnimPlayer.StopPlaying(idle_off_animation); }
+        anim_player.Play(powering_on_animation);
+        anim_player.AddToPile(idle_on_animation);
+        if (idle_off_animation != "idle") { anim_player.StopPlaying(idle_off_animation); }
 
         // on attend la fin de l'anim
-        while (AnimPlayer.IsShowing(powering_on_animation)) { yield return null; }
+        while (anim_player.IsShowing(powering_on_animation)) { yield return null; }
         if (!Capable.Loaded) { yield break; } // if the capable has been unloaded while waiting, we stop here to avoid errors
 
         // on allume l'ordi
@@ -65,16 +67,18 @@ public class OnOffCapacity : Capacity
         // if (delay > 0f) { yield return new WaitForSeconds(delay); }
 
         if (log) { Debug.Log("(Computer) " + Capable.name + " is powering off"); }
+        AnimPlayer anim_player = Visual as AnimPlayer;
+        if (anim_player == null) { Debug.LogWarning("OnOffCapacity requires an AnimPlayer to work properly."); yield break; }
 
         // on éteint l'ordi
         Onnable.IsOn = true;
         Onnable.IsMoving = true;
-        AnimPlayer.Play(powering_off_animation);
-        AnimPlayer.AddToPile(idle_off_animation);
-        if (idle_on_animation != "idle") { AnimPlayer.StopPlaying(idle_on_animation); }
+        anim_player.Play(powering_off_animation);
+        anim_player.AddToPile(idle_off_animation);
+        if (idle_on_animation != "idle") { anim_player.StopPlaying(idle_on_animation); }
 
         // on attend la fin de l'anim
-        while (AnimPlayer.IsShowing(powering_off_animation)) { yield return null; }
+        while (anim_player.IsShowing(powering_off_animation)) { yield return null; }
         if (!Capable.Loaded) { yield break; } // if the capable has been unloaded while waiting, we stop here to avoid errors
 
         // on eteint l'ordi

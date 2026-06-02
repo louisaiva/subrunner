@@ -51,6 +51,7 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
     [Header("Logs - Awake")]
     public bool log_templates_data_loading = false;
     public bool log_world_data_loading = false;
+    public bool log_world_data_loading_extended = false;
 
     [Header("Logs - Spawning")]
     public bool log_spawning = false;
@@ -192,6 +193,7 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         CapacityData data = JsonUtility.FromJson(json, type) as CapacityData;
         data_by_id.Add(data.id, data);
         log += data.GetDetails() + "\n";
+        if (log_world_data_loading_extended) { Debug.Log($"(CapacityEngine - loadCapacityDataOfType) Loaded capacity data : {data.id} of kind {kind} with details : \n{data.GetDetails()}"); }
         return data;
     }
 
@@ -302,9 +304,29 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
     public List<Capacity> LoadCapacities(List<string> capacities_ids, Capable capable)
     {
         List<Capacity> capacities = new List<Capacity>();
+
+        // we try to extract the visual capacity from the capacities_ids and we load it first
+        VisualData visual_capacity_data = GetCapacityData<VisualData>(capacities_ids);
+        if (visual_capacity_data != null)
+        {
+            Capacity capa = load_capacity(visual_capacity_data, capable.data);
+            if (capa != null)
+            {
+                // we register the capacity into the capable
+                capacities.Add(capa);
+                capable.RegisterCapacity(capa);
+
+                // we set the parent & local pos
+                capa.transform.SetParent(capable.transform);
+                capa.transform.localPosition = capa.data.local_position;
+            }
+        }
+
+        // then we load the other capacities
         for (int i = 0; i < capacities_ids.Count; i++)
         {
             string id = capacities_ids[i];
+            if (id == visual_capacity_data?.id) { continue; } // we already loaded the visual capacity
             Capacity capa = load_capacity(id,capable.data);
 
             if (capa == null) { continue; } // we may have skipped this capacity if it was already loaded
@@ -348,7 +370,7 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
 
         if (log_loading_extended) { Debug.Log($"(CapacityEngine - Load) Loading capacity '{data.id}' \n{data.GetDetails()}"); }
 
-        Capacity capacity = CapacityBank.Instance.Load(data);
+        Capacity capacity = CapacityBank.Instance.Load(data, capable_data);
         loaded_capacities_data.Add(data.id, data);
         if (log_loading) { Debug.Log("(CapacityEngine) Loaded " + data.id); }
         return capacity;
@@ -485,10 +507,27 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         }
         return datas;
     }
-
     public CapacityData GetTemplateData(string id)
     {
         if (!templates_capacities_data.TryGetValue(id, out CapacityData data)) { return null; }
         return data;
+    }
+    public T GetCapacityData<T>(List<string> ids) where T : CapacityData
+    {
+        foreach (string id in ids)
+        {
+            CapacityData data = GetCapacityData(id);
+            if (data != null && data is T t_data) { return t_data; }
+        }
+        return null;
+    }
+    public T GetTemplateData<T>(List<string> ids) where T : CapacityData
+    {
+        foreach (string id in ids)
+        {
+            CapacityData data = GetTemplateData(id);
+            if (data != null && data is T t_data) { return t_data.Duplicate() as T; }
+        }
+        return null;
     }
 }

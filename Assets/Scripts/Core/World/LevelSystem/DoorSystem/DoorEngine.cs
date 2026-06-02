@@ -243,18 +243,18 @@ public class DoorEngine : MonoBehaviour
         List<CapableData> capables_data = RoomEngine.Instance.GetCapablesDataInRoom(room_data);
         foreach (CapableData data in capables_data)
         {
-            if (data.Capable == null || data.Capable.AnimPlayer == null)
+            if (data.Capable == null || data.Capable.Visual == null)
             {
-                if (log_visibility) { Debug.LogWarning($"(DoorEngine) Capable {data.id} in room {room_data.id} {(data.Capable != null ? "has null AnimPlayer" : "is not loaded, we don't show it")}"); }
+                if (log_visibility) { Debug.LogWarning($"(DoorEngine) Capable {data.id} in room {room_data.id} {(data.Capable != null ? "has null Visual" : "is not loaded, we don't show it")}"); }
                 continue;
             }
             if (log_visibility) { Debug.Log($"(DoorEngine) Showing capable {data.id} in room {room_data.id}"); }
-            data.Capable.AnimPlayer.Show();
+            data.Capable.Visual.Show();
         }
 
         // show all the doors
         List<Door> doors = GetRoomDoors(room_data);
-        foreach (Door door in doors) { door.AnimPlayer.Show(); }
+        foreach (Door door in doors) { door.Visual.Show(); }
     }
 
     /// <summary>
@@ -285,8 +285,8 @@ public class DoorEngine : MonoBehaviour
         {
             // skip the doors bcz we do it manually after
             if (data is DoorData) { continue; }
-            if (data.Capable == null || data.Capable.AnimPlayer == null) { continue; }
-            data.Capable.AnimPlayer.Hide();
+            if (data.Capable == null || data.Capable.Visual == null) { continue; }
+            data.Capable.Visual.Hide();
         }
 
         // hide the doors linked to the room if the other room linked to the door is not visible
@@ -298,7 +298,7 @@ public class DoorEngine : MonoBehaviour
             RoomNode other_room = link.room1.ID == room_data.id ? link.room2 : link.room1;
             if (visible_rooms.Contains(other_room.data)) { continue; }
 
-            door.AnimPlayer.Hide();
+            door.Visual.Hide();
         }
     }
 
@@ -317,16 +317,16 @@ public class DoorEngine : MonoBehaviour
         if (capable_data is ItemData item_data && item_data.is_grabbed)
         {
             if (log_visibility) { Debug.Log($"(DoorEngine) Capable {capable_data.id} is a grabbed item, we force it to be hidden"); }
-            capable.AnimPlayer.Hide();
+            capable.Visual.Hide();
             return;
         }
 
-        if (capable.AnimPlayer != null)
+        if (capable.Visual != null)
         {
-            bool capable_visible = capable.AnimPlayer.IsVisible();
+            bool capable_visible = capable.Visual.IsVisible();
             bool room_visible = visible_rooms.Contains(room_data);
-            if (capable_visible && !room_visible) { capable.AnimPlayer.Hide(); }
-            else if (!capable_visible && room_visible) { capable.AnimPlayer.Show(); }
+            if (capable_visible && !room_visible) { capable.Visual.Hide(); }
+            else if (!capable_visible && room_visible) { capable.Visual.Show(); }
         }
     }
 

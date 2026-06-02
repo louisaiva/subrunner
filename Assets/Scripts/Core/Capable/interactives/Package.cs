@@ -31,7 +31,7 @@ public class Package : Movable, Interactable, TurnableIntoItem
     public void OnInteract(Capable interactor)
     {
         if (is_turning_to_item) { return; }
-        AnimPlayer.AddToPile("idle_open");
+        (Visual as AnimPlayer)?.AddToPile("idle_open");
         StartCoroutine(turn_into_leftover());
     }
     private IEnumerator turn_into_leftover()
@@ -43,15 +43,15 @@ public class Package : Movable, Interactable, TurnableIntoItem
         AddEffect(Effect.SemiGhost, timetolive:15f);
 
         // we play anim
-        AnimPlayer.Play("interact");
+        (Visual as AnimPlayer)?.Play("interact");
         float percentage = 0f;
         bool dropped_items = false;
-        while (AnimPlayer.IsShowing("interact"))
+        while ((Visual as AnimPlayer)?.IsShowing("interact") == true)
         {
             if (dropped_items) { yield return null; continue; }
 
             // we check the percentage
-            percentage = AnimPlayer.GetCurrentAnimPercentDone();
+            percentage = (Visual as AnimPlayer)?.GetCurrentAnimPercentDone() ?? 0f;
             if (percentage >= drop_animation_percentage)
             {
                 // we drop the items

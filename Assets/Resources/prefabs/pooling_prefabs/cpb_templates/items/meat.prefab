@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 542729204817951620}
   - component: {fileID: 2045630767414613931}
   - component: {fileID: 1091842297515312907}
+  - component: {fileID: 2718598902616061376}
   m_Layer: 24
   m_Name: meat
   m_TagString: Item
@@ -243,6 +244,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
   capacity_template_id: hover
+  capacity_template_ids: []
 --- !u!114 &1091842297515312907
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -256,6 +258,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
   capacity_template_id: item_iic
+  capacity_template_ids: []
+--- !u!114 &2718598902616061376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3927794695775646843}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90c2c539dbbc8784fb9abc95ffa6ada3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimCapacity
+  data:
+    <id>k__BackingField: meat_anim
+    <owner_id>k__BackingField: 
+    kind: 
+    local_position: {x: 0, y: 0}
+    layer: 0
+    tag: 
+  log: 0
+  _anim_player: {fileID: 0}
 --- !u!1 &8910784274748376873
 GameObject:
   m_ObjectHideFlags: 0

@@ -53,6 +53,7 @@ public class TemplatesManager : MonoBehaviour
 
     [Header("Logs")]
     public bool log = false;
+    public bool log_extended = false;
     public Loggable<TemplatesManager> log_banks;
 
 
@@ -106,14 +107,7 @@ public class TemplatesManager : MonoBehaviour
         if (!save_capables_capacities_as_templates) { return; }
 
         // we get all the capacities (ONLY DIRECT CHILDREN - we don't want to get the capa of the items we store :)
-        List<Capacity> capacities = new List<Capacity>();
-        for (int i = 0; i < capable.transform.childCount; i++)
-        {
-            Transform child = capable.transform.GetChild(i);
-            Capacity capa = child.GetComponent<Capacity>();
-            if (capa == null) { continue; }
-            capacities.Add(capa);
-        }
+        List<Capacity> capacities = capable.GetStaticCapacities();
 
         // then we save all the data of these capacities
         foreach (Capacity capacity in capacities)
@@ -188,7 +182,7 @@ public class TemplatesManager : MonoBehaviour
         string path = templates_data_path + "capacities/" + capacity_data.id + ".json";
         System.IO.File.WriteAllText(path, capacity_json, System.Text.Encoding.UTF8);
 
-        if (log) { Debug.Log($"(TemplatesManager - Save Capacity) Updated & Saved CapacityData : {capacity.name} (to {path})\n\n{capacity_data.GetDetails()}\n\n{capacity_json}"); }
+        if (log) { Debug.Log($"(TemplatesManager - Save Capacity) Updated & Saved CapacityData : {capacity.ID} (to {path})\n\n{capacity_data.GetDetails()}\n\n{capacity_json}"); }
     }
 
 

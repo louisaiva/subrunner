@@ -11,40 +11,10 @@
     },
     "layer": 24,
     "tag": "Item",
-    "anim_data": {
-        "skin_kind": "",
-        "skin": "empty",
-        "anim_capacity_priorities": [
-            {
-                "priority": 0,
-                "capacity_playing": "idle",
-                "capacities": [
-                    "idle"
-                ],
-                "lock_orientation": false,
-                "one_shot": false
-            },
-            {
-                "priority": 1,
-                "capacity_playing": "",
-                "capacities": [
-                    "hover"
-                ],
-                "lock_orientation": false,
-                "one_shot": false
-            }
-        ],
-        "current_capacity": "",
-        "material_name": "objects",
-        "sorting_layer_id": -667374433,
-        "order_in_layer": 0,
-        "never_flip": false,
-        "layers": [],
-        "local_position": {
-            "x": 0.0,
-            "y": 0.0
-        }
-    },
+    "capacities_ids": [
+        "key_cool",
+        "hover"
+    ],
     "inventory": {
         "item_pools_data": [],
         "item_type": 0
@@ -72,9 +42,6 @@
             }
         ]
     },
-    "capacities_ids": [
-        "hover"
-    ],
     "effects": [],
     "effects_ttl": [],
     "reference": "key:cool_key",

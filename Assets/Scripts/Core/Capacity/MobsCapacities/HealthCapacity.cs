@@ -118,7 +118,7 @@ public class HealthCapacity : Capacity
         Vector2 knockback_inverse_direction = knockback != null ? -1f * knockback.direction : Vector2.zero;
 
         // play hurt animation
-        if (!Capable.HasEffect(Effect.Unstoppable)) { Capable.AnimPlayer.PlayWithOrientation(hurted_animation, knockback_inverse_direction); }
+        if (!Capable.HasEffect(Effect.Unstoppable)) { (Visual as AnimPlayer)?.PlayWithOrientation(hurted_animation, knockback_inverse_direction); }
         else if (knockback != null) { knockback.magnitude *= 0.125f; } // reduce knockback magnitude by 8
 
         // floating dmg
@@ -204,8 +204,10 @@ public class HealthCapacity : Capacity
 
 
     // LOAD / UNLOAD DATA
-    public override void LoadData(CapacityData data)
+    public override void LoadData(CapacityData data, CapableData owner)
     {
+
+        base.LoadData(data, owner);
         if (data is not HealthCapacityData hdata) { return; }
 
         // load health
@@ -223,8 +225,6 @@ public class HealthCapacity : Capacity
         {
             _health_colliders.Add(ColliderBank.Instance.LoadCollider(colldata,transform));
         }
-
-        base.LoadData(data);
     }
     public override void UnloadData()
     {

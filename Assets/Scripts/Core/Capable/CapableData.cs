@@ -40,19 +40,20 @@ public interface ICapableData : IData
     [InstanceSpecific] public Vector2 orientation;
     public int layer;
     public string tag;
+    
+    // CAPACITIES
+    [InstanceSpecific] public List<string> capacities_ids;
+    public int TotalCapacitiesCount() { return capacities_ids.Count; }
+
 
     // ANIM PLAYER
-    public AnimPlayerData anim_data;
+    // public AnimPlayerData anim_data;
 
     // INVENTORY
     public InventoryData inventory;
 
     // BODY
     public FeetData feet_data;
-
-    // CAPACITIES
-    [InstanceSpecific] public List<string> capacities_ids;
-    public int TotalCapacitiesCount() { return capacities_ids.Count; }
 
     // EFFECTS
     [InstanceSpecific] public List<Effect> effects;
@@ -127,7 +128,7 @@ public interface ICapableData : IData
             tag = this.tag,
 
             // anim
-            anim_data = anim_data.Duplicate(),
+            // anim_data = anim_data.Duplicate(),
 
             // inventory
             inventory = this.inventory != null ? this.inventory.Duplicate() : null,
@@ -159,8 +160,8 @@ public interface ICapableData : IData
         else { details += $"  - no capacities\n"; }
         if (effects != null) { details += $"  - effects : {effects.Count} effects\n"; }
         else { details += $"  - no effects\n"; }
-        if (anim_data != null) { details += $"  - {anim_data.GetDetails()}\n"; }
-        else { details += $"  - no anim_data\n"; }
+        // if (anim_data != null) { details += $"  - {anim_data.GetDetails()}\n"; }
+        // else { details += $"  - no anim_data\n"; }
         return details;
     }
 

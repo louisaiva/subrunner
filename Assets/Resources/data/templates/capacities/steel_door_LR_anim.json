@@ -1,0 +1,126 @@
+﻿{
+    "<id>k__BackingField": "steel_door_LR_anim",
+    "<owner_id>k__BackingField": "steel_door_LR",
+    "kind": "AnimCapacity",
+    "local_position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "layer": 0,
+    "tag": "Untagged",
+    "skin": "steel_door",
+    "material_name": "doors",
+    "sorting_layer_id": -667374433,
+    "order_in_layer": 0,
+    "anim_capacity_priorities": [
+        {
+            "priority": 0,
+            "capacity_playing": "",
+            "capacities": [
+                "idle"
+            ],
+            "lock_orientation": false,
+            "one_shot": false
+        },
+        {
+            "priority": 1,
+            "capacity_playing": "",
+            "capacities": [
+                "hover"
+            ],
+            "lock_orientation": false,
+            "one_shot": false
+        },
+        {
+            "priority": 3,
+            "capacity_playing": "",
+            "capacities": [
+                "idle_open"
+            ],
+            "lock_orientation": true,
+            "one_shot": false
+        },
+        {
+            "priority": 4,
+            "capacity_playing": "",
+            "capacities": [
+                "open",
+                "close"
+            ],
+            "lock_orientation": true,
+            "one_shot": true
+        }
+    ],
+    "current_capacity": "",
+    "never_flip": true,
+    "layers": [
+        {
+            "skin": "door_ground",
+            "local_position": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "local_rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "material_name": "doors",
+            "sorting_layer_id": -31225397,
+            "order_in_layer": 1,
+            "never_flip": true,
+            "follow_duration": false
+        },
+        {
+            "skin": "steel_door_midup",
+            "local_position": {
+                "x": 0.0,
+                "y": 0.9990000128746033
+            },
+            "local_rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "material_name": "doors",
+            "sorting_layer_id": -667374433,
+            "order_in_layer": 0,
+            "never_flip": true,
+            "follow_duration": true
+        },
+        {
+            "skin": "steel_door_ceil",
+            "local_position": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "local_rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "material_name": "doors",
+            "sorting_layer_id": 1229680597,
+            "order_in_layer": 1,
+            "never_flip": true,
+            "follow_duration": true
+        },
+        {
+            "skin": "door_icon",
+            "local_position": {
+                "x": 0.0,
+                "y": 2.0
+            },
+            "local_rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 270.0
+            },
+            "material_name": "doors",
+            "sorting_layer_id": 1229680597,
+            "order_in_layer": 2,
+            "never_flip": false,
+            "follow_duration": false
+        }
+    ]
+}

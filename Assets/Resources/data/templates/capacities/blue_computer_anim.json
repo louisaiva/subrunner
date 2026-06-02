@@ -1,0 +1,66 @@
+﻿{
+    "<id>k__BackingField": "blue_computer_anim",
+    "<owner_id>k__BackingField": "no_parent",
+    "kind": "AnimCapacity",
+    "local_position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "layer": 29,
+    "tag": "Untagged",
+    "skin": "blue_pc",
+    "material_name": "computers",
+    "sorting_layer_id": -667374433,
+    "order_in_layer": 0,
+    "anim_capacity_priorities": [
+        {
+            "priority": 0,
+            "capacity_playing": "",
+            "capacities": [
+                "idle"
+            ],
+            "lock_orientation": false,
+            "one_shot": false
+        },
+        {
+            "priority": 1,
+            "capacity_playing": "",
+            "capacities": [
+                "hover"
+            ],
+            "lock_orientation": false,
+            "one_shot": false
+        },
+        {
+            "priority": 3,
+            "capacity_playing": "",
+            "capacities": [
+                "idle_on"
+            ],
+            "lock_orientation": true,
+            "one_shot": false
+        },
+        {
+            "priority": 3,
+            "capacity_playing": "",
+            "capacities": [
+                "hacked"
+            ],
+            "lock_orientation": true,
+            "one_shot": false
+        },
+        {
+            "priority": 4,
+            "capacity_playing": "",
+            "capacities": [
+                "onnin",
+                "offin"
+            ],
+            "lock_orientation": true,
+            "one_shot": true
+        }
+    ],
+    "current_capacity": "",
+    "never_flip": false,
+    "layers": []
+}

@@ -38,7 +38,7 @@ public class DieEngine : MonoBehaviour
         // on donne un floating dmg
         if (show_smiley)
         {
-            Vector3 sprite_center = dying_capable.transform.position + new Vector3(0, dying_capable.AnimPlayer.Renderer.bounds.size.y / 2f, 0);
+            Vector3 sprite_center = dying_capable.transform.position + new Vector3(0, dying_capable.Visual.Renderer.bounds.size.y / 2f, 0);
             float test = UnityEngine.Random.Range(0, 100);
             for (int i = 0; i < smileys.Count; i++)
             {

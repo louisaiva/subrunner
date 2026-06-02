@@ -67,7 +67,7 @@ public class AnimLayerBank : MonoBehaviour
 
 
     // LOAD / UNLOAD
-    public void LoadAnimData(AnimPlayer player, AnimPlayerData anim_data)
+    public void LoadAnimData(AnimPlayer player, AnimData anim_data)
     {
         if (player == null) { return; }
         if (anim_data == null || anim_data.skin == "empty" || string.IsNullOrEmpty(anim_data.skin))

@@ -31,6 +31,9 @@ public class HoverCapacity : Capacity
     }
 
 
+    private AnimPlayer AnimPlayer => Visual as AnimPlayer;
+
+
     // DELEGATES
     public event Action<Capable> OnHover = delegate { };
     public event Action<Capable> OnHoverLost = delegate { };
@@ -63,7 +66,7 @@ public class HoverCapacity : Capacity
         if (Controller.LazyInstance == null || capable != Controller.Capable) { return; }
         
         // we play the animation
-        this.Capable.AnimPlayer.Play(played_animation);
+        AnimPlayer.Play(played_animation);
 
         if (log) { Debug.Log("(HoverCapacity) " + capable.name + " hovered " + this.Capable.name + $", playing {played_animation}"); }
     }
@@ -75,7 +78,7 @@ public class HoverCapacity : Capacity
         if (this.Capable == null) { Debug.LogWarning($"(HoverCapacity) this.capable is null on {name}"); }
 
         // then we only stop playing animation if the capable is the one controlled
-        if (Controller.LazyInstance != null && capable == Controller.Capable) { this.Capable.AnimPlayer.StopPlaying(played_animation); } // we stop the animation
+        if (Controller.LazyInstance != null && capable == Controller.Capable) { AnimPlayer.StopPlaying(played_animation); } // we stop the animation
 
         OnHoverLost?.Invoke(capable);
         if (log) { Debug.Log("(HoverCapacity) " + capable.name + " stop hovering " + this.Capable.name + $", stopped playing {played_animation}"); }
@@ -87,11 +90,11 @@ public class HoverCapacity : Capacity
         if (!Hovered) { played_animation = animation; return; }
 
         // we stop the current animation
-        Capable.AnimPlayer.StopPlaying(played_animation);
+        AnimPlayer.StopPlaying(played_animation);
 
         // we play the new animation
         played_animation = animation;
-        Capable.AnimPlayer.AddToPile(played_animation);
+        AnimPlayer.AddToPile(played_animation);
     }
 
 
@@ -136,9 +139,9 @@ public class HoverCapacity : Capacity
 
 
     // LOAD / UNLOAD DATA
-    public override void LoadData(CapacityData data)
+    public override void LoadData(CapacityData data, CapableData owner)
     {
-        base.LoadData(data);
+        base.LoadData(data, owner);
 
         if (data is not HoverCapacityData hover_data) { return; }
         if (hover_data.hover_collider_data == null) { return; }

@@ -213,9 +213,9 @@ public class InteractCapacity : Capacity
 
 
     // LOAD / UNLOAD DATA
-    public override void LoadData(CapacityData data)
+    public override void LoadData(CapacityData data, CapableData owner)
     {
-        base.LoadData(data);
+        base.LoadData(data, owner);
 
         if (data is not InteractData idata) { return; }
         

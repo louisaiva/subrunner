@@ -743,8 +743,9 @@ GameObject:
   - component: {fileID: 3300976171874288010}
   - component: {fileID: 7435720630852086294}
   - component: {fileID: 6088879629829424136}
+  - component: {fileID: 5200912503891519416}
   m_Layer: 0
-  m_Name: anim_player
+  m_Name: steel_door_LR_anim
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -885,6 +886,27 @@ MonoBehaviour:
   log_pile: 0
   log_material: 0
   visible_on: 1
+--- !u!114 &5200912503891519416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5448391821279933632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90c2c539dbbc8784fb9abc95ffa6ada3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimCapacity
+  data:
+    <id>k__BackingField: 
+    <owner_id>k__BackingField: 
+    kind: 
+    local_position: {x: 0, y: 0}
+    layer: 0
+    tag: 
+  log: 0
+  _anim_player: {fileID: 0}
 --- !u!1 &8097317238664702898
 GameObject:
   m_ObjectHideFlags: 0
@@ -992,6 +1014,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
   capacity_template_id: hover
+  capacity_template_ids: []
 --- !u!114 &4686307518254948403
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1005,6 +1028,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
   capacity_template_id: door_close
+  capacity_template_ids: []
 --- !u!114 &4273493748862624389
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1018,3 +1042,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
   capacity_template_id: door_open
+  capacity_template_ids: []

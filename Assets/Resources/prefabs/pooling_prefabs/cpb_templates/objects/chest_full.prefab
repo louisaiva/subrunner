@@ -108,10 +108,8 @@ GameObject:
   - component: {fileID: 4053528548412223082}
   - component: {fileID: 3469911911898272934}
   - component: {fileID: 4377250325364095127}
-  - component: {fileID: 4061436434248241938}
-  - component: {fileID: 1590868522181584201}
   - component: {fileID: 7354214104889650310}
-  - component: {fileID: 5185740924811290538}
+  - component: {fileID: 6896665827754838311}
   m_Layer: 29
   m_Name: chest_full
   m_TagString: Untagged
@@ -127,7 +125,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3889928680168695102}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -305,8 +303,6 @@ MonoBehaviour:
   log: 0
   activate_all_capacities_logs_on_awake: 0
   log_static_data: 0
-  log_interact_kf: 0
-  log_buttons_registering: 0
   interactors: []
 --- !u!114 &4377250325364095127
 MonoBehaviour:
@@ -321,32 +317,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
   capacity_template_id: chest_open
---- !u!114 &4061436434248241938
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3889928680168695102}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b38a876e5f6fba4ab1dde6d23fd0f96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
-  capacity_template_id: chest_close
---- !u!114 &1590868522181584201
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3889928680168695102}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b38a876e5f6fba4ab1dde6d23fd0f96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
-  capacity_template_id: hover
+  capacity_template_ids:
+  - chest_iic
+  - chest_close
+  - hover
 --- !u!114 &7354214104889650310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -373,7 +347,7 @@ MonoBehaviour:
     quantity: 1
   - item_id: bone
     quantity: 16
---- !u!114 &5185740924811290538
+--- !u!114 &6896665827754838311
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -382,10 +356,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 3889928680168695102}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b38a876e5f6fba4ab1dde6d23fd0f96, type: 3}
+  m_Script: {fileID: 11500000, guid: 90c2c539dbbc8784fb9abc95ffa6ada3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
-  capacity_template_id: chest_iic
+  m_EditorClassIdentifier: Assembly-CSharp::AnimCapacity
+  data:
+    <id>k__BackingField: blue_chest_anim
+    <owner_id>k__BackingField: 
+    kind: 
+    local_position: {x: 0, y: 0}
+    layer: 0
+    tag: 
+  log: 0
+  _anim_player: {fileID: 0}
 --- !u!1 &6399019400784557793
 GameObject:
   m_ObjectHideFlags: 0

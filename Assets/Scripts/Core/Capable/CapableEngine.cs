@@ -699,11 +699,20 @@ public class CapableEngine : BSOD_System<CapableEngine>
         // 3. SPAWN THE ITEM DATA
         ItemData item_data = DuplicateTemplate(item_template) as ItemData;
         item_data.InitFromCapable(capable_data, turnable?.ItemDataInfo); // we transfer some of the capable data to the item data (ex : position, orientation, tag, skin if we have anim_data, etc)
+        AnimData mob_anim_data = capable.GetCapacity<AnimCapacity>()?.data as AnimData;
+        AnimData item_capa_data = CapacityEngine.Instance.GetCapacityData<AnimData>(item_data.capacities_ids);
+        if (item_capa_data != null && mob_anim_data != null)
+        {
+            AnimData new_player_data = mob_anim_data.Duplicate() as AnimData;
+            new_player_data.anim_capacity_priorities = item_capa_data.DuplicateACPs();
+            item_capa_data.ReplaceWith(new_player_data);
+        }
+
 
         // 5. SPAWN THE ITEM
         Item item = SpawnCapable(item_data) as Item;
         if (log_item_switching) { Debug.Log($"(CapableSystem - Turning) Switched {capable.ID} to item {item.ID} \n - Capable data : \n{capable_data.GetDetails()} \n - Item data : \n{item_data.GetDetails()}"); }
-        item.AnimPlayer.Play(anim_capacity_to_play);
+        (item.Visual as AnimPlayer)?.Play(anim_capacity_to_play);
 
         // 4. DESPAWN THE CAPABLE
         DespawnCapable(capable_data);
@@ -870,10 +879,19 @@ public class CapableEngine : BSOD_System<CapableEngine>
     /// <param name="data"></param>
     private void hide_show_capable_on_load(Capable capable, CapableData data)
     {
+        if (log_visibility) { Debug.Log($"(CapableSystem - Load) Checking visibility for capable '{data.id}'"); }
+
+        Visualizable visual = capable.Visual;
+        if (visual == null)
+        {
+            if (log_visibility) { Debug.LogWarning($"(CapableSystem - Load) Capable {data.id} has no visual --> CANT SHOW / HIDE"); }
+            return;
+        }
+
         // check game state, if we are in GameState.Building then we always show
         if (GameManager.State == GameState.Building)
         {
-            capable.AnimPlayer.Show();
+            visual.Show();
             if (log_loading_extended) { Debug.Log($"(CapableSystem - Load) Game state is Building --> SHOWING CAPABLE {data.id}"); }
             return;
         }
@@ -885,20 +903,20 @@ public class CapableEngine : BSOD_System<CapableEngine>
             // chunk = ChunkEngine.Instance.GetChunkDataFromID(ddata.room1_id);
             if (RoomEngine.Instance.DoorEngine.IsRoomVisible(ddata.room1_id))
             {
-                capable.AnimPlayer.Show();
+                visual.Show();
                 if (log_loading_extended) { Debug.Log($"(CapableSystem - Load) Door {data.id} ({ddata.room1_id} - {ddata.room2_id}) has room1 visible --> SHOWING DOOR"); }
                 return;
             }
             // chunk = ChunkEngine.Instance.GetChunkDataFromID(ddata.room2_id);
             if (RoomEngine.Instance.DoorEngine.IsRoomVisible(ddata.room2_id))
             {
-                capable.AnimPlayer.Show();
+                visual.Show();
                 if (log_loading_extended) { Debug.Log($"(CapableSystem - Load) Door {data.id} ({ddata.room1_id} - {ddata.room2_id}) has room2 visible --> SHOWING DOOR"); }
                 return;
             }
 
             // else both rooms are not visible, we hide the door
-            capable.AnimPlayer.Hide();
+            visual.Hide();
             if (log_loading_extended) { Debug.Log($"(CapableSystem - Load) Door {data.id} ({ddata.room1_id} - {ddata.room2_id}) has both rooms not visible --> HIDING DOOR"); }
             return;
         }
@@ -917,10 +935,14 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
         if (!RoomEngine.Instance.DoorEngine.IsRoomVisible(chunk.room_id))
         {
-            capable.AnimPlayer.Hide();
+            visual.Hide();
             if (log_visibility) { Debug.Log($"(CapableSystem - Load) Capable {data.id} is in room {chunk.id} which is not visible --> HIDING CAPABLE"); }
         }
-        else { capable.AnimPlayer.Show(); }
+        else
+        {
+            visual.Show();
+            if (log_visibility) { Debug.Log($"(CapableSystem - Load) Capable {data.id} is in room {chunk.id} which IS visible --> SHOWING CAPABLE"); }
+        }
     }
 
 
@@ -1081,6 +1103,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
     // GETTERS
     public bool HasLoadedCapableData(string id) { return loaded_capables_data.ContainsKey(id); }
+    public bool HasWorldCapableData(string id) { return world_capables_data.ContainsKey(id); }
     public int GetCapableHashFromID(string id)
     {
         return capables_hashs_by_ids.TryGetValue(id, out int hash) ? hash : 0;

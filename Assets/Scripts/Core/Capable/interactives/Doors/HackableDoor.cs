@@ -23,7 +23,7 @@ public class HackableDoor : Door, Lockable
         if (hoverer == null) { Debug.LogError($"(HackableDoor) {name} has no HoverCapacity component"); }
 
         // we play the idle_locked if we are locked
-        if (Locked) { AnimPlayer.Play("idle_locked"); }
+        if (Locked) { (Visual as AnimPlayer)?.Play("idle_locked"); }
     }
 
     // INTERACTION
@@ -55,18 +55,20 @@ public class HackableDoor : Door, Lockable
     {
         Locked = false;
         if (log) { Debug.Log($"(HackableDoor) {name} is now unlocked"); }
+        AnimPlayer anim_player = Visual as AnimPlayer;
+        if (anim_player == null) { if (log) { Debug.LogError($"(HackableDoor) {name} has no AnimPlayer component"); } return; }
 
         // we play unlock animation
-        AnimPlayer.Play("unlock");
+        anim_player.Play("unlock");
 
         // we update the hover animation to show a nice unlocked anim
         hoverer.ChangeAnimation("hover");
 
         // we stop playing idle_locked
-        AnimPlayer.StopPlaying("idle_locked");
+        anim_player.StopPlaying("idle_locked");
 
         // we wait for the unlock animation to stop
-        while (AnimPlayer.IsShowing("unlock")) { await System.Threading.Tasks.Task.Yield(); }
+        while (anim_player.IsShowing("unlock")) { await System.Threading.Tasks.Task.Yield(); }
 
         // we open the door
         open();
@@ -79,15 +81,18 @@ public class HackableDoor : Door, Lockable
         CancelInvoke();
         Locked = true;
         if (log) { Debug.Log($"(HackableDoor) {name} is now locked"); }
+        AnimPlayer anim_player = Visual as AnimPlayer;
+        if (anim_player == null) { if (log) { Debug.LogError($"(HackableDoor) {name} has no AnimPlayer component"); } return; }
+
 
         // we play lock animation
-        AnimPlayer.Play("lock");
+        anim_player.Play("lock");
 
         // we update the hover animation to show the locked anim
         hoverer.ChangeAnimation("hover_locked");
 
         // we start to play idle_locked again
-        AnimPlayer.AddToPile("idle_locked");
+        anim_player.AddToPile("idle_locked");
 
         // if we are open we close ourselves
         if (is_open)

@@ -61,13 +61,17 @@ public class SpawnCapacity : Capacity
         // we find the entity_layer new skin name based on the capable skin + "_" + entity skin
         if (entity_layer != null) { set_entity_layer_skin(entity); }
 
-        // we make the main capable play an animation
-        Capable.AnimPlayer.Play(spawn_anim_name);
-
-        // if we spawn after the animation we wait for it to finish
-        if (spawn_after_animation)
+        AnimPlayer AnimPlayer = Visual as AnimPlayer;
+        if (AnimPlayer != null)
         {
-            while (Capable.AnimPlayer.IsPlaying(spawn_anim_name)) { await System.Threading.Tasks.Task.Yield(); }
+            // we make the main capable play an animation
+            AnimPlayer.Play(spawn_anim_name);
+
+            // if we spawn after the animation we wait for it to finish
+            if (spawn_after_animation)
+            {
+                while (AnimPlayer.IsPlaying(spawn_anim_name)) { await System.Threading.Tasks.Task.Yield(); }
+            }
         }
 
         entity.SetActive(true);
@@ -143,9 +147,9 @@ public class SpawnCapacity : Capacity
 
 
     // LOAD / UNLOAD DATA
-    public override void LoadData(CapacityData data)
+    public override void LoadData(CapacityData data, CapableData owner)
     {
-        base.LoadData(data);
+        base.LoadData(data, owner);
 
         if (data is not SpawnCapacityData spawn_data) { return; }
 

@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 1190906631653771530}
   - component: {fileID: 2743114525321659963}
   - component: {fileID: 5936124369903011443}
+  - component: {fileID: 1776272490618839313}
   m_Layer: 0
-  m_Name: anim_player
+  m_Name: button_anim
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -151,6 +152,27 @@ MonoBehaviour:
   log_pile: 0
   log_material: 0
   visible_on: 1
+--- !u!114 &1776272490618839313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 333136184876123911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90c2c539dbbc8784fb9abc95ffa6ada3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimCapacity
+  data:
+    <id>k__BackingField: 
+    <owner_id>k__BackingField: 
+    kind: 
+    local_position: {x: 0, y: 0}
+    layer: 0
+    tag: 
+  log: 0
+  _anim_player: {fileID: 0}
 --- !u!1 &463941151558022612
 GameObject:
   m_ObjectHideFlags: 0

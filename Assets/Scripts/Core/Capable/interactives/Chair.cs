@@ -25,9 +25,12 @@ public class Chair : Capable, EndlessInteractable
     // COROUTINES
     private IEnumerator small_turn(int turns)
     {
-        Anim turn_anim = AnimPlayer.Play("turn");
+        AnimPlayer anim_player = Visual as AnimPlayer;
+        if (anim_player == null) { yield break; }
+
+        Anim turn_anim = anim_player.Play("turn");
         if (turn_anim == null) { yield break; }
-        AnimPlayer.Play("start_turn");
+        anim_player.Play("start_turn");
 
         // get the duration of the anim
         float anim_duration = turn_anim.GetDuration();
@@ -37,12 +40,12 @@ public class Chair : Capable, EndlessInteractable
         string[] orientations = new string[] { "U", "D", "L", "R" };
         string chosen_orientation = orientations[Random.Range(0, orientations.Length)];
         string capacity = "stop_at_" + chosen_orientation;
-        AnimPlayer.AddToPile(capacity);
+        anim_player.AddToPile(capacity);
 
         // we wait for a small amount of time & then stop playing turn
         yield return new WaitForSeconds(duration);
-        AnimPlayer.StopPlaying("turn");
-        while (!AnimPlayer.IsShowing(capacity)) { yield return null; }
+        anim_player.StopPlaying("turn");
+        while (!anim_player.IsShowing(capacity)) { yield return null; }
 
         // we set the orientation
         Orient(chosen_orientation);

@@ -11,67 +11,11 @@
     },
     "layer": 29,
     "tag": "Untagged",
-    "anim_data": {
-        "skin_kind": "",
-        "skin": "sink_front",
-        "anim_capacity_priorities": [
-            {
-                "priority": 0,
-                "capacity_playing": "",
-                "capacities": [
-                    "idle"
-                ],
-                "lock_orientation": false,
-                "one_shot": false
-            },
-            {
-                "priority": 0,
-                "capacity_playing": "",
-                "capacities": [
-                    "hover"
-                ],
-                "lock_orientation": false,
-                "one_shot": false
-            },
-            {
-                "priority": 0,
-                "capacity_playing": "",
-                "capacities": [
-                    "flowing"
-                ],
-                "lock_orientation": false,
-                "one_shot": false
-            }
-        ],
-        "current_capacity": "",
-        "material_name": "objects",
-        "sorting_layer_id": -667374433,
-        "order_in_layer": 0,
-        "never_flip": false,
-        "layers": [
-            {
-                "skin": "sink_back",
-                "local_position": {
-                    "x": 0.0,
-                    "y": 0.625
-                },
-                "local_rotation": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "material_name": "objects",
-                "sorting_layer_id": -667374433,
-                "order_in_layer": 0,
-                "never_flip": false,
-                "follow_duration": false
-            }
-        ],
-        "local_position": {
-            "x": 0.0,
-            "y": 0.0
-        }
-    },
+    "capacities_ids": [
+        "sink_anim",
+        "chest_iic",
+        "hover"
+    ],
     "inventory": {
         "item_pools_data": [
             {
@@ -112,10 +56,6 @@
         ],
         "circle_colliders": []
     },
-    "capacities_ids": [
-        "chest_iic",
-        "hover"
-    ],
     "effects": [],
     "effects_ttl": []
 }

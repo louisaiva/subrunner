@@ -32,21 +32,16 @@ public class Vulnerable : MonoBehaviour
             if (_connector == null) { _connector = GetComponent<ConnectCapacity>(); }
             return _connector;
         } }
-    public SpriteRenderer Renderer { get { return Capable.AnimPlayer.Renderer; } }
-    [HideInInspector] public Material TargetMaterial;
-    [HideInInspector] public Material BaseMaterial;
+    public SpriteRenderer Renderer { get { return Capable.Visual.Renderer; } }
+    // [HideInInspector] public Material TargetMaterial;
+    // [HideInInspector] public Material BaseMaterial;
+
 
 
     [Header("Log")]
     [SerializeField] private bool log = false;
     [SerializeField] private bool log_vulnerabilities = false;
 
-    // AWAKE
-    private void Start()
-    {
-        BaseMaterial = Capable.AnimPlayer.GetMaterial();
-        TargetMaterial = Resources.Load<Material>("materials/targeted/hack_door");
-    }
 
     // VULNERABILITIES
     public bool IsVulnerableTo(Exploit exploit)
@@ -120,11 +115,7 @@ public class Vulnerable : MonoBehaviour
     // OnDISABLE
     private void OnDisable()
     {
-        if (BaseMaterial != null)
-        {
-            // Renderer.material = BaseMaterial;
-            Capable.AnimPlayer.ChangeMaterial(BaseMaterial);
-        }
+        if (!string.IsNullOrEmpty(base_material)) { SwitchToBaseMaterial(); }
         while (running_hacks.Count > 0)
         {
             Hack hack = running_hacks[0];
@@ -133,6 +124,20 @@ public class Vulnerable : MonoBehaviour
         }
     }
 
+    // MATERIAL SWITCHING
+    private string target_material = "hack_door";
+    private string base_material = "";
+    public void RegisterBaseMaterial(string material_name) { base_material = material_name; }
+    public void SwitchToTargetMaterial()
+    {
+        // Renderer.material = TargetMaterial;
+        MaterialBank.ChangeMaterial(Capable.Visual, target_material, debug_cap_id: Capable.ID);
+    }
+    public void SwitchToBaseMaterial()
+    {
+        // Renderer.material = BaseMaterial;
+        MaterialBank.ChangeMaterial(Capable.Visual, base_material, debug_cap_id: Capable.ID);
+    }
 
 
 

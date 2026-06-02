@@ -79,11 +79,13 @@ public class WalkCapacity : Capacity
 
         // update sound
         update_sound_parameters();
+        AnimPlayer anim_player = Visual as AnimPlayer;
+        if (anim_player == null) { return; }
 
         if (speed == 0f)
         {
-            Capable.AnimPlayer.StopPlaying("walk");
-            Capable.AnimPlayer.StopPlaying("run");
+            anim_player.StopPlaying("walk");
+            anim_player.StopPlaying("run");
 
             // then we want to stop walking
             if (is_playing_footsteps) { stop_footsteps(); }
@@ -92,7 +94,7 @@ public class WalkCapacity : Capacity
 
         // else we have a walk_speed, we want to enable walk animation if not playing
         string anim_to_play = is_running ? "run" : "walk";
-        if (!Capable.AnimPlayer.IsPlaying(anim_to_play)) { Capable.AnimPlayer.Play(anim_to_play); }
+        if (!anim_player.IsPlaying(anim_to_play)) { anim_player.Play(anim_to_play); }
         // will automatically switch between walk & run (needs to be set in the same ACP priority)
 
         // and play the footsteps if not playing
@@ -170,8 +172,9 @@ public class WalkCapacity : Capacity
 
 
     // LOAD / UNLOAD DATA
-    public override void LoadData(CapacityData data)
+    public override void LoadData(CapacityData data, CapableData owner)
     {
+        base.LoadData(data, owner);
         if (data is not WalkData wdata) { return; }
 
         // load walk parameters
@@ -190,15 +193,13 @@ public class WalkCapacity : Capacity
         // reset walk speed
         speed = 0f;
 
-        base.LoadData(data);
-
         // reset audio
         if (walk_sound.isValid())
         {
             walk_sound.stop(STOP_MODE.IMMEDIATE);
             walk_sound.release();
         }
-        walk_sound = AudioEngine.Instance.CreateInstanceFromHolderID("walk", data.owner_id); // we get a walk sound instance from the audio engine
+        // walk_sound = AudioEngine.Instance.CreateInstanceFromSkin("walk", Capable.Skin); // we get a walk sound instance from the audio engine
 
         // apply run state
         is_running = !wdata.is_running; // we set the opposite so we can call the enable/disable run methods

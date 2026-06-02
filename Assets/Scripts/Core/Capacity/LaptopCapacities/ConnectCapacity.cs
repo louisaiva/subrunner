@@ -192,6 +192,15 @@ public class ConnectCapacity : Capacity
             connection.Close();
         }
     }
+
+
+    // DATA MANAGEMENT
+    public override void LoadData(CapacityData data, CapableData owner)
+    {
+        base.LoadData(data, owner);
+
+        GetComponent<Vulnerable>()?.RegisterBaseMaterial(Visual?.Renderer?.material?.name);
+    }
 }
 
 [Serializable]

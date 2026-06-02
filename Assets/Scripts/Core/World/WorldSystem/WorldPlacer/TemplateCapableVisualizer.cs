@@ -32,8 +32,9 @@ public class TemplateCapableVisualizer : MonoBehaviour
         this.template = template;
 
         // then we load the feet & anim data
-        if (data.anim_data != null && !string.IsNullOrEmpty(data.anim_data.skin)) { load_anim_data(data.anim_data); }
-        else if ( has_sprite_capacity(data, out SpriteData sr_data) ) { load_sprite_data(sr_data); }
+        load_visuals(data);
+        // if (data.anim_data != null && !string.IsNullOrEmpty(data.anim_data.skin)) { load_anim_data(data.anim_data); }
+        // else if ( has_sprite_capacity(data, out SpriteData sr_data) ) { load_sprite_data(sr_data); }
         load_feet_data(data.feet_data);
 
         // then we start following the mouse :D
@@ -105,7 +106,22 @@ public class TemplateCapableVisualizer : MonoBehaviour
     }
 
 
-    // DATA MANAGEMENT
+    // VISUAL MANAGEMENT
+    private void load_visuals(CapableData data)
+    {
+        // we try to get the AnimCapacityData from capacity engine + template
+        AnimData anim_data = CapacityEngine.LazyInstance.GetTemplateData<AnimData>(data.capacities_ids);
+        if (anim_data != null)
+        {
+            load_anim_data(anim_data);
+            return;
+        }
+
+        // else we do the same with SpriteData
+        SpriteData sr_data = CapacityEngine.LazyInstance.GetTemplateData<SpriteData>(data.capacities_ids);
+        if (sr_data != null) { load_sprite_data(sr_data); }
+        
+    }
     private void load_feet_data(FeetData feet_data)
     {
         Collider2D col;
@@ -124,7 +140,7 @@ public class TemplateCapableVisualizer : MonoBehaviour
             col.isTrigger = true;
         }
     }
-    private void load_anim_data(AnimPlayerData anim_data)
+    private void load_anim_data(AnimData anim_data)
     {
         sr.gameObject.SetActive(false);
         player.gameObject.SetActive(true);
@@ -162,7 +178,7 @@ public class TemplateCapableVisualizer : MonoBehaviour
         sr.sprite = sr_data.sprite;
         sr.gameObject.SetActive(true);
     }
-    private bool has_sprite_capacity(CapableData data, out SpriteData sr_data)
+    /* private bool has_sprite_capacity(CapableData data, out SpriteData sr_data)
     {
         sr_data = null;
         if (data.capacities_ids == null) { return false; }
@@ -179,7 +195,7 @@ public class TemplateCapableVisualizer : MonoBehaviour
             }
         }
         return false;
-    }
+    } */
 }
 
 public enum CapablePlacementStatus

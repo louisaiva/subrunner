@@ -1,0 +1,101 @@
+﻿{
+    "<id>k__BackingField": "forge3D_anim",
+    "<owner_id>k__BackingField": "forge3D",
+    "kind": "AnimCapacity",
+    "local_position": {
+        "x": -0.125,
+        "y": -0.0833333358168602
+    },
+    "layer": 0,
+    "tag": "Untagged",
+    "skin": "forge3D",
+    "material_name": "objects",
+    "sorting_layer_id": -667374433,
+    "order_in_layer": 0,
+    "anim_capacity_priorities": [
+        {
+            "priority": 0,
+            "capacity_playing": "idle",
+            "capacities": [
+                "idle"
+            ],
+            "lock_orientation": false,
+            "one_shot": false
+        },
+        {
+            "priority": 1,
+            "capacity_playing": "",
+            "capacities": [
+                "hover"
+            ],
+            "lock_orientation": false,
+            "one_shot": false
+        },
+        {
+            "priority": 1,
+            "capacity_playing": "",
+            "capacities": [
+                "turn_on",
+                "turn_off"
+            ],
+            "lock_orientation": true,
+            "one_shot": true
+        },
+        {
+            "priority": 1,
+            "capacity_playing": "",
+            "capacities": [
+                "idle_on"
+            ],
+            "lock_orientation": false,
+            "one_shot": false
+        },
+        {
+            "priority": 1,
+            "capacity_playing": "",
+            "capacities": [
+                "craft"
+            ],
+            "lock_orientation": false,
+            "one_shot": false
+        }
+    ],
+    "current_capacity": "",
+    "never_flip": false,
+    "layers": [
+        {
+            "skin": "forge3D_base",
+            "local_position": {
+                "x": 0.0,
+                "y": 0.5426666736602783
+            },
+            "local_rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "material_name": "objects",
+            "sorting_layer_id": -667374433,
+            "order_in_layer": 0,
+            "never_flip": false,
+            "follow_duration": false
+        },
+        {
+            "skin": "forge3D_wall",
+            "local_position": {
+                "x": 0.0,
+                "y": 0.0010000000474974514
+            },
+            "local_rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "material_name": "objects",
+            "sorting_layer_id": -667374433,
+            "order_in_layer": 0,
+            "never_flip": false,
+            "follow_duration": false
+        }
+    ]
+}

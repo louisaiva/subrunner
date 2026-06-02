@@ -11,58 +11,12 @@
     },
     "layer": 29,
     "tag": "Untagged",
-    "anim_data": {
-        "skin_kind": "",
-        "skin": "sofa_R",
-        "anim_capacity_priorities": [
-            {
-                "priority": 0,
-                "capacity_playing": "idle",
-                "capacities": [
-                    "idle"
-                ],
-                "lock_orientation": false,
-                "one_shot": false
-            },
-            {
-                "priority": 1,
-                "capacity_playing": "",
-                "capacities": [
-                    "hurted"
-                ],
-                "lock_orientation": true,
-                "one_shot": true
-            }
-        ],
-        "current_capacity": "",
-        "material_name": "objects",
-        "sorting_layer_id": -667374433,
-        "order_in_layer": 0,
-        "never_flip": false,
-        "layers": [
-            {
-                "skin": "sofa_L",
-                "local_position": {
-                    "x": -1.5,
-                    "y": 0.0
-                },
-                "local_rotation": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "material_name": "objects",
-                "sorting_layer_id": -667374433,
-                "order_in_layer": 0,
-                "never_flip": false,
-                "follow_duration": false
-            }
-        ],
-        "local_position": {
-            "x": 0.0,
-            "y": 0.0
-        }
-    },
+    "capacities_ids": [
+        "sofa_anim",
+        "sofa_hover",
+        "sofa_sorter",
+        "sofa_iic"
+    ],
     "inventory": {
         "item_pools_data": [],
         "item_type": 0
@@ -93,11 +47,6 @@
         ],
         "circle_colliders": []
     },
-    "capacities_ids": [
-        "sofa_hover",
-        "sofa_sorter",
-        "sofa_iic"
-    ],
     "effects": [],
     "effects_ttl": [],
     "local_sitting_position": {

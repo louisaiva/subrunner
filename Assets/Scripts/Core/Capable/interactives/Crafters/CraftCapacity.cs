@@ -10,7 +10,7 @@ public class CraftCapacity : Capacity
     public void Craft()
     {
         // check if we are already crafting
-        if (Capable.AnimPlayer.IsPlaying(craft_anim)) { return; }
+        if ((Visual is AnimPlayer player) && player.IsPlaying(craft_anim)) { return; }
 
         if (log) { Debug.Log($"(CraftCapacity) {Capable.ID} is crafting with duration {craft_duration}"); }
         StartCoroutine(CraftCoroutine());
@@ -19,7 +19,7 @@ public class CraftCapacity : Capacity
     // LOW LEVEL CRAFTING
     private IEnumerator CraftCoroutine()
     {
-        Capable.AnimPlayer.Play(craft_anim);
+        (Visual as AnimPlayer)?.Play(craft_anim);
         yield return new WaitForSeconds(craft_duration);
         craft_is_done();
     }
@@ -27,16 +27,16 @@ public class CraftCapacity : Capacity
     {
         if (Capable == null || !Capable.Loaded) { return; }
         if (log) { Debug.Log($"(CraftCapacity) {Capable.ID} is done crafting !"); }
-        Capable.AnimPlayer.StopPlaying(craft_anim);
+        (Visual as AnimPlayer)?.StopPlaying(craft_anim);
     }
 
 
 
 
     // LOAD / UNLOAD DATA
-    public override void LoadData(CapacityData data)
+    public override void LoadData(CapacityData data, CapableData owner)
     {
-        base.LoadData(data);
+        base.LoadData(data, owner);
 
         if (data is not CraftCapacityData craft_data) { return; }
         

@@ -71,10 +71,13 @@ public class EatCapacity : Capacity
     }
     private IEnumerator eat_coroutine(HealthCapacity health, Food food)
     {
+        AnimPlayer anim_player = Visual as AnimPlayer;
+        if (anim_player == null) { yield break; }
+
         // launch the animation
         for (int i = 0; i < bites_per_portion; i++)
         {
-            Anim anim = AnimPlayer.Play("eat", duration_override: bite_duration);
+            Anim anim = anim_player.Play("eat", duration_override: bite_duration);
             if (anim == null)
             {
                 current_coroutine = null;
@@ -85,7 +88,7 @@ public class EatCapacity : Capacity
             yield return new WaitForSeconds(bite_duration); // wait for the eating duration
 
             // we stop playing the anim
-            AnimPlayer.StopPlaying("eat");
+            anim_player.StopPlaying("eat");
 
             // we check if the food target is still valid
             if (food == null || !food.Loaded)
@@ -117,7 +120,7 @@ public class EatCapacity : Capacity
         current_coroutine = null; // we reset the current coroutine
 
         // we stop the anim_player from playing
-        if (AnimPlayer != null) { AnimPlayer.StopPlaying("eat"); }
+        if (Visual is AnimPlayer player) { player.StopPlaying("eat"); }
     }
 
     // SET FOOD
@@ -135,8 +138,9 @@ public class EatCapacity : Capacity
 
 
     // LOAD / UNLOAD DATA
-    public override void LoadData(CapacityData data)
+    public override void LoadData(CapacityData data, CapableData owner)
     {
+        base.LoadData(data, owner);
         if (data is not EatData edata) { return; }
 
         // load eating parameters
@@ -145,8 +149,6 @@ public class EatCapacity : Capacity
 
         // load entity data
         this.hunger = edata.hunger;
-
-        base.LoadData(data);
     }
 
     // SAVE DYNAMIC DATA

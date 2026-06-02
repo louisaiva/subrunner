@@ -112,6 +112,9 @@ public class Pot : Item, Usable
     public void Fill() { StartCoroutine(fill_coroutine()); }
     private IEnumerator fill_coroutine()
     {
+        AnimPlayer anim_player = Visual as AnimPlayer;
+        if (anim_player == null) { yield break; }
+
         // si le pot est burned, alors on le nettoie
         if (Reference == "pot:burned")
         {
@@ -121,10 +124,10 @@ public class Pot : Item, Usable
         }
 
         // we play the filling_up anim
-        AnimPlayer.Play("fill_up");
+        anim_player.Play("fill_up");
 
         // we wait for the animation to end
-        yield return new WaitWhile(() => AnimPlayer.IsPlaying("fill_up"));
+        yield return new WaitWhile(() => anim_player.IsPlaying("fill_up"));
 
         // we set the pot as filled
         has_water = true;
@@ -199,22 +202,29 @@ public class Pot : Item, Usable
         {
             RemoveEffect(Effect.Boiling);
 
+            AnimPlayer anim_player = Visual as AnimPlayer;
+            if (anim_player == null) { return; }
+
             // we play the animation
-            AnimPlayer.StopPlaying("boiling");
-            AnimPlayer.StopPlaying("boiling_pasta");
+            anim_player.StopPlaying("boiling");
+            anim_player.StopPlaying("boiling_pasta");
         }
     }
     private void update_burning()
     {
+        AnimPlayer anim_player = Visual as AnimPlayer;
+        if (anim_player == null) { return; }
+
         // we check if we start burning
         if (stacked_temperature >= stack_limit && !HasEffect(Effect.Burning))
         {
             AddEffect(Effect.Burning, -888f);
             if (log) { Debug.Log("(Pot) Now burning !"); }
 
+
             // we play the burning up animation
-            AnimPlayer.Play("burn_up");
-            AnimPlayer.AddToPile("burning");
+            anim_player.Play("burn_up");
+            anim_player.AddToPile("burning");
             is_burned = true;
             Empty(delete_food: true); // la nourriture crame & l'eau s'evapore
             // update_state(); // c fait automatiquement dans empty
@@ -233,14 +243,17 @@ public class Pot : Item, Usable
             if (log) { Debug.Log("(Pot) Stopped burning"); }
 
             // we stop the burning anims
-            AnimPlayer.Play("burn_down");
-            AnimPlayer.StopPlaying("burning");
+            anim_player.Play("burn_down");
+            anim_player.StopPlaying("burning");
         }
     }
 
     // STATE UPDATING
     private void update_state()
     {
+        AnimPlayer anim_player = Visual as AnimPlayer;
+        if (anim_player == null) { return; }
+
         // we update the pot state based on if it has pasta, water or is burnt
 
         // REFERENCE
@@ -255,8 +268,8 @@ public class Pot : Item, Usable
         if (log) { Debug.Log("(Pot) State updated to " + Reference); }
 
         // BURNING ANIMATIONS
-        AnimPlayer.ClearIdles();
-        if (is_burned) { AnimPlayer.AddToPile("idle_burned"); GetCapacity<HoverCapacity>()?.ChangeAnimation("hover_burned"); return; }
+        anim_player.ClearIdles();
+        if (is_burned) { anim_player.AddToPile("idle_burned"); GetCapacity<HoverCapacity>()?.ChangeAnimation("hover_burned"); return; }
 
         // IDLE ANIMATIONS
         string contenu = "";
@@ -264,14 +277,14 @@ public class Pot : Item, Usable
         if (HasFood) { contenu += (contenu == "" ? "pasta" : "_pasta"); }
 
         if (contenu == "") { GetCapacity<HoverCapacity>()?.ChangeAnimation("hover"); }
-        else { AnimPlayer.AddToPile("idle_" + contenu); GetCapacity<HoverCapacity>()?.ChangeAnimation("hover_" + contenu); }
+        else { anim_player.AddToPile("idle_" + contenu); GetCapacity<HoverCapacity>()?.ChangeAnimation("hover_" + contenu); }
 
         // BOILING ANIMATIONS
         if (HasEffect(Effect.Boiling))
         {
-            AnimPlayer.StopPlaying("boiling");
-            AnimPlayer.StopPlaying("boiling_pasta");
-            if (has_water) { AnimPlayer.Play(HasFood ? "boiling_pasta" : "boiling"); }
+            anim_player.StopPlaying("boiling");
+            anim_player.StopPlaying("boiling_pasta");
+            if (has_water) { anim_player.Play(HasFood ? "boiling_pasta" : "boiling"); }
         }
     }
 }

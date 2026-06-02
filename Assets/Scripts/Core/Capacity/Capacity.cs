@@ -13,14 +13,7 @@ public class Capacity : MonoBehaviour
             return _capable;
         }
     }
-    public AnimPlayer AnimPlayer
-    {
-        get
-        {
-            if (Capable == null) { return null; }
-            return Capable.AnimPlayer;
-        }
-    }
+
 
     [Header("Capacity data")]
     public CapacityData data;
@@ -50,12 +43,34 @@ public class Capacity : MonoBehaviour
     [Header("Logs")]
     public bool log = false;
 
+    [RuntimeOnly] private CapableData _owner_data_cache;
+    [RuntimeOnly] public CapableData OwnerData
+    {
+        get
+        {
+            if (_owner_data_cache != null) { return _owner_data_cache; }
+            if (Capable == null) { return null; }
+            if (Capable.data == null) { return null; }
+            return Capable.data;
+        }
+    }
+    [RuntimeOnly] public Visualizable Visual
+    {
+        get
+        {
+            if (Capable != null) { return Capable.Visual; }
+            if (_owner_data_cache != null) { return _owner_data_cache.Capable.Visual; }
+            return null;
+        }
+    }
 
     // LOAD / UNLAOD
-    public virtual void LoadData(CapacityData data)
+    public virtual void LoadData(CapacityData data, CapableData owner)
     {
         this.data = data;
         this.name = data.id;
+        _owner_data_cache = owner;
+        data.owner_id = owner.id;
 
         // set the local pos if different than zero
         if (data.local_position != Vector2.zero) { transform.localPosition = data.local_position; }
@@ -71,6 +86,7 @@ public class Capacity : MonoBehaviour
 
         this.data = null;
         this._capable = null;
+        this._owner_data_cache = null;
 
         // stop all coroutines
         StopAllCoroutines();
@@ -134,11 +150,11 @@ public class Capacity : MonoBehaviour
     }
 
     // USE
-    // ? do we need all Capacities to have a Use method ?
+    // ? do we need all Capacities to have a Use method ? no
     public virtual void Use(Capable capable)
     {
         // we play the animation
-        capable.AnimPlayer.Play(name);
+        (capable.Visual as AnimPlayer)?.Play(name);
     }
 
 

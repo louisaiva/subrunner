@@ -9,6 +9,8 @@ using UnityEngine;
 public class SleepCapacity : Capacity
 {
     private SleepingCat cat => Capable as SleepingCat; // we cast the capable to a SleepingCat
+    private AnimPlayer AnimPlayer => Visual as AnimPlayer;
+
 
     [Header("Sleeping parameters")]
     public bool asleep = false; // Is the cat asleep?
@@ -43,7 +45,7 @@ public class SleepCapacity : Capacity
     public void Sleep()
     {
         // we play the sleep animation
-        Anim anim = cat.AnimPlayer.Play("fell_asleep");
+        Anim anim = AnimPlayer.Play("fell_asleep");
         if (anim == null)
         {
             if (log) { Debug.LogWarning("(SleepCapacity) " + cat.name + " could not play fell_asleep animation"); }
@@ -53,7 +55,7 @@ public class SleepCapacity : Capacity
         if (log) { Debug.Log("(SleepCapacity) " + cat.name + " is falling asleep"); }
 
         // and we put the idle_sleep animation in the queue
-        cat.AnimPlayer.Play("idle_sleep");
+        AnimPlayer.Play("idle_sleep");
 
         // and we set the cat as asleep
         asleep = true;
@@ -74,7 +76,7 @@ public class SleepCapacity : Capacity
     public void WakeUp()
     {
         // we play the wake up animation
-        Anim anim = cat.AnimPlayer.Play("wake_up");
+        Anim anim = AnimPlayer.Play("wake_up");
         if (anim == null)
         {
             if (log) { Debug.LogWarning("(SleepCapacity) " + cat.name + " could not play wake_up animation"); }
@@ -82,7 +84,7 @@ public class SleepCapacity : Capacity
         }
 
         // we stop playing the idle_sleep animation
-        cat.AnimPlayer.StopPlaying("idle_sleep");
+        AnimPlayer.StopPlaying("idle_sleep");
 
         // we calculate the number of licks to do
         float time_spent_asleep = Time.time - sleep_timer;

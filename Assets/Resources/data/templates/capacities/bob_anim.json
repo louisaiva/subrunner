@@ -1,0 +1,117 @@
+﻿{
+    "<id>k__BackingField": "bob_anim",
+    "<owner_id>k__BackingField": "bob",
+    "kind": "AnimCapacity",
+    "local_position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "layer": 7,
+    "tag": "Untagged",
+    "skin": "bob",
+    "material_name": "perso",
+    "sorting_layer_id": -667374433,
+    "order_in_layer": 0,
+    "anim_capacity_priorities": [
+        {
+            "priority": 0,
+            "capacity_playing": "",
+            "capacities": [
+                "idle"
+            ],
+            "lock_orientation": false,
+            "one_shot": false
+        },
+        {
+            "priority": 1,
+            "capacity_playing": "",
+            "capacities": [
+                "walk",
+                "run"
+            ],
+            "lock_orientation": false,
+            "one_shot": false
+        },
+        {
+            "priority": 2,
+            "capacity_playing": "",
+            "capacities": [
+                "hack"
+            ],
+            "lock_orientation": true,
+            "one_shot": true
+        },
+        {
+            "priority": 3,
+            "capacity_playing": "",
+            "capacities": [
+                "attack",
+                "dodge"
+            ],
+            "lock_orientation": true,
+            "one_shot": true
+        },
+        {
+            "priority": 4,
+            "capacity_playing": "",
+            "capacities": [
+                "hurted",
+                "eat"
+            ],
+            "lock_orientation": true,
+            "one_shot": true
+        },
+        {
+            "priority": 5,
+            "capacity_playing": "",
+            "capacities": [
+                "idle_sit"
+            ],
+            "lock_orientation": true,
+            "one_shot": false
+        },
+        {
+            "priority": 5,
+            "capacity_playing": "",
+            "capacities": [
+                "zap_tv",
+                "sit",
+                "stand",
+                "zip",
+                "unzip"
+            ],
+            "lock_orientation": true,
+            "one_shot": true
+        },
+        {
+            "priority": 5,
+            "capacity_playing": "",
+            "capacities": [
+                "die"
+            ],
+            "lock_orientation": true,
+            "one_shot": true
+        }
+    ],
+    "current_capacity": "",
+    "never_flip": false,
+    "layers": [
+        {
+            "skin": "bob_hair",
+            "local_position": {
+                "x": 0.0,
+                "y": -0.0010000000474974514
+            },
+            "local_rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "material_name": "perso",
+            "sorting_layer_id": -667374433,
+            "order_in_layer": 0,
+            "never_flip": false,
+            "follow_duration": false
+        }
+    ]
+}

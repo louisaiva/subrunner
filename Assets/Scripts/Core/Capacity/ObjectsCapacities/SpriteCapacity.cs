@@ -25,8 +25,9 @@ public class SpriteCapacity : Capacity
     ///
 
     // LOAD / UNLOAD DATA
-    public override void LoadData(CapacityData data)
+    public override void LoadData(CapacityData data, CapableData owner)
     {
+        base.LoadData(data, owner);
         if (data is not SpriteData sdata) { return; }
 
         // load sprite
@@ -42,8 +43,6 @@ public class SpriteCapacity : Capacity
             int index = UnityEngine.Random.Range(-1, random_sprites.Count);
             if (index >= 0) { sr.sprite = random_sprites[UnityEngine.Random.Range(0, random_sprites.Count)]; }
         }
-
-        base.LoadData(data);
     }
 
     // GET STATIC DATA

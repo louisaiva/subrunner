@@ -11,69 +11,15 @@
     },
     "layer": 23,
     "tag": "Spider",
-    "anim_data": {
-        "skin_kind": "",
-        "skin": "spider",
-        "anim_capacity_priorities": [
-            {
-                "priority": 0,
-                "capacity_playing": "",
-                "capacities": [
-                    "idle"
-                ],
-                "lock_orientation": false,
-                "one_shot": false
-            },
-            {
-                "priority": 1,
-                "capacity_playing": "",
-                "capacities": [
-                    "walk",
-                    "run"
-                ],
-                "lock_orientation": false,
-                "one_shot": false
-            },
-            {
-                "priority": 3,
-                "capacity_playing": "",
-                "capacities": [
-                    "attack"
-                ],
-                "lock_orientation": true,
-                "one_shot": true
-            },
-            {
-                "priority": 4,
-                "capacity_playing": "",
-                "capacities": [
-                    "hurted",
-                    "eat"
-                ],
-                "lock_orientation": true,
-                "one_shot": true
-            },
-            {
-                "priority": 5,
-                "capacity_playing": "",
-                "capacities": [
-                    "die"
-                ],
-                "lock_orientation": true,
-                "one_shot": false
-            }
-        ],
-        "current_capacity": "",
-        "material_name": "enemy",
-        "sorting_layer_id": -667374433,
-        "order_in_layer": 0,
-        "never_flip": false,
-        "layers": [],
-        "local_position": {
-            "x": 0.0,
-            "y": 0.0
-        }
-    },
+    "capacities_ids": [
+        "spider_anim",
+        "spider_health",
+        "spider_walk",
+        "spider_eat",
+        "spider_attack",
+        "spider_motor",
+        "mob_exp"
+    ],
     "inventory": {
         "item_pools_data": [
             {
@@ -111,14 +57,6 @@
             }
         ]
     },
-    "capacities_ids": [
-        "spider_health",
-        "spider_walk",
-        "spider_eat",
-        "spider_attack",
-        "spider_motor",
-        "mob_exp"
-    ],
     "effects": [],
     "effects_ttl": [],
     "social_data": {

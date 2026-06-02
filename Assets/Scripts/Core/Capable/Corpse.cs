@@ -113,8 +113,8 @@ public class Corpse : Food
         Destroy(transform.Find("feet").gameObject);
 
         // and change our skin to bones
-        AnimPlayer.Skin = "bones";
-        AnimPlayer.ClearPile();
+        Visual.Skin = "bones";
+        (Visual as AnimPlayer)?.ClearPile();
         // Reference = "food:bones";
         // ItemDescription = "just some bones./. nothing special here.";
     }

@@ -162,8 +162,10 @@ public class MotorCapacity : Capacity
 
 
     // LOAD / UNLOAD DATA
-    public override void LoadData(CapacityData data)
+    public override void LoadData(CapacityData data, CapableData owner)
     {
+        base.LoadData(data, owner); // set this before the rest so the data is set // ! before it was at "goto" line
+
         if (data is not MotorData motor_data) { return; }
 
         // we load the goto
@@ -175,8 +177,7 @@ public class MotorCapacity : Capacity
 
         Agent.Initialize(); // we refresh the injected data for the agent
 
-        base.LoadData(data); // set this before the rest so the data is set
-
+        // ! goto is this line
 
         // we log
         if (last_agent_type == motor_data.agent_type)

@@ -87,9 +87,9 @@ public class ExpCapacity : Capacity
 
 
     // DATA MANAGEMENT
-    public override void LoadData(CapacityData data)
+    public override void LoadData(CapacityData data, CapableData owner)
     {
-        base.LoadData(data);
+        base.LoadData(data, owner);
         if (data is not ExpData expd) { return; }
 
         // we load the collider data if we have it

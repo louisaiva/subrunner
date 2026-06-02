@@ -175,6 +175,24 @@ public class MaterialBank : MonoBehaviour
 
         return mat_name;
     }
+    public static void ChangeMaterial(Visualizable visu, string material_id, string debug_cap_id = "not specified")
+    {
+        if (visu == null)
+        {
+            LogGetMaterial.Error($"[capable : '{debug_cap_id}'] The Visualizable is null, cannot change material");
+            return;
+        }
+
+        Material new_material = GetMaterial(material_id);
+        if (new_material == null)
+        {
+            LogGetMaterial.Error($"[capable : '{debug_cap_id}'] Failed to get material with id: {material_id}, cannot change material");
+            return;
+        }
+
+        visu.SetMaterial(new_material);
+        LogGetMaterial.Log($"[capable : '{debug_cap_id}'] Changed material to id: {material_id}, material name: {new_material.name}");
+    }
 }
 
 [Serializable] public class MaterialsPaths

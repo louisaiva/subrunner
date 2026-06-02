@@ -2,8 +2,8 @@
     "<id>k__BackingField": "vulnerable_cube",
     "kind": "FalseInteractable",
     "position": {
-        "x": -0.41298341751098635,
-        "y": 9.760965347290039
+        "x": 0.0,
+        "y": 0.0
     },
     "orientation": {
         "x": 0.0,
@@ -11,49 +11,11 @@
     },
     "layer": 29,
     "tag": "Untagged",
-    "anim_data": {
-        "skin_kind": "",
-        "skin": "lil_cube",
-        "anim_capacity_priorities": [
-            {
-                "priority": 0,
-                "capacity_playing": "",
-                "capacities": [
-                    "idle"
-                ],
-                "lock_orientation": false,
-                "one_shot": false
-            },
-            {
-                "priority": 1,
-                "capacity_playing": "",
-                "capacities": [
-                    "hover"
-                ],
-                "lock_orientation": false,
-                "one_shot": false
-            },
-            {
-                "priority": 3,
-                "capacity_playing": "",
-                "capacities": [
-                    "interact"
-                ],
-                "lock_orientation": true,
-                "one_shot": true
-            }
-        ],
-        "current_capacity": "",
-        "material_name": "Sprite-Lit-Default",
-        "sorting_layer_id": -667374433,
-        "order_in_layer": 0,
-        "never_flip": false,
-        "layers": [],
-        "local_position": {
-            "x": 0.0,
-            "y": 0.0
-        }
-    },
+    "capacities_ids": [
+        "vulncube_anim",
+        "hover",
+        "connect"
+    ],
     "inventory": {
         "item_pools_data": [],
         "item_type": 0
@@ -62,8 +24,8 @@
         "box_colliders": [
             {
                 "local_position": {
-                    "x": -0.41298341751098635,
-                    "y": 9.760965347290039
+                    "x": 0.0,
+                    "y": 0.0
                 },
                 "layerID": 29,
                 "pathfinding_area": 1,
@@ -84,10 +46,6 @@
         ],
         "circle_colliders": []
     },
-    "capacities_ids": [
-        "hover",
-        "connect"
-    ],
     "effects": [],
     "effects_ttl": []
 }

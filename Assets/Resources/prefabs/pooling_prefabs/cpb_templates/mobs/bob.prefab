@@ -277,19 +277,6 @@ MonoBehaviour:
   forces: []
   input_speed: 0
   Velocity: {x: 0, y: 0}
-  level: 1
-  xp: 0
-  total_xp: 0
-  xp_to_next_level: 100
-  metamorph_skins:
-  - perso
-  - cat
-  - zombo
-  - spider
-  - rat
-  - apple
-  - fridge
-  - laptop_black
   _laptop: {fileID: 0}
 --- !u!50 &5515429412044179659
 Rigidbody2D:
@@ -329,8 +316,9 @@ GameObject:
   - component: {fileID: 7449123127714947827}
   - component: {fileID: 1178247245300308537}
   - component: {fileID: 7090355425099884852}
+  - component: {fileID: 3137297137453370309}
   m_Layer: 7
-  m_Name: anim_player
+  m_Name: bob_anim
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -498,6 +486,27 @@ MonoBehaviour:
   log_pile: 0
   log_material: 0
   visible_on: 1
+--- !u!114 &3137297137453370309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 854574378054970382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90c2c539dbbc8784fb9abc95ffa6ada3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimCapacity
+  data:
+    <id>k__BackingField: 
+    <owner_id>k__BackingField: 
+    kind: 
+    local_position: {x: 0, y: 0}
+    layer: 0
+    tag: 
+  log: 0
+  _anim_player: {fileID: 0}
 --- !u!1 &1327415466438464259
 GameObject:
   m_ObjectHideFlags: 0

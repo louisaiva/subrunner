@@ -138,11 +138,15 @@ public class UI_MapCapablesManager : MonoBehaviour
         // if the icon has no skins, it does never matches
         if (icon.skins == null || icon.skins.Count == 0) { return false; }
 
+        // we get the VisualCapacityData of the capable, if it has one
+        VisualData vdata = CapacityEngine.Instance.GetCapacityData<VisualData>(cdata.capacities_ids);
+        if (vdata == null) { return false; }
+
         // if the capable has no skin, same
-        if (cdata.anim_data == null || string.IsNullOrEmpty(cdata.anim_data.skin)) { return false; }
+        if (string.IsNullOrEmpty(vdata.skin)) { return false; }
 
         // otherwise, we check if we have a skin match
-        return icon.skins.Contains(cdata.anim_data.skin);
+        return icon.skins.Contains(vdata.skin);
     }
 
     // EVENT HANDLERS

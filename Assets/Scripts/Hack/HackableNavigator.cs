@@ -114,7 +114,8 @@ public class HackableNavigator : MonoBehaviour
         connector.Connect(target,hacker);
 
         // we set the hovered target material
-        target.Vulnerable.Renderer.material = target.Vulnerable.TargetMaterial;
+        // target.Vulnerable.Renderer.material = target.Vulnerable.target_material;
+        target.Vulnerable.SwitchToTargetMaterial();
         if (log_material_switching) { Debug.Log($"(VulnerableNavigator) switched material of {target.Capable.ID} to targeted material"); }
 
         // we update the hackray
@@ -141,7 +142,7 @@ public class HackableNavigator : MonoBehaviour
             targeted_connector = null;
             return;
         }
-        vulnerable.Renderer.material = vulnerable.BaseMaterial;
+        vulnerable.SwitchToBaseMaterial();
         if (log_material_switching) { Debug.Log($"(VulnerableNavigator) resetted material of {vulnerable.Capable.ID} to base material"); }
 
 

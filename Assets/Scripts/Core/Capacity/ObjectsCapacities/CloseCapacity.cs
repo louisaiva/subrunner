@@ -28,6 +28,9 @@ public class CloseCapacity : Capacity
     public string idle_open_anim = "idle_open";
 
 
+    private AnimPlayer AnimPlayer => Visual as AnimPlayer;
+
+
     private OpenCapacity _open_capacity;
     private OpenCapacity open_capacity
     {
@@ -56,8 +59,8 @@ public class CloseCapacity : Capacity
         // on joue l'animation
         if (play_anim_and_sound)
         {
-            Capable.AnimPlayer.StopPlaying(idle_open_anim);
-            Capable.AnimPlayer.Play(close_anim, duration_override: closing_duration);
+            AnimPlayer.StopPlaying(idle_open_anim);
+            AnimPlayer.Play(close_anim, duration_override: closing_duration);
 
             // on joue le son
             AudioEngine.Instance.Play("close", Capable.Skin, Capable.gameObject);
@@ -68,8 +71,8 @@ public class CloseCapacity : Capacity
         // on fait les vérifications pour les portes
         if (Capable is Door door && !door.DontTouchSortingLayer)
         {
-            Capable.AnimPlayer.Renderer.sortingLayerName = "fg";
-            Capable.AnimPlayer.Renderer.sortingOrder = 1;
+            AnimPlayer.Renderer.sortingLayerName = "fg";
+            AnimPlayer.Renderer.sortingOrder = 1;
         }
 
         if (log) { Debug.Log(Capable.name + " is closing..."); }
@@ -87,13 +90,13 @@ public class CloseCapacity : Capacity
 
         // on joue l'animation
         GetSiblingCapacity<HoverCapacity>()?.ChangeAnimation(hover_close_anim);
-        Capable.AnimPlayer.Play("idle");
+        AnimPlayer.Play("idle");
 
         // on fait les vérifications pour les portes
         if (Capable is Door door && !door.DontTouchSortingLayer)
         {
-            Capable.AnimPlayer.Renderer.sortingLayerName = "main";
-            Capable.AnimPlayer.Renderer.sortingOrder = 0;
+            AnimPlayer.Renderer.sortingLayerName = "main";
+            AnimPlayer.Renderer.sortingOrder = 0;
         }
         if (Capable is Door door2) { door2.UpdateIF(door2.Orientation); }
 
@@ -119,9 +122,9 @@ public class CloseCapacity : Capacity
 
 
     // LOAD / UNLOAD DATA
-    public override void LoadData(CapacityData data)
+    public override void LoadData(CapacityData data, CapableData owner)
     {
-        base.LoadData(data);
+        base.LoadData(data, owner);
 
 
         if (data is not CloseCapacityData close_data) { return; }

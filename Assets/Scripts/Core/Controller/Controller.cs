@@ -276,7 +276,7 @@ public class Controller : MonoBehaviour
 
         // on ajoute le callback de changement de skin
         refresh_skin_based_parameters(capa.Skin);
-        capa.AnimPlayer.OnSkinChange += refresh_skin_based_parameters;
+        capa.Visual.OnSkinChange += refresh_skin_based_parameters;
 
         // on désactive le Brain si le nouveau capable est un IA
         if (capa is IA ia)
@@ -313,7 +313,7 @@ public class Controller : MonoBehaviour
     }
     private void uncontrol_capacities(Capable capa)
     {
-        capa.AnimPlayer.OnSkinChange -= refresh_skin_based_parameters; // on enlève le callback de changement de skin
+        capa.Visual.OnSkinChange -= refresh_skin_based_parameters; // on enlève le callback de changement de skin
 
         // register to the being died event of the new capable
         /* if (capa.TryGetCapacity(out HealthCapacity hcapa))
@@ -496,7 +496,7 @@ public class Controller : MonoBehaviour
         stack.Clear();
 
         string capable_id = data.controlled_capable_id;
-        if (string.IsNullOrEmpty(capable_id)) { capable_id = data.capable_template; }
+        if (string.IsNullOrEmpty(capable_id) || !CapableEngine.LazyInstance.HasWorldCapableData(capable_id)) { capable_id = data.capable_template; }
         if (string.IsNullOrEmpty(capable_id))
         {
             Debug.LogError($"(Controller) No capable id defined in controller data !!");

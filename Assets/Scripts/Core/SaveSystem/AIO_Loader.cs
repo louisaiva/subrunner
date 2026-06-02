@@ -231,7 +231,7 @@ public class AIO_Loader : MonoBehaviour
                 continue;
             }
             loaded_capables.Add(id);
-            capable.AnimPlayer.Show();
+            capable.Visual?.Show();
             capable.transform.SetParent(parent);
         }
     }

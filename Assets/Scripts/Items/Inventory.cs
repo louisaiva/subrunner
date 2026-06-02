@@ -452,7 +452,7 @@ public class Inventory : MonoBehaviour, ItemStorer
         // we suppose we already have the right amount of ItemPools (should be built in CapableBank)
 
         // we gather the real ItemPool
-        List<ItemPool> pools_to_fill = gameObject.GetComponents<ItemPool>().ToList();
+        List<ItemPool> pools_to_fill = new List<ItemPool>(GetComponents<ItemPool>());
         for (int i = 0; i < transform.childCount; i++)
         {
             pools_to_fill.AddRange(transform.GetChild(i).GetComponents<ItemPool>());
@@ -469,6 +469,10 @@ public class Inventory : MonoBehaviour, ItemStorer
         {
             if (i >= pools_to_fill.Count) { break; }
             pools_to_fill[i].LoadPoolData(data.item_pools_data[i]);
+            if (pools_to_fill[i].gameObject != this.gameObject)
+            {
+                pools_to_fill[i].name = pools_to_fill[i].PoolID; // we rename the pool so we can find it more easily in the hierarchy
+            }
 
             // we add the pool
             pools.Add(pools_to_fill[i]);

@@ -1,0 +1,85 @@
+﻿{
+    "<id>k__BackingField": "rack_anim",
+    "<owner_id>k__BackingField": "rack",
+    "kind": "AnimCapacity",
+    "local_position": {
+        "x": 0.0,
+        "y": 0.3333333432674408
+    },
+    "layer": 0,
+    "tag": "Untagged",
+    "skin": "rack_bg",
+    "material_name": "objects",
+    "sorting_layer_id": -667374433,
+    "order_in_layer": 0,
+    "anim_capacity_priorities": [
+        {
+            "priority": 0,
+            "capacity_playing": "",
+            "capacities": [
+                "idle_off"
+            ],
+            "lock_orientation": false,
+            "one_shot": false
+        },
+        {
+            "priority": 1,
+            "capacity_playing": "",
+            "capacities": [
+                "off_to_hold"
+            ],
+            "lock_orientation": true,
+            "one_shot": true
+        },
+        {
+            "priority": 2,
+            "capacity_playing": "idle",
+            "capacities": [
+                "hover",
+                "idle"
+            ],
+            "lock_orientation": false,
+            "one_shot": false
+        },
+        {
+            "priority": 3,
+            "capacity_playing": "",
+            "capacities": [
+                "idle_on"
+            ],
+            "lock_orientation": false,
+            "one_shot": false
+        },
+        {
+            "priority": 4,
+            "capacity_playing": "",
+            "capacities": [
+                "on_to_hold",
+                "turn_on"
+            ],
+            "lock_orientation": true,
+            "one_shot": true
+        }
+    ],
+    "current_capacity": "",
+    "never_flip": false,
+    "layers": [
+        {
+            "skin": "rack_fg",
+            "local_position": {
+                "x": 0.0,
+                "y": -0.33000001311302187
+            },
+            "local_rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "material_name": "objects",
+            "sorting_layer_id": -667374433,
+            "order_in_layer": 0,
+            "never_flip": false,
+            "follow_duration": false
+        }
+    ]
+}

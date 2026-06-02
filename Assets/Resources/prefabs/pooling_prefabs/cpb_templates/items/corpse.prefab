@@ -84,6 +84,7 @@ GameObject:
   - component: {fileID: 1995776913879646623}
   - component: {fileID: 2462137451817886706}
   - component: {fileID: 1146684479748803969}
+  - component: {fileID: 1466323411440998475}
   m_Layer: 13
   m_Name: corpse
   m_TagString: Untagged
@@ -315,6 +316,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
   capacity_template_id: hover
+  capacity_template_ids: []
 --- !u!114 &1146684479748803969
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -328,6 +330,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
   capacity_template_id: item_iic
+  capacity_template_ids: []
+--- !u!114 &1466323411440998475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6831872210500143280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90c2c539dbbc8784fb9abc95ffa6ada3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimCapacity
+  data:
+    <id>k__BackingField: corpse_anim
+    <owner_id>k__BackingField: 
+    kind: 
+    local_position: {x: 0, y: 0}
+    layer: 0
+    tag: 
+  log: 0
+  _anim_player: {fileID: 0}
 --- !u!1 &6875791579722229917
 GameObject:
   m_ObjectHideFlags: 0

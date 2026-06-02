@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5957966545497940798}
   - component: {fileID: 6070394440648107577}
   - component: {fileID: -6768863149690231592}
+  - component: {fileID: 7643233520903938114}
   m_Layer: 24
   m_Name: sub_2
   m_TagString: Item
@@ -266,6 +267,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
   capacity_template_id: hover
+  capacity_template_ids: []
+--- !u!114 &7643233520903938114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 497255072905198661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90c2c539dbbc8784fb9abc95ffa6ada3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimCapacity
+  data:
+    <id>k__BackingField: 
+    <owner_id>k__BackingField: 
+    kind: 
+    local_position: {x: 0, y: 0}
+    layer: 0
+    tag: 
+  log: 0
+  _anim_player: {fileID: 0}
 --- !u!1 &2867495659311770552
 GameObject:
   m_ObjectHideFlags: 0

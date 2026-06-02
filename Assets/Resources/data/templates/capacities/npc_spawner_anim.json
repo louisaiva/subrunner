@@ -1,0 +1,65 @@
+﻿{
+    "<id>k__BackingField": "npc_spawner_anim",
+    "<owner_id>k__BackingField": "no_parent",
+    "kind": "AnimCapacity",
+    "local_position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "layer": 29,
+    "tag": "Untagged",
+    "skin": "robot_sp",
+    "material_name": "objects",
+    "sorting_layer_id": -31225397,
+    "order_in_layer": 4,
+    "anim_capacity_priorities": [
+        {
+            "priority": 0,
+            "capacity_playing": "",
+            "capacities": [
+                "idle"
+            ],
+            "lock_orientation": false,
+            "one_shot": false
+        },
+        {
+            "priority": 1,
+            "capacity_playing": "",
+            "capacities": [
+                "hover"
+            ],
+            "lock_orientation": false,
+            "one_shot": false
+        },
+        {
+            "priority": 3,
+            "capacity_playing": "",
+            "capacities": [
+                "spawn"
+            ],
+            "lock_orientation": true,
+            "one_shot": true
+        }
+    ],
+    "current_capacity": "",
+    "never_flip": false,
+    "layers": [
+        {
+            "skin": "none",
+            "local_position": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "local_rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "material_name": "sprite_lit_default",
+            "sorting_layer_id": -667374433,
+            "order_in_layer": 0,
+            "never_flip": false,
+            "follow_duration": false
+        }
+    ]
+}

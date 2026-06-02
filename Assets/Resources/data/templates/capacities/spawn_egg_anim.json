@@ -1,0 +1,38 @@
+﻿{
+    "<id>k__BackingField": "spawn_egg_anim",
+    "<owner_id>k__BackingField": "no_parent",
+    "kind": "AnimCapacity",
+    "local_position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "layer": 24,
+    "tag": "Item",
+    "skin": "shoes",
+    "material_name": "objects",
+    "sorting_layer_id": -667374433,
+    "order_in_layer": 0,
+    "anim_capacity_priorities": [
+        {
+            "priority": 0,
+            "capacity_playing": "",
+            "capacities": [
+                "idle"
+            ],
+            "lock_orientation": false,
+            "one_shot": false
+        },
+        {
+            "priority": 1,
+            "capacity_playing": "",
+            "capacities": [
+                "hover"
+            ],
+            "lock_orientation": false,
+            "one_shot": false
+        }
+    ],
+    "current_capacity": "",
+    "never_flip": false,
+    "layers": []
+}

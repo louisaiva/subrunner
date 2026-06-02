@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7208066328217349858}
   - component: {fileID: 8100417847447987613}
   - component: {fileID: 3933269431797653870}
+  - component: {fileID: 7942838530121860953}
   m_Layer: 23
   m_Name: qwin
   m_TagString: Boss
@@ -275,6 +276,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
   capacity_template_id: mob_exp
+  capacity_template_ids: []
+--- !u!114 &7942838530121860953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3780083747204790414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90c2c539dbbc8784fb9abc95ffa6ada3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimCapacity
+  data:
+    <id>k__BackingField: qwin_anim
+    <owner_id>k__BackingField: 
+    kind: 
+    local_position: {x: 0, y: 0}
+    layer: 0
+    tag: 
+  log: 0
+  _anim_player: {fileID: 0}
 --- !u!1 &8838388296438177925
 GameObject:
   m_ObjectHideFlags: 0

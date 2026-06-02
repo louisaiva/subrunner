@@ -112,6 +112,9 @@ public class Oven : Chest, Onnable
     }
     private IEnumerator heat_up()
     {
+        AnimPlayer anim_player = Visual as AnimPlayer;
+        if (anim_player == null) { yield break; }
+
         IsOn = true;
         IsMoving = true;
 
@@ -119,11 +122,11 @@ public class Oven : Chest, Onnable
         float heat_up_duration = total_heat_time * (1.0f - heat_percentage);
 
         // we play the heating up animation
-        AnimPlayer.Play("heating_up", duration_override: heat_up_duration);
-        AnimPlayer.AddToPile("heating");
+        anim_player.Play("heating_up", duration_override: heat_up_duration);
+        anim_player.AddToPile("heating");
 
         // we wait for the animation to end
-        while (AnimPlayer.IsPlaying("heating_up"))
+        while (anim_player.IsPlaying("heating_up"))
         {
             heat_percentage += Time.deltaTime / total_heat_time;
             yield return null;
@@ -135,6 +138,9 @@ public class Oven : Chest, Onnable
     }
     private IEnumerator heat_down()
     {
+        AnimPlayer anim_player = Visual as AnimPlayer;
+        if (anim_player == null) { yield break; }
+        
         IsOn = false;
         IsMoving = true;
 
@@ -142,11 +148,11 @@ public class Oven : Chest, Onnable
         float heat_down_duration = total_heat_time * heat_percentage;
 
         // we play the heating down animation
-        AnimPlayer.Play("heating_down", duration_override: heat_down_duration);
-        AnimPlayer.StopPlaying("heating");
+        anim_player.Play("heating_down", duration_override: heat_down_duration);
+        anim_player.StopPlaying("heating");
 
         // we wait for the animation to end
-        while (AnimPlayer.IsPlaying("heating_down"))
+        while (anim_player.IsPlaying("heating_down"))
         {
             heat_percentage -= Time.deltaTime / total_heat_time;
             yield return null;
