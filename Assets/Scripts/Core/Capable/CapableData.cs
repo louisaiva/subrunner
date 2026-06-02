@@ -41,6 +41,10 @@ public interface ICapableData : IData
     public int layer;
     public string tag;
 
+    // CAPACITIES
+    [InstanceSpecific] public List<string> capacities_ids;
+    public int TotalCapacitiesCount() { return capacities_ids.Count; }
+    
     // ANIM PLAYER
     public AnimPlayerData anim_data;
 
@@ -50,9 +54,6 @@ public interface ICapableData : IData
     // BODY
     public FeetData feet_data;
 
-    // CAPACITIES
-    [InstanceSpecific] public List<string> capacities_ids;
-    public int TotalCapacitiesCount() { return capacities_ids.Count; }
 
     // EFFECTS
     [InstanceSpecific] public List<Effect> effects;

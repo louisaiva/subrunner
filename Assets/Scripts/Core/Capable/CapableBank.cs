@@ -35,6 +35,7 @@ public class CapableBank : MonoBehaviour
     [Header("Prefabs")]
     [SerializeField] protected GameObject capable_prefab; // with no kind at all : when instantiating we need to add component to it
     [SerializeField] protected GameObject feet_prefab;
+    [SerializeField] protected GameObject item_pool_prefab;
 
     [Header("Sleeping capables")]
     [SerializeField] protected Dictionary<string,Stack<Capable>> pooled_capables;
@@ -180,15 +181,25 @@ public class CapableBank : MonoBehaviour
     private void build_inventory_item_pools(Inventory inv, InventoryData data)
     {
         // we check if we have no inv or no data, no need to pull up those item pools
-        if (log_inventory_build) { Debug.Log($"(CapableBank - build_inventory_item_pools) building item pools for { (inv == null ? "(inventory is null)" : inv.Capable.name ) } with { (data == null ? "(data is null)" : data.item_pools_data.Count + " items pools")}"); }
+        if (log_inventory_build) { Debug.Log($"(CapableBank - build_inventory_item_pools) building item pools for {(inv == null ? "(inventory is null)" : inv.Capable.ID)} with {(data == null ? "(data is null)" : data.item_pools_data.Count + " items pools")}"); }
         if (inv == null) { return; }
         if (data == null || data.item_pools_data.Count == 0) { return; }
+        if (data.item_pools_data.Count == 1)
+        {
+            if (log_inventory_build) { Debug.Log($"(CapableBank - build_inventory_item_pools) only one item pool, adding one ItemPool component to the inventory gameobject"); }
+            inv.gameObject.AddComponent<ItemPool>();
+            return;
+        }
+
+        // if we have more than 1 item pool, we build multiple children gameObjects otherwise
+        // it will have weird issues when calling Capable.GetStaticData()
 
         // we get the number of pools we need to add
-        for (int i=0; i < data.item_pools_data.Count; i++)
+        for (int i = 0; i < data.item_pools_data.Count; i++)
         {
-            // we add an item pool component to the inv gameobject
-            inv.gameObject.AddComponent<ItemPool>();
+            GameObject go = Instantiate(item_pool_prefab, inv.transform);
+            go.name = data.item_pools_data[i].pool_id;
+            if (log_inventory_build) { Debug.Log($"(CapableBank - build_inventory_item_pools) built item pool '{go.name}' (n°{i}) for inventory {inv.Capable.ID}"); }
         }
     }
 
