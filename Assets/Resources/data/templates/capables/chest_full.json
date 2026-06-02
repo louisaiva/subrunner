@@ -11,6 +11,12 @@
     },
     "layer": 29,
     "tag": "Untagged",
+    "capacities_ids": [
+        "chest_open",
+        "chest_close",
+        "hover",
+        "chest_iic"
+    ],
     "anim_data": {
         "skin_kind": "",
         "skin": "blue_chest",
@@ -148,12 +154,6 @@
         ],
         "circle_colliders": []
     },
-    "capacities_ids": [
-        "chest_open",
-        "chest_close",
-        "hover",
-        "chest_iic"
-    ],
     "effects": [],
     "effects_ttl": []
 }

@@ -11,6 +11,15 @@
     },
     "layer": 23,
     "tag": "Rat",
+    "capacities_ids": [
+        "rat_health",
+        "rat_walk",
+        "rat_eat",
+        "rat_cyber_attack",
+        "rat_cyber_connect",
+        "rat_motor",
+        "mob_exp"
+    ],
     "anim_data": {
         "skin_kind": "",
         "skin": "cyber_rat",
@@ -111,15 +120,6 @@
             }
         ]
     },
-    "capacities_ids": [
-        "rat_health",
-        "rat_walk",
-        "rat_eat",
-        "rat_cyber_attack",
-        "rat_cyber_connect",
-        "rat_motor",
-        "mob_exp"
-    ],
     "effects": [],
     "effects_ttl": [],
     "social_data": {

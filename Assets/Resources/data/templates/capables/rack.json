@@ -11,6 +11,12 @@
     },
     "layer": 29,
     "tag": "Untagged",
+    "capacities_ids": [
+        "rack_connect",
+        "rack_on_off",
+        "rack_iic",
+        "hover"
+    ],
     "anim_data": {
         "skin_kind": "",
         "skin": "rack_bg",
@@ -158,12 +164,6 @@
         ],
         "circle_colliders": []
     },
-    "capacities_ids": [
-        "rack_connect",
-        "rack_on_off",
-        "rack_iic",
-        "hover"
-    ],
     "effects": [],
     "effects_ttl": []
 }

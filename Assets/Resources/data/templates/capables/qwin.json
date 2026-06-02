@@ -11,6 +11,13 @@
     },
     "layer": 23,
     "tag": "Boss",
+    "capacities_ids": [
+        "qwin_health",
+        "qwin_walk",
+        "qwin_attack",
+        "qwin_motor",
+        "mob_exp"
+    ],
     "anim_data": {
         "skin_kind": "",
         "skin": "qwin",
@@ -110,13 +117,6 @@
             }
         ]
     },
-    "capacities_ids": [
-        "qwin_health",
-        "qwin_walk",
-        "qwin_attack",
-        "qwin_motor",
-        "mob_exp"
-    ],
     "effects": [],
     "effects_ttl": [],
     "social_data": {

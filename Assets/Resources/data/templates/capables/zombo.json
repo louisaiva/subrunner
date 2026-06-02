@@ -11,6 +11,13 @@
     },
     "layer": 23,
     "tag": "Zombo",
+    "capacities_ids": [
+        "zombo_health",
+        "zombo_walk",
+        "zombo_attack",
+        "zombo_motor",
+        "mob_exp"
+    ],
     "anim_data": {
         "skin_kind": "",
         "skin": "zombo",
@@ -111,13 +118,6 @@
             }
         ]
     },
-    "capacities_ids": [
-        "zombo_health",
-        "zombo_walk",
-        "zombo_attack",
-        "zombo_motor",
-        "mob_exp"
-    ],
     "effects": [],
     "effects_ttl": [],
     "social_data": {

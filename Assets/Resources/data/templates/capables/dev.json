@@ -11,6 +11,13 @@
     },
     "layer": 23,
     "tag": "Dev",
+    "capacities_ids": [
+        "dev_health",
+        "dev_walk",
+        "dev_attack",
+        "dev_motor",
+        "mob_exp"
+    ],
     "anim_data": {
         "skin_kind": "",
         "skin": "dev",
@@ -180,13 +187,6 @@
             }
         ]
     },
-    "capacities_ids": [
-        "dev_health",
-        "dev_walk",
-        "dev_attack",
-        "dev_motor",
-        "mob_exp"
-    ],
     "effects": [],
     "effects_ttl": [],
     "social_data": {

@@ -11,6 +11,11 @@
     },
     "layer": 29,
     "tag": "Untagged",
+    "capacities_ids": [
+        "npc_spawn",
+        "npc_spawner_iic",
+        "hover"
+    ],
     "anim_data": {
         "skin_kind": "",
         "skin": "robot_sp",
@@ -99,11 +104,6 @@
             }
         ]
     },
-    "capacities_ids": [
-        "npc_spawn",
-        "npc_spawner_iic",
-        "hover"
-    ],
     "effects": [],
     "effects_ttl": []
 }

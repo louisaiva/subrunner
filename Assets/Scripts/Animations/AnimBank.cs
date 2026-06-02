@@ -20,6 +20,17 @@ public class AnimBank : MonoBehaviour
     // de les stocker dans des fichiers .json pour pouvoir les récupérer en BUILD
     // mais ça marche bien et c'est assez simple à utiliser
 
+    // subsystems
+    private AnimGenerator _anim_generator;
+    private AnimGenerator anim_generator
+    {
+        get
+        {
+            if (_anim_generator == null) { _anim_generator = GetComponentInChildren<AnimGenerator>(includeInactive: true); }
+            return _anim_generator;
+        }
+    }
+
 
     [Header("Animations")]
     // store all the animations with the keys : skin, capacity, orientation
@@ -96,6 +107,15 @@ public class AnimBank : MonoBehaviour
             foreach (SkinVariant skin_variant in skin_variants)
             {
                 generateVariantSkin(skin_variant);
+            }
+
+            // we also generate simple anims from the anim generator if we have some
+            List<Anim> generated_anims = anim_generator.GenerateAnims(spritesheets_path);
+            foreach (Anim anim in generated_anims)
+            {
+                if (anim == null) { continue; }
+                saveAnimToJson(anim);
+                AddAnim(anim);
             }
 
             return;

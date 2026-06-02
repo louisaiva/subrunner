@@ -11,6 +11,14 @@
     },
     "layer": 23,
     "tag": "Spider",
+    "capacities_ids": [
+        "spider_health",
+        "spider_walk",
+        "spider_eat",
+        "spider_attack",
+        "spider_motor",
+        "mob_exp"
+    ],
     "anim_data": {
         "skin_kind": "",
         "skin": "spider",
@@ -111,14 +119,6 @@
             }
         ]
     },
-    "capacities_ids": [
-        "spider_health",
-        "spider_walk",
-        "spider_eat",
-        "spider_attack",
-        "spider_motor",
-        "mob_exp"
-    ],
     "effects": [],
     "effects_ttl": [],
     "social_data": {

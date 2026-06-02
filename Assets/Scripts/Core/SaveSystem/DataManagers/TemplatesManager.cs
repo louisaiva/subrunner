@@ -95,12 +95,8 @@ public class TemplatesManager : MonoBehaviour
         // We do most heavy job with templates, AND SO we must be fast
         filter_capable_data(capable, ref data);
 
-        // save the current data to a json file
-        string json = JsonUtility.ToJson(data, true);
-        string path = templates_data_path + "capables/" + data.id + ".json";
-        System.IO.File.WriteAllText(path, json, System.Text.Encoding.UTF8);
-
-        if (log) { Debug.Log($"(TemplatesManager - Save Capable) Updated & Saved CapableData : {capable.name} (to {path})\n\n{data.GetDetails()}\n\n{json}"); }
+        // save the current data to a json file (+ handles MultipleSkins if we have one)
+        save_capable_data_and_multiskin(capable, data);
 
         // we also save the capacities of this capable if we want to
         if (!save_capables_capacities_as_templates) { return; }
@@ -127,6 +123,34 @@ public class TemplatesManager : MonoBehaviour
             // we save this capacity as a template
             saveCapacityTemplate(capacity);
         }
+    }
+
+    // low level saving / filtering data methods
+    private void save_capable_data_and_multiskin(Capable capable, CapableData data)
+    {
+        // we check if we have a multi skin
+        TemplateMultipleSkins multi_skins = capable.GetComponent<TemplateMultipleSkins>();
+        if (multi_skins == null || data.anim_data == null) { save_capable_data(capable.ID, data); return; }
+
+        // if we have one, we save one template per skin, with ids _0, _1, etc... and we add the skin name in the data
+        for (int i = 0; i < multi_skins.Skins.Count; i++)
+        {
+            string skin = multi_skins.Skins[i];
+            if (string.IsNullOrEmpty(skin)) { continue; }
+
+            data.id = /* capable.ID + "_" + */ skin;
+            data.anim_data.skin = skin;
+            save_capable_data(data.id, data);
+        }
+    }
+    private void save_capable_data(string capable_id, CapableData data)
+    {
+        // save the current data to a json file
+        string json = JsonUtility.ToJson(data, true);
+        string path = templates_data_path + "capables/" + data.id + ".json";
+        System.IO.File.WriteAllText(path, json, System.Text.Encoding.UTF8);
+
+        if (log) { Debug.Log($"(TemplatesManager - Save Capable) Updated & Saved CapableData : {capable_id} (to {path})\n\n{data.GetDetails()}\n\n{json}"); }
     }
     private void filter_capable_data(Capable capable, ref CapableData data)
     {

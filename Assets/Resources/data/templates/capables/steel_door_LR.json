@@ -11,6 +11,12 @@
     },
     "layer": 9,
     "tag": "Untagged",
+    "capacities_ids": [
+        "steel_door_LR_wall_collider",
+        "hover",
+        "door_close",
+        "door_open"
+    ],
     "anim_data": {
         "skin_kind": "",
         "skin": "steel_door",
@@ -165,12 +171,6 @@
         ],
         "circle_colliders": []
     },
-    "capacities_ids": [
-        "steel_door_LR_wall_collider",
-        "hover",
-        "door_close",
-        "door_open"
-    ],
     "effects": [],
     "effects_ttl": [],
     "is_vertical": false,

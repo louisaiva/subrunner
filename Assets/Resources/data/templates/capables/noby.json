@@ -11,6 +11,13 @@
     },
     "layer": 23,
     "tag": "Boss",
+    "capacities_ids": [
+        "noby_health",
+        "noby_walk",
+        "noby_attack",
+        "noby_motor",
+        "mob_exp"
+    ],
     "anim_data": {
         "skin_kind": "",
         "skin": "noby",
@@ -110,13 +117,6 @@
             }
         ]
     },
-    "capacities_ids": [
-        "noby_health",
-        "noby_walk",
-        "noby_attack",
-        "noby_motor",
-        "mob_exp"
-    ],
     "effects": [],
     "effects_ttl": [],
     "social_data": {

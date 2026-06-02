@@ -11,6 +11,13 @@
     },
     "layer": 23,
     "tag": "Robot",
+    "capacities_ids": [
+        "npc_health",
+        "npc_walk",
+        "npc_attack",
+        "rat_motor",
+        "mob_exp"
+    ],
     "anim_data": {
         "skin_kind": "",
         "skin": "npc",
@@ -111,13 +118,6 @@
             }
         ]
     },
-    "capacities_ids": [
-        "npc_health",
-        "npc_walk",
-        "npc_attack",
-        "rat_motor",
-        "mob_exp"
-    ],
     "effects": [],
     "effects_ttl": [],
     "social_data": {

@@ -11,6 +11,15 @@
     },
     "layer": 23,
     "tag": "Cat",
+    "capacities_ids": [
+        "cat_health",
+        "cat_walk",
+        "cat_talk",
+        "cat_eat",
+        "cat_attack",
+        "cat_motor",
+        "mob_exp"
+    ],
     "anim_data": {
         "skin_kind": "",
         "skin": "cat",
@@ -111,15 +120,6 @@
             }
         ]
     },
-    "capacities_ids": [
-        "cat_health",
-        "cat_walk",
-        "cat_talk",
-        "cat_eat",
-        "cat_attack",
-        "cat_motor",
-        "mob_exp"
-    ],
     "effects": [],
     "effects_ttl": [],
     "social_data": {

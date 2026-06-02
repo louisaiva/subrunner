@@ -11,6 +11,11 @@
     },
     "layer": 24,
     "tag": "Item",
+    "capacities_ids": [
+        "dodge",
+        "hover",
+        "item_iic"
+    ],
     "anim_data": {
         "skin_kind": "",
         "skin": "shoes",
@@ -72,11 +77,6 @@
             }
         ]
     },
-    "capacities_ids": [
-        "dodge",
-        "hover",
-        "item_iic"
-    ],
     "effects": [],
     "effects_ttl": [],
     "reference": "shoes:carbon",

@@ -11,6 +11,9 @@
     },
     "layer": 24,
     "tag": "Item",
+    "capacities_ids": [
+        "hover"
+    ],
     "anim_data": {
         "skin_kind": "",
         "skin": "vacuum",
@@ -93,9 +96,6 @@
         ],
         "circle_colliders": []
     },
-    "capacities_ids": [
-        "hover"
-    ],
     "effects": [],
     "effects_ttl": [],
     "reference": "tool:vacuum",

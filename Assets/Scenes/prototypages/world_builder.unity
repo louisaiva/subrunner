@@ -1610,6 +1610,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -1627,7 +1628,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -3349,6 +3349,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -3387,7 +3388,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -5089,6 +5089,9 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 29
     tag: Untagged
+    capacities_ids:
+    - hover-17
+    - sorter-0
     anim_data:
       skin_kind: 
       skin: sofa_L
@@ -5135,9 +5138,6 @@ MonoBehaviour:
         offset: {x: 0.75, y: 0.375}
         size: {x: 2.75, y: 0.75}
       circle_colliders: []
-    capacities_ids:
-    - hover-17
-    - sorter-0
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -6561,6 +6561,10 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 29
     tag: Untagged
+    capacities_ids:
+    - connect-0
+    - hover-20
+    - on_off-0
     anim_data:
       skin_kind: 
       skin: rack_bg
@@ -6685,10 +6689,6 @@ MonoBehaviour:
         offset: {x: 0, y: 0.2086633}
         size: {x: 1, y: 0.41666666}
       circle_colliders: []
-    capacities_ids:
-    - connect-0
-    - hover-20
-    - on_off-0
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -8601,6 +8601,10 @@ MonoBehaviour:
     orientation: {x: 1, y: 0}
     layer: 9
     tag: Untagged
+    capacities_ids:
+    - hover-18
+    - open-14
+    - close-14
     anim_data:
       skin_kind: 
       skin: steel_door
@@ -8685,10 +8689,6 @@ MonoBehaviour:
         offset: {x: 0, y: 0.5}
         size: {x: 0.5, y: 1}
       circle_colliders: []
-    capacities_ids:
-    - hover-18
-    - open-14
-    - close-14
     effects: 
     effects_ttl: []
   inputs: {x: 1, y: 0}
@@ -9543,6 +9543,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -9560,7 +9561,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 1}
@@ -10355,6 +10355,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -10393,7 +10394,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -13144,6 +13144,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -13182,7 +13183,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -16356,6 +16356,8 @@ MonoBehaviour:
     orientation: {x: 0, y: 1}
     layer: 24
     tag: Item
+    capacities_ids:
+    - hover-28
     anim_data:
       skin_kind: 
       skin: pckg_front
@@ -16421,8 +16423,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.24}
         radius: 0.23744136
-    capacities_ids:
-    - hover-28
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 1}
@@ -19151,6 +19151,9 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 29
     tag: Untagged
+    capacities_ids:
+    - hover-23
+    - spawn-3
     anim_data:
       skin_kind: 
       skin: blackcube
@@ -19201,9 +19204,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.19}
         radius: 0.20993589
-    capacities_ids:
-    - hover-23
-    - spawn-3
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -23404,6 +23404,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -23442,7 +23443,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -23685,6 +23685,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -23723,7 +23724,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -24261,6 +24261,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -24278,7 +24279,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -24888,6 +24888,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -24905,7 +24906,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -25381,6 +25381,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -25419,7 +25420,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -25726,6 +25726,8 @@ MonoBehaviour:
     orientation: {x: 0, y: 1}
     layer: 24
     tag: Item
+    capacities_ids:
+    - hover-27
     anim_data:
       skin_kind: 
       skin: pckg_front
@@ -25791,8 +25793,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.24}
         radius: 0.23744136
-    capacities_ids:
-    - hover-27
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 1}
@@ -28823,6 +28823,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -28840,7 +28841,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -31686,6 +31686,10 @@ MonoBehaviour:
     orientation: {x: 1, y: 0}
     layer: 9
     tag: Untagged
+    capacities_ids:
+    - hover-5
+    - open-4
+    - close-4
     anim_data:
       skin_kind: 
       skin: steel_door
@@ -31770,10 +31774,6 @@ MonoBehaviour:
         offset: {x: 0, y: 0.5}
         size: {x: 0.5, y: 1}
       circle_colliders: []
-    capacities_ids:
-    - hover-5
-    - open-4
-    - close-4
     effects: 
     effects_ttl: []
   inputs: {x: 1, y: 0}
@@ -32301,6 +32301,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -32339,7 +32340,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -33760,6 +33760,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -33798,7 +33799,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -34410,6 +34410,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -34448,7 +34449,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -37359,6 +37359,8 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids:
+    - dodge-0
     anim_data:
       skin_kind: 
       skin: shoes
@@ -37397,8 +37399,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids:
-    - dodge-0
     effects: 09000000
     effects_ttl:
     - -888
@@ -41923,6 +41923,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -41961,7 +41962,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -42043,6 +42043,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -42081,7 +42082,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -42510,6 +42510,7 @@ MonoBehaviour:
   loaded_capables: []
   capable_prefab: {fileID: 5145456041456219900, guid: 2e2198340ed98684cbe88e8106899adb, type: 3}
   feet_prefab: {fileID: 6157973582211797263, guid: 390c173041bfffa479a693b4481f31a8, type: 3}
+  item_pool_prefab: {fileID: 5145456041456219900, guid: 7ca812c61a9951c46a006c287543f41c, type: 3}
   log_types: 1
   log_inventory_build: 0
 --- !u!114 &313120231
@@ -43781,6 +43782,8 @@ MonoBehaviour:
     orientation: {x: 0, y: 1}
     layer: 24
     tag: Item
+    capacities_ids:
+    - hover-32
     anim_data:
       skin_kind: 
       skin: pckg_front
@@ -43849,8 +43852,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.24}
         radius: 0.23744136
-    capacities_ids:
-    - hover-32
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 1}
@@ -44537,6 +44538,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -44554,7 +44556,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 0}
@@ -46951,6 +46952,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -46968,7 +46970,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 1}
@@ -47931,6 +47932,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -47948,7 +47950,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -48652,6 +48653,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: apple
@@ -48690,7 +48692,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -49822,6 +49823,8 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 29
     tag: Untagged
+    capacities_ids:
+    - health-0
     anim_data:
       skin_kind: 
       skin: dummy
@@ -49868,8 +49871,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.18}
         radius: 0.20869231
-    capacities_ids:
-    - health-0
     effects: 0400000006000000
     effects_ttl:
     - -888
@@ -50605,6 +50606,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -50643,7 +50645,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -50729,6 +50730,10 @@ MonoBehaviour:
     orientation: {x: 1, y: 0}
     layer: 9
     tag: Untagged
+    capacities_ids:
+    - hover-3
+    - open-2
+    - close-2
     anim_data:
       skin_kind: 
       skin: steel_door
@@ -50813,10 +50818,6 @@ MonoBehaviour:
         offset: {x: 0, y: 0.5}
         size: {x: 0.5, y: 1}
       circle_colliders: []
-    capacities_ids:
-    - hover-3
-    - open-2
-    - close-2
     effects: 
     effects_ttl: []
   inputs: {x: 1, y: 0}
@@ -54704,6 +54705,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -54742,7 +54744,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -55051,6 +55052,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -55068,7 +55070,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -55537,6 +55538,9 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 29
     tag: Untagged
+    capacities_ids:
+    - hover-11
+    - spawn-1
     anim_data:
       skin_kind: 
       skin: blackcube
@@ -55587,9 +55591,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.19}
         radius: 0.20993589
-    capacities_ids:
-    - hover-11
-    - spawn-1
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -56880,6 +56881,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -56897,7 +56899,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -57165,6 +57166,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -57182,7 +57184,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -58327,6 +58328,10 @@ MonoBehaviour:
     orientation: {x: 1, y: 0}
     layer: 9
     tag: Untagged
+    capacities_ids:
+    - hover-0
+    - open-0
+    - close-0
     anim_data:
       skin_kind: 
       skin: steel_door
@@ -58411,10 +58416,6 @@ MonoBehaviour:
         offset: {x: 0, y: 0.5}
         size: {x: 0.5, y: 1}
       circle_colliders: []
-    capacities_ids:
-    - hover-0
-    - open-0
-    - close-0
     effects: 
     effects_ttl: []
   inputs: {x: 1, y: 0}
@@ -60598,6 +60599,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -60636,7 +60638,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -64436,6 +64437,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: apple
@@ -64474,7 +64476,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -66015,6 +66016,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -66053,7 +66055,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -66707,6 +66708,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -66724,7 +66726,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 1}
@@ -68035,6 +68036,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -68073,7 +68075,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -73285,6 +73286,8 @@ MonoBehaviour:
     orientation: {x: 0, y: 1}
     layer: 24
     tag: Item
+    capacities_ids:
+    - hover-25
     anim_data:
       skin_kind: 
       skin: pckg_front
@@ -73353,8 +73356,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.24}
         radius: 0.23744136
-    capacities_ids:
-    - hover-25
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 1}
@@ -73886,6 +73887,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -73903,7 +73905,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 1}
@@ -77221,6 +77222,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -77238,7 +77240,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -81897,6 +81898,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -81935,7 +81937,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -82018,6 +82019,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -82035,7 +82037,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -84891,6 +84892,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -84908,7 +84910,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 1}
@@ -85070,6 +85071,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -85087,7 +85089,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -93883,6 +93884,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -93921,7 +93923,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -98426,6 +98427,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -98443,7 +98445,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -99645,6 +99646,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -99662,7 +99664,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -101107,6 +101108,8 @@ MonoBehaviour:
     orientation: {x: 0, y: 1}
     layer: 24
     tag: Item
+    capacities_ids:
+    - hover-30
     anim_data:
       skin_kind: 
       skin: pckg_front
@@ -101172,8 +101175,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.24}
         radius: 0.23744136
-    capacities_ids:
-    - hover-30
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 1}
@@ -105674,6 +105675,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -105691,7 +105693,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -107826,6 +107827,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -107843,7 +107845,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 1}
@@ -109056,6 +109057,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -109073,7 +109075,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -110562,6 +110563,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -110600,7 +110602,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -112638,6 +112639,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -112676,7 +112678,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -113997,6 +113998,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -114035,7 +114037,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -114679,6 +114680,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -114696,7 +114698,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -122572,6 +122573,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -122610,7 +122612,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -123022,6 +123023,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -123039,7 +123041,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -123227,6 +123228,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: apple
@@ -123265,7 +123267,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -123461,6 +123462,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -123478,7 +123480,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -124384,6 +124385,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -124401,7 +124403,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -125434,6 +125435,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -125451,7 +125453,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -127319,6 +127320,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -127357,7 +127359,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -128511,6 +128512,8 @@ MonoBehaviour:
     orientation: {x: 0, y: 1}
     layer: 24
     tag: Item
+    capacities_ids:
+    - hover-34
     anim_data:
       skin_kind: 
       skin: pckg_front
@@ -128576,8 +128579,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.24}
         radius: 0.23744136
-    capacities_ids:
-    - hover-34
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 1}
@@ -129247,6 +129248,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -129285,7 +129287,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -130661,6 +130662,8 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids:
+    - attack-1
     anim_data:
       skin_kind: 
       skin: katana
@@ -130699,8 +130702,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids:
-    - attack-1
     effects: 09000000
     effects_ttl:
     - -888
@@ -132766,6 +132767,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -132783,7 +132785,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -134649,6 +134650,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -134687,7 +134689,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -134952,6 +134953,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -134969,7 +134971,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 1}
@@ -137863,6 +137864,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -137880,7 +137882,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -141395,6 +141396,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: apple
@@ -141433,7 +141435,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -142549,6 +142550,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -142566,7 +142568,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -144474,6 +144475,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -144491,7 +144493,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -144743,6 +144744,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -144781,7 +144783,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -146794,6 +146795,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -146811,7 +146813,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 1}
@@ -147121,6 +147122,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -147159,7 +147161,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -147466,6 +147467,8 @@ MonoBehaviour:
     orientation: {x: 0, y: 1}
     layer: 24
     tag: Item
+    capacities_ids:
+    - hover-29
     anim_data:
       skin_kind: 
       skin: pckg_front
@@ -147531,8 +147534,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.24}
         radius: 0.23744136
-    capacities_ids:
-    - hover-29
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 1}
@@ -147908,6 +147909,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -147925,7 +147927,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -148223,6 +148224,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -148240,7 +148242,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 1}
@@ -154862,6 +154863,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -154879,7 +154881,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -158479,6 +158480,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -158496,7 +158498,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -159819,6 +159820,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -159836,7 +159838,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 1}
@@ -162939,6 +162940,10 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 29
     tag: Untagged
+    capacities_ids:
+    - connect-2
+    - hover-22
+    - on_off-2
     anim_data:
       skin_kind: 
       skin: rack_bg
@@ -163063,10 +163068,6 @@ MonoBehaviour:
         offset: {x: 0, y: 0.2086633}
         size: {x: 1, y: 0.41666666}
       circle_colliders: []
-    capacities_ids:
-    - connect-2
-    - hover-22
-    - on_off-2
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -165214,6 +165215,9 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 29
     tag: Untagged
+    capacities_ids:
+    - hover-14
+    - spawn-2
     anim_data:
       skin_kind: 
       skin: blackcube
@@ -165264,9 +165268,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.19}
         radius: 0.20993589
-    capacities_ids:
-    - hover-14
-    - spawn-2
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -165815,6 +165816,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -165853,7 +165855,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -166955,6 +166956,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -166972,7 +166974,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -167048,6 +167049,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -167065,7 +167067,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -167654,6 +167655,9 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 29
     tag: Untagged
+    capacities_ids:
+    - hover-24
+    - spawn-4
     anim_data:
       skin_kind: 
       skin: blackcube
@@ -167704,9 +167708,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.19}
         radius: 0.20993589
-    capacities_ids:
-    - hover-24
-    - spawn-4
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -167999,6 +168000,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -168037,7 +168039,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -168463,6 +168464,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -168501,7 +168503,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -168674,6 +168675,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -168712,7 +168714,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -174568,6 +174569,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -174585,7 +174587,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -176312,6 +176313,8 @@ MonoBehaviour:
     orientation: {x: 0, y: 1}
     layer: 24
     tag: Item
+    capacities_ids:
+    - hover-26
     anim_data:
       skin_kind: 
       skin: pckg_front
@@ -176377,8 +176380,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.24}
         radius: 0.23744136
-    capacities_ids:
-    - hover-26
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 1}
@@ -176854,6 +176855,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -176871,7 +176873,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -179118,6 +179119,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -179156,7 +179158,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -179240,6 +179241,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -179257,7 +179259,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -182290,6 +182291,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -182328,7 +182330,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -183719,6 +183720,8 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids:
+    - dodge-1
     anim_data:
       skin_kind: 
       skin: shoes
@@ -183757,8 +183760,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids:
-    - dodge-1
     effects: 09000000
     effects_ttl:
     - -888
@@ -185018,6 +185019,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -185056,7 +185058,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -186644,6 +186645,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -186682,7 +186684,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -190495,6 +190496,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -190533,7 +190535,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -193150,6 +193151,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -193167,7 +193169,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -193539,6 +193540,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -193556,7 +193558,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -196655,6 +196656,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -196693,7 +196695,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -199110,6 +199111,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: pastas
@@ -199148,7 +199150,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -201160,6 +201161,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -201177,7 +201179,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -204029,6 +204030,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -204067,7 +204069,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -208593,6 +208594,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -208631,7 +208633,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -209259,6 +209260,10 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 29
     tag: Untagged
+    capacities_ids:
+    - connect-1
+    - hover-21
+    - on_off-1
     anim_data:
       skin_kind: 
       skin: rack_bg
@@ -209383,10 +209388,6 @@ MonoBehaviour:
         offset: {x: 0, y: 0.2086633}
         size: {x: 1, y: 0.41666666}
       circle_colliders: []
-    capacities_ids:
-    - connect-1
-    - hover-21
-    - on_off-1
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -209858,6 +209859,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -209875,7 +209877,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -214146,6 +214147,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -214163,7 +214165,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -217983,6 +217984,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -218021,7 +218023,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -219467,6 +219468,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -219505,7 +219507,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -219855,6 +219856,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -219872,7 +219874,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -226575,6 +226576,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -226613,7 +226615,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -227115,6 +227116,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -227153,7 +227155,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -227584,6 +227585,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: bones
@@ -227622,7 +227624,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -229126,6 +229127,9 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 29
     tag: Untagged
+    capacities_ids:
+    - hover-1
+    - spawn-0
     anim_data:
       skin_kind: 
       skin: blackcube
@@ -229176,9 +229180,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.19}
         radius: 0.20993589
-    capacities_ids:
-    - hover-1
-    - spawn-0
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -230653,6 +230654,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -230691,7 +230693,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -233458,6 +233459,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: apple
@@ -233496,7 +233498,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -235296,6 +235297,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -235334,7 +235336,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -236079,6 +236080,8 @@ MonoBehaviour:
     orientation: {x: 0, y: 1}
     layer: 24
     tag: Item
+    capacities_ids:
+    - hover-33
     anim_data:
       skin_kind: 
       skin: pckg_front
@@ -236144,8 +236147,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.24}
         radius: 0.23744136
-    capacities_ids:
-    - hover-33
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 1}
@@ -238957,6 +238958,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -238995,7 +238997,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -240564,6 +240565,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -240602,7 +240604,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -240775,6 +240776,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -240813,7 +240815,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -253263,6 +253264,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -253280,7 +253282,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -255443,6 +255444,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -255460,7 +255462,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -260944,6 +260945,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -260982,7 +260984,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -268040,6 +268041,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -268057,7 +268059,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -270060,6 +270061,10 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 29
     tag: Untagged
+    capacities_ids:
+    - hover-19
+    - open-15
+    - close-15
     anim_data:
       skin_kind: 
       skin: blue_chest
@@ -270137,10 +270142,6 @@ MonoBehaviour:
         offset: {x: 0, y: 0.19611192}
         size: {x: 1.4423603, y: 0.37552118}
       circle_colliders: []
-    capacities_ids:
-    - hover-19
-    - open-15
-    - close-15
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -275060,6 +275061,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -275077,7 +275079,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 1}
@@ -277389,6 +277390,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -277406,7 +277408,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -279238,6 +279239,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -279276,7 +279278,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -288679,6 +288680,8 @@ MonoBehaviour:
     orientation: {x: 0, y: 1}
     layer: 24
     tag: Item
+    capacities_ids:
+    - hover-31
     anim_data:
       skin_kind: 
       skin: pckg_front
@@ -288744,8 +288747,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.24}
         radius: 0.23744136
-    capacities_ids:
-    - hover-31
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 1}
@@ -291095,6 +291096,8 @@ MonoBehaviour:
     orientation: {x: 0, y: 1}
     layer: 24
     tag: Item
+    capacities_ids:
+    - hover-35
     anim_data:
       skin_kind: 
       skin: pckg_front
@@ -291160,8 +291163,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.24}
         radius: 0.23744136
-    capacities_ids:
-    - hover-35
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 1}
@@ -293701,6 +293702,8 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids:
+    - attack-0
     anim_data:
       skin_kind: 
       skin: katana
@@ -293739,8 +293742,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids:
-    - attack-0
     effects: 09000000
     effects_ttl:
     - -888
@@ -294766,6 +294767,10 @@ MonoBehaviour:
     orientation: {x: 1, y: 0}
     layer: 9
     tag: Untagged
+    capacities_ids:
+    - hover-6
+    - open-5
+    - close-5
     anim_data:
       skin_kind: 
       skin: steel_door
@@ -294850,10 +294855,6 @@ MonoBehaviour:
         offset: {x: 0, y: 0.5}
         size: {x: 0.5, y: 1}
       circle_colliders: []
-    capacities_ids:
-    - hover-6
-    - open-5
-    - close-5
     effects: 
     effects_ttl: []
   inputs: {x: 1, y: 0}
@@ -294998,6 +294999,7 @@ MonoBehaviour:
     orientation: {x: 0, y: -1}
     layer: 24
     tag: Item
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: empty
@@ -295036,7 +295038,6 @@ MonoBehaviour:
         is_trigger: 0
         offset: {x: 0, y: 0.1}
         radius: 0.09
-    capacities_ids: []
     effects: 09000000
     effects_ttl:
     - -888
@@ -295573,6 +295574,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -295590,7 +295592,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -297673,6 +297674,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -297690,7 +297692,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -303215,6 +303216,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -303232,7 +303234,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 0}
@@ -304111,6 +304112,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -304128,7 +304130,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -304201,6 +304202,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -304218,7 +304220,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -306610,6 +306611,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -306627,7 +306629,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -307305,6 +307306,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -307322,7 +307324,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 0}
@@ -309562,6 +309563,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -309579,7 +309581,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -309728,6 +309729,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -309745,7 +309747,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -310314,6 +310315,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -310331,7 +310333,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -312111,6 +312112,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -312128,7 +312130,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -314567,6 +314568,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -314584,7 +314586,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -315792,6 +315793,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -315809,7 +315811,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -317545,6 +317546,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -317562,7 +317564,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -322250,6 +322251,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -322267,7 +322269,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -322802,6 +322803,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -322819,7 +322821,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -322922,6 +322923,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -322939,7 +322941,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -324133,6 +324134,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -324150,7 +324152,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 0}
@@ -325403,6 +325404,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -325420,7 +325422,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -329784,6 +329785,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -329801,7 +329803,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -330511,6 +330512,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -330528,7 +330530,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 0}
@@ -335283,6 +335284,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -335300,7 +335302,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -337086,6 +337087,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -337103,7 +337105,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -337873,6 +337874,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -337890,7 +337892,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -339909,6 +339910,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -339926,7 +339928,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -343235,6 +343236,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -343252,7 +343254,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -345748,6 +345749,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -345765,7 +345767,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -346140,6 +346141,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -346157,7 +346159,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -346222,6 +346223,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -346239,7 +346241,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -347659,6 +347660,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -347676,7 +347678,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -348776,6 +348777,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -348793,7 +348795,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}

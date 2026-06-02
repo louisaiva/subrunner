@@ -11,6 +11,15 @@
     },
     "layer": 7,
     "tag": "Player",
+    "capacities_ids": [
+        "exp",
+        "bob_walk",
+        "bob_health",
+        "bob_interact",
+        "bob_sit",
+        "bob_talk",
+        "bob_eat"
+    ],
     "anim_data": {
         "skin_kind": "",
         "skin": "bob",
@@ -224,15 +233,6 @@
             }
         ]
     },
-    "capacities_ids": [
-        "exp",
-        "bob_walk",
-        "bob_health",
-        "bob_interact",
-        "bob_sit",
-        "bob_talk",
-        "bob_eat"
-    ],
     "effects": [],
     "effects_ttl": []
 }
