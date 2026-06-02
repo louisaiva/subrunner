@@ -11,16 +11,24 @@
     },
     "layer": 29,
     "tag": "Untagged",
-    "capacities_ids": [
-        "little_sink_sprite"
-    ],
+    "capacities_ids": [],
     "anim_data": {
         "skin_kind": "",
-        "skin": "",
-        "anim_capacity_priorities": [],
+        "skin": "little_sink",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            }
+        ],
         "current_capacity": "",
-        "material_name": "",
-        "sorting_layer_id": 0,
+        "material_name": "sprite_lit_default",
+        "sorting_layer_id": -667374433,
         "order_in_layer": 0,
         "never_flip": false,
         "layers": [],

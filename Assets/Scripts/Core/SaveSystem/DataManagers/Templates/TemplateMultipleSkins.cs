@@ -25,7 +25,8 @@ public class TemplateMultipleSkins : MonoBehaviour
             if (string.IsNullOrEmpty(burst_skin.skin)) { continue; }
             for (int i = 0; i < burst_skin.skin_count; i++)
             {
-                string skin = burst_skin.skin + "_" + i;
+                int index = burst_skin.start_index + i;
+                string skin = burst_skin.skin + "_" + index;
                 if (!skins.Contains(skin)) { skins.Add(skin); }
             }
         }
@@ -37,5 +38,6 @@ public class TemplateMultipleSkins : MonoBehaviour
 [System.Serializable] public class BurstSkinTemplate
 {
     public string skin = "";
+    public int start_index = 0;
     public int skin_count = 0;
 }

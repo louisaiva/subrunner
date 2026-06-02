@@ -30,8 +30,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 7081803178657954280}
   - {fileID: 6097671969106891768}
-  - {fileID: 6846227222466422415}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5963297052572659453
@@ -53,6 +53,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -70,7 +71,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 0}
@@ -81,7 +81,7 @@ MonoBehaviour:
   log: 0
   activate_all_capacities_logs_on_awake: 0
   log_static_data: 0
---- !u!1 &2553825203391156442
+--- !u!1 &1347355449078811542
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -89,23 +89,23 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6846227222466422415}
-  - component: {fileID: 8255555009710960450}
-  - component: {fileID: 83507049940617365}
-  m_Layer: 0
-  m_Name: little_sink_sprite
+  - component: {fileID: 7081803178657954280}
+  - component: {fileID: 6138618002211814023}
+  - component: {fileID: 5174006591827861117}
+  m_Layer: 29
+  m_Name: anim_player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
---- !u!4 &6846227222466422415
+--- !u!4 &7081803178657954280
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2553825203391156442}
+  m_GameObject: {fileID: 1347355449078811542}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -114,14 +114,14 @@ Transform:
   m_Children: []
   m_Father: {fileID: 745539603501021210}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &8255555009710960450
+--- !u!212 &6138618002211814023
 SpriteRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2553825203391156442}
+  m_GameObject: {fileID: 1347355449078811542}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -173,26 +173,44 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 1
---- !u!114 &83507049940617365
+--- !u!114 &5174006591827861117
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2553825203391156442}
+  m_GameObject: {fileID: 1347355449078811542}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6d09747094e4f54a8041d6621036f22, type: 3}
+  m_Script: {fileID: 11500000, guid: 7d0b43fa0567e1540bacfa253e7fd613, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SpriteCapacity
-  data:
-    <id>k__BackingField: little_sink_sprite
-    <owner_id>k__BackingField: 
-    kind: 
-    local_position: {x: 0, y: 0}
-    layer: 0
-    tag: 
+  m_EditorClassIdentifier: 
+  skin: little_sink
+  <orientation>k__BackingField: D
+  current_anim:
+    name: 
+    sprites_paths: []
+    sprites: []
+    sprites_durations: []
+    loop: 1
+    speed: 1
+    flipX: 0
+  update_each_frame: 1
+  anim_capacity_priorities:
+  - priority: 0
+    capacity_playing: 
+    capacities:
+    - idle
+    lock_orientation: 0
+    one_shot: 0
+  never_flip: 0
   log: 0
+  log_orientation: 0
+  log_advanced: 0
+  log_frames: 0
+  log_pile: 0
+  log_material: 0
+  visible_on: 1
 --- !u!1 &9188833793657190737
 GameObject:
   m_ObjectHideFlags: 0
