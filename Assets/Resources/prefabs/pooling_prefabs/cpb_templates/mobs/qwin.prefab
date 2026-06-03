@@ -154,6 +154,12 @@ MonoBehaviour:
   - priority: 5
     capacity_playing: 
     capacities:
+    - talk
+    lock_orientation: 0
+    one_shot: 0
+  - priority: 5
+    capacity_playing: 
+    capacities:
     - die
     lock_orientation: 1
     one_shot: 0
@@ -211,6 +217,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -228,7 +235,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 0}
@@ -275,6 +281,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
   capacity_template_id: mob_exp
+  capacity_template_ids: []
 --- !u!1 &8838388296438177925
 GameObject:
   m_ObjectHideFlags: 0

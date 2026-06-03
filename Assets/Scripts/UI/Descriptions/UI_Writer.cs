@@ -59,6 +59,8 @@ public class UI_Writer : MonoBehaviour
     }
 
     // WRITING
+    private Coroutine writing_coroutine = null;
+    public bool IsWriting => writing_coroutine != null;
     public void Write(string raw_writing)
     {
         // if disabled we don't start the coroutine
@@ -88,7 +90,6 @@ public class UI_Writer : MonoBehaviour
         label.text = "";
         writing_coroutine = StartCoroutine(write());
     }
-    private Coroutine writing_coroutine = null;
     public IEnumerator write()
     {
         while (cursor < target_writing.Length)

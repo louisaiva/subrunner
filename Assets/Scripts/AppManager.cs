@@ -92,6 +92,12 @@ public class AppManager : MonoBehaviour
         return full;
     }
 
+    public static int CompareVersion(string other_version)
+    {
+        Version current = new Version(Instance.version);
+        Version other = new Version(other_version);
+        return current.CompareTo(other);
+    }
 
 
 
@@ -328,4 +334,47 @@ public enum FileNotFound
     Log,
     LogWarning,
     LogError,
+}
+
+public class Version
+{
+    public int major;
+    public int minor;
+    public int patch;
+    public string prototype;
+
+    public Version(string version)
+    {
+        string[] parts = version.Split('.');
+        if (parts.Length >= 1) { int.TryParse(parts[0], out major); }
+        if (parts.Length >= 2) { int.TryParse(parts[1], out minor); }
+        if (parts.Length >= 3)
+        {
+            // here we have something like "15f" or "1ab" so we need to separate the number from the prototype
+            string patch_part = parts[2];
+            string number_part = "";
+            string prototype_part = "";
+            foreach (char c in patch_part)
+            {
+                if (char.IsDigit(c)) { number_part += c; }
+                else { prototype_part += c; }
+            }
+            int.TryParse(number_part, out patch);
+            prototype = prototype_part;
+        }
+    }
+
+    public override string ToString()
+    {
+        return $"{major}.{minor}.{patch}{prototype}";
+    }
+    
+    public int CompareTo(Version other)
+    {
+        if (other == null) { return 1; }
+        if (major != other.major) { return 100 * major.CompareTo(other.major); }
+        if (minor != other.minor) { return 10 * minor.CompareTo(other.minor); }
+        if (patch != other.patch) { return patch.CompareTo(other.patch); }
+        return string.Compare(prototype, other.prototype, StringComparison.Ordinal);
+    }
 }

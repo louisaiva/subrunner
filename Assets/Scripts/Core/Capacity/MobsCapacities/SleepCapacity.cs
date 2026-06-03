@@ -60,11 +60,11 @@ public class SleepCapacity : Capacity
         sleep_timer = Time.time;
 
         // we stop talking during sleep
-        if (Capable.GetCapacity<TalkCapacity>() != null)
+        /* if (Capable.GetCapacity<TalkCapacity>() != null)
         {
             Capable.GetCapacity<TalkCapacity>().StopTalking();
             Capable.GetCapacity<TalkCapacity>().Say("z/.z/.z/."); // we say we are sleeping
-        }
+        } */
 
         // // wait until the falling asleep animation is finished
         // while (cat.anim_player.current_capacity == "fell_asleep") { yield return null; }
@@ -100,10 +100,10 @@ public class SleepCapacity : Capacity
 
 
         // we start talking again
-        if (Capable.GetCapacity<TalkCapacity>() != null)
+        /* if (Capable.GetCapacity<TalkCapacity>() != null)
         {
             Capable.GetCapacity<TalkCapacity>().StartTalking();
-        }
+        } */
 
         if (log) { Debug.Log("(SleepCapacity) " + cat.name + " woke up after a " + time_spent_asleep + " seconds nap : means " + licking_to_do + " licks to do !"); }
 

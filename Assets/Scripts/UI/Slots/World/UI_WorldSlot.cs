@@ -40,10 +40,10 @@ public class UI_WorldSlot : UI_EventButton, Descriptable
         if (world_data == null) { return "No world data."; }
 
         string description = "";
-        description += $"<b>subrunner {world_data.game_version}</b>\n";
+        description += $"<b>subrunner {world_data.game_version}</b>\n".AddColor(get_color_version(world_data.game_version));
         description += "\n\n";
-        description += $"modified : <b>{world_data.last_update_date}</b>\n";
-        description += $"created : <b>{world_data.creation_date}</b>\n";
+        description += $"modified : ".AddColor(Color.grey) + $"<b>{world_data.last_update_date}</b>\n";
+        description += $"created : ".AddColor(Color.grey) + $"<b>{world_data.creation_date}</b>\n";
         description += "\n\n\n";
         description += $"<b>Levels</b> : ";
 
@@ -64,5 +64,13 @@ public class UI_WorldSlot : UI_EventButton, Descriptable
         return description;
     }
 
-
+    private static Color get_color_version(string version)
+    {
+        int compare_to_current = AppManager.CompareVersion(version);
+        if (compare_to_current == 0) { return Color.green; }
+        if (Mathf.Abs(compare_to_current) > 100) { return Color.red; } // if the major version is different, it's a big deal
+        if (Mathf.Abs(compare_to_current) > 10) { return Color.yellow; } // if the minor version is different, it's a bit of a deal
+        // if (compare_to_current > 0) { return Color.lightGreen; } // the app version is newer than the world, should probably work fine
+        return Color.lightYellow; // world version is newer than the app, might cause issues, better be careful
+    }
 }

@@ -96,7 +96,7 @@ public class UI_Manager : Singleton<UI_Manager>
         // only for log & prototype purpose
         string start_pool = current_pool.Reference;
         current_pool = null;
-        SwitchTo(start_pool);        
+        SwitchTo(start_pool);
     }
 
     /// <summary>

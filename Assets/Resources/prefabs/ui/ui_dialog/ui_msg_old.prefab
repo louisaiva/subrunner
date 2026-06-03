@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8695103730772398120}
   - component: {fileID: 5230037441940238141}
   m_Layer: 5
-  m_Name: ui_msg
+  m_Name: ui_msg_old
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -105,6 +105,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -157,8 +158,6 @@ MonoBehaviour:
   scale: 1
   base_color: white
   text_mesh: {fileID: 3255316847385399685}
-  initialised_read_only: 0
-  log: 1
 --- !u!114 &5230037441940238141
 MonoBehaviour:
   m_ObjectHideFlags: 0

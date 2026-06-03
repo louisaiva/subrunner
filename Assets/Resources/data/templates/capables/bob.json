@@ -12,8 +12,8 @@
     "layer": 7,
     "tag": "Player",
     "capacities_ids": [
-        "exp",
         "bob_walk",
+        "exp",
         "bob_health",
         "bob_interact",
         "bob_sit",
@@ -76,9 +76,10 @@
                 "priority": 5,
                 "capacity_playing": "",
                 "capacities": [
-                    "idle_sit"
+                    "idle_sit",
+                    "talk"
                 ],
-                "lock_orientation": true,
+                "lock_orientation": false,
                 "one_shot": false
             },
             {
@@ -89,7 +90,8 @@
                     "sit",
                     "stand",
                     "zip",
-                    "unzip"
+                    "unzip",
+                    "start_talk"
                 ],
                 "lock_orientation": true,
                 "one_shot": true

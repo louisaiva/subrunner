@@ -460,9 +460,11 @@ public class Controller : MonoBehaviour
     //
     ///
 
+    
     public async Awaitable LoadWorldData(string world_id, bool log)
     {
         if (log) { Debug.Log($"(Controller) Loading controller data for world with id '{world_id}' ..."); }
+
 
         // get the controller data
         ControllerData data = LoadWorldControllerData(world_id);
@@ -490,10 +492,17 @@ public class Controller : MonoBehaviour
     }
 
     // DATA MANAGEMENT
+    [Header("On Load Data parameters")]
+    [Tooltip("If true, the controller will respawn the template capable EACH time the world is loaded ! THIS MEANS YOU LOSE INVENTORY & POSITION, don't enable this if you don't need it")]
+    [SerializeField] private bool respawn_template = false;
     public void LoadData(ControllerData data, bool tp = true)
     {
         this.data = data;
         stack.Clear();
+
+        #if !UNITY_EDITOR
+        if (respawn_template) { Debug.LogError("(Controller) Respawning template on world loading is enabled! You will always lose your inventory & position! If you don't want this, please download another subrunner version :D"); }
+        #endif
 
         string capable_id = data.controlled_capable_id;
         if (string.IsNullOrEmpty(capable_id)) { capable_id = data.capable_template; }
@@ -502,6 +511,7 @@ public class Controller : MonoBehaviour
             Debug.LogError($"(Controller) No capable id defined in controller data !!");
             return;
         }
+        if (respawn_template) { capable_id = data.capable_template; } // we always assign the new perso as template
 
         // load the controlled capable
         if (!Control(capable_id))

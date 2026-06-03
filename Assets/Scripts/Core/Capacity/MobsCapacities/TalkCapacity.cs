@@ -11,12 +11,10 @@ public class TalkCapacity : Capacity
 {
 
     [Header("Talking parameters")]
-    [SerializeField] private bool talk_on_start = false;
-    [SerializeField] private bool allow_bad_words = true;
-    [SerializeField] private Vector2 talking_delay_range = new Vector2(30f, 60f);
+    [SerializeField] private string talk_anim = "talk";
 
 
-    [Header("Talks")]
+    [Header("Talks (NEED TO BE IN A FILE OR IN MESSAGE LOADER)")]
     [SerializeField]
     private List<string> talks_random = new List<string>()
                         {
@@ -82,56 +80,111 @@ public class TalkCapacity : Capacity
                         };
 
     [Header("Components")]
-    private GameObject floating_dmg_provider;
+    // private GameObject floating_dmg_provider;
+    [SerializeField] private Transform ui_messages_parent;
+    [SerializeField] private Transitioner main_transitioner;
 
-    // START
-    private void Start()
-    {
-        // on récupère le provider de floating dmg
-        floating_dmg_provider = GameObject.Find("/game/dmgs_provider");
+    private List<UI_Message> ui_messages = new List<UI_Message>();
 
-        // on lance le parlage automatique
-        if (talk_on_start) { StartTalking(); }
-    }
 
-    // trigger the attack
+    // MAIN ENTRY POINT + TALKING
     public override void Use(Capable capable)
     {
-        // todo talking has animations ?
+        /* // todo talking has animations ?
         randomTalk();
-        CancelInvoke("randomTalk");
+        CancelInvoke("randomTalk"); */
+
+        // monologue
+        SaySomething();
+    }
+    public void SaySomething()
+    {
+        // get a random message from bank
+        UI_Message msg = MessageBank.Instance.CreateUIMessage(MessageBank.Instance.GetRandomMessage(), ui_messages_parent, this);
+        ui_messages.Add(msg);
+
+        // here we need to make sure that the canvas transitionner is shown
+        // and then we will receive msg status to hide it when it's done
+        _ = main_transitioner.Show();
+
+        // todo we start talking anim here
+        Capable.AnimPlayer.Play(talk_anim);
     }
 
-    // SINGLE TALKING
-    public void Say(string msg) { StartCoroutine(floating_dmg_provider.GetComponent<TextManager>().TalkLines(msg, transform)); }
-
-    // RANDOM TALKING
-    public void StopTalking()
+    // MESSAGE STATUS
+    public void OnMessageDoneTalking(UI_Message msg)
     {
-        // stop random talking
-        CancelInvoke("randomTalk");
-    }
-    public void StartTalking()
-    {
-        float delay_talking = Random.Range(talking_delay_range.x, talking_delay_range.y);
-        // Debug.Log(name + " is talking in " + delay_talking);
-        Invoke("randomTalk", delay_talking);
-    }
-
-    void randomTalk()
-    {
-        // on fait parler le perso
-        int index = Random.Range(0, talks_random.Count + (allow_bad_words ? talks_random_bad_words.Count : 0));
-        if (index >= talks_random.Count)
+        // we check if there are more messages still talking
+        foreach (UI_Message ui_msg in ui_messages)
         {
-            Say(talks_random_bad_words[index - talks_random.Count]);
-        }
-        else
-        {
-            Say(talks_random[index]);
+            if (ui_msg == msg) { continue; }
+            if (ui_msg.IsWriting) { return; }
         }
 
-        // on relance
-        Invoke("randomTalk", Random.Range(talking_delay_range.x, talking_delay_range.y));
+        // todo then we stop the anim player "talk" anim
+        Capable.AnimPlayer.StopPlaying(talk_anim);
+    }
+    public void OnMessageFading(UI_Message msg)
+    {
+        if (ui_messages.Count == 0) { return; }
+
+        // we check if the just fading message was the last not-fading msg
+        foreach (UI_Message ui_msg in ui_messages)
+        {
+            if (ui_msg == msg) { continue; }
+            if (!ui_msg.IsFading) { return; }
+        }
+        // then we can fade the canvas group
+        _ = main_transitioner.Hide(UI_Message.FADING_DURATION);
+    }
+    public void OnMessageDestroyed(UI_Message msg)
+    {
+        ui_messages.Remove(msg);
+    }
+
+
+    // LOAD / UNLOAD DATA
+    public override void LoadData(CapacityData data)
+    {
+        base.LoadData(data);
+
+        _ = main_transitioner.Hide(0f);
+
+        // todo : load the data
+        /* if (data is not TalkData talk_data) { return; }
+        talk_anim = talk_data.talk_anim_name; */
+        // todo : just above, but first we need to write getstaticdata & save template so for now we don't
+    }
+    /* public override void UnloadData()
+    {
+        // this saves the dynamic health data
+        base.UnloadData();
+    } */
+}
+
+public class TalkData : CapacityData
+{
+
+    // template parameters
+    public string talk_anim_name;
+
+    // CONSTRUCTOR
+    public TalkData(CapacityData parent) : base(parent) { }
+
+    // DUPLICATE
+    public override ICapacityData Duplicate()
+    {
+        return new TalkData(base.Duplicate() as CapacityData)
+        {
+            talk_anim_name = this.talk_anim_name,
+        };
+    }
+
+    // GET DETAILS
+    public override string GetDetails()
+    {
+        string details = "";
+        details += $"  - talk anim name : {talk_anim_name}\n";
+        return base.GetDetails() + details;
     }
 }

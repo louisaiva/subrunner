@@ -1,60 +1,62 @@
 using UnityEngine;
 
-/// <summary>
-/// auto adjust its height & width to always fit perfectly the text
-/// </summary>
 public class UI_Message : MonoBehaviour
 {
 
-    [Header("Components")]
-    public RectTransform rect_transform;
-    public TMPro.TMP_Text text_mesh;
+    // static variables
+    public const int WAITING_DURATION = 5;
+    public const int FADING_DURATION = 5;
 
-    [Header("Parameters")]
-    public bool lock_width = false;
-    public bool lock_height = false;
 
-    [Header("Logs")]
-    public bool debug = false;
-
-    void Start()
+    // instance variables
+    public Message message;
+    [SerializeField] private UI_Writer writer;
+    [SerializeField] private Transitioner transitioner;
+    private RectTransform _rectTransform;
+    private RectTransform rectTransform
     {
-        if (rect_transform == null) { rect_transform = GetComponent<RectTransform>(); }
-        if (text_mesh == null) { text_mesh = GetComponent<TMPro.TMP_Text>(); }
-
-        if (rect_transform == null || text_mesh == null)
+        get
         {
-            Debug.LogError("UI_Message: missing components");
-            return;
-        }
-
-        adjust_tmptext_size();
-    }
-    void Update()
-    {
-        adjust_tmptext_size();
-    }
-
-    private void adjust_tmptext_size()
-    {
-        if (text_mesh == null || rect_transform == null) { return; }
-
-        Vector2 size = rect_transform.sizeDelta;
-        Vector2 text_size = new Vector2(text_mesh.preferredWidth * rect_transform.localScale.x, text_mesh.preferredHeight * rect_transform.localScale.y);
-
-        if (!lock_width && size.x != text_size.x)
-        {
-            size.x = text_size.x;
-            rect_transform.sizeDelta = size;
-            if (debug) { Debug.Log("UI_Message: adjusted width to " + size.x); }
-        }
-
-        if (!lock_height && size.y != text_size.y)
-        {
-            size.y = text_size.y;
-            rect_transform.sizeDelta = size;
-            if (debug) { Debug.Log("UI_Message: adjusted height to " + size.y); }
+            if (_rectTransform != null) { return _rectTransform; }
+            _rectTransform = GetComponent<RectTransform>();
+            return _rectTransform;
         }
     }
+    public bool IsWriting => writer.IsWriting;
+    public bool IsFading { get; private set; } = false;
 
+
+    private TalkCapacity talker;
+    public async void Init(Message message)
+    {
+        this.message = message;
+        rectTransform.sizeDelta = new Vector2(message.width, rectTransform.sizeDelta.y);
+        talker = GetComponentInParent<TalkCapacity>();
+        if (talker == null)
+        {
+            Debug.LogWarning($"(UI_Message) No TalkCapacity found in parent hierarchy of {this.gameObject.name}.");
+        }
+
+        // we start writing before any showing stuff
+        writer.Write(message.text);
+
+        await transitioner.Show(); // first we show the canvas group
+        while (writer.IsWriting) { await System.Threading.Tasks.Task.Yield(); } // then we wait for the writing to be done
+        talker.OnMessageDoneTalking(this);
+
+        await System.Threading.Tasks.Task.Delay(WAITING_DURATION * 1000); // and finally we wait before fading the message
+
+        // ? we can also wait for the potential just above sibling ui_message to be fading before fading ?
+
+
+        // then we slowly hide the message
+        IsFading = true;
+        talker.OnMessageFading(this);
+        await transitioner.HideAndDestroy(duration: FADING_DURATION);
+    }
+    private void OnDestroy()
+    {
+        if (talker == null) { return; }
+        talker.OnMessageDestroyed(this);
+    }
 }
