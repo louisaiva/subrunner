@@ -31,6 +31,16 @@ public class UI_Message : MonoBehaviour
             return _bulleRectTransform;
         }
     }
+    private RectTransform _notchRectTransform;
+    private RectTransform notchRect
+    {
+        get
+        {
+            if (_notchRectTransform != null) { return _notchRectTransform; }
+            _notchRectTransform = transform.Find("notch").GetComponent<RectTransform>();
+            return _notchRectTransform;
+        }
+    }
     public bool IsWriting => writer.IsWriting;
     public bool IsFading { get; private set; } = false;
     public float WritingTime { get; private set; } = 0f;
@@ -107,6 +117,7 @@ public class UI_Message : MonoBehaviour
             if (graphic == null) { continue; }
             graphic.color = slot_color;
         }
+        notchRect.GetComponent<Graphic>().color = slot_color;
     }
     public void SetTalker(TalkCapacity talker)
     {
@@ -118,13 +129,21 @@ public class UI_Message : MonoBehaviour
     }
     public void SetFacing(bool facing_right)
     {
-        // todo : change anchors of bulle rect, if facing right the anchors are lefted
-
         bulleRect.pivot = new Vector2(facing_right ? 0f : 1f, bulleRect.pivot.y);
         bulleRect.anchorMin = new Vector2(facing_right ? 0f : 1f, bulleRect.anchorMin.y);
         bulleRect.anchorMax = new Vector2(facing_right ? 0f : 1f, bulleRect.anchorMax.y);
         bulleRect.anchoredPosition = new Vector2(0f, bulleRect.anchoredPosition.y);
 
+        // todo we also flip the notch
+        notchRect.anchorMin = new Vector2(facing_right ? 0f : 1f, notchRect.anchorMin.y);
+        notchRect.anchorMax = new Vector2(facing_right ? 0f : 1f, notchRect.anchorMax.y);
+        notchRect.localScale = new Vector3(facing_right ? 1f : -1f, 1f, 1f);
+        notchRect.anchoredPosition = new Vector2(0f, notchRect.anchoredPosition.y);
+
         // todo : we change the text anchor as well, if facing right the text is left aligned
+    }
+    public void HideNotch(bool hide = true)
+    {
+        notchRect.gameObject.SetActive(!hide);
     }
 }
