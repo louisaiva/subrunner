@@ -104,8 +104,18 @@ public class TalkCapacity : Capacity
     }
     [SerializeField] private Transitioner main_transitioner;
     [SerializeField] private Graphic notch;
+    private Canvas _canvas;
+    private Canvas canvas
+    {
+        get
+        {
+            if (_canvas != null) { return _canvas; }
+            _canvas = GetComponentInChildren<Canvas>(includeInactive: true);
+            return _canvas;
+        }
+    }
 
-    private List<UI_Message> ui_messages = new List<UI_Message>();
+    private Dictionary<UI_Message, TalkCapacity> ui_messages = new Dictionary<UI_Message, TalkCapacity>();
     private List<TalkCapacity> talk_members = new List<TalkCapacity>();
 
 
@@ -146,7 +156,7 @@ public class TalkCapacity : Capacity
         notch.color = slot_color;
 
         // we set the msg as a child of the ui_messages_parent and we set its colors
-        take_over_msg(msg);
+        take_over_msg(msg, talker);
         msg.SetColors(slot_color, text_color);
         msg.StartWriting();
 
@@ -156,17 +166,18 @@ public class TalkCapacity : Capacity
 
         Capable.AnimPlayer.Play(talk_anim);
     }
-    private void take_over_msg(UI_Message msg)
+    private void take_over_msg(UI_Message msg, TalkCapacity talker = null)
     {
         msg.transform.SetParent(ui_messages_parent);
         msg.transform.localScale = Vector3.one; // important to reset the scale since we change parent
-        ui_messages.Add(msg);
-        msg.SetTalker(this);
+        TalkCapacity dude_who_talked = talker != null ? talker : this;
+        ui_messages.Add(msg, dude_who_talked);
+        msg.SetHolder(this);
+        msg.SetTalker(dude_who_talked);
 
         // here we also set the facing right parameter
-        // todo : if we are in dialog we need to check which talker said what so that leader messages are properly oriented,
-        // but opposite to the other talkers, but for now we only have one talker in dialog so it doesn't matter
-        msg.SetFacing(was_facing_right);
+        if (dude_who_talked == this) { msg.SetFacing(was_facing_right); }
+        else { msg.SetFacing(!was_facing_right); }
     }
 
 
@@ -190,13 +201,13 @@ public class TalkCapacity : Capacity
         Vector2 raycast_direction = Capable.Orientation;
         float raycast_distance = RAYCAST_DISTANCE;
 
+        Debug.DrawRay(raycast_origin, raycast_direction * raycast_distance, Color.lightPink, duration: 2f);
         RaycastHit2D[] hits = Physics2D.RaycastAll(raycast_origin, raycast_direction, raycast_distance, talking_entity_layers);
         if (hits.Length == 0)
         {
             Debug.Log($"(TalkCapacity) {Capable.ID} said something but no one heard it..");
             return;
         }
-        Debug.DrawRay(raycast_origin, raycast_direction * raycast_distance, Color.lightPink, duration: 1f);
         List<Capable> hearing_capables = new List<Capable>();
         foreach (RaycastHit2D hit in hits)
         {
@@ -239,11 +250,14 @@ public class TalkCapacity : Capacity
         last_spoken_dudes[someone] = msg;
         Debug.Log($"(TalkCapacity) {Capable.ID} heard from {someone.Capable.ID}.\nmessage was : {msg.message.text}");
 
+        if (Controller.Capable == null || Controller.Capable == this.Capable) { return; }
+        
+        // orientate towards the talker who just said something
+        Vector2 orientation_to_talker = (someone.Capable.transform.position - Capable.transform.position).normalized;
+        Capable.Orientation = orientation_to_talker;
+
         // we automatically answer after 1s if we are not the controlled capable
-        if (Controller.Capable != null && Controller.Capable != this.Capable)
-        {
-            Invoke("SaySomething", 1f);
-        }
+        Invoke("SaySomething", 1f);
     }
     public void AskDialog(TalkCapacity first_spoken_dude)
     {
@@ -283,29 +297,37 @@ public class TalkCapacity : Capacity
 
         // we clear our messages since it is now handled by the talk leader
         ui_messages.Clear(); // ! important : we don't destroy the msgs bcz it was moved to the leader talk capacity. we just don't care about them anymore
+
+        if (Controller.Capable == null || Controller.Capable == this.Capable) { return; }
+
+        // here we start invoking the talk method so the npc is talking randomly
+        InvokeRepeating("talk_randomly", UnityEngine.Random.Range(3, 10), 3f);
     }
     public void ReceiveNewDialogMember(TalkCapacity new_member)
     {
         // we gather all the new member messages into our own list
         Debug.Log($"(TalkCapacity) {Capable.ID} is receiving new dialog member {new_member.Capable.ID}.");
-        foreach (UI_Message ui_msg in new_member.GetCurrentMessages())
+        foreach (KeyValuePair<UI_Message, TalkCapacity> kvp in new_member.GetCurrentMessages())
         {
+            UI_Message ui_msg = kvp.Key;
+            TalkCapacity talker = kvp.Value;
+
             float smallest_time_diff = Mathf.Infinity;
             int sibling_index_to_take = 0;
-            for (int i = 0; i < ui_messages.Count; i++)
+            foreach (KeyValuePair<UI_Message, TalkCapacity> kvp2 in ui_messages)
             {
-                float time_diff = ui_msg.WritingTime - ui_messages[i].WritingTime;
+                float time_diff = ui_msg.WritingTime - kvp2.Key.WritingTime;
                 if (time_diff > 0f) { continue; }
                 if (Mathf.Abs(time_diff) < smallest_time_diff)
                 {
                     smallest_time_diff = Mathf.Abs(time_diff);
-                    sibling_index_to_take = i;
+                    sibling_index_to_take = kvp2.Key.transform.GetSiblingIndex();
                 }
             }
             // we want to set the according sibling index for the message based on its writing time
             // we find the sibling index of the message that has its writing time just after the one of our message
             // smallest negative time diff !!!!
-            take_over_msg(ui_msg);
+            take_over_msg(ui_msg, talker);
 
             // we apply the sibling index
             if (smallest_time_diff != Mathf.Infinity)
@@ -316,6 +338,52 @@ public class TalkCapacity : Capacity
 
         // then we add the talk capacity to the ongoing dialog members so our local position will lerp properly in update method
         talk_members.Add(new_member);
+
+        // we can now updat the facing since we have a new member in the dialog
+        UpdateFacing(force_update: true);
+    }
+    public void QuitDialog()
+    {
+        if (talk_mode.Mode != TalkType.Dialog) { return; }
+        if (talk_mode.Leader == null) { return; }
+        if (talk_mode.Leader != this)
+        {
+            // we get back the messages we send to the leader to handle them again
+            talk_mode = new TalkMode(TalkType.Monologue, this);
+            foreach (KeyValuePair<UI_Message, TalkCapacity> kvp in talk_mode.Leader.GetCurrentMessages())
+            {
+                if (kvp.Value != this) { continue; }
+                UI_Message ui_msg = kvp.Key;
+                take_over_msg(ui_msg, this);
+            }
+
+            // stop the potential random talk invoke
+            CancelInvoke("talk_randomly");
+            return;
+        }
+
+        // reset things on the leader
+        talk_mode = new TalkMode(TalkType.Monologue, this);
+        foreach (TalkCapacity talk_member in talk_members)
+        {
+            talk_member.QuitDialog();
+        }
+        talk_members.Clear();
+        List<UI_Message> msgs_to_destroy = new List<UI_Message>();
+        foreach (KeyValuePair<UI_Message, TalkCapacity> kvp in ui_messages)
+        {
+            if (kvp.Value == this) { continue; }
+            msgs_to_destroy.Add(kvp.Key);
+        }
+        foreach (UI_Message ui_msg in msgs_to_destroy) { ui_messages.Remove(ui_msg); } // ! important : we don't destroy here bcz the ui_msg was transfered to its real talker
+    }
+    private void talk_randomly()
+    {
+        // CancelInvoke("talk_randomly"); // we want only one invoke at a time
+        SaySomething();
+
+        // we invoke ourself again to keep talking randomly after some time
+        // Invoke("talk_randomly", UnityEngine.Random.Range(3, 10));
     }
 
     // UPDATE
@@ -324,18 +392,21 @@ public class TalkCapacity : Capacity
     private const float HORIZONTAL_MOUTH_OFFSET = .75f;
     public Vector2 MouthLocalPosition { get { return data.local_position + new Vector2(HORIZONTAL_MOUTH_OFFSET * (was_facing_right ? 1f : -1f), 0f); } }
     private bool was_facing_right = false;
-    private bool FacingRight { get { return Capable.Orientation.x >= 0f; } }
+    // private bool FacingRight { get { return Capable.Orientation.x >= 0f; } }
     private void Update()
     {
         if (!Loaded) { return; }
 
 
         // update ui_message orientation if we changed orientation
-        if (FacingRight != was_facing_right && Capable.Orientation.x != 0f) { SetFacing(FacingRight); }
+        UpdateFacing();
+        
 
 
         // update the local position
         Vector2 avg_local_pos = MouthLocalPosition;
+        float max_talk_member_distance = 0f;
+        // if (talk_mode.Mode == TalkType.Monologue) { max_talk_member_distance = MAX_DIALOG_DISTANCE; } // we set this to max so we can later apply the max target msg group width, bcz we don't want update calculation for monologue !!!
         if (talk_mode.Mode == TalkType.Dialog)
         {
             List<TalkCapacity> members_to_remove = new List<TalkCapacity>();
@@ -348,54 +419,114 @@ public class TalkCapacity : Capacity
                     members_to_remove.Add(talk_member);
                     continue;
                 }
+                Vector2 world_capable_pos_diff = (Vector2)(talk_member.Capable.transform.position - Capable.transform.position);
+                // target_talk_width = Mathf.Max(target_talk_width, );
+                if (Mathf.Abs(world_capable_pos_diff.x) > max_talk_member_distance) { max_talk_member_distance = Mathf.Abs(world_capable_pos_diff.x); }
 
                 // convert to local position
-                avg_local_pos += talk_member.MouthLocalPosition + (Vector2)(talk_member.Capable.transform.position - Capable.transform.position);
+                avg_local_pos += talk_member.MouthLocalPosition + world_capable_pos_diff;
             }
 
             // we remove the far members from the dialog
             foreach (TalkCapacity talk_member in members_to_remove)
             {
                 talk_members.Remove(talk_member);
-                // todo : here we notify the member that they quit the conv,
-                // and we give them back their messages
+                talk_member.QuitDialog();
             }
+            if (talk_members.Count == 0) { QuitDialog(); }
 
             avg_local_pos /= (talk_members.Count + 1);
         }
+
 
         // we lerp the local position of the talk capacities to the average local position of the dialog members
         Vector2 new_local_pos = Vector2.Lerp(transform.localPosition, avg_local_pos, Time.deltaTime * LOCAL_POS_LERP_SPEED);
         if (Vector2.Distance(new_local_pos, avg_local_pos) < 0.01f)
         {
             transform.localPosition = avg_local_pos;
+        }
+        else { transform.localPosition = new_local_pos; }
+
+
+
+        // update the msg group width
+        if (talk_mode.Mode == TalkType.Monologue)
+        {
+            msg_parent_rect.sizeDelta = new Vector2(150f, msg_parent_rect.sizeDelta.y);
             return;
         }
-        transform.localPosition = new_local_pos;
+        else
+        {
+            // we do a rapport proportionnel to calculate the target msg group width based on max distance btwn talk members :
+            // max_distance == MAX_DIALOG_DISTANCE ---------> width == 150f
+            // max_distance == 0f -----------------------> width == 0f
+            float target_width = (max_talk_member_distance / MAX_DIALOG_DISTANCE) * 75f;
+            if (target_width < 50f) { target_width = 50f; } // we clamp to a minimum width so the msg don't look too weirdd
+            Debug.Log($"(TalkCapacity) max talk member distance : {max_talk_member_distance}, so width will be {target_width}");
+            msg_parent_rect.sizeDelta = new Vector2(Mathf.Abs(target_width), msg_parent_rect.sizeDelta.y);
+        }
     }
-    public void SetFacing(bool facing_right)
+    public void UpdateFacing(bool force_update = false)
+    {
+        bool new_facing_right = calculate_facing();
+        if (new_facing_right == was_facing_right && !force_update) { return; }
+
+        if (talk_mode.Mode == TalkType.Monologue)
+        {
+            if (Capable.Orientation.x != 0f) { set_facing(new_facing_right); }
+            return;
+        }
+
+        // else we need to change the the facing
+        set_facing(new_facing_right);
+    }
+    private bool calculate_facing()
+    {
+        if (talk_mode.Mode == TalkType.Monologue) { return Capable.Orientation.x >= 0f; }
+        else if (talk_members.Count == 0) { return was_facing_right; } // if dialog but no talk members, it means we are one of the slave talk capa, no need to do anything
+
+        // else we want to look at the average position of the other talk members
+        float avg_other_members_pos_x = 0f;
+        foreach (TalkCapacity talk_member in talk_members)
+        {
+            avg_other_members_pos_x += talk_member.Capable.transform.position.x;
+        }
+        avg_other_members_pos_x /= talk_members.Count;
+
+        return avg_other_members_pos_x >= Capable.transform.position.x;
+    }
+    private void set_facing(bool facing_right)
     {
         was_facing_right = facing_right;
 
-        // // todo : change pivot of msg group + reset anchored position
-        msg_parent_rect.pivot = new Vector2(facing_right ? 0f : 1f, msg_parent_rect.pivot.y);
-        msg_parent_rect.anchoredPosition = new Vector2(0f, msg_parent_rect.anchoredPosition.y);
-
-        foreach (UI_Message ui_msg in ui_messages)
+        if (talk_mode.Mode == TalkType.Monologue)
         {
-            ui_msg.SetFacing(facing_right);
+            msg_parent_rect.pivot = new Vector2(facing_right ? 0f : 1f, msg_parent_rect.pivot.y);
+            msg_parent_rect.anchoredPosition = new Vector2(0f, msg_parent_rect.anchoredPosition.y);
+        }
+        else if (talk_mode.Leader == this)
+        {
+            msg_parent_rect.pivot = new Vector2(0.5f, msg_parent_rect.pivot.y);
+            msg_parent_rect.anchoredPosition = new Vector2(0f, msg_parent_rect.anchoredPosition.y);
+
+            // todo here we can update the width ?
+        }
+
+        foreach (KeyValuePair<UI_Message, TalkCapacity> kvp in ui_messages)
+        {
+            if (kvp.Value == this) { kvp.Key.SetFacing(facing_right); }
+            else { kvp.Key.SetFacing(!facing_right); }
         }
     }
-
 
     // MESSAGE STATUS
     public void OnMessageDoneTalking(UI_Message msg)
     {
         // we check if there are more messages still talking
-        foreach (UI_Message ui_msg in ui_messages)
+        foreach (KeyValuePair<UI_Message, TalkCapacity> kvp in ui_messages)
         {
-            if (ui_msg == msg) { continue; }
-            if (ui_msg.IsWriting) { return; }
+            if (kvp.Key == msg) { continue; }
+            if (kvp.Key.IsWriting) { return; }
         }
 
         Capable.AnimPlayer.StopPlaying(talk_anim);
@@ -405,10 +536,10 @@ public class TalkCapacity : Capacity
         if (ui_messages.Count == 0) { return; }
 
         // we check if the just fading message was the last not-fading msg
-        foreach (UI_Message ui_msg in ui_messages)
+        foreach (KeyValuePair<UI_Message, TalkCapacity> kvp in ui_messages)
         {
-            if (ui_msg == msg) { continue; }
-            if (!ui_msg.IsFading) { return; }
+            if (kvp.Key == msg) { continue; }
+            if (!kvp.Key.IsFading) { return; }
         }
         // then we can fade the canvas group
         _ = main_transitioner.Hide(UI_Message.FADING_DURATION);
@@ -419,7 +550,7 @@ public class TalkCapacity : Capacity
     }
 
     // GETTERS
-    public List<UI_Message> GetCurrentMessages() { return ui_messages; }
+    public Dictionary<UI_Message, TalkCapacity> GetCurrentMessages() { return ui_messages; }
 
     // LOAD / UNLOAD DATA
     public override void LoadData(CapacityData data)

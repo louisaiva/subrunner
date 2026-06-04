@@ -46,12 +46,13 @@ public class UI_Message : MonoBehaviour
 
     // START WRITING
     private TalkCapacity talker;
+    private TalkCapacity holder;
     public async void StartWriting()
     {
         // ensure we have a talker reference to send status to
-        if (talker == null)
+        if (talker == null || holder == null)
         {
-            Debug.LogWarning($"(UI_Message) No TalkCapacity was found at start writing for {this.gameObject.name}.");
+            Debug.LogWarning($"(UI_Message) No TalkCapacity holder or talker was found at start writing for {this.gameObject.name}.");
         }
 
         // we start writing before any showing stuff
@@ -80,13 +81,13 @@ public class UI_Message : MonoBehaviour
 
         // then we slowly hide the message
         IsFading = true;
-        talker.OnMessageFading(this);
+        holder.OnMessageFading(this);
         _ = transitioner.HideAndDestroy(duration: FADING_DURATION);
     }
     private void OnDestroy()
     {
-        if (talker == null) { return; }
-        talker.OnMessageDestroyed(this);
+        if (holder == null) { return; }
+        holder.OnMessageDestroyed(this);
     }
     
 
@@ -109,6 +110,10 @@ public class UI_Message : MonoBehaviour
     public void SetTalker(TalkCapacity talker)
     {
         this.talker = talker;
+    }
+    public void SetHolder(TalkCapacity holder)
+    {
+        this.holder = holder;
     }
     public void SetFacing(bool facing_right)
     {
