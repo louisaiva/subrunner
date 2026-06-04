@@ -32,15 +32,15 @@ public class MessageBank : MonoBehaviour
 
 
     // UI_MSG creation
-    public UI_Message CreateUIMessage(string msg_id, Transform parent, TalkCapacity talker)
+    public UI_Message CreateUIMessage(string msg_id)
     {
         Message message = GetMessage(msg_id);
         if (message == null) return null;
-        return CreateUIMessage(message, parent, talker);
+        return CreateUIMessage(message);
     }
-    public UI_Message CreateUIMessage(Message message, Transform parent, TalkCapacity talker)
+    public UI_Message CreateUIMessage(Message message)
     {
-        GameObject ui_msg_go = Instantiate(ui_msg_prefab, parent);
+        GameObject ui_msg_go = Instantiate(ui_msg_prefab);
         UI_Message ui_msg = ui_msg_go.GetComponent<UI_Message>();
         ui_msg.Init(message);
         return ui_msg;

@@ -33,25 +33,27 @@ public class UI_Message : MonoBehaviour
     }
     public bool IsWriting => writer.IsWriting;
     public bool IsFading { get; private set; } = false;
-
+    public float WritingTime { get; private set; } = 0f;
 
 
 
 
     private TalkCapacity talker;
-    public async void Init(Message message)
+    public void Init(Message message)
     {
         this.message = message;
         rectTransform.sizeDelta = new Vector2(message.width, rectTransform.sizeDelta.y);
-
+    }
+    public async void StartWriting()
+    {
         // ensure we have a talker reference to send status to
-        talker = GetComponentInParent<TalkCapacity>();
         if (talker == null)
         {
-            Debug.LogWarning($"(UI_Message) No TalkCapacity found in parent hierarchy of {this.gameObject.name}.");
+            Debug.LogWarning($"(UI_Message) No TalkCapacity was found at start writing for {this.gameObject.name}.");
         }
 
         // we start writing before any showing stuff
+        WritingTime = Time.unscaledTime;
         writer.Write(message.text);
 
         await transitioner.Show(); // first we show the canvas group
@@ -61,7 +63,7 @@ public class UI_Message : MonoBehaviour
         await System.Threading.Tasks.Task.Delay(WAITING_DURATION * 1000); // we wait before fading the message
         if (gameObject == null) { return; }
 
-        // ? we can also wait for the potential just above sibling ui_message to be fading before fading ?
+        // we also wait for the above sibling to be fading before we do
         int sibling_index = rectTransform.GetSiblingIndex();
         if (sibling_index > 0)
         {
@@ -84,7 +86,8 @@ public class UI_Message : MonoBehaviour
         if (talker == null) { return; }
         talker.OnMessageDestroyed(this);
     }
-
+    
+    // GETTERS / SETTERS
     public void SetColors(Color slot_color, Color text_color)
     {
         this.slot_color = slot_color;
@@ -98,5 +101,9 @@ public class UI_Message : MonoBehaviour
             if (graphic == null) { continue; }
             graphic.color = slot_color;
         }
+    }
+    public void SetTalker(TalkCapacity talker)
+    {
+        this.talker = talker;
     }
 }
