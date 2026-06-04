@@ -62,6 +62,7 @@ public class UI_Message : MonoBehaviour
         await transitioner.Show(); // first we show the canvas group
         while (writer.IsWriting) { await System.Threading.Tasks.Task.Yield(); } // then we wait for the writing to be done
         talker.OnMessageDoneTalking(this);
+        if (holder != null && holder != talker) { holder.OnMessageDoneTalking(this); }
 
         await System.Threading.Tasks.Task.Delay(WAITING_DURATION * 1000); // we wait before fading the message
         if (gameObject == null) { return; }

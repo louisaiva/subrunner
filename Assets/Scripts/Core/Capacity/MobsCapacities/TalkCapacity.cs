@@ -164,13 +164,12 @@ public class TalkCapacity : Capacity
         // and then we will receive msg status to hide it when it's done
         _ = main_transitioner.Show();
 
-        Capable.AnimPlayer.Play(talk_anim);
+        talker.Capable.AnimPlayer.Play(talk_anim);
     }
-    private void take_over_msg(UI_Message msg, TalkCapacity talker = null)
+    private void take_over_msg(UI_Message msg, TalkCapacity dude_who_talked)
     {
         msg.transform.SetParent(ui_messages_parent);
         msg.transform.localScale = Vector3.one; // important to reset the scale since we change parent
-        TalkCapacity dude_who_talked = talker != null ? talker : this;
         ui_messages.Add(msg, dude_who_talked);
         msg.SetHolder(this);
         msg.SetTalker(dude_who_talked);
@@ -301,7 +300,7 @@ public class TalkCapacity : Capacity
         if (Controller.Capable == null || Controller.Capable == this.Capable) { return; }
 
         // here we start invoking the talk method so the npc is talking randomly
-        InvokeRepeating("talk_randomly", UnityEngine.Random.Range(3, 10), 3f);
+        InvokeRepeating(nameof(talk_randomly), UnityEngine.Random.Range(3, 10), 3f);
     }
     public void ReceiveNewDialogMember(TalkCapacity new_member)
     {
@@ -348,6 +347,8 @@ public class TalkCapacity : Capacity
         if (talk_mode.Leader == null) { return; }
         if (talk_mode.Leader != this)
         {
+            Debug.Log($"(TalkCapacity) {Capable.ID} is quitting dialog led by {talk_mode.Leader.Capable.ID}.");
+            
             // we get back the messages we send to the leader to handle them again
             talk_mode = new TalkMode(TalkType.Monologue, this);
             foreach (KeyValuePair<UI_Message, TalkCapacity> kvp in talk_mode.Leader.GetCurrentMessages())
@@ -358,10 +359,11 @@ public class TalkCapacity : Capacity
             }
 
             // stop the potential random talk invoke
-            CancelInvoke("talk_randomly");
+            CancelInvoke(nameof(talk_randomly));
             return;
         }
 
+        Debug.Log($"(TalkCapacity) Leader {Capable.ID} is quitting dialog. We end it for everyone.");
         // reset things on the leader
         talk_mode = new TalkMode(TalkType.Monologue, this);
         foreach (TalkCapacity talk_member in talk_members)
@@ -379,11 +381,18 @@ public class TalkCapacity : Capacity
     }
     private void talk_randomly()
     {
-        // CancelInvoke("talk_randomly"); // we want only one invoke at a time
+
+        // we rotate over the leader
+        TalkCapacity talker = talk_mode.Leader;
+        if (talker == null) { return; }
+        if (talker == this) { return; }
+        Capable.Orientation = (talker.Capable.transform.position - Capable.transform.position).normalized;
+
+        // CancelInvoke(nameof(talk_randomly)); // we want only one invoke at a time
         SaySomething();
 
         // we invoke ourself again to keep talking randomly after some time
-        // Invoke("talk_randomly", UnityEngine.Random.Range(3, 10));
+        // Invoke(nameof(talk_randomly), UnityEngine.Random.Range(3, 10));
     }
 
     // UPDATE
@@ -392,6 +401,7 @@ public class TalkCapacity : Capacity
     private const float HORIZONTAL_MOUTH_OFFSET = .75f;
     public Vector2 MouthLocalPosition { get { return data.local_position + new Vector2(HORIZONTAL_MOUTH_OFFSET * (was_facing_right ? 1f : -1f), 0f); } }
     private bool was_facing_right = false;
+    public bool Facing { get { return was_facing_right; } }
     // private bool FacingRight { get { return Capable.Orientation.x >= 0f; } }
     private void Update()
     {
@@ -406,8 +416,7 @@ public class TalkCapacity : Capacity
         // update the local position
         Vector2 avg_local_pos = MouthLocalPosition;
         float max_talk_member_distance = 0f;
-        // if (talk_mode.Mode == TalkType.Monologue) { max_talk_member_distance = MAX_DIALOG_DISTANCE; } // we set this to max so we can later apply the max target msg group width, bcz we don't want update calculation for monologue !!!
-        if (talk_mode.Mode == TalkType.Dialog)
+        if (talk_mode.Mode == TalkType.Dialog && talk_mode.Leader == this)
         {
             List<TalkCapacity> members_to_remove = new List<TalkCapacity>();
             foreach (TalkCapacity talk_member in talk_members)
@@ -450,7 +459,7 @@ public class TalkCapacity : Capacity
 
 
         // update the msg group width
-        if (talk_mode.Mode == TalkType.Monologue)
+        if (talk_mode.Mode == TalkType.Monologue || talk_mode.Leader != this)
         {
             msg_parent_rect.sizeDelta = new Vector2(150f, msg_parent_rect.sizeDelta.y);
             return;
@@ -462,7 +471,7 @@ public class TalkCapacity : Capacity
             // max_distance == 0f -----------------------> width == 0f
             float target_width = (max_talk_member_distance / MAX_DIALOG_DISTANCE) * 75f;
             if (target_width < 50f) { target_width = 50f; } // we clamp to a minimum width so the msg don't look too weirdd
-            Debug.Log($"(TalkCapacity) max talk member distance : {max_talk_member_distance}, so width will be {target_width}");
+            // Debug.Log($"(TalkCapacity) max talk member distance : {max_talk_member_distance}, so width will be {target_width}");
             msg_parent_rect.sizeDelta = new Vector2(Mathf.Abs(target_width), msg_parent_rect.sizeDelta.y);
         }
     }
@@ -483,7 +492,7 @@ public class TalkCapacity : Capacity
     private bool calculate_facing()
     {
         if (talk_mode.Mode == TalkType.Monologue) { return Capable.Orientation.x >= 0f; }
-        else if (talk_members.Count == 0) { return was_facing_right; } // if dialog but no talk members, it means we are one of the slave talk capa, no need to do anything
+        else if (talk_mode.Leader != this) { return !talk_mode.Leader.Facing; }
 
         // else we want to look at the average position of the other talk members
         float avg_other_members_pos_x = 0f;
@@ -519,7 +528,12 @@ public class TalkCapacity : Capacity
         }
     }
 
+
     // MESSAGE STATUS
+    /* public void OnMessageStartedTalking(UI_Message msg)
+    {
+        Capable.AnimPlayer.Play(talk_anim);
+    } */
     public void OnMessageDoneTalking(UI_Message msg)
     {
         // we check if there are more messages still talking
