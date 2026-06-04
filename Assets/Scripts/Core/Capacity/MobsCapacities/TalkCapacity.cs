@@ -92,6 +92,16 @@ public class TalkCapacity : Capacity
     [Header("Components")]
     // private GameObject floating_dmg_provider;
     [SerializeField] private Transform ui_messages_parent;
+    private RectTransform _msg_parent_rect;
+    private RectTransform msg_parent_rect
+    {
+        get
+        {
+            if (_msg_parent_rect != null) { return _msg_parent_rect; }
+            _msg_parent_rect = ui_messages_parent.GetComponent<RectTransform>();
+            return _msg_parent_rect;
+        }
+    }
     [SerializeField] private Transitioner main_transitioner;
     [SerializeField] private Graphic notch;
 
@@ -100,15 +110,7 @@ public class TalkCapacity : Capacity
 
 
     // MAIN ENTRY POINT + TALKING
-    public override void Use(Capable capable)
-    {
-        /* // todo talking has animations ?
-        randomTalk();
-        CancelInvoke("randomTalk"); */
-
-        // monologue
-        SaySomething();
-    }
+    public override void Use(Capable capable) { SaySomething(); }
     public void SaySomething()
     {
         // get a random message from bank
@@ -160,6 +162,11 @@ public class TalkCapacity : Capacity
         msg.transform.localScale = Vector3.one; // important to reset the scale since we change parent
         ui_messages.Add(msg);
         msg.SetTalker(this);
+
+        // here we also set the facing right parameter
+        // todo : if we are in dialog we need to check which talker said what so that leader messages are properly oriented,
+        // but opposite to the other talkers, but for now we only have one talker in dialog so it doesn't matter
+        msg.SetFacing(was_facing_right);
     }
 
 
@@ -314,12 +321,21 @@ public class TalkCapacity : Capacity
     // UPDATE
     private const float LOCAL_POS_LERP_SPEED = 5f;
     private const float MAX_DIALOG_DISTANCE = 5f;
+    private const float HORIZONTAL_MOUTH_OFFSET = .75f;
+    public Vector2 MouthLocalPosition { get { return data.local_position + new Vector2(HORIZONTAL_MOUTH_OFFSET * (was_facing_right ? 1f : -1f), 0f); } }
+    private bool was_facing_right = false;
+    private bool FacingRight { get { return Capable.Orientation.x >= 0f; } }
     private void Update()
     {
         if (!Loaded) { return; }
 
-        Vector2 avg_local_pos = data.local_position;
 
+        // update ui_message orientation if we changed orientation
+        if (FacingRight != was_facing_right && Capable.Orientation.x != 0f) { SetFacing(FacingRight); }
+
+
+        // update the local position
+        Vector2 avg_local_pos = MouthLocalPosition;
         if (talk_mode.Mode == TalkType.Dialog)
         {
             List<TalkCapacity> members_to_remove = new List<TalkCapacity>();
@@ -334,7 +350,7 @@ public class TalkCapacity : Capacity
                 }
 
                 // convert to local position
-                avg_local_pos += (Vector2)(talk_member.transform.position - transform.position);
+                avg_local_pos += talk_member.MouthLocalPosition + (Vector2)(talk_member.Capable.transform.position - Capable.transform.position);
             }
 
             // we remove the far members from the dialog
@@ -357,7 +373,19 @@ public class TalkCapacity : Capacity
         }
         transform.localPosition = new_local_pos;
     }
+    public void SetFacing(bool facing_right)
+    {
+        was_facing_right = facing_right;
 
+        // // todo : change pivot of msg group + reset anchored position
+        msg_parent_rect.pivot = new Vector2(facing_right ? 0f : 1f, msg_parent_rect.pivot.y);
+        msg_parent_rect.anchoredPosition = new Vector2(0f, msg_parent_rect.anchoredPosition.y);
+
+        foreach (UI_Message ui_msg in ui_messages)
+        {
+            ui_msg.SetFacing(facing_right);
+        }
+    }
 
 
     // MESSAGE STATUS

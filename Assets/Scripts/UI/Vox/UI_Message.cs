@@ -12,38 +12,40 @@ public class UI_Message : MonoBehaviour
     // instance variables
     public Message message;
     
-    [Header("Colors")]
-    [SerializeField] private Color slot_color = Color.white;
-    [SerializeField] private Color text_color = Color.black;
+    // [Header("Colors")]
+    // [SerializeField] private Color slot_color = Color.white;
+    // [SerializeField] private Color text_color = Color.black;
 
 
     [Header("Components")]
     [SerializeField] private Transform slot;
     [SerializeField] private UI_Writer writer;
     [SerializeField] private Transitioner transitioner;
-    private RectTransform _rectTransform;
-    private RectTransform rectTransform
+    private RectTransform _bulleRectTransform;
+    private RectTransform bulleRect
     {
         get
         {
-            if (_rectTransform != null) { return _rectTransform; }
-            _rectTransform = GetComponent<RectTransform>();
-            return _rectTransform;
+            if (_bulleRectTransform != null) { return _bulleRectTransform; }
+            _bulleRectTransform = transform.Find("bulle").GetComponent<RectTransform>();
+            return _bulleRectTransform;
         }
     }
     public bool IsWriting => writer.IsWriting;
     public bool IsFading { get; private set; } = false;
     public float WritingTime { get; private set; } = 0f;
 
-
-
-
-    private TalkCapacity talker;
     public void Init(Message message)
     {
         this.message = message;
-        rectTransform.sizeDelta = new Vector2(message.width, rectTransform.sizeDelta.y);
+
+        // set the bulle size
+        bulleRect.sizeDelta = new Vector2(message.width, bulleRect.sizeDelta.y);
     }
+
+
+    // START WRITING
+    private TalkCapacity talker;
     public async void StartWriting()
     {
         // ensure we have a talker reference to send status to
@@ -64,10 +66,10 @@ public class UI_Message : MonoBehaviour
         if (gameObject == null) { return; }
 
         // we also wait for the above sibling to be fading before we do
-        int sibling_index = rectTransform.GetSiblingIndex();
+        int sibling_index = transform.GetSiblingIndex();
         if (sibling_index > 0)
         {
-            Transform above_sibling = rectTransform.parent.GetChild(sibling_index - 1);
+            Transform above_sibling = transform.parent.GetChild(sibling_index - 1);
             UI_Message above_sibling_msg = above_sibling.GetComponent<UI_Message>();
             if (above_sibling_msg != null)
             {
@@ -87,11 +89,13 @@ public class UI_Message : MonoBehaviour
         talker.OnMessageDestroyed(this);
     }
     
+
+
     // GETTERS / SETTERS
     public void SetColors(Color slot_color, Color text_color)
     {
-        this.slot_color = slot_color;
-        this.text_color = text_color;
+        // this.slot_color = slot_color;
+        // this.text_color = text_color;
 
         // we apply the colors
         writer.SetColor(text_color);
@@ -105,5 +109,16 @@ public class UI_Message : MonoBehaviour
     public void SetTalker(TalkCapacity talker)
     {
         this.talker = talker;
+    }
+    public void SetFacing(bool facing_right)
+    {
+        // todo : change anchors of bulle rect, if facing right the anchors are lefted
+
+        bulleRect.pivot = new Vector2(facing_right ? 0f : 1f, bulleRect.pivot.y);
+        bulleRect.anchorMin = new Vector2(facing_right ? 0f : 1f, bulleRect.anchorMin.y);
+        bulleRect.anchorMax = new Vector2(facing_right ? 0f : 1f, bulleRect.anchorMax.y);
+        bulleRect.anchoredPosition = new Vector2(0f, bulleRect.anchoredPosition.y);
+
+        // todo : we change the text anchor as well, if facing right the text is left aligned
     }
 }
