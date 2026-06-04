@@ -235,7 +235,7 @@ GameObject:
   - component: {fileID: 7608580222025435331}
   - component: {fileID: 6946560831050589668}
   m_Layer: 5
-  m_Name: knot
+  m_Name: notch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -351,9 +351,9 @@ MonoBehaviour:
     layer: 0
     tag: 
   log: 0
-  talk_on_start: 0
-  allow_bad_words: 1
-  talking_delay_range: {x: 30, y: 60}
+  talk_anim: talk
+  slot_color: {r: 0.03529412, g: 0.050980397, b: 0.03137255, a: 1}
+  text_color: {r: 1, g: 1, b: 1, a: 1}
   talks_random:
   - here we go again/.
   - well/.i'm not dead yet :D/lthat's a good start
@@ -481,3 +481,4 @@ MonoBehaviour:
   - fuck Google I'm gonna hack them
   ui_messages_parent: {fileID: 1095428341084810434}
   main_transitioner: {fileID: 4406431561521901691}
+  notch: {fileID: 6946560831050589668}

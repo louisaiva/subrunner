@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// TalkCapacity is a capacity that allows a being to talk
@@ -12,6 +13,10 @@ public class TalkCapacity : Capacity
 
     [Header("Talking parameters")]
     [SerializeField] private string talk_anim = "talk";
+
+    [Header("Colors")]
+    [SerializeField] private Color slot_color = Color.white;
+    [SerializeField] private Color text_color = Color.black;
 
 
     [Header("Talks (NEED TO BE IN A FILE OR IN MESSAGE LOADER)")]
@@ -83,6 +88,7 @@ public class TalkCapacity : Capacity
     // private GameObject floating_dmg_provider;
     [SerializeField] private Transform ui_messages_parent;
     [SerializeField] private Transitioner main_transitioner;
+    [SerializeField] private Graphic notch;
 
     private List<UI_Message> ui_messages = new List<UI_Message>();
 
@@ -102,12 +108,13 @@ public class TalkCapacity : Capacity
         // get a random message from bank
         UI_Message msg = MessageBank.Instance.CreateUIMessage(MessageBank.Instance.GetRandomMessage(), ui_messages_parent, this);
         ui_messages.Add(msg);
+        msg.SetColors(slot_color, text_color);
+        notch.color = slot_color;
 
         // here we need to make sure that the canvas transitionner is shown
         // and then we will receive msg status to hide it when it's done
         _ = main_transitioner.Show();
 
-        // todo we start talking anim here
         Capable.AnimPlayer.Play(talk_anim);
     }
 
@@ -121,7 +128,6 @@ public class TalkCapacity : Capacity
             if (ui_msg.IsWriting) { return; }
         }
 
-        // todo then we stop the anim player "talk" anim
         Capable.AnimPlayer.StopPlaying(talk_anim);
     }
     public void OnMessageFading(UI_Message msg)
@@ -167,6 +173,8 @@ public class TalkData : CapacityData
 
     // template parameters
     public string talk_anim_name;
+    public Color slot_color;
+    public Color text_color;
 
     // CONSTRUCTOR
     public TalkData(CapacityData parent) : base(parent) { }
@@ -177,6 +185,8 @@ public class TalkData : CapacityData
         return new TalkData(base.Duplicate() as CapacityData)
         {
             talk_anim_name = this.talk_anim_name,
+            slot_color = this.slot_color,
+            text_color = this.text_color,
         };
     }
 
@@ -185,6 +195,8 @@ public class TalkData : CapacityData
     {
         string details = "";
         details += $"  - talk anim name : {talk_anim_name}\n";
+        details += $"  - slot color : {slot_color}\n";
+        details += $"  - text color : {text_color}\n";
         return base.GetDetails() + details;
     }
 }
