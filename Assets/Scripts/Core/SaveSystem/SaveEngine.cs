@@ -162,6 +162,12 @@ public class SaveEngine : MonoBehaviour
                 tmp_log += $"- '{capables_data[i].id}' -------------- {(capables_data[i].capacities_ids != null ? capables_data[i].capacities_ids.Count : 0)} capacities  /  {(capables_data[i].inventory != null ? capables_data[i].inventory.ItemsCount() : 0)} items\n";
                 if (capables_data[i].capacities_ids != null) { capacities_ids.AddRange(capables_data[i].capacities_ids); }
                 if (capables_data[i].inventory != null) { capables_ids.AddRange(capables_data[i].inventory.GetAllItemsIds()); }
+
+                // also check for containers
+                if (capables_data[i] is ContainerData container_data && container_data.contained_capable_ids != null)
+                {
+                    capables_ids.AddRange(container_data.contained_capable_ids);
+                }
             }
             slog?.Log($"Saved {capables_data.Count} capables ----- iteration {iterations} :{tmp_log}");
             total_capables += capables_data.Count;

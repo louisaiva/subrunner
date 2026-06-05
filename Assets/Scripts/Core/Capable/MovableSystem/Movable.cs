@@ -231,8 +231,6 @@ public class Movable : Capable
 
     public void DisableMovements()
     {
-        if (this.HasEffect(Effect.BeingCarried)) { return; }
-
         ClearForces();
         Velocity = Vector2.zero;
         AddEffect(Effect.BeingCarried, -888f);

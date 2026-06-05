@@ -244,6 +244,11 @@ public class World : BSOD_System<World>
             return;
         }
         else { ChunkEngine.LazyInstance.InitPlayerChunk(chunk_id); } */
+
+        // we wait for the controller capable to be loaded
+        int frames_waited = 0;
+        while (Controller.Capable == null || !Controller.Capable.Loaded) { await Task.Yield(); frames_waited++; }
+        if (log) { Debug.Log($"(World) Player capable loaded after waiting {frames_waited} frames. Capable ID: {Controller.Capable.ID}"); }
         ChunkEngine.LazyInstance.RefreshPlayerChunk(Controller.Capable);
     }
     private string extract_world_json(string world_id)

@@ -72,6 +72,7 @@ public class CapableBank : MonoBehaviour
     [Header("Logs")]
     public bool log_types = false;
     public bool log_inventory_build = false;
+    public bool log_feet = false;
 
     // ACTIONS
     public Action<CapableData> OnCapableLoading = delegate { }; // fired BEFORE the data is loaded
@@ -223,6 +224,8 @@ public class CapableBank : MonoBehaviour
             if (force_is_trigger) { feet_data.circle_colliders[i].is_trigger = true; }
             ColliderBank.Instance.LoadCollider(feet_data.circle_colliders[i], feet);
         }
+
+        if (log_feet) { Debug.Log($"(CapableBank) Loaded feet data for capable {capable.ID}, box colliders count : {feet_data.box_colliders.Count}, circle colliders count : {feet_data.circle_colliders.Count}"); }
     }
 
 

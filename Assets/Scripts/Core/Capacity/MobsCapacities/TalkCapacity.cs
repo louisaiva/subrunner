@@ -179,7 +179,13 @@ public class TalkCapacity : Capacity
         // and then we will receive msg status to hide it when it's done
         _ = main_transitioner.Show();
 
-        talker.Capable.AnimPlayer.Play(talk_anim);
+        
+        // we get the right talk_anim
+        if (TryGetSiblingCapacity(out SitCapacity sit_capacity) && sit_capacity.IsSitting)
+        {
+            talker.Capable.AnimPlayer.Play("talk_sit");
+        }
+        else { talker.Capable.AnimPlayer.Play(talk_anim); }
 
         if (Controller.Capable == null || Controller.Capable == this.Capable) { return; }
         if (talker == this) { return; }
@@ -299,6 +305,7 @@ public class TalkCapacity : Capacity
         }
 
         Capable.AnimPlayer.StopPlaying(talk_anim);
+        Capable.AnimPlayer.StopPlaying("talk_sit");
     }
     public void OnMessageFading(UI_Message msg)
     {

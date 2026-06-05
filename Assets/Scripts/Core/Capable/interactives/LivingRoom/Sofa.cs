@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Sofa : Capable, Interactable, Sittable
+public class Sofa : Container, Interactable, Sittable
 {
 
     public InteractCapacity Interactor => null;
@@ -16,22 +16,39 @@ public class Sofa : Capable, Interactable, Sittable
     {
         // check if the interactor is the controlled one
         if (interactor != Controller.Capable) { return; }
+        if (!interactor.TryGetCapacity(out SitCapacity sit_capacity)) { return; }
+
+
+        // we check if we are already sitting on this sofa
+        if (sit_capacity.CurrentSofa == this)
+        {
+            // if we are, we exit the sofa
+            sit_capacity.ExitSofa();
+            return;
+        }
 
         // we sit on the sofa
-        interactor.GetCapacity<SitCapacity>()?.Sit(this);
+        sit_capacity.Sit(this);
     }
-
-
-
+    protected override void load_capable_accordingly(Capable capable)
+    {
+        // we sit on the sofa
+        capable.GetCapacity<SitCapacity>()?.Sit(this, instant: true);
+        // capable.AnimPlayer.Show();
+    }
 
     // DATA MANAGEMENT
     public override void LoadData(CapableData data)
     {
-        base.LoadData(data);
-        if (data is not SofaData sofa_data) { Debug.LogError($"(Sofa) {name} cannot load data because it's not a SofaData"); return; }
+        if (data is not SofaData sofa_data) { Debug.LogError($"(Sofa) {name} cannot load data because it's not a SofaData"); base.LoadData(data); return; }
 
+        // ! WE WANT TO SET THE LOCAL POSITIONS BEFORE calling base.LoadData()
+        // because load data calls load_capable_accordingly which call SitCapacity and so
+        // we need to have our position set :D
         local_sitting_position = sofa_data.local_sitting_position;
         local_standing_position = sofa_data.local_standing_position;
+
+        base.LoadData(data);
     }
     public override ICapableData GetStaticData()
     {
@@ -45,7 +62,7 @@ public class Sofa : Capable, Interactable, Sittable
     }
 }
 
-public class SofaData : CapableData
+public class SofaData : ContainerData
 {
     public Vector2 local_sitting_position;
     public Vector2 local_standing_position;
@@ -67,8 +84,8 @@ public class SofaData : CapableData
     public override string GetDetails()
     {
         string details = base.GetDetails();
-        details += $"local_sitting_position: {local_sitting_position}\n";
-        details += $"local_standing_position: {local_standing_position}\n";
+        details += $"  - local_sitting_position: {local_sitting_position}\n";
+        details += $"  - local_standing_position: {local_standing_position}\n";
         return details;
     }
 }

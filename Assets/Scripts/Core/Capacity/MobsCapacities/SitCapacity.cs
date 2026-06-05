@@ -3,8 +3,12 @@ using UnityEngine;
 
 public class SitCapacity : Capacity
 {
+
+    // todo : make this work with Container rather than Sofa, so we can use it for anything,
+    // like chairs, beds toilets etc
     private Sofa current_sofa;
     public Sofa CurrentSofa { get { return current_sofa;} }
+    public bool IsSitting { get { return current_sofa != null; } }
 
     private Coroutine zap_coroutine;
     private Coroutine sit_stand_coroutine;
@@ -12,7 +16,7 @@ public class SitCapacity : Capacity
 
 
     // SIT & STAND
-    public void Sit(Sofa sofa)
+    public void Sit(Sofa sofa, bool instant = false)
     {
         current_sofa = sofa;
 
@@ -22,9 +26,20 @@ public class SitCapacity : Capacity
         
         sorting_capacity.ReceiveMovable(movable, sofa.WorldSittingPosition);
 
-        // we show the sofa UI
-        UI_Manager.Instance.GetPool<UI_SofaPool>()?.ShowSofaUI(this);
+        // we show the sofa UI if we are on hud
+        if (GameManager.State == GameState.Gaming)
+        {
+            UI_Manager.Instance.GetPool<UI_SofaPool>()?.ShowSofaUI(this);
+        }
 
+        // sit instantly (when loading game)
+        if (instant)
+        {
+            sitInstantly();
+            return;
+        }
+
+        // else we play the sit animation
         StopAllCoroutines();
         sit_stand_coroutine = StartCoroutine(sitCoroutine());
     }
@@ -56,7 +71,7 @@ public class SitCapacity : Capacity
         AnimPlayer.Play("idle_sit");
         sit_stand_coroutine = null;
     }
-    private IEnumerator standCoroutine()
+    private IEnumerator standCoroutine(bool add_force = false)
     {
         if (log) { Debug.Log($"(SitCapacity) Exiting sofa {current_sofa.ID}"); }
         if (current_sofa == null) { yield break; }
@@ -91,13 +106,17 @@ public class SitCapacity : Capacity
 
         // we put a little force on the player
         movable.Orientation = Vector2.down;
-        movable.AddForce(new Force("stand_from_sofa", Vector2.down, 60f));
+        if (add_force) { movable.AddForce(new Force("stand_from_sofa", Vector2.down, 60f)); }
 
         current_sofa = null;
         sit_stand_coroutine = null;
     }
-
-
+    private void sitInstantly()
+    {
+        // we make the AnimPlayer play the idle sit animation
+        AnimPlayer.Play("idle_sit");
+        sit_stand_coroutine = null;
+    }
 
 
 

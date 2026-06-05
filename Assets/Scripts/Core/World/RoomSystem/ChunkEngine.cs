@@ -699,6 +699,8 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
     }
     public void RefreshPlayerChunk(Capable capable)
     {
+        
+
         // we find the best chunk for the capable's position and set it as the player chunk
         Vector2 capable_position = capable.data.Position;
         ChunkData chunk = GetChunkAtPosition(capable_position);

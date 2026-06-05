@@ -15,27 +15,47 @@ using UnityEngine;
     public string player_chunk;
 
     // last spawn
-    public string last_sofa_id;
+    public string container_id;
 
     // UpdatePlayerLevelRoomChunk
     public void UpdatePlayerLevelRoomChunk(Loggable<SaveEngine> slog = null)
     {
         if (!ChunkEngine.HasInstance)
         {
-            slog?.Warning("No ChunkEngine instance, cannot update player level/room/chunk in controller data.");
+            slog?.Error("No ChunkEngine instance, cannot update player level/room/chunk in controller data.");
             return;
         }
 
         if (string.IsNullOrEmpty(controlled_capable_id))
         {
-            slog?.Warning("No controlled capable id in controller data, cannot update player level/room/chunk.");
+            slog?.Error("No controlled capable id in controller data, cannot update player level/room/chunk.");
             return;
         }
 
+        Container potential_container = null;
         if (!ChunkEngine.LazyInstance.TryGetCapableChunk(controlled_capable_id, out ChunkData chunk))
         {
-            slog?.Warning($"Could not find chunk for capable id '{controlled_capable_id}', cannot update player level/room/chunk in controller data.");
-            return;
+            // maybe the capable is in a container, so we try to find the container and get its chunk
+
+            if (Controller.Capable == null) {}
+            else if (!Controller.Capable.TryGetCapacity(out SitCapacity sitter)) {}
+            else if (sitter.CurrentSofa == null) {}
+            else
+            {
+                Container container = sitter.CurrentSofa;
+                if (!ChunkEngine.LazyInstance.TryGetCapableChunk(container.ID, out chunk))
+                {
+                    slog?.Error($"Could not find chunk for container id '{container.ID}', cannot update player level/room/chunk in controller data.");
+                    return;
+                }
+                potential_container = container;
+            }
+
+            if (potential_container == null)
+            {
+                slog?.Error($"Could not find chunk for capable id '{controlled_capable_id}', cannot update player level/room/chunk in controller data.");
+                return;
+            }
         }
 
         player_chunk = chunk.id;
@@ -46,6 +66,16 @@ using UnityEngine;
         {
             slog?.Warning($"Could not find level for room id '{player_room}', cannot update player level in controller data.");
             return;
+        }
+
+        // updates container
+        if (potential_container != null)
+        {
+            container_id = potential_container.ID;
+        }
+        else
+        {
+            container_id = null;
         }
 
         player_level = level.id;
@@ -63,7 +93,7 @@ using UnityEngine;
             player_level = this.player_level,
             player_room = this.player_room,
             player_chunk = this.player_chunk,
-            last_sofa_id = this.last_sofa_id
+            container_id = this.container_id
         };
     }
 
@@ -76,7 +106,7 @@ using UnityEngine;
                          $" - player level : {player_level}\n" +
                          $" - player room : {player_room}\n" +
                          $" - player chunk : {player_chunk}\n" +
-                         $" - last sofa id : {last_sofa_id}";
+                         $" - container id : {container_id}";
         return details;
     }
 }

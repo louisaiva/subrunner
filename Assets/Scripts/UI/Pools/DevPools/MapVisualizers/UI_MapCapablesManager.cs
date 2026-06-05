@@ -37,6 +37,12 @@ public class UI_MapCapablesManager : MonoBehaviour
         List<CapableData> cdata = LevelEngine.Instance.GetCapablesDataOfLevel(level_id);
         foreach (CapableData cap in cdata)
         {
+            if (cap == null || string.IsNullOrEmpty(cap.id))
+            {
+                Debug.LogWarning($"(CapableVisualizerManager) could not create visu for capable with id '{cap?.id}' and kind '{cap?.kind}'");
+                continue;
+            }
+
             // we create a visu for this capable
             create_visu_for_capable(cap);
 

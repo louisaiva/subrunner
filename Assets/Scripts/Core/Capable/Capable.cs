@@ -477,6 +477,8 @@ public class Capable : MonoBehaviour, Debuggable
         {
             AddEffect(data.effects[i], data.effects_ttl[i]);
         }
+        // if (this is Movable movable && HasEffect(Effect.BeingCarried)) { movable.DisableMovements(); }
+        
 
         // we load the capacities
         if (CapableEngine.Instance.log_loading_extended) { Debug.Log($"(Capable - LoadData) Calling CapacitySystem loading for capacities : {string.Join(" ", data.capacities_ids)}"); }

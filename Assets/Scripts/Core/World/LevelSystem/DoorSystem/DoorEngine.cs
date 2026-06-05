@@ -250,6 +250,22 @@ public class DoorEngine : MonoBehaviour
             }
             if (log_visibility) { Debug.Log($"(DoorEngine) Showing capable {data.id} in room {room_data.id}"); }
             data.Capable.AnimPlayer.Show();
+
+            if (data is ContainerData cdata && cdata.contained_capable_ids != null)
+            {
+                foreach (string id in cdata.contained_capable_ids)
+                {
+                    // we try to get the capable data of the contained capable, if it exists
+                    CapableData contained_data = CapableEngine.Instance.GetCapableDataFromID(id);
+                    if (contained_data == null) { continue; }
+                    if (contained_data.Capable == null || contained_data.Capable.AnimPlayer == null)
+                    {
+                        if (log_visibility) { Debug.LogWarning($"(DoorEngine) Contained capable {id} in container {data.id} in room {room_data.id} {(contained_data.Capable != null ? "has null AnimPlayer" : "is not loaded, we don't show it")}"); }
+                        continue;
+                    }
+                    contained_data.Capable.AnimPlayer.Show();
+                }
+            }
         }
 
         // show all the doors
@@ -287,6 +303,22 @@ public class DoorEngine : MonoBehaviour
             if (data is DoorData) { continue; }
             if (data.Capable == null || data.Capable.AnimPlayer == null) { continue; }
             data.Capable.AnimPlayer.Hide();
+
+            if (data is ContainerData cdata && cdata.contained_capable_ids != null)
+            {
+                foreach (string id in cdata.contained_capable_ids)
+                {
+                    // we try to get the capable data of the contained capable, if it exists
+                    CapableData contained_data = CapableEngine.Instance.GetCapableDataFromID(id);
+                    if (contained_data == null) { continue; }
+                    if (contained_data.Capable == null || contained_data.Capable.AnimPlayer == null)
+                    {
+                        if (log_visibility) { Debug.LogWarning($"(DoorEngine) Contained capable {id} in container {data.id} in room {room_data.id} {(contained_data.Capable != null ? "has null AnimPlayer" : "is not loaded, we don't show it")}"); }
+                        continue;
+                    }
+                    contained_data.Capable.AnimPlayer.Hide();
+                }
+            }
         }
 
         // hide the doors linked to the room if the other room linked to the door is not visible

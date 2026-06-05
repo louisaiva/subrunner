@@ -14,7 +14,7 @@ public class UI_SofaPool : UI_SlottablePool
         this.sit_capacity = sit_capacity;
 
         // then we show the ui_sofa
-        UI_Manager.Instance.SwitchTo("sofa");
+        UI_Manager.Instance.StackPool("sofa");
     }
 
     // EXITING SOFA (HAPPENS WHEN SWITCHING TO ANOTHER UI_POOL)

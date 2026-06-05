@@ -911,8 +911,22 @@ public class CapableEngine : BSOD_System<CapableEngine>
         ChunkEngine.Instance.TryGetCapableChunk(data.id, out chunk);
         if (chunk == null)
         {
-            if (log_visibility) { Debug.LogWarning($"(CapableSystem - Load) Capable {data.id} is not in any room ?! --> CANT SHOW / HIDE"); }
-            return;
+            // we check if the capable has a sit capacity
+            if (!capable.TryGetCapacity(out SitCapacity sit_capa))
+            {
+                if (log_visibility) { Debug.LogWarning($"(CapableSystem - Load) Capable {data.id} is not in any room ?! --> CANT SHOW / HIDE"); }
+                return;
+            }
+            if (sit_capa.CurrentSofa == null)
+            {
+                if (log_visibility) { Debug.LogWarning($"(CapableSystem - Load) Capable {data.id} has a SitCapacity but is not currently sitting on any sofa ?! --> CANT SHOW / HIDE"); }
+                return;
+            }
+            if (!ChunkEngine.Instance.TryGetCapableChunk(sit_capa.CurrentSofa.ID, out chunk))
+            {
+                if (log_visibility) { Debug.LogWarning($"(CapableSystem - Load) Capable {data.id} is sitting on sofa {sit_capa.CurrentSofa.ID} but we cant find the chunk of this sofa ?! --> CANT SHOW / HIDE"); }
+                return;
+            }
         }
 
         if (!RoomEngine.Instance.DoorEngine.IsRoomVisible(chunk.room_id))

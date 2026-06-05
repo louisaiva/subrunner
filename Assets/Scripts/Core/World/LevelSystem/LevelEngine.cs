@@ -208,7 +208,8 @@ public class LevelEngine : BSOD_System<LevelEngine>
         // we also add the controller capable if the level is the current level
         if (level_id == CurrentLevelID && Controller.LazyInstance != null && Controller.Capable != null)
         {
-            capable_datas.Add(Controller.Capable.data);
+            CapableData controller_capable_data = CapableEngine.Instance.GetCapableDataFromID(Controller.Capable.ID);
+            if (controller_capable_data != null) { capable_datas.Add(controller_capable_data); }
         }
 
         return capable_datas;

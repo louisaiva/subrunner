@@ -508,6 +508,22 @@ public class Controller : MonoBehaviour
         if (respawn_template) { Debug.LogError("(Controller) Respawning template on world loading is enabled! You will always lose your inventory & position! If you don't want this, please download another subrunner version :D"); }
         #endif
 
+
+        // if we have a container id we need to load it instantly because otherwise we won't be able to load
+        // the controller capable which is inside the container
+        if (!string.IsNullOrEmpty(data.container_id))
+        {
+            if (!CapableBank.LazyInstance.TryGetLoadedCapable(data.container_id, out Capable container_capable))
+            {
+                container_capable = CapableEngine.LazyInstance.LoadCapableInstantly(data.container_id);
+                if (container_capable == null)
+                {
+                    Debug.LogError($"(Controller) Could not load instantly container capable '{data.container_id}' so we probably won't be able to load controller");
+                }
+            }
+        }
+
+
         string capable_id = data.controlled_capable_id;
         if (string.IsNullOrEmpty(capable_id)) { capable_id = data.capable_template; }
         if (string.IsNullOrEmpty(capable_id))
