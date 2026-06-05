@@ -128,4 +128,5 @@ public enum GameState
     Gaming,
     Paused,
     Building, // inside the world builder
+    Cinematic,
 }

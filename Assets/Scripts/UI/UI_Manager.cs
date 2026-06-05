@@ -197,6 +197,7 @@ public class UI_Manager : Singleton<UI_Manager>
     private IEnumerator switch_pool_coroutine(List<UI_Pool> stack, bool force = false)
     {
         // we check that we are not switching to the same pool
+        // if (stack.Count > 0)
         UI_Pool pool = stack[stack.Count - 1];
         if (pool == current_pool) { yield break; }
 

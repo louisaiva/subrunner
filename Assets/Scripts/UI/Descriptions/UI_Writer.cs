@@ -6,6 +6,11 @@ using System.Collections.Generic;
 [RequireComponent(typeof(TextMeshProUGUI))]
 public class UI_Writer : MonoBehaviour
 {
+    [Header("Auto writing parameters")]
+    [SerializeField] private bool write_on_enable = false;
+    [SerializeField] private string raw_writing_on_enable = "";
+    [SerializeField] private float on_enable_delay = 0f;
+
     [Header("Writing")]
     private int cursor = 0;
     private string current_raw_writing = "";
@@ -48,8 +53,21 @@ public class UI_Writer : MonoBehaviour
     }
     private void OnEnable()
     {
-        if (cursor == 0) { return; } // we finished writing last time so we don't write again
+        if (write_on_enable && !string.IsNullOrEmpty(raw_writing_on_enable))
+        {
+            // we empty the label
+            label.text = "";
+
+            if (on_enable_delay <= 0) { Write(raw_writing_on_enable); }
+            else { StartCoroutine(write_on_enable_delay()); }
+        }
+        else if (cursor == 0) { return; } // we finished writing last time so we don't write again
         writing_coroutine = StartCoroutine(write());
+    }
+    private IEnumerator write_on_enable_delay()
+    {
+        yield return new WaitForSecondsRealtime(on_enable_delay);
+        Write(raw_writing_on_enable);
     }
 
     // COLOR

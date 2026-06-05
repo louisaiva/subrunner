@@ -159,6 +159,13 @@ public class TalkCapacity : Capacity
 
         talk_leader.WriteMessage(msg, this);
     }
+    public void Say(string message_id)
+    {
+        // get a random message from bank
+        UI_Message msg = MessageBank.Instance.CreateUIMessage(message_id);
+        if (msg == null) { Debug.LogError($"(TalkCapacity) No message found with id {message_id}"); return; }
+        WriteMessage(msg, this);
+    }
     public void WriteMessage(UI_Message msg, TalkCapacity talker)
     {
         // notch.color = slot_color;

@@ -29,6 +29,9 @@ public class CameraFollow : Singleton<CameraFollow>
     [SerializeField] private float default_size = 3f;
     private float target_size = 3f;
 
+    [Header("Logs")]
+    [SerializeField] private bool log_target = false;
+
     private void Start()
     {
         simple_target = FindFirstObjectByType<SimpleCameraController>(FindObjectsInactive.Include);
@@ -46,11 +49,19 @@ public class CameraFollow : Singleton<CameraFollow>
     // CAPABLE TARGET SETTER
     public void ChangeCapableTarget(Capable new_target, bool tp = false)
     {
+        if (log_target) { Debug.Log($"(CameraFollow) Changing capable target to {(new_target != null ? new_target.ID : "null")}"); }
         if (new_target == null) { return; }
         target = new_target;
         capable_rb = target.GetComponent<Rigidbody2D>();
         if (tp) { transform.position = new Vector3(target.transform.position.x, target.transform.position.y, transform.position.z); }
         // if not tp we will smoothly lerp to the new target in the update loop
+    }
+    public void RemoveCapableTarget()
+    {
+        if (target == null) { return; }
+        target = null;
+        capable_rb = null;
+        if (log_target) { Debug.Log($"(CameraFollow) Removed capable target"); }
     }
 
     // UPDATE
@@ -75,7 +86,15 @@ public class CameraFollow : Singleton<CameraFollow>
     }
     private void lerp_to_capable()
     {
-        if (Controller.Capable == null || target == null || Controller.LazyInstance.PIC.InputsDisabled) { capable_rb = null; target = null; return; }
+        if (Controller.Capable == null || Controller.LazyInstance.PIC.InputsDisabled)
+        {
+            RemoveCapableTarget();
+            return;
+        }
+        else if (target == null)
+        {
+            ChangeCapableTarget(Controller.Capable, tp: false);
+        }
 
         // calcule le mouvement de la cam en X
         float final_x = target.transform.position.x;

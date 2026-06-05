@@ -478,6 +478,10 @@ public class Controller : MonoBehaviour
         CapableEngine.LazyInstance.OnCapableDespawned += handle_capable_despawned;
 
         if (log) { Debug.Log($"(Controller) CONTROLLER SUCCESSFULLY LOADED for '{world_id}' !\n{data.GetDetails()}"); }
+
+
+        // now we can launch the "intro" cinematics
+        UI_Manager.Instance.GetPool<UI_CinematicPool>()?.PlayCinematic("intro");
     }
     public async Awaitable UnloadWorldData(bool log)
     {

@@ -436,6 +436,11 @@ public class World : BSOD_System<World>
         }
         return generated_ids_counters[prefix];
     }
+    public string GetPrefix(string id) { return get_id_prefix(id); }
+    public bool DoesIDMatchPrefix(string id, string prefix)
+    {
+        return get_id_prefix(id) == prefix;
+    }
 }
 
 
