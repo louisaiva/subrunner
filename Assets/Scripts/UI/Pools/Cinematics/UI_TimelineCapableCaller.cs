@@ -8,22 +8,27 @@ public class UI_TimelineCapableCaller : MonoBehaviour
     [SerializeField] private Capable capable;
     public Capable Capable { get { return capable; } }
 
-    public void ConnectCapable()
+    public void Init()
+    {
+        if (!ConnectCapable()) { return; } 
+        gather_move_positions();
+
+        Debug.Log("(UI_TimelineCapableCaller) Connected capable with id '" + capable_id + "', and found " + move_positions.Count + " move positions");
+    }
+    public bool ConnectCapable()
     {
         // check if we have a capable id
-        if (string.IsNullOrEmpty(capable_id)) { return; }
-
+        if (string.IsNullOrEmpty(capable_id)) { return false; }
         if (capable_id == "controller")
         {
             if (Controller.Capable == null)
             {
                 Debug.LogError("UI_TimelineCapableCaller: Controller has no capable");
-                return;
+                return false;
             }
             capable = Controller.Capable;
-            return;
+            return true;
         }
-
         if (!CapableBank.Instance.TryGetLoadedCapable(capable_id, out Capable found_capable))
         {
             Debug.LogWarning("UI_TimelineCapableCaller: No capable found with id " + capable_id);
@@ -32,31 +37,48 @@ public class UI_TimelineCapableCaller : MonoBehaviour
             if (!CapableBank.Instance.TryGeFirstCapableWithPrefix(World.Instance.GetPrefix(capable_id), out found_capable))
             {
                 Debug.LogError("UI_TimelineCapableCaller: No capable found with prefix " + capable_id);
-                return;
+                return false;
             }
         }
-
         capable = found_capable;
 
         // todo : we switch the brain mode of the capable to CinematicMode
+
+        return true;
     }
 
     // MOVING
 
     [Header("Positions for moving the capable")]
-    [SerializeField] private List<Transform> position_transforms = new List<Transform>();
+    // [SerializeField] private List<Transform> position_transforms = new List<Transform>();
+    private List<Transform> move_positions = new List<Transform>();
+    [SerializeField] private List<Transform> positions_parent;
+    private void gather_move_positions()
+    {
+        move_positions.Clear();
+        // gather the positions
+        if (positions_parent == null || positions_parent.Count == 0) { return; }
+        
+        foreach (Transform parent in positions_parent)
+        {
+            foreach (Transform child in parent)
+            {
+                move_positions.Add(child);
+            }
+        }
+    }
     public void MoveCapableToNextPosition()
     {
         if (capable == null) { Debug.LogError("UI_TimelineCapableCaller: No capable connected"); return; }
-        if (position_transforms.Count == 0) { Debug.LogWarning("UI_TimelineCapableCaller: No position transforms set"); return; }
+        if (move_positions.Count == 0) { Debug.LogWarning("UI_TimelineCapableCaller: No position transforms set"); return; }
 
         // for now we simply override the position
-        capable.transform.position = position_transforms[0].position;
+        capable.transform.position = move_positions[0].position;
 
         // then we move the used transform to the end of the list
-        Transform used_transform = position_transforms[0];
-        position_transforms.RemoveAt(0);
-        position_transforms.Add(used_transform);
+        Transform used_transform = move_positions[0];
+        move_positions.RemoveAt(0);
+        move_positions.Add(used_transform);
     }
     public void MoveCapableToPosition(int position_index)
     {
@@ -66,13 +88,13 @@ public class UI_TimelineCapableCaller : MonoBehaviour
         // todo : or a small GOTO capacity that will handle the walk for us
 
         // for now we simply override the position
-        if (position_index < 0 || position_index >= position_transforms.Count)
+        if (position_index < 0 || position_index >= move_positions.Count)
         {
             Debug.LogError("UI_TimelineCapableCaller: Position index out of range");
             return;
         }
 
-        capable.transform.position = position_transforms[position_index].position;
+        capable.transform.position = move_positions[position_index].position;
     }
     public void SetCapableSpeed(float speed)
     {
@@ -158,7 +180,16 @@ public class UI_TimelineCapableCaller : MonoBehaviour
 
         sit_capacity.Sit(sofa);
     }
+    public void ExitSofa()
+    {
+        if (!capable.TryGetCapacity(out SitCapacity sit_capacity))
+        {
+            Debug.LogError("(UI_TimelineCapableCaller - ExitSofa) Capable does not have a SitCapacity");
+            return;
+        }
 
+        sit_capacity.ExitSofa();
+    }
 
     // TALK
     [Header("Dialogs")]
