@@ -58,22 +58,22 @@ public class UI_LifeXPHandler : MonoBehaviour
     // UPDATE FILL LOW METHODS
     private void update_life_fill()
     {
-        // on récupère les infos du perso
-        float life_percent = Controller.Perso.GetCapacity<HealthCapacity>().LifePourcent;
+        if (Controller.Perso == null) { return; }
+        if (!Controller.Perso.TryGetCapacity(out HealthCapacity health_capa)) { return; }
 
         // on met à jour la taille du fill
-        float life_width = life_fill_max_width * life_percent;
+        float life_width = life_fill_max_width * health_capa.LifePourcent;
 
         // on met à jour la taille du fill
         life_fill.sizeDelta = new Vector2(life_width, life_fill_height);
     }
     private void update_xp_fill()
     {
-        // on récupère les infos du perso
-        float xp_percent = Controller.Perso.GetCapacity<ExpCapacity>().XPPourcent;
+        if (Controller.Perso == null) { return; }
+        if (!Controller.Perso.TryGetCapacity(out ExpCapacity exp_capa)) { return; }
 
         // on met à jour la taille du fill
-        float xp_width = xp_fill_max_width * xp_percent;
+        float xp_width = xp_fill_max_width * exp_capa.XPPourcent;
 
         // on met à jour la taille du fill
         xp_fill.sizeDelta = new Vector2(xp_width, xp_fill_height);

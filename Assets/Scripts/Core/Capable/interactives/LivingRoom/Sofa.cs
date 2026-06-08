@@ -34,7 +34,6 @@ public class Sofa : Container, Interactable, Sittable
     {
         // we sit on the sofa
         capable.GetCapacity<SitCapacity>()?.Sit(this, instant: true);
-        // capable.AnimPlayer.Show();
     }
 
     // DATA MANAGEMENT

@@ -133,14 +133,14 @@ public class AnimPlayer : MonoBehaviour
         AnimCapacityPriority capacity_priority = getAnimCapacityPriority(capacity);
         if (capacity_priority == null)
         {
-            if (log) { Debug.LogWarning($"(AnimPlayer - {Capable.name}) The capacity " + capacity + " doesn't exist in the anim_capacity_priorities list"); }
+            if (log) { Debug.LogWarning($"(AnimPlayer - {Capable.ID}) The capacity " + capacity + " doesn't exist in the anim_capacity_priorities list"); }
             return null;
         }
 
         // we check if the index is < than current prio we don't play it
         if (current_capacity_priority != null && capacity_priority.priority < current_capacity_priority.priority)
         {
-            if (log_pile) { Debug.LogWarning($"(AnimPlayer - {Capable.name}) The capacity " + capacity + " has a lower priority than the current one (" + current_capacity_priority.priority + ")"); }
+            if (log_pile) { Debug.LogWarning($"(AnimPlayer - {Capable.ID}) The capacity " + capacity + " has a lower priority than the current one (" + current_capacity_priority.priority + ")"); }
             return null;
         }
 
@@ -155,10 +155,10 @@ public class AnimPlayer : MonoBehaviour
         Anim anim = AnimBank.Instance.GetAnim(anim_name);
         if (log)
         {
-            Debug.Log($"(AnimPlayer - {Capable.name}) Bank found anim : " + anim.name
+            Debug.Log($"(AnimPlayer - {Capable.ID}) Playing anim : " + anim.name
                 + (anim_name == anim.name
-                ? ""
-                : " (" + anim_name + " was asked)"));
+                ? " (bank found exact match)"
+                : " (" + anim_name + " was asked to bank)"));
         }
 
         // we check if this anim is a single frame anim
@@ -181,7 +181,7 @@ public class AnimPlayer : MonoBehaviour
         {
             if (log)
             {
-                Debug.LogWarning($"(AnimPlayer - {Capable.name}) The animation " + anim.name + " is already playing at frame " + current_frame);
+                Debug.LogWarning($"(AnimPlayer - {Capable.ID}) The animation " + anim.name + " is already playing at frame " + current_frame);
             }
             return current_anim;
         }
@@ -221,9 +221,9 @@ public class AnimPlayer : MonoBehaviour
         Anim anim = AnimBank.Instance.GetAnim(anim_name);
         if (log)
         {
-            Debug.Log($"(AnimPlayer - {Capable.name}) Bank found anim : " + anim.name
+            Debug.Log($"(AnimPlayer - {Capable.ID}) Playing next pile anim : " + anim.name
                 + (anim_name == anim.name
-                ? ""
+                ? " (exact match)"
                 : " (" + anim_name + " was asked)"));
         }
 
@@ -261,7 +261,6 @@ public class AnimPlayer : MonoBehaviour
     public void StopPlaying(string capacity) { StopPlaying(capacity, false); }
     public void StopPlaying(string capacity, bool dont_stop_if_currently_playing = false)
     {
-
         // we get the anim capa prio
         AnimCapacityPriority priority = getAnimCapacityPriority(capacity);
         if (priority == null)
@@ -271,7 +270,13 @@ public class AnimPlayer : MonoBehaviour
         }
 
         // we make it stop playing
+        if (priority.capacity_playing != capacity)
+        {
+            if (log_pile) { Debug.LogWarning("(AnimPlayer - StopPlaying) The capacity " + capacity + " is not currently playing"); }
+            return;
+        }
         priority.capacity_playing = "";
+        if (log) { Debug.Log($"(AnimPlayer - {Capable.ID}) Stopping " + capacity); }
 
         // we check if we have to brutally stop the current playing animation
         if (dont_stop_if_currently_playing || current_capacity != capacity) { return; }
@@ -378,7 +383,7 @@ public class AnimPlayer : MonoBehaviour
         AnimCapacityPriority capacity_priority = getAnimCapacityPriority(capacity);
         if (capacity_priority == null)
         {
-            if (log_pile) { Debug.LogWarning("(AnimPlayer - AddToPile) The capacity " + capacity + " doesn't exist in the anim_capacity_priorities list"); }
+            if (log_pile) { Debug.LogWarning("(AnimPlayer - " + Capable.ID + ") The capacity " + capacity + " doesn't exist in the anim_capacity_priorities list"); }
             return;
         }
 
@@ -388,14 +393,14 @@ public class AnimPlayer : MonoBehaviour
         // we check if the index is >= than current prio we play it also
         if (capacity_priority.priority >= current_capacity_priority.priority)
         {
-            if (log_pile) { Debug.LogWarning("(AnimPlayer - AddToPile) The capacity " + capacity + " has a higher priority than the current one. we play it rn"); }
+            if (log_pile) { Debug.LogWarning("(AnimPlayer - " + Capable.ID + ") The capacity " + capacity + " has a higher priority than the current one. we play it rn"); }
             Play(capacity);
             return;
         }
 
         // else we don't want to play it rn we simply add it to the pile for it to be played next
         capacity_priority.capacity_playing = capacity;
-        if (log_pile) { Debug.Log("(AnimPlayer - AddToPile) Added " + capacity + " to the pile"); }
+        if (log) { Debug.Log("(AnimPlayer - " + Capable.ID + ") Added " + capacity + " to the pile"); }
     }
     public void ClearIdles()
     {
@@ -747,6 +752,8 @@ public class AnimPlayer : MonoBehaviour
     /// <returns></returns>
     public AnimPlayerData GetStaticAnimData()
     {
+        re_index_priorities();
+
         // get basic player data
         AnimPlayerData data = new AnimPlayerData
         {

@@ -72,11 +72,10 @@ public class Container : Capable
     }
     public override ICapableData GetStaticData()
     {
-        ContainerData static_data = new ContainerData((CapableData)base.GetStaticData())
-        {
-            contained_capable_ids = new List<string>(this.contain_data.contained_capable_ids)
-        };
-
+        ContainerData static_data = new ContainerData((CapableData)base.GetStaticData());
+        // Debug.Log($"(Container) GetStaticData of {name} of type {static_data.GetType().Name} base data:\n{static_data.GetDetails()}");
+        if (this.data == null || this.data is not ContainerData contain_data) { return static_data; }
+        static_data.contained_capable_ids = new List<string>(contain_data.contained_capable_ids);
         return static_data;
     }
 }

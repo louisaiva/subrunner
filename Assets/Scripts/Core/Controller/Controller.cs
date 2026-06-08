@@ -77,9 +77,9 @@ public class Controller : MonoBehaviour
     
     [Header("Logs")]
     [SerializeField] private bool log;
-    // [SerializeField] private bool log_ui_attachment;
-    // [SerializeField] private bool enable_controller_inventory_logs;
     [SerializeField] private bool log_perso;
+    // [SerializeField] private bool enable_controller_inventory_logs;
+    [SerializeField] private bool enable_controller_animplayer_logs;
 
 
     ///
@@ -210,6 +210,11 @@ public class Controller : MonoBehaviour
             }
         }
         if (capable is Perso perso) { _perso = (PersoData)perso.data; if (log_perso) {Debug.Log($"(Controller) new perso controlled: {perso.ID}, Controller.Perso is now {Controller.Perso.ID}"); } }
+
+        if (enable_controller_animplayer_logs)
+        {
+            capable.AnimPlayer.log = true;
+        }
 
         // next we uncontrol the current capable if there is one
         uncontrol();

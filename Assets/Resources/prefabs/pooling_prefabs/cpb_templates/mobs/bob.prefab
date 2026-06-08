@@ -458,8 +458,14 @@ MonoBehaviour:
   - priority: 5
     capacity_playing: 
     capacities:
-    - idle_sit
     - talk
+    lock_orientation: 0
+    one_shot: 0
+  - priority: 5
+    capacity_playing: 
+    capacities:
+    - idle_sit
+    - talk_sit
     lock_orientation: 0
     one_shot: 0
   - priority: 5

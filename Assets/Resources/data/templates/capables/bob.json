@@ -76,14 +76,23 @@
                 "priority": 5,
                 "capacity_playing": "",
                 "capacities": [
-                    "idle_sit",
                     "talk"
                 ],
                 "lock_orientation": false,
                 "one_shot": false
             },
             {
-                "priority": 5,
+                "priority": 6,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle_sit",
+                    "talk_sit"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 7,
                 "capacity_playing": "",
                 "capacities": [
                     "zap_tv",
@@ -97,7 +106,7 @@
                 "one_shot": true
             },
             {
-                "priority": 5,
+                "priority": 8,
                 "capacity_playing": "",
                 "capacities": [
                     "die"

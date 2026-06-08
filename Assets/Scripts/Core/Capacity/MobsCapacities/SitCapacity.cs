@@ -114,7 +114,7 @@ public class SitCapacity : Capacity
     private void sitInstantly()
     {
         // we make the AnimPlayer play the idle sit animation
-        AnimPlayer.Play("idle_sit");
+        AnimPlayer.AddToPile("idle_sit");
         sit_stand_coroutine = null;
     }
 
