@@ -289,6 +289,42 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         data.owner_id = cdata.id;
     }
 
+    // DESPAWN CAPACITY
+    public void DespawnCapacity(Capacity capacity)
+    {
+        if (capacity == null) { return; }
+        DespawnCapacity(capacity.data.id, capacity.data.owner_id);
+    }
+    public void DespawnCapacity(string capacity_id, string capable_id)
+    {
+        // we ensure we have the data and that it is unloaded
+        if (!world_capacities_data.ContainsKey(capacity_id)) { return; }
+        if (loaded_capacities_data.ContainsKey(capacity_id))
+        {
+            Capacity capacity = CapacityBank.Instance.GetLoadedCapacity(capacity_id);
+            Capable capable = CapableBank.Instance.GetLoadedCapable(capable_id);
+            if (capacity != null && capable != null)
+            {
+                UnloadCapacities(new List<string>() { capacity_id }, capable);
+            }
+            else
+            {
+                // the capable (n capacity) is not loaded.
+                // so we just ensure the capacity id is removed from the capable data
+                // so it won't load next time the capable is loaded
+                CapableData cdata = CapableEngine.Instance.GetCapableDataFromID(capable_id);
+                if (cdata != null && cdata.capacities_ids != null && cdata.capacities_ids.Contains(capacity_id))
+                {
+                    cdata.capacities_ids.Remove(capacity_id);
+                }
+            }
+        }
+
+        // now the capacity is unloaded and unregistered from capable, we can safely remove the data
+        world_capacities_data.Remove(capacity_id);
+        World.Instance.UnregisterUniqueID(capacity_id);
+        if (log_spawning) { Debug.Log($"(CapacityEngine - Despawn) Capacity '{capacity_id}' despawned and data removed from world data"); }
+    }
 
     ///
     //

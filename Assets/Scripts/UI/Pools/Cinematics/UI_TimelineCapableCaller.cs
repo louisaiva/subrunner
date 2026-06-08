@@ -8,10 +8,20 @@ public class UI_TimelineCapableCaller : MonoBehaviour
     [SerializeField] private Capable capable;
     public Capable Capable { get { return capable; } }
 
-    public void Init()
+
+
+    // INIT & CAPABLE CONNECTION
+    public void OnEnable()
     {
         if (!ConnectCapable()) { return; } 
         gather_move_positions();
+
+        // if we have more than 0 move positions, we add a MoveCapacity to the capable if it does not have one
+        if (move_positions.Count > 0 && !capable.TryGetCapacity(out MoveCapacity _))
+        {
+            CapacityData move_data = CapacityEngine.Instance.SpawnCapacity("move", capable.data);
+            CapacityEngine.Instance.LoadCapacities(new List<string>() { move_data.id }, capable);
+        }
 
         Debug.Log("(UI_TimelineCapableCaller) Connected capable with id '" + capable_id + "', and found " + move_positions.Count + " move positions");
     }
@@ -23,7 +33,7 @@ public class UI_TimelineCapableCaller : MonoBehaviour
         {
             if (Controller.Capable == null)
             {
-                Debug.LogError("UI_TimelineCapableCaller: Controller has no capable");
+                Debug.LogError("(UI_TimelineCapableCaller) Controller has no capable");
                 return false;
             }
             capable = Controller.Capable;
@@ -31,12 +41,12 @@ public class UI_TimelineCapableCaller : MonoBehaviour
         }
         if (!CapableBank.Instance.TryGetLoadedCapable(capable_id, out Capable found_capable))
         {
-            Debug.LogWarning("UI_TimelineCapableCaller: No capable found with id " + capable_id);
+            Debug.LogWarning("(UI_TimelineCapableCaller) No capable found with id " + capable_id);
 
             // we try to get the first one with the prefix
             if (!CapableBank.Instance.TryGeFirstCapableWithPrefix(World.Instance.GetPrefix(capable_id), out found_capable))
             {
-                Debug.LogError("UI_TimelineCapableCaller: No capable found with prefix " + capable_id);
+                Debug.LogError("(UI_TimelineCapableCaller) No capable found with prefix " + capable_id);
                 return false;
             }
         }
@@ -47,10 +57,29 @@ public class UI_TimelineCapableCaller : MonoBehaviour
         return true;
     }
 
-    // MOVING
 
+    // CAPABLE DECONNECTION
+    private void OnDisable()
+    {
+        if (capable == null) { return; }
+
+        // we switch back the brain mode to normal
+
+        // we remove the potential move capacity we added
+        if (capable.TryGetCapacity(out MoveCapacity move_capacity))
+        {
+            CapacityEngine.Instance.DespawnCapacity(move_capacity);
+        }
+
+        Debug.Log("(UI_TimelineCapableCaller) Disconnected capable with id '" + capable.ID);
+        capable = null;
+    }
+
+
+
+
+    // MOVING
     [Header("Positions for moving the capable")]
-    // [SerializeField] private List<Transform> position_transforms = new List<Transform>();
     private List<Transform> move_positions = new List<Transform>();
     [SerializeField] private List<Transform> positions_parent;
     private void gather_move_positions()
@@ -69,11 +98,10 @@ public class UI_TimelineCapableCaller : MonoBehaviour
     }
     public void MoveCapableToNextPosition()
     {
-        if (capable == null) { Debug.LogError("UI_TimelineCapableCaller: No capable connected"); return; }
-        if (move_positions.Count == 0) { Debug.LogWarning("UI_TimelineCapableCaller: No position transforms set"); return; }
+        if (capable == null) { Debug.LogError("(UI_TimelineCapableCaller) No capable connected"); return; }
+        if (move_positions.Count == 0) { Debug.LogWarning("(UI_TimelineCapableCaller) No position transforms set"); return; }
 
-        // for now we simply override the position
-        capable.transform.position = move_positions[0].position;
+        MoveCapableToPosition(0);
 
         // then we move the used transform to the end of the list
         Transform used_transform = move_positions[0];
@@ -82,42 +110,50 @@ public class UI_TimelineCapableCaller : MonoBehaviour
     }
     public void MoveCapableToPosition(int position_index)
     {
-        if (capable == null) { Debug.LogError("UI_TimelineCapableCaller: No capable connected"); return; }
-
-        // todo : here we call a specific capacity like walk capacity if we want to update our self ?
-        // todo : or a small GOTO capacity that will handle the walk for us
+        if (capable == null) { Debug.LogError("(UI_TimelineCapableCaller) No capable connected"); return; }
 
         // for now we simply override the position
         if (position_index < 0 || position_index >= move_positions.Count)
         {
-            Debug.LogError("UI_TimelineCapableCaller: Position index out of range");
+            Debug.LogError("(UI_TimelineCapableCaller) Position index out of range");
+            return;
+        }
+        if (!capable.TryGetCapacity(out MoveCapacity mover))
+        {
+            Debug.LogError("(UI_TimelineCapableCaller) Capable does not have a MoveCapacity");
             return;
         }
 
-        capable.transform.position = move_positions[position_index].position;
+        mover.MoveTo(move_positions[position_index].position);
     }
     public void SetCapableSpeed(float speed)
     {
-        if (capable == null) { Debug.LogError("UI_TimelineCapableCaller: No capable connected"); return; }
-
-        // todo : same shit here either we call the goto small handler or the walk capacity directly
+        if (capable == null) { Debug.LogError("(UI_TimelineCapableCaller) No capable connected"); return; }
+        if (!capable.TryGetCapacity(out MoveCapacity mover))
+        {
+            Debug.LogError("(UI_TimelineCapableCaller) Capable does not have a MoveCapacity");
+            return;
+        }
+        mover.SetSpeedPercentage(speed);
     }
+
+
 
 
     // ANIMATIONS
     public void PlayAnim(string capacity)
     {
-        if (capable == null) { Debug.LogError("UI_TimelineCapableCaller: No capable connected"); return; }
+        if (capable == null) { Debug.LogError("(UI_TimelineCapableCaller) No capable connected"); return; }
         capable.AnimPlayer.Play(capacity);
     }
     public void StopPlaying(string capacity)
     {
-        if (capable == null) { Debug.LogError("UI_TimelineCapableCaller: No capable connected"); return; }
+        if (capable == null) { Debug.LogError("(UI_TimelineCapableCaller) No capable connected"); return; }
         capable.AnimPlayer.StopPlaying(capacity);
     }
     public void SetOrientation(string orientation)
     {
-        if (capable == null) { Debug.LogError("UI_TimelineCapableCaller: No capable connected"); return; }
+        if (capable == null) { Debug.LogError("(UI_TimelineCapableCaller) No capable connected"); return; }
         switch (orientation)
         {
             case "U":
@@ -145,10 +181,11 @@ public class UI_TimelineCapableCaller : MonoBehaviour
                 capable.Orientation = Vector2.right;
                 break;
             default:
-                Debug.LogWarning("UI_TimelineCapableCaller: Unknown orientation " + orientation);
+                Debug.LogWarning("(UI_TimelineCapableCaller) Unknown orientation " + orientation);
                 break;
         }
     }
+
 
 
     // SIT
@@ -191,22 +228,24 @@ public class UI_TimelineCapableCaller : MonoBehaviour
         sit_capacity.ExitSofa();
     }
 
+
+
     // TALK
     [Header("Dialogs")]
     [SerializeField] private List<string> dialog_lines_ids = new List<string>();
     public void SayNextLine()
     {
-        if (dialog_lines_ids.Count == 0) { Debug.LogWarning("UI_TimelineCapableCaller: No dialog lines available"); return; }
+        if (dialog_lines_ids.Count == 0) { Debug.LogWarning("(UI_TimelineCapableCaller) No dialog lines available"); return; }
         Say(dialog_lines_ids[0]);
         dialog_lines_ids.RemoveAt(0);
     }
     public void Say(string msg_id)
     {
-        if (capable == null) { Debug.LogError("UI_TimelineCapableCaller: No capable connected"); return; }
+        if (capable == null) { Debug.LogError("(UI_TimelineCapableCaller) No capable connected"); return; }
 
         if (!capable.TryGetCapacity(out TalkCapacity talk_capacity))
         {
-            Debug.LogError("UI_TimelineCapableCaller: Capable does not have a TalkCapacity");
+            Debug.LogError("(UI_TimelineCapableCaller) Capable does not have a TalkCapacity");
             return;
         }
 
