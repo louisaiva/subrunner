@@ -386,8 +386,20 @@ public class DoorEngine : MonoBehaviour
         }
         return doors;
     }
+    public Door GetDoorBetweenRooms(string room1_id, string room2_id)
+    {
+        RoomNode room1 = door_graph.GetRoomNode(room1_id);
+        RoomNode room2 = door_graph.GetRoomNode(room2_id);
+        if (room1 == null) { Debug.LogError($"(DoorEngine) Could not find room node for room id: {room1_id}"); return null; }
+        if (room2 == null) { Debug.LogError($"(DoorEngine) Could not find room node for room id: {room2_id}"); return null; }
 
+        RoomLink link = door_graph.links.FirstOrDefault(l => (l.room1 == room1 && l.room2 == room2) || (l.room1 == room2 && l.room2 == room1));
+        if (link == null) { Debug.LogWarning($"(DoorEngine) Could not find link between room {room1_id} and room {room2_id}"); return null; }
 
+        Door door = loaded_doors.FirstOrDefault(d => d.ID == link.door_id);
+        if (door == null) { Debug.LogWarning($"(DoorEngine) Could not find loaded door for door id: {link.door_id} between room {room1_id} and room {room2_id}"); return null; }
+        return door;
+    }
 
 
     // INTERNAL CLASSES

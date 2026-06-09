@@ -19,7 +19,7 @@ public class DoorElevator : Door
         if (!Opener.Able) { return; }
 
         // on ouvre la porte
-        open();
+        Open();
 
         // on reset le timer de fermeture automatique
         auto_close_timer = auto_close_delay;
@@ -36,7 +36,7 @@ public class DoorElevator : Door
             if (auto_close_timer <= 0f)
             {
                 auto_close_timer = 0f;
-                if (Closer.Able) { close(); }
+                if (Closer.Able) { Close(); }
             }
         }
     }

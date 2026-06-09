@@ -52,7 +52,34 @@ public class CameraFollow : Singleton<CameraFollow>
     [Header("Logs")]
     [SerializeField] private bool log_target = false;
 
-    // TARGET ADD / REMOVE
+
+    ///
+    //
+    /// TARGET MANAGEMENT
+    //
+    ///
+
+    // SET SINGLE TARGET
+    public void SetSingleTarget(MonoBehaviour new_target, bool tp = false, float weight = 1f, float size = 3f)
+    {
+        SetSingleTarget(new_target.transform, tp, weight, size);
+    }
+    public void SetSingleTarget(Transform new_target, bool tp = false, float weight = 1f, float size = 3f)
+    {
+        // we remove all other targets
+        for (int i = targets.Count - 1; i >= 0; i--)
+        {
+            if (targets[i].Target != new_target) { remove_target(targets[i]); }
+        }
+        AddTarget(new_target, tp);
+    }
+    public void ResetCameraToController(bool tp = false)
+    {
+        if (Controller.Capable == null) { return; }
+        SetSingleTarget(Controller.Capable, tp: tp);
+    }
+
+    // ADD TARGET
     public void AddTarget(MonoBehaviour mono, bool tp = false, float weight = 1f, float size = 3f)
     {
         AddTarget(mono.transform, tp, weight, size);
@@ -67,7 +94,18 @@ public class CameraFollow : Singleton<CameraFollow>
     private void add_target(CameraTarget new_target, bool tp = false)
     {
         if (new_target == null) { return; }
-        if (has_target(new_target)) { return; }
+        if (has_target(new_target))
+        {
+            // we replace all the values of the existing target with the new one
+            foreach (CameraTarget target in targets)
+            {
+                if (target.Target != new_target.Target) { continue; }
+                target.Weight = new_target.Weight;
+                target.Size = new_target.Size;
+                if (log_target) { Debug.Log($"(CameraFollow) Updated existing target '{new_target.ID}' with weight {new_target.Weight} and size {new_target.Size}"); }
+                return;
+            }
+        }
         if (log_target) { Debug.Log($"(CameraFollow) Adding target '{new_target.ID}' with weight {new_target.Weight} and size {new_target.Size}"); }
         targets.Add(new_target);
         debug_targets.Add(new_target.Target);
@@ -78,6 +116,8 @@ public class CameraFollow : Singleton<CameraFollow>
         if (rb != null) { return; }
         rb = new_target.Target.GetComponent<Rigidbody2D>();
     }
+    
+    // REMOVE TARGET
     public void RemoveTarget(MonoBehaviour mono)
     {
         RemoveTarget(mono.transform);
@@ -112,24 +152,15 @@ public class CameraFollow : Singleton<CameraFollow>
             if (log_target) { Debug.Log($"(CameraFollow) Camera target was the rigidbody, so we removed it as well and disabled dynamic camera"); }
         }
     }
-    public void SetSingleTarget(MonoBehaviour new_target, bool tp = false, float weight = 1f, float size = 3f)
-    {
-        SetSingleTarget(new_target.transform, tp, weight, size);
-    }
-    public void SetSingleTarget(Transform new_target, bool tp = false, float weight = 1f, float size = 3f)
-    {
-        // we remove all other targets
-        for (int i = targets.Count - 1; i >= 0; i--)
-        {
-            if (targets[i].Target != new_target) { remove_target(targets[i]); }
-        }
-        AddTarget(new_target, tp);
-    }
-    public void ResetCameraToController(bool tp = false)
-    {
-        if (Controller.Capable == null) { return; }
-        SetSingleTarget(Controller.Capable, tp: tp);
-    }
+    
+    
+    ///
+    //
+    /// UPDATE
+    //
+    ///
+
+
     // UPDATE
     private void Update()
     {
@@ -223,12 +254,15 @@ public class CameraFollow : Singleton<CameraFollow>
         return blended_position;
     }
 
-    // SIZE SETTER
+    ///
+    //
+    /// GETTERS
+    //
+    ///
+    
+    // GETTER
     public float GetSize() { return target_size; }
     public float GetSizeRelativeToDefault() { return target_size / default_size; }
-
-
-    // GETTER
     private bool has_target(MonoBehaviour mono)
     {
         return has_target(mono.transform);

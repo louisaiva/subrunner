@@ -69,7 +69,7 @@ public class HackableDoor : Door, Lockable
         while (AnimPlayer.IsShowing("unlock")) { await System.Threading.Tasks.Task.Yield(); }
 
         // we open the door
-        open();
+        Open();
 
         // we invoke the locking after x seconds
         Invoke(nameof(Lock), locking_interval);
@@ -93,7 +93,7 @@ public class HackableDoor : Door, Lockable
         if (is_open)
         {
             if (log) { Debug.Log($"(HackableDoor) {name} is open, closing it now"); }
-            close();
+            Close();
         }
     }
 }

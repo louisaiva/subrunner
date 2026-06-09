@@ -93,7 +93,7 @@ public class Door : Capable, Interactable, Openable
         shadow_caster = door_collider.GetComponent<ShadowCaster2D>();
 
         // on close
-        if (Closer is not null && Closer.Able) { close(silently: true); }
+        if (Closer is not null && Closer.Able) { Close(silently: true); }
     }
 
 
@@ -107,12 +107,12 @@ public class Door : Capable, Interactable, Openable
         Interactor = interactor.GetCapacity<InteractCapacity>();
 
         // on réagit à l'interaction
-        if (Opener.Able) { open(); }
-        else if (Closer.Able) { close(); }
+        if (Opener.Able) { Open(); }
+        else if (Closer.Able) { Close(); }
     }
 
     // OPENABLE
-    public void open(bool silently = false)
+    public void Open(bool silently = false)
     {
         // on désactive le collider
         door_collider.enabled = false;
@@ -123,7 +123,7 @@ public class Door : Capable, Interactable, Openable
         Opener.Open(play_anim_and_sound: !silently);
         if (!silently) { OnDoorOpen?.Invoke(this); }
     }
-    public void close(bool silently = false)
+    public void Close(bool silently = false)
     {
         // on reactive le collider
         door_collider.enabled = true;

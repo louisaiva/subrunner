@@ -20,7 +20,7 @@ public class MoveCapacity : Capacity
     private bool has_destination = false;
     private Vector2 destination;
     private WalkCapacity walker;
-    private float speed_percentage = 1f;
+    [SerializeField] private float speed_percentage = 1f;
 
     // events
     private System.Action OnDestinationReachedCallback = null;
@@ -31,15 +31,15 @@ public class MoveCapacity : Capacity
     //
     ///
 
-    public void WalkTo(Vector2 destination, float speed_percentage = 1f)
+    public void WalkTo(Vector2 destination, float? speed_percentage = null)
     {
         MoveTo(destination, speed_percentage, run: false);
     }
-    public void RunTo(Vector2 destination, float speed_percentage = 1f)
+    public void RunTo(Vector2 destination, float? speed_percentage = null)
     {
         MoveTo(destination, speed_percentage, run: true);
     }
-    public void MoveTo(Vector2 destination, float speed_percentage = 1f, bool run = false)
+    public void MoveTo(Vector2 destination, float? speed_percentage = null, bool run = false)
     {
         if (walker == null)
         {
@@ -52,7 +52,7 @@ public class MoveCapacity : Capacity
 
         // we set the destination and we start updating our movement til the destination is reached
         this.destination = destination;
-        this.speed_percentage = speed_percentage;
+        if (speed_percentage != null) { this.speed_percentage = speed_percentage.Value; }
         this.has_destination = true;
         if (run) { walker.EnableRun(); }
         else { walker.DisableRun(); }
@@ -112,7 +112,7 @@ public class MoveCapacity : Capacity
         if (log) { Debug.Log("(MoveCapacity) " + Capable.ID + " has stopped moving."); }
         
         has_destination = false;
-        speed_percentage = 1f;
+        // speed_percentage = 1f; // don't reset speed bcz we want to remember which speed we were using for next time
     }
 
 

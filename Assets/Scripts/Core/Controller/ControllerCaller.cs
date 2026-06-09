@@ -10,6 +10,9 @@ public class ControllerCaller : MonoBehaviour
     {
         Controller.LazyInstance?.PIC.EnableInputs();
         InputManager.Instance.EnablePersoInputs();
+
+        // we also reset the camera to the controller
+        CameraFollow.Instance?.ResetCameraToController();
     }
     public void DisableInputs() => Controller.LazyInstance?.PIC.DisableInputs();
 }

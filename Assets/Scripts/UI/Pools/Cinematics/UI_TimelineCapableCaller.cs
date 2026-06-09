@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class UI_TimelineCapableCaller : MonoBehaviour
 {
-    [SerializeField] private string capable_id;
-    [SerializeField] private Capable capable;
+    [SerializeField] protected string capable_id;
+    [SerializeField] protected Capable capable;
     public Capable Capable { get { return capable; } }
 
 
@@ -25,7 +25,7 @@ public class UI_TimelineCapableCaller : MonoBehaviour
 
         Debug.Log("(UI_TimelineCapableCaller) Connected capable with id '" + capable.ID + "', and found " + move_positions.Count + " move positions");
     }
-    public bool ConnectCapable()
+    public virtual bool ConnectCapable()
     {
         // check if we have a capable id
         if (string.IsNullOrEmpty(capable_id)) { return false; }
@@ -63,9 +63,6 @@ public class UI_TimelineCapableCaller : MonoBehaviour
     private void OnDisable()
     {
         if (capable == null) { return; }
-
-        // disable the camera targeting if we had one
-        StopTargetingCamera();
 
         // we switch back the brain mode to normal
 
@@ -128,7 +125,7 @@ public class UI_TimelineCapableCaller : MonoBehaviour
         // then we move the used transform to the end of the list
         Transform used_transform = move_positions[0];
         move_positions.RemoveAt(0);
-        move_positions.Add(used_transform);
+        // move_positions.Add(used_transform);
     }
     public void MoveCapableToPosition(int position_index)
     {
@@ -278,4 +275,18 @@ public class UI_TimelineCapableCaller : MonoBehaviour
 
         talk_capacity.Say(msg_id);
     }
+
+
+    // EFFECTS
+    public void AddGhostEffect()
+    {
+        if (capable == null) { Debug.LogError("(UI_TimelineCapableCaller) No capable connected"); return; }
+        capable.AddEffect(Effect.Ghost, -888f);
+    }
+    public void RemoveGhostEffect()
+    {
+        if (capable == null) { Debug.LogError("(UI_TimelineCapableCaller) No capable connected"); return; }
+        capable.RemoveEffect(Effect.Ghost);
+    }
+
 }
