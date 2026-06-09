@@ -349,7 +349,7 @@ public class CapableBank : MonoBehaviour
         capable = GetLoadedCapable(id);
         return capable != null;
     }
-    public bool TryGeFirstCapableWithPrefix(string prefix, out Capable capable)
+    public bool TryGetFirstCapableWithPrefix(string prefix, out Capable capable)
     {
         capable = null;
         

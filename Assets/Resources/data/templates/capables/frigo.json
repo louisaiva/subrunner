@@ -1,0 +1,195 @@
+﻿{
+    "<id>k__BackingField": "frigo",
+    "kind": "Frigo",
+    "position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": -1.0
+    },
+    "layer": 23,
+    "tag": "IA",
+    "capacities_ids": [
+        "frigo_health",
+        "frigo_walk",
+        "frigo_talk",
+        "mob_exp"
+    ],
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "frigo",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle",
+                    "idle_on"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "walk",
+                    "run"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 2,
+                "capacity_playing": "talk",
+                "capacities": [],
+                "lock_orientation": true,
+                "one_shot": false
+            },
+            {
+                "priority": 3,
+                "capacity_playing": "",
+                "capacities": [
+                    "attack",
+                    "wake_up",
+                    "show_wheel"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            },
+            {
+                "priority": 4,
+                "capacity_playing": "",
+                "capacities": [
+                    "hurted"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            },
+            {
+                "priority": 5,
+                "capacity_playing": "",
+                "capacities": [
+                    "die"
+                ],
+                "lock_orientation": true,
+                "one_shot": false
+            }
+        ],
+        "current_capacity": "",
+        "material_name": "objects",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "never_flip": false,
+        "layers": [
+            {
+                "skin": "frigo_face",
+                "local_position": {
+                    "x": 0.0,
+                    "y": -0.00009999999747378752
+                },
+                "local_rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "material_name": "objects",
+                "sorting_layer_id": -667374433,
+                "order_in_layer": 0,
+                "never_flip": false,
+                "follow_duration": false
+            },
+            {
+                "skin": "frigo_wheels",
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.00009999999747378752
+                },
+                "local_rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "material_name": "objects",
+                "sorting_layer_id": -667374433,
+                "order_in_layer": 0,
+                "never_flip": false,
+                "follow_duration": false
+            },
+            {
+                "skin": "frigo_smoke",
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.00019999999494757503
+                },
+                "local_rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "material_name": "objects",
+                "sorting_layer_id": -667374433,
+                "order_in_layer": 0,
+                "never_flip": false,
+                "follow_duration": false
+            }
+        ],
+        "local_position": {
+            "x": 0.0,
+            "y": 0.0
+        }
+    },
+    "inventory": {
+        "item_pools_data": [
+            {
+                "item_type": 0,
+                "stacks_data": [],
+                "pool_id": "stuff",
+                "max_stacks": 6,
+                "min_stacks": 6,
+                "scalable": true,
+                "item_rule": "food"
+            }
+        ],
+        "item_type": 0
+    },
+    "feet_data": {
+        "box_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 25,
+                "pathfinding_area": -1,
+                "shadow_caster_data": {
+                    "cast_and_self": false,
+                    "used_layers": []
+                },
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.12805938720703126
+                },
+                "size": {
+                    "x": 0.7498602867126465,
+                    "y": 0.2561187744140625
+                }
+            }
+        ],
+        "circle_colliders": []
+    },
+    "effects": [],
+    "effects_ttl": [],
+    "social_data": {
+        "exploration_radius": 10.0,
+        "range_detection": 15.0,
+        "friendly_skins": [],
+        "dangerous_skins": [
+            "bob"
+        ],
+        "prey_skins": []
+    }
+}

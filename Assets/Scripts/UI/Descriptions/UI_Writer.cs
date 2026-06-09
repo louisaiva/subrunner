@@ -232,6 +232,8 @@ public class UI_Writer : MonoBehaviour
             refined_cursor++;
         }
 
+        // todo check colors here
+
         return raw_writing.Replace("/.", "...").Replace("/l", string.Empty).Replace("\\n", "\n");
     }
     private float calculate_chars_per_frame()

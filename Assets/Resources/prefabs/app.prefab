@@ -697,12 +697,26 @@ MonoBehaviour:
     - beings/bob/bob_sit_base
     - beings/perso/perso_sit_down_base
     keep_base_anim_if_spritesheet_not_found: 0
-  - variant_name: gofri
+  - variant_name: frigo_face
     variant_spritesheets:
-    - beings/boss/gofri/gofri_frigo
-    base_skin: gofri_face
+    - beings/boss/frigo/frigo_face
+    base_skin: frigo
     base_spritesheets:
-    - beings/boss/gofri/gofri_face
+    - beings/boss/frigo/frigo_frigo
+    keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: frigo_wheels
+    variant_spritesheets:
+    - beings/boss/frigo/frigo_wheels
+    base_skin: frigo
+    base_spritesheets:
+    - beings/boss/frigo/frigo_frigo
+    keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: frigo_smoke
+    variant_spritesheets:
+    - beings/boss/frigo/frigo_smoke
+    base_skin: frigo
+    base_spritesheets:
+    - beings/boss/frigo/frigo_frigo
     keep_base_anim_if_spritesheet_not_found: 0
   - variant_name: vacuum_ground
     variant_spritesheets:

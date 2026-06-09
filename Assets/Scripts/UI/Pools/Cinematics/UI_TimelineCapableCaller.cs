@@ -23,7 +23,7 @@ public class UI_TimelineCapableCaller : MonoBehaviour
             CapacityEngine.Instance.LoadCapacities(new List<string>() { move_data.id }, capable);
         }
 
-        Debug.Log("(UI_TimelineCapableCaller) Connected capable with id '" + capable_id + "', and found " + move_positions.Count + " move positions");
+        Debug.Log("(UI_TimelineCapableCaller) Connected capable with id '" + capable.ID + "', and found " + move_positions.Count + " move positions");
     }
     public bool ConnectCapable()
     {
@@ -39,18 +39,19 @@ public class UI_TimelineCapableCaller : MonoBehaviour
             capable = Controller.Capable;
             return true;
         }
-        if (!CapableBank.Instance.TryGetLoadedCapable(capable_id, out Capable found_capable))
+        if (!CapableBank.LazyInstance.TryGetLoadedCapable(capable_id, out Capable found_capable))
         {
             Debug.LogWarning("(UI_TimelineCapableCaller) No capable found with id " + capable_id);
 
             // we try to get the first one with the prefix
-            if (!CapableBank.Instance.TryGeFirstCapableWithPrefix(World.Instance.GetPrefix(capable_id), out found_capable))
+            if (!CapableBank.LazyInstance.TryGetFirstCapableWithPrefix(World.Instance.GetPrefix(capable_id), out found_capable))
             {
                 Debug.LogError("(UI_TimelineCapableCaller) No capable found with prefix " + capable_id);
                 return false;
             }
         }
         capable = found_capable;
+        Debug.Log("(UI_TimelineCapableCaller) Connected capable with id '" + found_capable.ID + "'");
 
         // todo : we switch the brain mode of the capable to CinematicMode
 
@@ -146,6 +147,11 @@ public class UI_TimelineCapableCaller : MonoBehaviour
         if (capable == null) { Debug.LogError("(UI_TimelineCapableCaller) No capable connected"); return; }
         capable.AnimPlayer.Play(capacity);
     }
+    public void AddToPile(string capacity)
+    {
+        if (capable == null) { Debug.LogError("(UI_TimelineCapableCaller) No capable connected"); return; }
+        capable.AnimPlayer.AddToPile(capacity);
+    }
     public void StopPlaying(string capacity)
     {
         if (capable == null) { Debug.LogError("(UI_TimelineCapableCaller) No capable connected"); return; }
@@ -235,7 +241,7 @@ public class UI_TimelineCapableCaller : MonoBehaviour
     [SerializeField] private List<string> dialog_lines_ids = new List<string>();
     public void SayNextLine()
     {
-        if (dialog_lines_ids.Count == 0) { Debug.LogWarning("(UI_TimelineCapableCaller) No dialog lines available"); return; }
+        if (dialog_lines_ids.Count == 0) { Debug.LogWarning("(UI_TimelineCapableCaller) No dialog lines available on " + name + $" (timeline capable caller connected with {capable?.ID ?? "null"})"); return; }
         Say(dialog_lines_ids[0]);
         dialog_lines_ids.RemoveAt(0);
     }
