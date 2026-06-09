@@ -19,12 +19,6 @@ public class Capable : MonoBehaviour, Debuggable
 
 
 
-
-
-
-
-
-
     // OLD AREA
 
 

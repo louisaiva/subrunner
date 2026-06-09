@@ -64,6 +64,9 @@ public class UI_TimelineCapableCaller : MonoBehaviour
     {
         if (capable == null) { return; }
 
+        // disable the camera targeting if we had one
+        StopTargetingCamera();
+
         // we switch back the brain mode to normal
 
         // we remove the potential move capacity we added
@@ -77,6 +80,24 @@ public class UI_TimelineCapableCaller : MonoBehaviour
     }
 
 
+    // CAMERA HANDLING
+    [Header("Camera targeting")]
+    [SerializeField] private float camera_target_size = 3f;
+    public void TargetCamera(float weight = 1f)
+    {
+        if (capable == null) { Debug.LogError("(UI_TimelineCapableCaller) No capable connected"); return; }
+        if (CameraFollow.Instance == null) { Debug.LogError("(UI_TimelineCapableCaller) No CameraFollow instance found in the scene"); return; }
+
+        CameraFollow.Instance.AddTarget(capable, weight: weight, size: camera_target_size);
+
+    }
+    public void StopTargetingCamera()
+    {
+        if (capable == null) { Debug.LogError("(UI_TimelineCapableCaller) No capable connected"); return; }
+        if (CameraFollow.Instance == null) { Debug.LogError("(UI_TimelineCapableCaller) No CameraFollow instance found in the scene"); return; }
+
+        CameraFollow.Instance.RemoveTarget(capable);
+    }
 
 
     // MOVING

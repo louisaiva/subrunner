@@ -8,6 +8,19 @@ using UnityEngine;
 public class SimpleCameraController : MonoBehaviour
 {
     public float move_speed = 5f;
+    private CameraTarget _target = null;
+    public CameraTarget Target
+    {
+        get
+        {
+            if (_target == null) { _target = new CameraTarget(transform, 1f, 3f); }
+            return _target;
+        }
+    }
+    
+    public void SetSize(float new_size) { Target.Size = new_size; }
+    public void ResetSize() { Target.Size = 3f; }
+    public void ResetPosition() { transform.position = new Vector3(0f, 0f, transform.position.z); }
 
     private void Update()
     {
@@ -28,4 +41,5 @@ public class SimpleCameraController : MonoBehaviour
         // we change our position
         transform.position += new Vector3(direction.x, direction.y, 0f) * move_speed * Time.deltaTime * CameraFollow.Instance.GetSizeRelativeToDefault();
     }
+
 }

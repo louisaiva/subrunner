@@ -168,8 +168,8 @@ public class LevelBuilder : MonoBehaviour
         make_rooms_grab_all_doors();
         make_rooms_grab_all_lights();
 
-        CameraFollow.Instance.ResetSimpleControllerToCenter();
-        CameraFollow.Instance.EnableSimpleController();
+        CameraFollow.Instance.SimpleTarget.ResetPosition();
+        CameraFollow.Instance.SetSingleTarget(CameraFollow.Instance.SimpleTarget, tp: true);
     }
     private void OnDisable()
     {
@@ -177,8 +177,8 @@ public class LevelBuilder : MonoBehaviour
         Erase();
         try
         {
-            CameraFollow.Instance.ResetSize();
-            CameraFollow.Instance.DisableSimpleController();
+            CameraFollow.Instance.SimpleTarget.ResetSize();
+            CameraFollow.Instance.RemoveTarget(CameraFollow.Instance.SimpleTarget);
         }
         catch (Exception) { }
     }
@@ -208,7 +208,7 @@ public class LevelBuilder : MonoBehaviour
     // UPDATE
     private void Update()
     {
-        CameraFollow.Instance.SetSize(Zoom);
+        CameraFollow.Instance.SimpleTarget.SetSize(Zoom);
 
         // check if we are on the right ui_pool
         if (UI_Manager.Instance.CurrentPool != "dev_level_builder")

@@ -4303,6 +4303,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI_TimelineCapableCaller
   capable_id: qg_sofa
   capable: {fileID: 0}
+  camera_target_size: 3
   positions_parent: []
   dialog_lines_ids: []
 --- !u!1 &41310711
@@ -5804,6 +5805,8 @@ PlayableDirector:
     value: {fileID: 1166800308}
   - key: {fileID: 9041940286564708348, guid: b561f27595aacf747841deddcad5fb15, type: 2}
     value: {fileID: 504392693}
+  - key: {fileID: 4175327414906365178, guid: b561f27595aacf747841deddcad5fb15, type: 2}
+    value: {fileID: 1368778257}
   m_ExposedReferences:
     m_References: []
 --- !u!1 &52670788
@@ -157347,6 +157350,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI_TimelineCapableCaller
   capable_id: frigo
   capable: {fileID: 0}
+  camera_target_size: 3
   positions_parent:
   - {fileID: 990979030}
   dialog_lines_ids:
@@ -185518,6 +185522,84 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1367907293}
   m_CullTransparentMesh: 1
+--- !u!1 &1368778255
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1368778256}
+  - component: {fileID: 1368778258}
+  - component: {fileID: 1368778257}
+  m_Layer: 0
+  m_Name: camera_target
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1368778256
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1368778255}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1961092930}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1368778257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1368778255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Timeline::UnityEngine.Timeline.SignalReceiver
+  m_Events:
+    m_Signals:
+    - {fileID: 11400000, guid: 63cbc42a3e954204689a2b3d74dfe164, type: 2}
+    m_Events:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1368778258}
+          m_TargetAssemblyTypeName: CameraCaller, Assembly-CSharp
+          m_MethodName: MakeCameraTargetThisOnly
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!114 &1368778258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1368778255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 302cb26512e8e564a8c07921aa3de686, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraCaller
+  tp_on_target: 0
+  camera_target_size: 3
+  camera_target_weight: 1
 --- !u!1 &1369632968
 GameObject:
   m_ObjectHideFlags: 0
@@ -232404,6 +232486,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI_TimelineCapableCaller
   capable_id: controller
   capable: {fileID: 0}
+  camera_target_size: 3
   positions_parent:
   - {fileID: 1455125114}
   dialog_lines_ids:
@@ -269979,6 +270062,7 @@ Transform:
   m_Children:
   - {fileID: 1455125114}
   - {fileID: 990979030}
+  - {fileID: 1368778256}
   m_Father: {fileID: 155458647}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1962456674
@@ -321554,6 +321638,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 603141588740584443, guid: d33fd979bd28c1748a8507c800a08ef4, type: 3}
+      propertyPath: log_target
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 603141588740584443, guid: d33fd979bd28c1748a8507c800a08ef4, type: 3}
       propertyPath: simple_target
       value: 

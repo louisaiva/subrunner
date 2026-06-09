@@ -53,4 +53,5 @@ public class Caller : MonoBehaviour
     // SETTINGS
     public void EnableSetting(string setting_name) => SettingsManager.Instance?.SetSetting(setting_name, 1f);
     public void DisableSetting(string setting_name) => SettingsManager.Instance?.SetSetting(setting_name, 0f);
+
 }

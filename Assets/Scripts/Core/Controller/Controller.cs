@@ -270,7 +270,7 @@ public class Controller : MonoBehaviour
     private void control_capacities(Capable capa)
     {
         // on refresh la cam
-        CameraFollow.Instance.ChangeCapableTarget(capa);
+        CameraFollow.Instance.AddTarget(capa);
 
         // register to the being died event of the new capable
         /* if (capa.TryGetCapacity(out HealthCapacity hcapa))
@@ -363,6 +363,9 @@ public class Controller : MonoBehaviour
         // reset l'inventory
         // unattach_ui_item_pools();
         if (capa.Inventory != null) { capa.Inventory.DisableLogs(); }
+
+        // on refresh la cam
+        CameraFollow.Instance.RemoveTarget(capa);
     }
     private void refresh_skin_based_parameters(string skin)
     {
@@ -547,7 +550,7 @@ public class Controller : MonoBehaviour
 
         // here we can tp the camera to the controlled capable position
         this.data.controlled_capable_id = Capable.ID;
-        CameraFollow.Instance.ChangeCapableTarget(Capable, tp: tp);
+        CameraFollow.Instance.AddTarget(Capable, tp: tp);
 
         // load the capable stack
         if (data.stack_capable_ids != null)
