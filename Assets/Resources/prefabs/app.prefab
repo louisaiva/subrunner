@@ -739,6 +739,20 @@ MonoBehaviour:
     base_spritesheets:
     - objects/interactives/crafters/forge_3D_robot
     keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: printer_ceil
+    variant_spritesheets:
+    - objects/interactives/crafters/3Dprinter/3Dprinter_ceil
+    base_skin: printer
+    base_spritesheets:
+    - objects/interactives/crafters/3Dprinter/3Dprinter_mid
+    keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: printer_item
+    variant_spritesheets:
+    - objects/interactives/crafters/3Dprinter/3Dprinter_item
+    base_skin: printer
+    base_spritesheets:
+    - objects/interactives/crafters/3Dprinter/3Dprinter_mid
+    keep_base_anim_if_spritesheet_not_found: 0
   log: 0
   log_LAFAC: 0
   log_variant_awake: 0

@@ -352,18 +352,15 @@ public class CapableBank : MonoBehaviour
     public bool TryGetFirstCapableWithPrefix(string prefix, out Capable capable)
     {
         capable = null;
-        
+
         // we look for the capable with the given id in the pool of loaded capables
         for (int i = 0; i < loaded_capables.Count; i++)
         {
             capable = loaded_capables[i];
             if (capable.data == null) { continue; }
-            if (World.Instance.DoesIDMatchPrefix(capable.data.id, prefix))
-            {
-                return true;
-            }
+            if (World.Instance.DoesIDMatchPrefix(capable.data.id, prefix)) { return true; }
         }
-        return capable != null;
+        return false;
     }
     public Capable GetLoadedCapable(string id)
     {

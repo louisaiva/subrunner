@@ -15986,7 +15986,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::World
   load_status: 0
-  world_id: c3
+  world_id: c2
   data:
     game_version: 1.5.1a
     creation_date: 29/05/2026 15:23:53
@@ -106947,6 +106947,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2427471456612112662, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: extract_json_on_load
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3744786912224508728, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -254205,12 +254209,12 @@ MonoBehaviour:
   - {fileID: 5997114575170726373, guid: 45501413685587d4ebc84b76fe6952d2, type: 3}
   others_templates:
   - {fileID: 7910803720122069419, guid: f2b8fd2b5e7b3ff4daf969a55d1bc33e, type: 3}
-  - {fileID: 454958719224331644, guid: ae92cfd18d2b88545948eb191b2c831b, type: 3}
   - {fileID: 2137358931719857597, guid: 59030affd72e04848abbdde09f88dce6, type: 3}
   template_paths:
   - prefabs/pooling_prefabs/cpb_templates/objects/atrier
   - prefabs/pooling_prefabs/cpb_templates/objects/deco
   - prefabs/pooling_prefabs/cpb_templates/objects/kitchen
+  - prefabs/pooling_prefabs/cpb_templates/objects/crafters
 --- !u!1 &1817759213
 GameObject:
   m_ObjectHideFlags: 0

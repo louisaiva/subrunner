@@ -49,6 +49,7 @@ public class UI_TimelineCapableCaller : MonoBehaviour
                 Debug.LogError("(UI_TimelineCapableCaller) No capable found with prefix " + capable_id);
                 return false;
             }
+            Debug.LogWarning("(UI_TimelineCapableCaller) Found capable with prefix " + capable_id + " : " + found_capable.ID);
         }
         capable = found_capable;
         Debug.Log("(UI_TimelineCapableCaller) Connected capable with id '" + found_capable.ID + "'");
@@ -139,7 +140,7 @@ public class UI_TimelineCapableCaller : MonoBehaviour
         }
         if (!capable.TryGetCapacity(out MoveCapacity mover))
         {
-            Debug.LogError("(UI_TimelineCapableCaller) Capable does not have a MoveCapacity");
+            Debug.LogError($"(UI_TimelineCapableCaller) Capable {capable?.ID ?? "null"} does not have a MoveCapacity (timeline capable caller is {name})");
             return;
         }
 
@@ -150,7 +151,7 @@ public class UI_TimelineCapableCaller : MonoBehaviour
         if (capable == null) { Debug.LogError("(UI_TimelineCapableCaller) No capable connected"); return; }
         if (!capable.TryGetCapacity(out MoveCapacity mover))
         {
-            Debug.LogError("(UI_TimelineCapableCaller) Capable does not have a MoveCapacity");
+            Debug.LogError($"(UI_TimelineCapableCaller) Capable {capable?.ID ?? "null"} does not have a MoveCapacity (timeline capable caller is {name})");
             return;
         }
         mover.SetSpeedPercentage(speed);
@@ -269,7 +270,7 @@ public class UI_TimelineCapableCaller : MonoBehaviour
 
         if (!capable.TryGetCapacity(out TalkCapacity talk_capacity))
         {
-            Debug.LogError("(UI_TimelineCapableCaller) Capable does not have a TalkCapacity");
+            Debug.LogError($"(UI_TimelineCapableCaller) Capable {capable?.ID ?? "null"} does not have a TalkCapacity (timeline capable caller is {name})");
             return;
         }
 
