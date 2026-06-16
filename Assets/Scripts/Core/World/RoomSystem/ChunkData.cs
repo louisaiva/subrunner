@@ -57,6 +57,27 @@ using UnityEngine;
         return details;
     }
 
+    // DUPLICATE
+    public ChunkData Duplicate()
+    {
+        ChunkData duplicate = new ChunkData()
+        {
+            id = this.id,
+            room_id = this.room_id,
+            position = this.position,
+            collider_points = new List<Vector2>(this.collider_points),
+            neighbours_ids = new List<string>(this.neighbours_ids),
+            capables_ids = new List<string>(this.capables_ids),
+            movables_ids = new List<string>(this.movables_ids),
+            lights_data = new List<LightData>()
+        };
+        foreach (LightData light in this.lights_data)
+        {
+            duplicate.lights_data.Add(light.Duplicate());
+        }
+        return duplicate;
+    }
+
 }
 
 
@@ -68,4 +89,17 @@ using UnityEngine;
     public float intensity;
     public Vector2 radius; // inner & outer radius for the light falloff
     public float falloff; // how fast the light decreases
+
+    // DUPLICATE
+    public LightData Duplicate()
+    {
+        return new LightData()
+        {
+            position = this.position,
+            color = this.color,
+            intensity = this.intensity,
+            radius = this.radius,
+            falloff = this.falloff
+        };
+    }
 }

@@ -40,4 +40,56 @@ using Newtonsoft.Json;
         this.capacities = capacities;
     }
     
+    public WorldDataHelper ToWorldDataHelper()
+    {
+        WorldDataHelper helper = new WorldDataHelper
+        {
+            world = world,
+            controller = controller
+        };
+        return helper;
+    }
+
+    /* public WorldSaveData Duplicate(string new_world_name)
+    {
+        WorldSaveData duplicate = new WorldSaveData()
+        {
+            world = world.Duplicate(),
+            controller = controller.Duplicate(),
+            levels = new List<LevelData>(),
+            rooms = new List<RoomData>(),
+            chunks = new List<ChunkData>(),
+            capables = new List<CapableData>(),
+            capacities = new List<CapacityData>()
+        };
+        duplicate.world.id = new_world_name;
+
+        // duplicate lists
+        foreach (LevelData level in levels) { duplicate.levels.Add(level.Duplicate()); }
+        foreach (RoomData room in rooms) { duplicate.rooms.Add(room.Duplicate()); }
+        foreach (ChunkData chunk in chunks) { duplicate.chunks.Add(chunk.Duplicate()); }
+        foreach (CapableData capable in capables) { duplicate.capables.Add(capable.Duplicate() as CapableData); }
+        foreach (CapacityData capacity in capacities) { duplicate.capacities.Add(capacity.Duplicate() as CapacityData); }
+        return duplicate;
+    } */
+}
+
+
+/// <summary>
+/// this class is only a helper class for fast deserialization of world data.
+/// only used when not in a world (i.e. main menu)
+/// </summary>
+[Serializable] public class WorldDataHelper
+{
+    public WorldData world;
+    public ControllerData controller;
+
+    public string GetDetails()
+    {
+        string details = "";
+        details += world.GetDetails();
+        details += "\n";
+        details += controller.GetDetails();
+        return details;
+    }
 }

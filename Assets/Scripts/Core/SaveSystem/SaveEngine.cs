@@ -105,10 +105,7 @@ public class SaveEngine : MonoBehaviour
             return;
         }
 
-        // and we save it
-        if (LazyInstance.save_as_one_file) { SaveWorldSaveDataAsFile(save); }
-        else { SaveWorldSaveDataAsFolder(save); }
-
+        SaveWorldSaveData(save);
         slog?.Log($"Finished dynamic saving of world '{save.world.id}' !");
     }
     private static WorldSaveData generate_save_from_dynamic_world()
@@ -271,31 +268,33 @@ public class SaveEngine : MonoBehaviour
     //
     ///
     
-    private static Dictionary<string, WorldSaveData> _loaded_worlds_saves = new Dictionary<string, WorldSaveData>();
+    private static WorldSaveData _loaded_save = null; // only one big world save data loaded at a time
+    public static WorldSaveData LoadWorldSaveFromJson(string json, bool log=true)
+    {
+        if (string.IsNullOrEmpty(json))
+        {
+            if (log) { Debug.LogWarning($"(SaveEngine - LoadWorldSaveFromJson) json is null or empty: {json}"); }
+            return null;
+        }
+        _loaded_save = JsonConvert.DeserializeObject<WorldSaveData>(json, one_file_settings);
+        return _loaded_save;
+    }
     public static WorldSaveData GetWorldSave(string world_id)
     {        
         if (string.IsNullOrEmpty(world_id)) { Debug.LogWarning($"(SaveEngine) Invalid world_id : '{world_id}'"); return null; }
 
         // Debug.Log($"(SaveEngine) Loading world save data for world '{world_id}' from folder or file..., save is null: {save == null}");
-        if (_loaded_worlds_saves.TryGetValue(world_id, out WorldSaveData save)) { return save; } // we already have one loaded, we return it
-        save = new WorldSaveData();
+        if (_loaded_save != null && _loaded_save.world.id == world_id) { return _loaded_save; } // we already have one loaded, we return it
+        _loaded_save = new WorldSaveData();
 
         // then we have no save load
         // Debug.Log($"(SaveEngine) Loading world save data for world '{world_id}' from folder or file..., save is null: {save == null}");
 
         AppManager.EnsureFolderExists(WorldManager.WorldsDataPath);
-        if (load_world_save_from_folder(world_id, ref save))
-        {
-            _loaded_worlds_saves[world_id] = save;
-            return save;
-        }
+        if (load_world_save_from_folder(world_id, ref _loaded_save)) { return _loaded_save; }
 
         // here we have no folder for the world, we try to load it from the single file save
-        if (load_world_save_from_file(world_id, ref save))
-        {
-            _loaded_worlds_saves[world_id] = save;
-            return save;
-        }
+        if (load_world_save_from_file(world_id, ref _loaded_save)) { return _loaded_save; }
 
         // if we reach this point, we failed to load the world save data
         Debug.LogError($"(SaveEngine) Failed to load world save data for world '{world_id}' from both folder and file.");
@@ -411,8 +410,6 @@ public class SaveEngine : MonoBehaviour
         return true;
     }
 
-    // todo : we need a method to clear all the cache (or unload a specific world save)
-    // todo : bcz we don't really need to keep all the world saves in memory when playing
 
     private static bool _log_capable_data_kind_checking = true;
     public static CapableData LoadCapableDataWithGoodKind(string json)
@@ -465,6 +462,58 @@ public class SaveEngine : MonoBehaviour
         if (type == null) { type = Type.GetType(kind.Replace("Capacity", "Data")); }
         if (type == null) { type = typeof(CapacityData); }
         return JsonUtility.FromJson(json, type) as CapacityData;
+    }
+
+    private static Dictionary<string, WorldDataHelper> _world_data_helpers = new Dictionary<string, WorldDataHelper>();
+    public static WorldDataHelper GetWorldData(string world_id)
+    {
+        if (string.IsNullOrEmpty(world_id)) { Debug.LogWarning($"(SaveEngine) Invalid world_id : '{world_id}'"); return null; }
+
+        if (_world_data_helpers.TryGetValue(world_id, out WorldDataHelper w_data)) { return w_data; }
+        w_data = new WorldDataHelper();
+
+        // then we have no cached world data, we try to load it from the world folder or file        
+        AppManager.EnsureFolderExists(WorldManager.WorldsDataPath);
+        if (load_world_data_helper_from_folder(world_id, ref w_data)) { return w_data; }
+
+        // here we have no folder for the world, we try to load it from the single file save
+        if (load_world_data_helper_from_file(world_id, ref w_data)) { return w_data; }
+
+        // if we reach this point, we failed to load the world save data
+        Debug.LogWarning($"(SaveEngine) Failed to load world save data for world '{world_id}' from both folder and file.");
+        return null;
+    }
+    private static bool load_world_data_helper_from_file(string id, ref WorldDataHelper helper, bool log = true)
+    {
+        // get the json
+        string json = AppManager.LoadJsonFromWorldsFolder(id + ".json");
+        if (string.IsNullOrEmpty(json))
+        {
+            if (log) { Debug.LogWarning($"(SaveEngine - Load World Data Helper) World Data Helper file not found: {id}.json"); }
+            return false;
+        }
+        helper = JsonConvert.DeserializeObject<WorldDataHelper>(json, one_file_settings);
+        return true;
+    }
+    private static bool load_world_data_helper_from_folder(string id, ref WorldDataHelper helper, bool log = true)
+    {
+        // load the world data
+        string json = AppManager.LoadJsonFromWorldFolder(id, "world_data.json");
+        if (string.IsNullOrEmpty(json)) { return false; }
+        WorldData data = JsonUtility.FromJson<WorldData>(json);
+
+        // and controller
+        json = AppManager.LoadJsonFromWorldFolder(id, "controller.json");
+        if (string.IsNullOrEmpty(json)) { return false; }
+        ControllerData controller_data = JsonUtility.FromJson<ControllerData>(json);
+
+        // if we reach this point, our save is complete and we return true
+        helper = new WorldDataHelper
+        {
+            world = data,
+            controller = controller_data
+        };
+        return true;
     }
 
     ///
@@ -525,6 +574,11 @@ public class SaveEngine : MonoBehaviour
     //
     ///
 
+    public static void SaveWorldSaveData(WorldSaveData data)
+    {
+        if (LazyInstance.save_as_one_file) { SaveWorldSaveDataAsFile(data); }
+        else { SaveWorldSaveDataAsFolder(data); }
+    }
     public static void SaveWorldSaveDataAsFile(WorldSaveData data)
     {
         // saves the world save data to a single file

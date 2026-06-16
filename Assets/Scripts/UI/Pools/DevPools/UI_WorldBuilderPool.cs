@@ -22,7 +22,9 @@ public class UI_WorldBuilderPool : UI_SlottablePool, Descriptable
     {
         GameManager.State = GameState.Building;
         
-        world_slot.Initialize(WorldManager.Instance.SelectedWorldData);
+        WorldDataHelper selected_world_data = SaveEngine.GetWorldData(WorldManager.Instance.SelectedWorld);
+        if (selected_world_data == null) { Debug.LogError($"No world data found for selected world '{WorldManager.Instance.SelectedWorld}'"); return; }
+        world_slot.Initialize(selected_world_data);
         world_folder_caller.world_id = WorldManager.Instance.SelectedWorld;
     }
     protected override void before_showing() { RefreshLevelSlots(); }

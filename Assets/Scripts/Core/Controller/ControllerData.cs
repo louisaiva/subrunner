@@ -17,6 +17,12 @@ using UnityEngine;
     // last spawn
     public string container_id;
 
+
+    // story
+    [RuntimeOnly] public bool play_intro_cinematic = false;
+
+
+
     // UpdatePlayerLevelRoomChunk
     public void UpdatePlayerLevelRoomChunk(Loggable<SaveEngine> slog = null)
     {
@@ -95,12 +101,12 @@ using UnityEngine;
     public string GetDetails()
     {
         string details = $" - capable template : {capable_template}\n" +
-                         $" - controlled capable id : {controlled_capable_id}\n" +
-                         $" - stack capable ids : {string.Join(", ", stack_capable_ids)}\n" +
-                         $" - player level : {player_level}\n" +
-                         $" - player room : {player_room}\n" +
-                         $" - player chunk : {player_chunk}\n" +
-                         $" - container id : {container_id}";
+                         $" - controlled capable id : {controlled_capable_id}\n";
+        details += $" - stack capable ids : {(stack_capable_ids == null ? "null" : (stack_capable_ids.Count == 0 ? "none" : string.Join(", ", stack_capable_ids)))}\n";
+        details += $" - player level : {player_level}\n";
+        details += $" - player room : {player_room}\n";
+        details += $" - player chunk : {player_chunk}\n";
+        details += $" - container id : {container_id}";
         return details;
     }
 }

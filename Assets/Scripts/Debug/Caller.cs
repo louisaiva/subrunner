@@ -34,12 +34,26 @@ public class Caller : MonoBehaviour
     public void LoadGame() => SceneLoader.Instance?.LoadGame();
     public void SaveWorld() => SaveEngine.SaveDynamicWorld();
 
+    // PLAY BUTTON
+    public void Play()
+    {
+        // if we have no world, we create a new one and launch it immediately
+        if (WorldManager.Instance.ExistingWorldsCount == 0)
+        {
+            WorldManager.Instance.CreateNewWorldWithName(auto_load: true); // will choose default template, won't ask anything
+            return;
+        }
+
+        // else if we have at least 1 world, we go to the world selection screen
+        SwitchTo("world_selector");
+    }
+
 
     // WORLD MANAGER
     public void OpenWorldFolder() => AppManager.OpenWorldsFolder();
     public async void UnloadWorld() { await WorldManager.Instance?.UnloadCurrentWorld(); }
     public void LoadWorld() { WorldManager.Instance?.LoadSelectedWorld(); }
-    public void CreateWorld() => WorldManager.Instance?.CreateNewWorld();
+    public void CreateWorld() => WorldManager.Instance?.CreateNewWorld(); // will ask a name for this world
     public void CreateLevel() => WorldManager.Instance?.CreateNewLevel();
 
 

@@ -938,7 +938,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7306490061061382454}
         m_TargetAssemblyTypeName: Caller, Assembly-CSharp
-        m_MethodName: SwitchTo
+        m_MethodName: Play
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1206,8 +1206,6 @@ MonoBehaviour:
   Showed: 0
   Stacked: 0
   Settings: {fileID: 11400000, guid: d76142a0998a2f5479116e5dd74ad9ad, type: 2}
-  angle_threshold: 45
-  angle_multiplicator: 0
   ui_elements:
   - {fileID: 0}
   - {fileID: 449760745318656151}
@@ -1242,6 +1240,7 @@ MonoBehaviour:
   slots_parents:
   - {fileID: 4326945488977728123}
   - {fileID: 5298689696806842195}
+  deep_search: 0
 --- !u!1 &1587076781579619681
 GameObject:
   m_ObjectHideFlags: 0
@@ -2563,9 +2562,11 @@ MonoBehaviour:
   down_sprite: {fileID: -1618646064, guid: 0c2e8aec6434f89f2990c31d371eeb8f, type: 3}
   disabled_sprite: {fileID: -968096919, guid: 0c2e8aec6434f89f2990c31d371eeb8f, type: 3}
   btn_icon: {fileID: 4668869056719236939}
+  auto_cycle_on_click: 1
   cycle_datas:
   - name: chill
     label: chill
+    description: 
     baseColor: {r: 0.24022421, g: 0.16470587, b: 1, a: 1}
     hoverColor: {r: 1, g: 1, b: 1, a: 1}
     iconHoverColor: {r: 1, g: 1, b: 1, a: 1}
@@ -2587,6 +2588,7 @@ MonoBehaviour:
           m_CallState: 2
   - name: wired
     label: wired
+    description: 
     baseColor: {r: 0.16509432, g: 0.6506414, b: 1, a: 1}
     hoverColor: {r: 1, g: 1, b: 1, a: 1}
     iconHoverColor: {r: 1, g: 1, b: 1, a: 1}
@@ -2608,6 +2610,7 @@ MonoBehaviour:
           m_CallState: 2
   - name: wired glitchy
     label: wired glitchy
+    description: 
     baseColor: {r: 0.24701849, g: 0.8584906, b: 0.775216, a: 1}
     hoverColor: {r: 1, g: 1, b: 1, a: 1}
     iconHoverColor: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 1}
@@ -2629,6 +2632,7 @@ MonoBehaviour:
           m_CallState: 2
   - name: glitchy
     label: glitchy
+    description: 
     baseColor: {r: 0.8470589, g: 1, b: 0, a: 1}
     hoverColor: {r: 1, g: 1, b: 1, a: 1}
     iconHoverColor: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 1}
@@ -2650,6 +2654,7 @@ MonoBehaviour:
           m_CallState: 2
   - name: full glitchy
     label: full glitchy
+    description: 
     baseColor: {r: 1, g: 0.4760489, b: 0, a: 1}
     hoverColor: {r: 1, g: 1, b: 1, a: 1}
     iconHoverColor: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 1}
@@ -2673,6 +2678,8 @@ MonoBehaviour:
   - {fileID: 6235498461947704763}
   setting_name: home_glitch_mode
   setting: {fileID: 0}
+  start_cycle_index: 0
+  fire_event_on_start: 1
 --- !u!1 &6955525316059997848
 GameObject:
   m_ObjectHideFlags: 0
@@ -2785,9 +2792,11 @@ MonoBehaviour:
   down_sprite: {fileID: -1618646064, guid: 0c2e8aec6434f89f2990c31d371eeb8f, type: 3}
   disabled_sprite: {fileID: -968096919, guid: 0c2e8aec6434f89f2990c31d371eeb8f, type: 3}
   btn_icon: {fileID: 3982095890590641830}
+  auto_cycle_on_click: 1
   cycle_datas:
   - name: disabled
     label: leaf mode off
+    description: 
     baseColor: {r: 0.23394452, g: 0.5849056, b: 0.11311853, a: 1}
     hoverColor: {r: 1, g: 1, b: 1, a: 1}
     iconHoverColor: {r: 1, g: 1, b: 1, a: 1}
@@ -2809,6 +2818,7 @@ MonoBehaviour:
           m_CallState: 2
   - name: enabled
     label: leaf mode on
+    description: 
     baseColor: {r: 0.23394452, g: 0.5849056, b: 0.11311853, a: 1}
     hoverColor: {r: 1, g: 1, b: 1, a: 1}
     iconHoverColor: {r: 1, g: 1, b: 1, a: 1}
@@ -2832,6 +2842,8 @@ MonoBehaviour:
   - {fileID: 340348480358748816}
   setting_name: 
   setting: {fileID: 0}
+  start_cycle_index: 0
+  fire_event_on_start: 1
 --- !u!1 &7294605310429893335
 GameObject:
   m_ObjectHideFlags: 0

@@ -464,6 +464,20 @@ public class World : BSOD_System<World>
             return 0;
         }
     }
+
+    public string GetDetails()
+    {
+        string details = "";
+        details += "id : " + id + "\n";
+        details += "game version : " + $"{game_version}\n";
+        details += $"modified : " + $"{last_update_date}\n";
+        details += $"created : " + $"{creation_date}\n";
+        details += $"color : " + $"{color}\n";
+        details += $"icon path : " + $"{icon_path}\n";
+        details += $"icon name : " + $"{icon_name}\n";
+        details += $"levels ids : " + $"{(levels_ids != null ? string.Join(", ", levels_ids) : "null")}\n";
+        return details;
+    }
 }
 
 [Serializable] public enum WorldLoadStatus

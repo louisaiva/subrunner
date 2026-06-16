@@ -1,51 +1,56 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 public class UI_WorldSlot : UI_EventButton, Descriptable
 {
-    private WorldData world_data;
+    private WorldDataHelper whelper;
+    private WorldData wdata => whelper != null ? whelper.world : null;
 
     [Header("Components")]
     [SerializeField] private TextMeshProUGUI name_text;
 
     // INITIALIZATION & DESTRUCTION
-    public void Initialize(WorldData world_data)
+    public void Initialize(WorldDataHelper world_data)
     {
-        this.world_data = world_data;
+        this.whelper = world_data;
 
         // we set the icon sprite and color
         if (world_data == null) { return; }
         
-        Sprite icon_sprite = WorldManager.Instance.GetIconSprite(world_data.icon_path, world_data.icon_name);
+        Sprite icon_sprite = WorldManager.Instance.GetIconSprite(wdata.icon_path, wdata.icon_name);
         if (icon_sprite != null) { btn_icon.sprite = icon_sprite; }
-        btn_icon.color = world_data.color;
-        this.baseColor = world_data.color;
-        name_text.text = world_data.id;
+        btn_icon.color = wdata.color;
+        this.baseColor = wdata.color;
+        name_text.text = wdata.id;
     }
 
     // CLICK HANDLER
     public void SelectAndLoadWorld()
     {
-        WorldManager.Instance.SelectWorld(world_data);
+        WorldManager.Instance.SelectWorld(wdata);
         SceneLoader.Instance.LoadGame();
     }
 
 
     // DESCRIPTABLE
-    public string Name => world_data != null ? world_data.id : "/!\\ no world data /!\\";
+    public string Name => wdata != null ? wdata.id : "/!\\ no world data /!\\";
     public string Description => get_description();
     private string get_description()
     {
-        if (world_data == null) { return "No world data."; }
+        if (wdata == null) { return "No world data."; }
 
         string description = "";
-        description += $"<b>subrunner {world_data.game_version}</b>\n".AddColor(get_color_version(world_data.game_version));
+        description += $"<b>subrunner {wdata.game_version}</b>\n".AddColor(get_color_version(wdata.game_version));
         description += "\n\n";
-        description += $"modified : ".AddColor(Color.grey) + $"<b>{world_data.last_update_date}</b>\n";
-        description += $"created : ".AddColor(Color.grey) + $"<b>{world_data.creation_date}</b>\n";
+        description += $"modified : ".AddColor(Color.grey) + $"<b>{wdata.last_update_date}</b>\n";
+        description += $"created : ".AddColor(Color.grey) + $"<b>{wdata.creation_date}</b>\n";
         description += "\n\n\n";
-        description += $"<b>Levels</b> : ";
+
+        description += $"controller : ".AddColor(Color.grey) + $"<b>{whelper.controller.controlled_capable_id}</b>\n";
+
+        /* description += $"<b>Levels</b> : ";
 
         // we get the levels from the LevelEngine static method since the world is not loaded, which means
         // data.levels_ids is necessary empty
@@ -60,17 +65,25 @@ public class UI_WorldSlot : UI_EventButton, Descriptable
         foreach (string id in levels_ids)
         {
             description += $"{id}  -\n";
-        }
+        } */
         return description;
     }
 
     private static Color get_color_version(string version)
     {
-        int compare_to_current = AppManager.CompareVersion(version);
-        if (compare_to_current == 0) { return Color.green; }
-        if (Mathf.Abs(compare_to_current) > 100) { return Color.red; } // if the major version is different, it's a big deal
-        if (Mathf.Abs(compare_to_current) > 10) { return Color.yellow; } // if the minor version is different, it's a bit of a deal
-        // if (compare_to_current > 0) { return Color.lightGreen; } // the app version is newer than the world, should probably work fine
-        return Color.lightYellow; // world version is newer than the app, might cause issues, better be careful
+        try
+        {
+            int compare_to_current = AppManager.CompareVersion(version);
+            if (compare_to_current == 0) { return Color.green; }
+            if (Mathf.Abs(compare_to_current) > 100) { return Color.red; } // if the major version is different, it's a big deal
+            if (Mathf.Abs(compare_to_current) > 10) { return Color.orangeRed; } // if the minor version is different, it's a bit of a deal
+            // if (compare_to_current > 0) { return Color.lightGreen; } // the app version is newer than the world, should probably work fine
+            return Color.orange; // world version is newer than the app, might cause issues, better be careful
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Error occurred while comparing versions: '{version}' & '{Application.version}' \n{ex.Message}");
+            return Color.gray; // default color in case of error
+        }
     }
 }
