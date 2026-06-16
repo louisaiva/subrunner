@@ -123,10 +123,10 @@ public class WorldManager : MonoBehaviour
         existing_worlds_data.Clear();
 
         // we check if the worlds data folder exists
-        if (!Directory.Exists(WorldManager.WorldsDataPath)) { return; }
+        if (!Directory.Exists(WorldsDataPath)) { return; }
 
         // we get all the world folders in the worlds data folder
-        string[] world_folders = Directory.GetDirectories(WorldManager.WorldsDataPath);
+        string[] world_folders = Directory.GetDirectories(WorldsDataPath);
         foreach (string world_folder in world_folders)
         {
             // we get the world_id from the folder name
@@ -141,20 +141,48 @@ public class WorldManager : MonoBehaviour
                 continue;
             }
             WorldData world_data = JsonUtility.FromJson<WorldData>(json);
-            world_data.id = world_id; // we set the world_id in the data for easier access to it later, even if it's not serialized
-
-            // we check if it has no icon path
-            if (string.IsNullOrEmpty(world_data.icon_path))
-            {
-                world_data.color = GetRandomWorldColor();
-                world_data.icon_path = GetRandomIconPath(out string icon_name);
-                world_data.icon_name = icon_name;
-            }
-
-            // we add the loaded data to the existing worlds data dictionary
-            existing_worlds_data.Add(world_id, world_data);
+            add_world_data_to_existing(world_data, world_id);
             if (log_world_data_loading_on_awake) { Debug.Log($"(WorldManager) Loaded world data for world_id: {world_id} from path: {world_data_json_path}\n\n{json}"); }
         }
+
+        // we also check if we have direct "WorldSaveData" json files on the worldsdatapath root
+        string[] world_data_json_files = Directory.GetFiles(WorldsDataPath, "*.json", SearchOption.TopDirectoryOnly);
+        foreach (string world_data_json_file in world_data_json_files)
+        {
+            // we get the world_id from the file name
+            string world_id = Path.GetFileNameWithoutExtension(world_data_json_file);
+            if (existing_worlds_data.ContainsKey(world_id))
+            {
+                if (log_world_data_loading_on_awake) { Debug.LogWarning($"(WorldManager) Skipping loading world data for world_id: {world_id} from path: {world_data_json_file} because it was already loaded from a folder."); }
+                continue;
+            }
+
+            // we load the world data from the json file
+            string json = AppManager.LoadJsonFromPersistentDataPath(world_data_json_file, FileNotFound.DontLog);
+            if (string.IsNullOrEmpty(json))
+            {
+                if (!hide_files_not_found) { Debug.LogWarning($"(WorldManager) Failed to load world data for world_id: {world_id} from path: {world_data_json_file}"); }
+                continue;
+            }
+            WorldSaveData world_data = JsonUtility.FromJson<WorldSaveData>(json);
+            add_world_data_to_existing(world_data.world, world_id);
+            if (log_world_data_loading_on_awake) { Debug.Log($"(WorldManager) Loaded world data for world_id: {world_id} from path: {world_data_json_file}\n\n{json}"); }
+        }
+    }
+    private void add_world_data_to_existing(WorldData world_data, string id)
+    {
+        world_data.id = id; // we set the id in the data for easier access to it later, even if it's not serialized
+
+        // we check if it has no icon path
+        if (string.IsNullOrEmpty(world_data.icon_path))
+        {
+            world_data.color = GetRandomWorldColor();
+            world_data.icon_path = GetRandomIconPath(out string icon_name);
+            world_data.icon_name = icon_name;
+        }
+
+        // we add the loaded data to the existing worlds data dictionary
+        existing_worlds_data.Add(id, world_data);
     }
 
 
@@ -174,6 +202,30 @@ public class WorldManager : MonoBehaviour
         }
 
         SelectWorld(world_data);
+    }
+
+
+
+    ///
+    //
+    /// WORLD TEMPLATES
+    //
+    ///
+    private string world_templates_path = "data/world_templates"; // in this folder there are worldsavedata.json files
+    private List<WorldSaveData> existing_worlds_templates = new List<WorldSaveData>();
+    public List<WorldSaveData> ExistingWorldsTemplates { get { return existing_worlds_templates; } }
+    public void RefreshExistingWorldsTemplates()
+    {
+        // we clear the existing worlds templates list
+        existing_worlds_templates.Clear();
+
+        // we load the world templates from the json files in the data world templates folder
+        string[] jsons = AppManager.LoadJsonsFromAssets(world_templates_path);
+        foreach (string json in jsons)
+        {
+            WorldSaveData world_data = JsonUtility.FromJson<WorldSaveData>(json);
+            existing_worlds_templates.Add(world_data);
+        }
     }
 
 
@@ -245,6 +297,17 @@ public class WorldManager : MonoBehaviour
         // we save the world data to a json file in the current world folder
         return world_folder_created;
     }
+    public static bool DoesWorldSaveDataExists(string world_id)
+    {
+        if (string.IsNullOrEmpty(world_id))
+        {
+            if (log) { Debug.LogWarning("(WorldManager) Cannot check if world save data exists : world_id is null or empty."); }
+            return false;
+        }
+
+        string world_data_path = Path.Combine(WorldsDataPath, world_id + ".json");
+        return System.IO.File.Exists(world_data_path);
+    }
 
     ///
     //
@@ -289,10 +352,10 @@ public class WorldManager : MonoBehaviour
         // 3. else if the world instance has a world_id defined, we load it
 
         if (!string.IsNullOrEmpty(SelectedWorld)) { } // we do nothing, we are good !
-        else if (!string.IsNullOrEmpty(world.world_id))
+        else if (!string.IsNullOrEmpty(world.world_to_load))
         {
-            // we select the world from the world instance world_id
-            SelectWorld(world.world_id);
+            // we select the world from the world instance world_to_load
+            SelectWorld(world.world_to_load);
         }
 
         OnWorldLoading?.Invoke();
@@ -347,6 +410,7 @@ public class WorldManager : MonoBehaviour
 
         // and we create and save a default ControllerData for the world
         ControllerData controller_data = new ControllerData() { capable_template = "bob", stack_capable_ids = new List<string>() };
+        controller_data.UpdatePlayerLevelRoomChunk();
         SaveEngine.SaveControllerData(controller_data, world_name);
 
         if (log_create) { Debug.Log($"(WorldManager) Created new world with world_id: {world_name}"); }

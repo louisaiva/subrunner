@@ -113,30 +113,11 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
 
         // we load all the json files in the data path and get their kind
         string[] files = AppManager.LoadJsonsFromAssets(templates_data_path);
-        Dictionary<string, List<string>> json_by_kind = new Dictionary<string, List<string>>();
         foreach (string json in files)
         {
-            CapacityData data = JsonUtility.FromJson<CapacityData>(json);
-
-            if (json_by_kind.ContainsKey(data.kind))
-            {
-                json_by_kind[data.kind].Add(json);
-            }
-            else
-            {
-                json_by_kind.Add(data.kind, new List<string> { json });
-            }
-        }
-
-        // then we go through all json & kind and we load the json with the good type
-        foreach (KeyValuePair<string, List<string>> entry in json_by_kind)
-        {
-            string kind = entry.Key;
-            List<string> json_list = entry.Value;
-            foreach (string json in json_list)
-            {
-                loadCapacityDataOfType(json, kind, ref log_capacities_details, ref templates_capacities_data);
-            }
+            CapacityData data = SaveEngine.LoadCapacityDataWithGoodKind(json);
+            templates_capacities_data.Add(data.id, data);
+            log_capacities_details += data.GetDetails() + "\n";
         }
 
         if (log_templates_data_loading) { Debug.Log("(CapacityEngine) TEMPLATES CAPACITIES DATA LOADED : " + templates_capacities_data.Count + log_capacities_details); }
@@ -149,52 +130,20 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         string log_capacities_details = "\n\n";
 
         // we load all the json files in the data path and get their kind
-        string[] files = AppManager.LoadJsonsFromWorldFolder(world_id, "capacities");
-        Dictionary<string, List<string>> json_by_kind = new Dictionary<string, List<string>>();
-        foreach (string json in files)
+        List<CapacityData> world_capacities = World.Save.capacities;
+        // string[] files = AppManager.LoadJsonsFromWorldFolder(world_id, "capacities");
+        // Dictionary<string, List<CapacityData>> json_by_kind = new Dictionary<string, List<CapacityData>>();
+        foreach (CapacityData data in world_capacities)
         {
-            CapacityData data = JsonUtility.FromJson<CapacityData>(json);
+            world_capacities_data.Add(data.id, data);
+            log_capacities_details += data.GetDetails() + "\n";
 
-            if (json_by_kind.ContainsKey(data.kind))
-            {
-                json_by_kind[data.kind].Add(json);
-            }
-            else
-            {
-                json_by_kind.Add(data.kind, new List<string> { json });
-            }
-        }
-
-        // then we go through all json & kind and we load the json with the good type
-        foreach (KeyValuePair<string, List<string>> entry in json_by_kind)
-        {
-            string kind = entry.Key;
-            List<string> json_list = entry.Value;
-            CapacityData data = null;
-            foreach (string json in json_list)
-            {
-                data = loadCapacityDataOfType(json, kind, ref log_capacities_details, ref world_capacities_data);
-
-                // we add the id to the world unique ids registry to avoid generating the same id for another data
-                World.LazyInstance.RegisterUniqueID(data.id);
-            }
+            // we add the id to the world unique ids registry to avoid generating the same id for another data
+            World.LazyInstance.RegisterUniqueID(data.id);
         }
 
         if (log_world_data_loading) { Debug.Log("(CapacityEngine) WORLD CAPACITIES DATA LOADED : " + world_capacities_data.Count + log_capacities_details); }
     }
-    private CapacityData loadCapacityDataOfType(string json, string kind, ref string log, ref Dictionary<string, CapacityData> data_by_id)
-    {
-        // if (log_awake_data) { Debug.Log($"(CapacityEngine - loadCapacityDataOfType) loading capacity of kind {kind} with json : {json}"); }
-
-        Type type = Type.GetType(kind + "Data");
-        if (type == null) { type = Type.GetType(kind.Replace("Capacity","Data")); }
-        if (type == null) { type = typeof(CapacityData); }
-        CapacityData data = JsonUtility.FromJson(json, type) as CapacityData;
-        data_by_id.Add(data.id, data);
-        log += data.GetDetails() + "\n";
-        return data;
-    }
-
 
 
     ///

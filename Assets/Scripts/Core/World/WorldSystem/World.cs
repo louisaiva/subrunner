@@ -10,8 +10,12 @@ public class World : BSOD_System<World>
     public static WorldLoadStatus Status => LazyInstance != null ? LazyInstance.load_status : WorldLoadStatus.NotLoaded;
 
     [Header("Current world")]
-    public string world_id;
-    public WorldData data;
+    public string world_to_load = ""; // we can set this in the inspector to load a specific world at start
+    public string world_id => data == null ? "" : data.id;
+    public static string ID => LazyInstance == null ? "" : LazyInstance.world_id;
+    public WorldData data => save == null ? null : save.world;
+    public WorldSaveData save;
+    public static WorldSaveData Save => LazyInstance == null ? null : LazyInstance.save;
     public bool IsWorldLoaded => load_status == WorldLoadStatus.Loaded;
     public bool IsWorldLoadingOrUnloading => load_status != WorldLoadStatus.Loaded && load_status != WorldLoadStatus.NotLoaded;
 
@@ -146,19 +150,21 @@ public class World : BSOD_System<World>
         /* */ load_status = WorldLoadStatus.LoadingWorld;
         ///
 
-        string json = extract_world_json(world_id);
-        if (json == null)
+        save = SaveEngine.GetWorldSave(world_id);
+        if (save == null)
         {
-            if (log) { Debug.LogWarning($"(World) Failed to load world data for world_id: {world_id} -- json is null."); }
+            if (log) { Debug.LogWarning($"(World) Failed to load world save data for world_id: {world_id} -- json is null."); }
             return;
         }
 
-        // load the data inside the world
-        data = JsonUtility.FromJson<WorldData>(json);
-        this.world_id = world_id;
-        data.id = world_id; // we set the world_id in the data for easier access to it later, even if it's not serialized
-        if (log_loading_extended) { Debug.Log($"(World) Loaded world data for world_id: {world_id}\n\n{json}"); }
+        /* string json = extract_save_json(world_id);
+        save = JsonUtility.FromJson<WorldSaveData>(json);
+        if (json == null) */
 
+        // load the data inside the world save
+        // data = JsonUtility.FromJson<WorldData>(json);
+        data.id = world_id; // we set the world_id in the data for easier access to it later, even if it's not serialized
+        if (log_loading_extended) { Debug.Log($"(World) Loaded world save data for world_id: {world_id}\n\n"); }
 
 
         ///
@@ -251,44 +257,6 @@ public class World : BSOD_System<World>
         if (log) { Debug.Log($"(World) Player capable loaded after waiting {frames_waited} frames. Capable ID: {Controller.Capable.ID}"); }
         ChunkEngine.LazyInstance.RefreshPlayerChunk(Controller.Capable);
     }
-    private string extract_world_json(string world_id)
-    {
-        AppManager.EnsureFolderExists(WorldManager.WorldsDataPath);
-        string world_path = Path.Combine(WorldManager.WorldsDataPath, world_id);
-        
-        // check if the current world folder exists in the worlds folder.
-        if (!System.IO.Directory.Exists(world_path))
-        {
-            if (log) { Debug.LogWarning($"(World) World folder not found: {world_path}"); }
-            return null;
-        }
-
-
-        // check if the world data json exists in the worlds folder.
-        string world_data_json_path = Path.Combine(world_path, "world_data.json");
-        if (!System.IO.File.Exists(world_data_json_path))
-        {
-            if (log) { Debug.LogWarning($"(World) World file not found: {world_data_json_path}"); }
-            return null;
-        }
-
-        // we load the world from Application.persistentDataPath + worlds_path
-        try
-        {
-            using (FileStream stream = new FileStream(world_data_json_path, FileMode.Open))
-            {
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            if (log) { Debug.LogWarning($"(World) Failed to extract world data json in {world_data_json_path}: {e.Message}"); }
-            return null;
-        }
-    }
     public async Task UnloadWorld()
     {
         if (log) { Debug.Log($"(World) ----------------------------------- UNLOADING WORLD : {world_id}"); }
@@ -307,8 +275,7 @@ public class World : BSOD_System<World>
         await CapacityEngine.LazyInstance.UnloadWorldData(log_loading_extended);
 
         // we clear the world data
-        data = null;
-        world_id = null;
+        save = null; // ? really useful to clear the save data here ? maybe we will reload it in like 2 seconds
         if (log)
         {
             Debug.Log($"(World) ----------------------------------- WORLD UNLOADED : (in {Time.realtimeSinceStartup - start_time}s)");
@@ -453,7 +420,7 @@ public class World : BSOD_System<World>
 {
     [NonSerialized] public string id;
     [NonSerialized] public List<string> levels_ids; // no need to serialize it since we always get them from the "levels" folder -> more granular better
-    public Dictionary<string, int> generated_ids_counters;
+    [RuntimeOnly] public Dictionary<string, int> generated_ids_counters;
 
 
     // meta data

@@ -191,11 +191,7 @@ public class SpawnCapacity : Capacity
 
 
     // CONSTRUCTOR
-    public SpawnCapacityData(CapacityData parent)
-    {
-        foreach (var prop in parent.GetType().GetProperties()) { prop.SetValue(this, prop.GetValue(parent)); }
-        foreach (var prop in parent.GetType().GetFields()) { prop.SetValue(this, prop.GetValue(parent)); }
-    }
+    public SpawnCapacityData(CapacityData parent) : base(parent) { }
 
     // DUPLICATE
     public override ICapacityData Duplicate()

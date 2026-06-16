@@ -954,6 +954,9 @@ public class LevelBuilder : MonoBehaviour
     // LOAD
     public bool LoadLevelSchematic(string world, string level)
     {
+        // todo : think about how to handle single world save data & schematics, maybe
+        // todo : we need to include schematics inside the world save data ?
+
         string path = Path.Combine("levels", level + ".schematic");
         string json = AppManager.LoadJsonFromWorldFolder(world, path);
         if (string.IsNullOrEmpty(json))

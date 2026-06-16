@@ -230,8 +230,17 @@ public class AppManager : MonoBehaviour
     public static string LoadJsonFromWorldFolder(string world_id, string path)
     {
         // load json from the current world data path (which is in the persistent data path) instead of the assets
-        // path should contain the world name like this : "world_id/levels/level_id.json"
-        string json_path = Path.Combine(WorldManager.WorldsDataPath, world_id, path);
+        // path should NOT contain the world name, since it is specified on its own like this :
+        // - world_id = "test"
+        // - path = "levels/level_id.json"
+        string json_path = Path.Combine(world_id, path);
+        return LoadJsonFromWorldsFolder(json_path);
+    }
+    public static string LoadJsonFromWorldsFolder(string path)
+    {
+        // load json from the current world data path (which is in the persistent data path) instead of the assets
+        // path should contain the world name if you are looking for a file into a world folder like this : "world_id/levels/level_id.json"
+        string json_path = Path.Combine(WorldManager.WorldsDataPath, path);
         if (!System.IO.File.Exists(json_path))
         {
             Debug.LogWarning($"(AppManager) Failed to load json from persistent data path: {json_path} because the file was not found.");
@@ -259,11 +268,16 @@ public class AppManager : MonoBehaviour
         EnsureFolderExists(worlds_folder_path);
         Application.OpenURL(worlds_folder_path);
     }
-    public static void OpenFolderInWorlds(string path_in_worlds)
+    public static bool OpenFolderInWorlds(string path_in_worlds)
     {
         string path = Path.Combine(Application.persistentDataPath, "worlds", path_in_worlds);
-        EnsureFolderExists(path);
+        if (!Directory.Exists(path))
+        {
+            Debug.LogWarning($"(AppManager) Failed to open folder in worlds because the folder was not found: {path}");
+            return false;
+        }
         Application.OpenURL(path);
+        return true;
     }
 
     // JSON DATA SAVING TO WORLD DATA PATH
@@ -272,6 +286,20 @@ public class AppManager : MonoBehaviour
         string json_path = Path.Combine(WorldManager.WorldsDataPath, world_id, path);
         System.IO.File.WriteAllText(json_path, json);
         if (log) { Debug.Log($"(AppManager) Saved json to {world_id} world folder: {json_path}\n{json}"); }
+    }
+    public static void SaveJsonToWorldsDataPath(string path, string json, Verbosity verbose = Verbosity.Normal)
+    {
+        string full_path = Path.Combine(WorldManager.WorldsDataPath, path);
+        try
+        {
+            System.IO.File.WriteAllText(full_path, json);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"(AppManager) Failed to save json to worlds data path: {full_path}\n{json}\nError: {e.Message}");
+            return;
+        }
+        if (verbose >= Verbosity.Normal) { Debug.Log($"(AppManager) Saved json to worlds data path: {full_path}\n{json}"); }
     }
     public static void SaveJsonToAsset(string path, string json, Verbosity verbose)
     {

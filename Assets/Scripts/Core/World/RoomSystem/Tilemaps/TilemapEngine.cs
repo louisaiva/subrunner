@@ -265,11 +265,11 @@ public class RoomTilemaps
     public void Build(RoomData data, List<TileBase> tilebases_used)
     {
         // we build the tilemaps
-        ceiling_tilemap?.BuildTilemap(tilebases_used, data.ceiling_tiles, data.ceiling_bounds);
-        walls_tilemap?.BuildTilemap(tilebases_used, data.walls_tiles, data.walls_bounds);
-        carpet_tilemap?.BuildTilemap(tilebases_used, data.carpet_tiles, data.carpet_bounds);
-        ground_tilemap?.BuildTilemap(tilebases_used, data.ground_tiles, data.ground_bounds);
-        edges_tilemap?.BuildTilemap(tilebases_used, data.edges_tiles, data.edges_bounds);
+        ceiling_tilemap?.BuildTilemap(tilebases_used, data.ceiling_tiles, data.ceiling_bounds.ToBoundsInt());
+        walls_tilemap?.BuildTilemap(tilebases_used, data.walls_tiles, data.walls_bounds.ToBoundsInt());
+        carpet_tilemap?.BuildTilemap(tilebases_used, data.carpet_tiles, data.carpet_bounds.ToBoundsInt());
+        ground_tilemap?.BuildTilemap(tilebases_used, data.ground_tiles, data.ground_bounds.ToBoundsInt());
+        edges_tilemap?.BuildTilemap(tilebases_used, data.edges_tiles, data.edges_bounds.ToBoundsInt());
     }
 
     // ENABLER

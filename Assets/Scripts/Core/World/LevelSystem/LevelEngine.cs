@@ -92,12 +92,12 @@ public class LevelEngine : BSOD_System<LevelEngine>
         string log_levels_details = "\n\n";
 
         // we load all the json files in the data path and convert them to LevelData objects
-        string[] files = AppManager.LoadJsonsFromWorldFolder(world_id, "levels");
-        foreach (string file in files)
+        // string[] files = AppManager.LoadJsonsFromWorldFolder(world_id, "levels");
+        List<LevelData> levels = World.Save.levels;
+        foreach (LevelData level_data in levels)
         {
-            LevelData data = JsonUtility.FromJson<LevelData>(file);
-            levels_data.Add(data.id, data);
-            log_levels_details += data.GetDetails() + "\n";
+            levels_data.Add(level_data.id, level_data);
+            log_levels_details += level_data.GetDetails() + "\n";
         }
 
         if (log_awake_data) { Debug.Log("(LevelEngine) LEVELS DATA LOADED : " + levels_data.Count + log_levels_details); }
@@ -258,27 +258,25 @@ public class LevelEngine : BSOD_System<LevelEngine>
     // STATIC GETTERS
     public static List<LevelData> LoadWorldLevelsData(string world_id)
     {
-        List<LevelData> levels_data = new List<LevelData>();
-
-        // we load all the json files in the data path and convert them to LevelData objects
-        string[] files = AppManager.LoadJsonsFromWorldFolder(world_id, "levels");
-        foreach (string file in files)
-        {
-            LevelData data = JsonUtility.FromJson<LevelData>(file);
-            levels_data.Add(data);
-        }
-        return levels_data;
+        if (string.IsNullOrEmpty(world_id)) { Debug.LogWarning($"(LevelEngine - LoadWorldLevelsData) Invalid world_id : '{world_id}'"); return new List<LevelData>(); }
+        
+        // else the targeted world is not loaded. we need to load it
+        WorldSaveData save = SaveEngine.GetWorldSave(world_id);
+        return save.levels;
     }
     public static LevelData LoadWorldLevelData(string world_id, string level_id)
     {
-        // we load the json file for the specified level and convert it to a LevelData object
-        string file = AppManager.LoadJsonFromWorldFolder(world_id, Path.Combine("levels", level_id + ".json"));
-        if (string.IsNullOrEmpty(file))
+        if (string.IsNullOrEmpty(world_id) || string.IsNullOrEmpty(level_id)) { Debug.LogWarning($"(LevelEngine - LoadWorldLevelData) Invalid world_id or level_id : world_id='{world_id}', level_id='{level_id}'"); return null; }
+
+        // we get the save from save engine
+        WorldSaveData save = SaveEngine.GetWorldSave(world_id);
+        foreach (LevelData level_data in save.levels)
         {
-            Debug.LogError($"(LevelEngine) Level data not found for id: {level_id}");
-            return null;
+            if (level_data.id == level_id) { return level_data; }
         }
-        return JsonUtility.FromJson<LevelData>(file);
+
+        Debug.LogError($"(LevelEngine) Level data not found for id: {level_id} in world: {world_id}");
+        return null;
     }
 }
 

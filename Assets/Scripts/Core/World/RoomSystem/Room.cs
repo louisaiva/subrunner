@@ -69,21 +69,21 @@ public class Room : MonoBehaviour
         }
         room_data.tilebases_names = tilebase_paths_used;
     }
-    protected int[] get_tilemap(Tilemap tilemap, out BoundsInt bounds, ref TileBase[] tilebases_used)
+    protected int[] get_tilemap(Tilemap tilemap, out BoundsIntData bounds, ref TileBase[] tilebases_used)
     {
         // check if tilemap is null
-        if (tilemap == null) { bounds = new BoundsInt(); return new int[0]; }
+        if (tilemap == null) { bounds = new BoundsIntData(); return new int[0]; }
 
         tilemap.CompressBounds();
-        bounds = tilemap.cellBounds;
-        TileBase[] tiles = tilemap.GetTilesBlock(bounds);
+        BoundsInt boundsInt = tilemap.cellBounds;
+        TileBase[] tiles = tilemap.GetTilesBlock(boundsInt);
         int[] tiles_data = new int[tiles.Length];
-        for (int x = 0; x < bounds.size.x; x++)
+        for (int x = 0; x < boundsInt.size.x; x++)
         {
-            for (int y = 0; y < bounds.size.y; y++)
+            for (int y = 0; y < boundsInt.size.y; y++)
             {
-                TileBase tile = tiles[x + y * bounds.size.x];
-                if (tile == null) { tiles_data[x + y * bounds.size.x] = -1; continue; }
+                TileBase tile = tiles[x + y * boundsInt.size.x];
+                if (tile == null) { tiles_data[x + y * boundsInt.size.x] = -1; continue; }
 
                 // check if we have it already in the used ones
                 if (!tilebases_used.Contains(tile))
@@ -93,9 +93,10 @@ public class Room : MonoBehaviour
 
                 // the tile_id is the index inside tilebases
                 int tile_id = System.Array.IndexOf(tilebases_used, tile);
-                tiles_data[x + y * bounds.size.x] = tile_id;
+                tiles_data[x + y * boundsInt.size.x] = tile_id;
             }
         }
+        bounds = new BoundsIntData(boundsInt);
         return tiles_data;
     }
     public Tilemap GetStaticTilemap(string tilemap_type)

@@ -427,7 +427,8 @@ public class Controller : MonoBehaviour
         }
 
         // then we load the controller data again, which will load the capable data we just modified
-        LoadData(new_data, tp: false);
+        bool first_spawn = false;
+        LoadData(new_data, ref first_spawn, tp: false);
     }
 
 
@@ -480,16 +481,17 @@ public class Controller : MonoBehaviour
 
         // load the data & control the initial capable
         if (log) { Debug.Log($"(Controller) Controller data ready to be loaded : {data.GetDetails()}"); }
-        LoadData(data);
+        bool first_spawn = false;
+        LoadData(data, ref first_spawn);
 
         // register to CapableEngine despawn event
         CapableEngine.LazyInstance.OnCapableDespawned += handle_capable_despawned;
 
         if (log) { Debug.Log($"(Controller) CONTROLLER SUCCESSFULLY LOADED for '{world_id}' !\n{data.GetDetails()}"); }
 
-
-        // now we can launch the "intro" cinematics
-        UI_Manager.Instance.GetPool<UI_CinematicPool>()?.PlayCinematic("intro");
+        // now we can launch the "intro" cinematics (only if this is the first spawn)
+        if (first_spawn) { UI_Manager.Instance.GetPool<UI_CinematicPool>()?.PlayCinematic("intro"); }
+        else { UI_Manager.Instance.SwitchToHUD(); }
     }
     public async Awaitable UnloadWorldData(bool log)
     {
@@ -507,7 +509,7 @@ public class Controller : MonoBehaviour
     [Header("On Load Data parameters")]
     [Tooltip("If true, the controller will respawn the template capable EACH time the world is loaded ! THIS MEANS YOU LOSE INVENTORY & POSITION, don't enable this if you don't need it")]
     [SerializeField] private bool respawn_template = false;
-    public void LoadData(ControllerData data, bool tp = true)
+    public void LoadData(ControllerData data, ref bool first_spawn, bool tp = true)
     {
         this.data = data;
         stack.Clear();
@@ -533,7 +535,7 @@ public class Controller : MonoBehaviour
 
 
         string capable_id = data.controlled_capable_id;
-        if (string.IsNullOrEmpty(capable_id)) { capable_id = data.capable_template; }
+        if (string.IsNullOrEmpty(capable_id)) { capable_id = data.capable_template; first_spawn = true; }
         if (string.IsNullOrEmpty(capable_id))
         {
             Debug.LogError($"(Controller) No capable id defined in controller data !!");
@@ -576,13 +578,9 @@ public class Controller : MonoBehaviour
     // STATIC METHODS
     public static ControllerData LoadWorldControllerData(string world_id)
     {
-        string json = AppManager.LoadJsonFromWorldFolder(world_id, "controller.json");
-        ControllerData data = JsonUtility.FromJson<ControllerData>(json);
-        if (data == null)
-        {
-            Debug.LogError($"(Controller) Failed to load controller data for world with id '{world_id}' !!");
-            return null;
-        }
-        return data;
+        if (string.IsNullOrEmpty(world_id)) { return null; }
+        WorldSaveData save = SaveEngine.GetWorldSave(world_id);
+        if (save == null) { return null; }
+        return save.controller;
     }
 }

@@ -9,9 +9,12 @@ public class WorldFolderCaller : MonoBehaviour
     {
         if (rest_of_path == "")
         {
-            AppManager.OpenFolderInWorlds(world_id);
-            return;
+            if (AppManager.OpenFolderInWorlds(world_id)) { return; }
         }
-        AppManager.OpenFolderInWorlds(Path.Combine(world_id, rest_of_path));
+        else if (AppManager.OpenFolderInWorlds(Path.Combine(world_id, rest_of_path))) { return; }
+
+        // we failed to open the folder, maybe we have a single file world save, we open the main world folder instead
+        AppManager.OpenWorldsFolder();
+        return;
     }
 }

@@ -10,6 +10,8 @@ using System.Reflection;
 /// </summary>
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
 public sealed class RuntimeOnlyAttribute : Attribute { }
+[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+public sealed class IncludeInDataAttribute : Attribute { }
 
 
 /// <summary>
@@ -146,7 +148,7 @@ public interface ICapableData : IData
     // GET DETAILS
     public virtual string GetDetails()
     {
-        string details = $"Capable '{id}' :\n";
+        string details = $"Capable '{id}' (of type : '{GetType().Name}') :\n";
         details += $"  - kind : {kind}\n";
         details += $"  - position : {position}\n";
         details += $"  - orientation : {orientation}\n";

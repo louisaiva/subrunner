@@ -11,6 +11,7 @@ using System;
 using UnityEditor;
 #endif
 
+[Obsolete("WorldSaver is deprecated. Use WorldManager/SaveEngine instead.")]
 public class WorldSaver : MonoBehaviour
 {
 

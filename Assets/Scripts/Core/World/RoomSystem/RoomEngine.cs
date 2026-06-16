@@ -81,10 +81,10 @@ public class RoomEngine : BSOD_System<RoomEngine>
         string log_rooms_details = "\n\n";
 
         // we load all the json files in the data path and convert them to RoomData objects
-        string[] files = AppManager.LoadJsonsFromWorldFolder(world_id, "rooms");
-        foreach (string file in files)
+        List<RoomData> rooms = World.Save.rooms;
+        // string[] files = AppManager.LoadJsonsFromWorldFolder(world_id, "rooms");
+        foreach (RoomData data in rooms)
         {
-            RoomData data = JsonUtility.FromJson<RoomData>(file);
             rooms_data.Add(data.id, data);
             log_rooms_details += data.GetDetails() + "\n";
         }
@@ -168,13 +168,13 @@ public class RoomEngine : BSOD_System<RoomEngine>
     }
     public List<RoomData> LoadRoomsData(string world_id, List<string> room_ids)
     {
-        List<RoomData> rooms_data = new List<RoomData>();
+        if (string.IsNullOrEmpty(world_id)) { Debug.LogWarning($"(RoomEngine - LoadRoomsData) Invalid world_id : '{world_id}'"); return new List<RoomData>(); }
 
-        // we load all the json files in the data path and convert them to RoomData objects
-        string[] files = AppManager.LoadJsonsFromWorldFolder(world_id, "rooms");
-        foreach (string file in files)
+        List<RoomData> rooms_data = new List<RoomData>();
+        WorldSaveData save = SaveEngine.GetWorldSave(world_id);
+
+        foreach (RoomData data in save.rooms)
         {
-            RoomData data = JsonUtility.FromJson<RoomData>(file);
             if (!room_ids.Contains(data.id)) { continue; }
             rooms_data.Add(data);
         }
@@ -210,13 +210,16 @@ public class RoomEngine : BSOD_System<RoomEngine>
     // STATIC GETTERS
     public static List<RoomData> LoadWorldRoomsData(string world_id, List<string> room_ids)
     {
+        if (string.IsNullOrEmpty(world_id)) { return new List<RoomData>(); }
+        WorldSaveData save = SaveEngine.GetWorldSave(world_id);
+
         List<RoomData> levels_data = new List<RoomData>();
 
         // we load all the json files in the data path and convert them to RoomData objects
-        string[] files = AppManager.LoadSpecificJsonsFromWorldFolder(world_id, "rooms", room_ids);
-        foreach (string file in files)
+        // string[] files = AppManager.LoadSpecificJsonsFromWorldFolder(world_id, "rooms", room_ids);
+        foreach (RoomData data in save.rooms)
         {
-            RoomData data = JsonUtility.FromJson<RoomData>(file);
+            if (!room_ids.Contains(data.id)) { continue; }
             levels_data.Add(data);
         }
         return levels_data;

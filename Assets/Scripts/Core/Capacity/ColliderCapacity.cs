@@ -95,11 +95,7 @@ public class ColliderCapacity : Capacity
 
 
     // CONSTRUCTOR
-    public ColliderCapacityData(CapacityData parent)
-    {
-        foreach (var prop in parent.GetType().GetProperties()) { prop.SetValue(this, prop.GetValue(parent)); }
-        foreach (var prop in parent.GetType().GetFields()) { prop.SetValue(this, prop.GetValue(parent)); }
-    }
+    public ColliderCapacityData(CapacityData parent) : base(parent) { }
 
     // DUPLICATE
     public override ICapacityData Duplicate()

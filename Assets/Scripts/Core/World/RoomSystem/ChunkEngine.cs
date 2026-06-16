@@ -194,10 +194,11 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
         string log_rooms_details = "\n\n";
 
         // we load all the json files in the data path and convert them to RoomData objects
-        string[] files = AppManager.LoadJsonsFromWorldFolder(world_id, "chunks");
-        foreach (string file in files)
+        List<ChunkData> chunks = World.Save.chunks;
+        // string[] files = AppManager.LoadJsonsFromWorldFolder(world_id, "chunks");
+        foreach (ChunkData data in chunks)
         {
-            ChunkData data = JsonUtility.FromJson<ChunkData>(file);
+            // ChunkData data = JsonUtility.FromJson<ChunkData>(file);
             chunks_data.Add(data.id, data);
             generate_runtime_chunk_id(data.id);
             log_rooms_details += data.GetDetails() + "\n";
@@ -913,14 +914,15 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
     // STATIC GETTERS
     public static List<ChunkData> LoadWorldChunksData(string world_id, List<string> chunks_ids)
     {
+        if (string.IsNullOrEmpty(world_id)) { return new List<ChunkData>(); }
+        WorldSaveData save = SaveEngine.GetWorldSave(world_id);
         List<ChunkData> chunks_data = new List<ChunkData>();
 
         // we load all the json files in the data path and convert them to RoomData objects
-        string[] files = AppManager.LoadSpecificJsonsFromWorldFolder(world_id, "chunks", chunks_ids);
-        foreach (string file in files)
+        // string[] files = AppManager.LoadSpecificJsonsFromWorldFolder(world_id, "chunks", chunks_ids);
+        foreach (ChunkData data in save.chunks)
         {
-            // if (!chunks_ids.Contains(data.id)) { continue; }
-            ChunkData data = JsonUtility.FromJson<ChunkData>(file);
+            if (!chunks_ids.Contains(data.id)) { continue; }
             chunks_data.Add(data);
         }
         return chunks_data;

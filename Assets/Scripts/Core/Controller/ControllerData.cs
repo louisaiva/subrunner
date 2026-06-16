@@ -69,14 +69,8 @@ using UnityEngine;
         }
 
         // updates container
-        if (potential_container != null)
-        {
-            container_id = potential_container.ID;
-        }
-        else
-        {
-            container_id = null;
-        }
+        if (potential_container != null) { container_id = potential_container.ID; }
+        else { container_id = null; }
 
         player_level = level.id;
         slog?.Log($"Updated player level/room/chunk in controller data : level '{player_level}', room '{player_room}', chunk '{player_chunk}'.");

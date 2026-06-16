@@ -59,6 +59,7 @@ public class GameManager : MonoBehaviour
         _state = GameState.Loading;
 
         // we launch the world from WorldManager
+        World.LazyInstance.load_status = WorldLoadStatus.NotLoaded;
         WorldManager.LazyInstance.LoadSelectedWorld();
     }
     private void Start()

@@ -19,11 +19,7 @@ using UnityEngine;
     public AvoidanceData avoidance_data = new AvoidanceData();
 
     // CONSTRUCTOR
-    public MotorData(CapacityData parent)
-    {
-        foreach (var prop in parent.GetType().GetProperties()) { prop.SetValue(this, prop.GetValue(parent)); }
-        foreach (var prop in parent.GetType().GetFields()) { prop.SetValue(this, prop.GetValue(parent)); }
-    }
+    public MotorData(CapacityData parent) : base(parent) { }
 
     // DUPLICATE
     public override ICapacityData Duplicate()

@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using Newtonsoft.Json;
+using Unity.VisualScripting;
 
 public class SaveEngine : MonoBehaviour
 {
@@ -44,6 +46,24 @@ public class SaveEngine : MonoBehaviour
     }
 
 
+    [Header("Save Parameters")]
+    [SerializeField] private bool save_as_one_file = true; // if true, saves the whole world save data in a single json file, if false, saves the world save data in multiple json files in a folder structure
+    private static JsonSerializerSettings one_file_settings = new JsonSerializerSettings
+    {
+        TypeNameHandling = TypeNameHandling.Auto,
+        Formatting = Formatting.Indented,
+        ContractResolver = new UnityValueTypeContractResolver()
+        /* ,
+        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+        PreserveReferencesHandling = PreserveReferencesHandling.Objects */
+    };
+    /* private static JsonTextWriter Writer = new JsonTextWriter(new StringWriter())
+    {
+        Formatting = Formatting.Indented,
+        Indentation = 4,
+        IndentChar = ' '
+    }; */
+    
     [Header("Logs")]
     [SerializeField] private Loggable<SaveEngine> log;
     private static Loggable<SaveEngine> slog => LazyInstance != null ? LazyInstance.log : null;
@@ -78,36 +98,53 @@ public class SaveEngine : MonoBehaviour
     /// </summary>
     public static void SaveDynamicWorld()
     {
+        WorldSaveData save = generate_save_from_dynamic_world();
+        if (save == null)
+        {
+            slog?.Error("Failed to generate world save data. Aborting saving.");
+            return;
+        }
+
+        // and we save it
+        if (LazyInstance.save_as_one_file) { SaveWorldSaveDataAsFile(save); }
+        else { SaveWorldSaveDataAsFolder(save); }
+
+        slog?.Log($"Finished dynamic saving of world '{save.world.id}' !");
+    }
+    private static WorldSaveData generate_save_from_dynamic_world()
+    {
         string world_id = WorldManager.StaticSelectedWorld;
         if (string.IsNullOrEmpty(world_id))
         {
-            slog?.Error("No world selected, cannot save dynamic world.");
-            return;
+            slog?.Error("No world selected, cannot generate save data from dynamic world.");
+            return null;
         }
         slog?.Log($"Saving Dynamic World '{world_id}'");
+        WorldSaveData save = new WorldSaveData();
 
         // saving the world data
-        WorldData world_data = World.LazyInstance.data;
-        SaveWorldData(world_data);
-        slog?.Log($"Saved world data : '{world_id}'");
+        save.world = World.LazyInstance.data;
+        slog?.Log($"Gathered world data : '{world_id}'");
 
         // controller
         ControllerData controller_data = Controller.LazyInstance.data;
-        SaveControllerData(controller_data, world_id);
-        slog?.Log($"Saved controller data : '{controller_data.controlled_capable_id}'");
+        controller_data.UpdatePlayerLevelRoomChunk(slog);
+        save.controller = controller_data;
+        slog?.Log($"Gathered controller data : '{controller_data.controlled_capable_id}'");
 
         // levels
         List<string> rooms_ids = new List<string>();
-        int levels_count = world_data.levels_ids != null ? world_data.levels_ids.Count : 0;
+        int levels_count = save.world.levels_ids != null ? save.world.levels_ids.Count : 0;
         string tmp_log = "\n";
         for (int i = 0; i < levels_count; i++)
         {
-            LevelData level_data = LevelEngine.LazyInstance.GetLevelDataFromID(world_data.levels_ids[i]);
-            SaveLevelData(level_data, world_id);
+            LevelData level_data = LevelEngine.LazyInstance.GetLevelDataFromID(save.world.levels_ids[i]);
+            save.levels.Add(level_data);
+            // SaveLevelData(level_data, world_id);
             tmp_log += $"- '{level_data.id}' -------------- {level_data.rooms_ids.Count} rooms\n";
             rooms_ids.AddRange(level_data.rooms_ids);
         }
-        slog?.Log($"Saved {levels_count} levels :{tmp_log}");
+        slog?.Log($"Gathered {levels_count} levels :{tmp_log}");
 
         // rooms
         List<string> chunks_ids = new List<string>();
@@ -115,11 +152,12 @@ public class SaveEngine : MonoBehaviour
         tmp_log = "\n";
         for (int i = 0; i < rooms_data.Count; i++)
         {
-            SaveRoomData(rooms_data[i], world_id);
+            save.rooms.Add(rooms_data[i]);
+            // SaveRoomData(rooms_data[i], world_id);
             tmp_log += $"- '{rooms_data[i].id}' -------------- {rooms_data[i].chunks_ids.Count} chunks\n";
             chunks_ids.AddRange(rooms_data[i].chunks_ids);
         }
-        slog?.Log($"Saved {rooms_data.Count} rooms :{tmp_log}");
+        slog?.Log($"Gathered {rooms_data.Count} rooms :{tmp_log}");
 
         // chunks
         List<string> capables_ids = new List<string>();
@@ -127,12 +165,13 @@ public class SaveEngine : MonoBehaviour
         tmp_log = "\n";
         for (int i = 0; i < chunks_data.Count; i++)
         {
-            SaveChunkData(chunks_data[i], world_id);
+            save.chunks.Add(chunks_data[i]);
+            // SaveChunkData(chunks_data[i], world_id);
             tmp_log += $"- '{chunks_data[i].id}' -------------- {chunks_data[i].capables_ids.Count} capables  /  {chunks_data[i].movables_ids.Count} movables\n";
             capables_ids.AddRange(chunks_data[i].capables_ids);
             capables_ids.AddRange(chunks_data[i].movables_ids);
         }
-        slog?.Log($"Saved {chunks_data.Count} chunks :{tmp_log}");
+        slog?.Log($"Gathered {chunks_data.Count} chunks :{tmp_log}");
 
 
         // now we save the dynamic data of capables & capacities
@@ -158,7 +197,8 @@ public class SaveEngine : MonoBehaviour
             capables_ids.Clear();
             for (int i = 0; i < capables_data.Count; i++)
             {
-                SaveCapableData(capables_data[i], world_id);
+                save.capables.Add(capables_data[i]);
+                // SaveCapableData(capables_data[i], world_id);
                 tmp_log += $"- '{capables_data[i].id}' -------------- {(capables_data[i].capacities_ids != null ? capables_data[i].capacities_ids.Count : 0)} capacities  /  {(capables_data[i].inventory != null ? capables_data[i].inventory.ItemsCount() : 0)} items\n";
                 if (capables_data[i].capacities_ids != null) { capacities_ids.AddRange(capables_data[i].capacities_ids); }
                 if (capables_data[i].inventory != null) { capables_ids.AddRange(capables_data[i].inventory.GetAllItemsIds()); }
@@ -169,22 +209,23 @@ public class SaveEngine : MonoBehaviour
                     capables_ids.AddRange(container_data.contained_capable_ids);
                 }
             }
-            slog?.Log($"Saved {capables_data.Count} capables ----- iteration {iterations} :{tmp_log}");
+            slog?.Log($"Gathered {capables_data.Count} capables ----- iteration {iterations} :{tmp_log}");
             total_capables += capables_data.Count;
         }
-        slog?.Log($"Saved total {total_capables} capables in {iterations} iterations.");
+        slog?.Log($"Gathered total {total_capables} capables in {iterations} iterations.");
 
         // capacities
         List<CapacityData> capacities_data = CapacityEngine.LazyInstance.GetCapacitiesDataFromIDs(capacities_ids);
         tmp_log = "\n";
         for (int i = 0; i < capacities_data.Count; i++)
         {
-            SaveCapacityData(capacities_data[i], world_id);
+            save.capacities.Add(capacities_data[i]);
+            // SaveCapacityData(capacities_data[i], world_id);
             tmp_log += $"- '{capacities_data[i].id}'\n";
         }
-        slog?.Log($"Saved {capacities_data.Count} capacities :{tmp_log}");
+        slog?.Log($"Gathered {capacities_data.Count} capacities :{tmp_log}");
 
-        slog?.Log($"Finished dynamic saving of world '{world_id}' !");
+        return save;
     }
     public static void SaveAIOLevel(Level level, string world_id, bool save_rooms = true, bool save_capables = true)
     {
@@ -224,8 +265,207 @@ public class SaveEngine : MonoBehaviour
     }
 
 
+    ///
+    //
+    /// LOADING SAVES
+    //
+    ///
+    
+    private static Dictionary<string, WorldSaveData> _loaded_worlds_saves = new Dictionary<string, WorldSaveData>();
+    public static WorldSaveData GetWorldSave(string world_id)
+    {        
+        if (string.IsNullOrEmpty(world_id)) { Debug.LogWarning($"(SaveEngine) Invalid world_id : '{world_id}'"); return null; }
 
+        // Debug.Log($"(SaveEngine) Loading world save data for world '{world_id}' from folder or file..., save is null: {save == null}");
+        if (_loaded_worlds_saves.TryGetValue(world_id, out WorldSaveData save)) { return save; } // we already have one loaded, we return it
+        save = new WorldSaveData();
 
+        // then we have no save load
+        // Debug.Log($"(SaveEngine) Loading world save data for world '{world_id}' from folder or file..., save is null: {save == null}");
+
+        AppManager.EnsureFolderExists(WorldManager.WorldsDataPath);
+        if (load_world_save_from_folder(world_id, ref save))
+        {
+            _loaded_worlds_saves[world_id] = save;
+            return save;
+        }
+
+        // here we have no folder for the world, we try to load it from the single file save
+        if (load_world_save_from_file(world_id, ref save))
+        {
+            _loaded_worlds_saves[world_id] = save;
+            return save;
+        }
+
+        // if we reach this point, we failed to load the world save data
+        Debug.LogError($"(SaveEngine) Failed to load world save data for world '{world_id}' from both folder and file.");
+        return null;
+    }
+    private static bool load_world_save_from_file(string id, ref WorldSaveData save, bool log = true)
+    {
+        // string world_file_path = Path.Combine(WorldManager.WorldsDataPath, id + ".json");
+
+        // get the json
+        string json = AppManager.LoadJsonFromWorldsFolder(id + ".json");
+        if (string.IsNullOrEmpty(json))
+        {
+            if (log) { Debug.LogWarning($"(SaveEngine - Load World Save) World Save Data file not found: {id}.json"); }
+            return false;
+        }
+        save = JsonConvert.DeserializeObject<WorldSaveData>(json, one_file_settings);
+        return true;
+    }
+    private static bool load_world_save_from_folder(string id, ref WorldSaveData save, bool log = true)
+    {
+        string world_path = Path.Combine(WorldManager.WorldsDataPath, id);
+
+        // check if the current world folder exists in the worlds folder.
+        if (!Directory.Exists(world_path))
+        {
+            if (log) { Debug.LogWarning($"(World) World folder not found: {world_path}"); }
+            return false;
+        }
+
+        // now we load the world save data from the folder structure
+        string json = "";
+        
+        // first, world data
+        json = AppManager.LoadJsonFromWorldFolder(id, "world_data.json");
+        if (!string.IsNullOrEmpty(json)) { save.world = JsonUtility.FromJson<WorldData>(json); }
+        else
+        {
+            if (log) { Debug.LogWarning($"(World) World data file not found: {Path.Combine(world_path, "world_data.json")}"); }
+            return false;
+        }
+
+        // controller data
+        json = AppManager.LoadJsonFromWorldFolder(id, "controller.json");
+        if (!string.IsNullOrEmpty(json)) { save.controller = JsonUtility.FromJson<ControllerData>(json); }
+        else
+        {
+            if (log) { Debug.LogWarning($"(World) Controller data file not found: {Path.Combine(world_path, "controller.json")}"); }
+            return false;
+        }
+
+        // levels data
+        string[] jsons = AppManager.LoadJsonsFromWorldFolder(id, "levels");
+        if (jsons != null && jsons.Length > 0)
+        {
+            foreach (string level_json in jsons)
+            {
+                LevelData level_data = JsonUtility.FromJson<LevelData>(level_json);
+                save.levels.Add(level_data);
+            }
+        }
+        else if (log) { Debug.LogWarning($"(World) No levels data files found in folder: {Path.Combine(world_path, "levels")}"); }
+
+        // rooms data
+        jsons = AppManager.LoadJsonsFromWorldFolder(id, "rooms");
+        if (jsons != null && jsons.Length > 0)
+        {
+            foreach (string room_json in jsons)
+            {
+                RoomData room_data = JsonUtility.FromJson<RoomData>(room_json);
+                save.rooms.Add(room_data);
+            }
+        }
+        else if (log) { Debug.LogWarning($"(World) No rooms data files found in folder: {Path.Combine(world_path, "rooms")}"); }
+
+        // chunks data
+        jsons = AppManager.LoadJsonsFromWorldFolder(id, "chunks");
+        if (jsons != null && jsons.Length > 0)
+        {
+            foreach (string chunk_json in jsons)
+            {
+                ChunkData chunk_data = JsonUtility.FromJson<ChunkData>(chunk_json);
+                save.chunks.Add(chunk_data);
+            }
+        }
+        else if (log) { Debug.LogWarning($"(World) No chunks data files found in folder: {Path.Combine(world_path, "chunks")}"); }
+
+        // capables data
+        jsons = AppManager.LoadJsonsFromWorldFolder(id, "capables");
+        if (jsons != null && jsons.Length > 0)
+        {
+            foreach (string capable_json in jsons)
+            {
+                CapableData capable_data = LoadCapableDataWithGoodKind(capable_json);
+                save.capables.Add(capable_data);
+            }
+        }
+        else if (log) { Debug.LogWarning($"(World) No capables data files found in folder: {Path.Combine(world_path, "capables")}"); }
+
+        // capacities data
+        jsons = AppManager.LoadJsonsFromWorldFolder(id, "capacities");
+        if (jsons != null && jsons.Length > 0)
+        {
+            foreach (string capacity_json in jsons)
+            {
+                CapacityData capacity_data = LoadCapacityDataWithGoodKind(capacity_json);
+                save.capacities.Add(capacity_data);
+            }
+        }
+        else if (log) { Debug.LogWarning($"(World) No capacities data files found in folder: {Path.Combine(world_path, "capacities")}"); }
+
+        // if we reach this point, our save is complete and we return true
+        return true;
+    }
+
+    // todo : we need a method to clear all the cache (or unload a specific world save)
+    // todo : bcz we don't really need to keep all the world saves in memory when playing
+
+    private static bool _log_capable_data_kind_checking = true;
+    public static CapableData LoadCapableDataWithGoodKind(string json)
+    {
+        // gather the kind of the capacity from the json
+        CapableData tmp_data = JsonUtility.FromJson<CapableData>(json);
+        string kind = tmp_data.kind;
+        if (_log_capable_data_kind_checking) { Debug.Log($"(SaveEngine) Loading capable data '{tmp_data.id}' with kind '{kind}'"); }
+
+        // first we check if we have a data for this precise kind
+        Type data_type = Type.GetType(kind + "Data");
+        if (data_type != null)
+        {
+            if (_log_capable_data_kind_checking) { Debug.Log($"(SaveEngine) Found precise data type for capable kind '{kind}' : {data_type}"); }
+            return JsonUtility.FromJson(json, data_type) as CapableData;
+        }
+
+        // we found no precise data type ://
+        // we check if we have an intermediary type
+        // ex : ItemData, DoorData
+        // (insert in the list below)
+        Type capable_type = Type.GetType(kind);
+        if (_log_capable_data_kind_checking) { Debug.Log($"(SaveEngine) No precise data type for capable kind '{kind}' was found. Checking for intermediary types..."); }
+
+        // PersoData
+        if (GameManager.IsKind(capable_type, typeof(Perso))) { data_type = typeof(PersoData); }
+
+        // ItemData
+        else if (GameManager.IsKind(capable_type, typeof(Item))) { data_type = typeof(ItemData); }
+
+        // IAData
+        else if (GameManager.IsKind(capable_type, typeof(IA))) { data_type = typeof(IAData); }
+
+        // DoorData
+        else if (GameManager.IsKind(capable_type, typeof(Door))) { data_type = typeof(DoorData); }
+
+        // no intermediary type -> we give a CapableData, basic
+        else { data_type = typeof(CapableData); }
+
+        if (_log_capable_data_kind_checking) { Debug.Log($"(SaveEngine) Final data type for capable kind '{kind}' is '{data_type}'"); }
+
+        // we finally extract the data
+        return JsonUtility.FromJson(json, data_type) as CapableData;
+    }
+    public static CapacityData LoadCapacityDataWithGoodKind(string json)
+    {
+        // gather the kind of the capacity from the json
+        string kind = JsonUtility.FromJson<CapacityData>(json).kind;
+        Type type = Type.GetType(kind + "Data");
+        if (type == null) { type = Type.GetType(kind.Replace("Capacity", "Data")); }
+        if (type == null) { type = typeof(CapacityData); }
+        return JsonUtility.FromJson(json, type) as CapacityData;
+    }
 
     ///
     //
@@ -285,6 +525,46 @@ public class SaveEngine : MonoBehaviour
     //
     ///
 
+    public static void SaveWorldSaveDataAsFile(WorldSaveData data)
+    {
+        // saves the world save data to a single file
+
+        // update world data
+        bool just_created = !WorldManager.DoesWorldSaveDataExists(data.world.id);
+        data.world.UpdateTime(just_created);
+
+        // prepare for serializing into json, we want to keep to
+        // good casting for everything (SofaData =/= CapableData)
+        // so we use a specific json contract
+        slog?.Log($"Converting WORLD SAVE data to json (single file)... using custom json contract to keep the good casting for all data types");
+        string json = "";
+        try
+        {
+            json = JsonConvert.SerializeObject(data, one_file_settings);
+            slog?.Log($"Serialized {json.Length} chars");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogException(ex);
+        }
+
+        // and we save the world save data to a single json file
+        string path = $"{data.world.id}.json";
+        slog?.Log($"Saving WORLD SAVE data (single file) to path: {path}\n{json}");
+        AppManager.SaveJsonToWorldsDataPath(path, json, slog.Verbose);
+    }
+    public static void SaveWorldSaveDataAsFolder(WorldSaveData data)
+    {
+        // splits the save into small json data files into an unique world folder
+        SaveWorldData(data.world);
+        SaveControllerData(data.controller, data.world.id);
+
+        foreach (LevelData level_data in data.levels) { SaveLevelData(level_data, data.world.id); }
+        foreach (RoomData room_data in data.rooms) { SaveRoomData(room_data, data.world.id); }
+        foreach (ChunkData chunk_data in data.chunks) { SaveChunkData(chunk_data, data.world.id); }
+        foreach (CapableData capable_data in data.capables) { SaveCapableData(capable_data, data.world.id); }
+        foreach (CapacityData capacity_data in data.capacities) { SaveCapacityData(capacity_data, data.world.id); }
+    }
     public static void SaveWorldData(WorldData data)
     {
         bool just_created = WorldManager.EnsureWorldDataHierarchy(data.id);
@@ -299,7 +579,7 @@ public class SaveEngine : MonoBehaviour
     public static void SaveControllerData(ControllerData data, string world_id)
     {
         // updating controller with the player level/room/chunk before saving
-        data.UpdatePlayerLevelRoomChunk(slog);
+        // data.UpdatePlayerLevelRoomChunk(slog);
 
         // save the current ControllerData to a json file
         string json = JsonUtility.ToJson(data, true);

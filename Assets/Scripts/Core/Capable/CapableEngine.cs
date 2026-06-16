@@ -161,30 +161,13 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
         // we load all the json files in the data path and get their kind
         string[] files = AppManager.LoadJsonsFromAssets(templates_data_path);
-        Dictionary<string, List<string>> json_by_kind = new Dictionary<string, List<string>>();
+        // Dictionary<string, List<string>> json_by_kind = new Dictionary<string, List<string>>();
         foreach (string json in files)
         {
-            CapableData data = JsonUtility.FromJson<CapableData>(json);
-
-            if (json_by_kind.ContainsKey(data.kind))
-            {
-                json_by_kind[data.kind].Add(json);
-            }
-            else
-            {
-                json_by_kind.Add(data.kind, new List<string> { json });
-            }
-        }
-
-        // then we go through all json & kind and we load the json with the good type
-        foreach (KeyValuePair<string, List<string>> entry in json_by_kind)
-        {
-            string kind = entry.Key;
-            List<string> json_list = entry.Value;
-            foreach (string json in json_list)
-            {
-                loadCapableDataOfType(json, kind, ref log_capables_details, ref templates_capables_data, generate_runtime: false);
-            }
+            CapableData data = SaveEngine.LoadCapableDataWithGoodKind(json);
+            if (log_awake_data_extended) { Debug.Log($"(CapableEngine) Loading capable data template for '{data.id}' of type {data.GetType().Name}: \n{data.GetDetails()}"); }
+            templates_capables_data.Add(data.id, data);
+            log_capables_details += data.GetDetails() + "\n";
         }
 
         if (log_templates_data_loading) { Debug.Log("(CapableEngine) TEMPLATES CAPABLES DATA LOADED : " + templates_capables_data.Count + log_capables_details); }
@@ -200,47 +183,24 @@ public class CapableEngine : BSOD_System<CapableEngine>
         string log_capables_details = "\n\n";
 
         // we load all the json files in the data path and get their kind
-        string[] files = AppManager.LoadJsonsFromWorldFolder(world_id, "capables");
-        Dictionary<string, List<string>> json_by_kind = new Dictionary<string, List<string>>();
-        CapableData data;
-        foreach (string json in files)
+        // string[] files = World.Save.capables(world_id, "capables");
+        Dictionary<string, List<CapableData>> data_by_kind = new Dictionary<string, List<CapableData>>();
+        // CapableData data;
+        List<CapableData> world_capables = World.Save.capables;
+        foreach (CapableData data in world_capables)
         {
-            data = JsonUtility.FromJson<CapableData>(json);
-            
-            // verify that we are not loading a template
-            if (templates_capables_data.ContainsKey(data.id))
-            {
-                if (log_world_data_loading) { Debug.LogWarning($"(CapableSystem - loadWorldCapablesData) Trying to load world capable data with id {data.id} but it already exists in templates data. Skipping it."); }
-                continue;
-            }
+            if (log_awake_data_extended) { Debug.Log($"(CapableEngine) Loading capable data for '{data.id}' of type {data.GetType().Name}: \n{data.GetDetails()}"); }
+            world_capables_data.Add(data.id, data);
+            generate_runtime_id(data.id);
+            log_capables_details += data.GetDetails() + "\n";
 
-            if (json_by_kind.ContainsKey(data.kind))
-            {
-                json_by_kind[data.kind].Add(json);
-            }
-            else
-            {
-                json_by_kind.Add(data.kind, new List<string> { json });
-            }
-        }
-
-        // then we go through all json & kind and we load the json with the good type
-        foreach (KeyValuePair<string, List<string>> entry in json_by_kind)
-        {
-            string kind = entry.Key;
-            List<string> json_list = entry.Value;
-            foreach (string json in json_list)
-            {
-                data = loadCapableDataOfType(json, kind, ref log_capables_details, ref world_capables_data);
-
-                // we add the id to the world unique ids registry to avoid generating the same id for another data
-                World.LazyInstance.RegisterUniqueID(data.id);
-            }
+            // we add the id to the world unique ids registry to avoid generating the same id for another data
+            World.LazyInstance.RegisterUniqueID(data.id);
         }
 
         if (log_world_data_loading) { Debug.Log("(CapableEngine) WORLD CAPABLES DATA LOADED : " + world_capables_data.Count + log_capables_details); }
     }
-    private CapableData loadCapableDataOfType(string json, string kind, ref string log, ref Dictionary<string, CapableData> data_by_id, bool generate_runtime = true)
+    /* private CapableData loadCapableDataOfType(string json, string kind, ref string log, ref Dictionary<string, CapableData> data_by_id, bool generate_runtime = true)
     {
         // find the data type suited for this capable_type
         // and extracts the json as this data type
@@ -258,7 +218,10 @@ public class CapableEngine : BSOD_System<CapableEngine>
             log += data.GetDetails() + "\n";
             return data;
         }
-        
+
+        // first we check if we have a data for this precise kind
+        Type data_type = Type.GetType(kind + "Data");
+
         // we found no precise data type ://
         // we check if we have an intermediary type
         // ex : ItemData, DoorData
@@ -288,7 +251,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
         if (generate_runtime) { generate_runtime_id(data.id); }
         log += data.GetDetails() + "\n";
         return data;
-    }
+    } */
     private int generate_runtime_id(string id)
     {
         if (string.IsNullOrEmpty(id))
@@ -1193,23 +1156,36 @@ public class CapableEngine : BSOD_System<CapableEngine>
     // STATIC GETTERS
     public static List<CapableData> LoadWorldCapablesData(string world_id, List<string> capables_ids)
     {
+        if (string.IsNullOrEmpty(world_id) || capables_ids == null || capables_ids.Count <= 0) { return new List<CapableData>(); }
+        WorldSaveData save = SaveEngine.GetWorldSave(world_id);
+        if (save == null) { return new List<CapableData>(); }
+
         List<CapableData> capables_data = new List<CapableData>();
 
         // we load all the json files in the data path and convert them to CapableData objects
-        string[] jsons = AppManager.LoadSpecificJsonsFromWorldFolder(world_id, "capables", capables_ids);
-        foreach (string json in jsons)
+        // string[] jsons = AppManager.LoadSpecificJsonsFromWorldFolder(world_id, "capables", capables_ids);
+        // foreach (string json in jsons)
+        foreach (CapableData data in save.capables)
         {
-            CapableData data = JsonUtility.FromJson<CapableData>(json);
+            // CapableData data = JsonUtility.FromJson<CapableData>(json);
+            if (data == null) { continue; }
+            if (!capables_ids.Contains(data.id)) { continue; }
             capables_data.Add(data);
         }
         return capables_data;
     }
     public static CapableData LoadWorldCapableData(string world_id, string item_id)
     {
+        if (string.IsNullOrEmpty(world_id)) { return null; }
+        WorldSaveData save = SaveEngine.GetWorldSave(world_id);
+        if (save == null) { return null; }
+        return save.capables.Find(c => c.id == item_id);
+
+        /*
         string path = Path.Combine("capables", item_id);
         string json = AppManager.LoadJsonFromWorldFolder(world_id, path);
         if (string.IsNullOrEmpty(json)) { return null; }
-        return JsonUtility.FromJson<CapableData>(json);
+        return JsonUtility.FromJson<CapableData>(json); */
     }
 
 }
