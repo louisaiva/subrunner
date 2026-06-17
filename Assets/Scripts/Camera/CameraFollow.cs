@@ -27,7 +27,7 @@ public class CameraFollow : Singleton<CameraFollow>
 
 
     [Header("Blended Targets")]
-    private List<CameraTarget> targets = new List<CameraTarget>();
+    [SerializeField] private List<CameraTarget> targets = new List<CameraTarget>();
     [SerializeField] private List<Transform> debug_targets = new List<Transform>(); // only for showing targets in the inspector
     private Rigidbody2D rb;
 
@@ -36,8 +36,9 @@ public class CameraFollow : Singleton<CameraFollow>
     private Vector3 velocity;
 
     [Header("Size")]
-    [SerializeField] private float default_size = 3f;
-    private float target_size = 3f;
+    public const float DEFAULT_SIZE_OVERALL = 4f;
+    [SerializeField] private float default_size = 4f;
+    [SerializeField] private float target_size = 4f;
 
     // these parameters are used for the dynamic camera mode,
     // which is basically never used but adapt camera movement
@@ -60,11 +61,11 @@ public class CameraFollow : Singleton<CameraFollow>
     ///
 
     // SET SINGLE TARGET
-    public void SetSingleTarget(MonoBehaviour new_target, bool tp = false, float weight = 1f, float size = 3f)
+    public void SetSingleTarget(MonoBehaviour new_target, bool tp = false, float weight = 1f, float size = DEFAULT_SIZE_OVERALL)
     {
         SetSingleTarget(new_target.transform, tp, weight, size);
     }
-    public void SetSingleTarget(Transform new_target, bool tp = false, float weight = 1f, float size = 3f)
+    public void SetSingleTarget(Transform new_target, bool tp = false, float weight = 1f, float size = DEFAULT_SIZE_OVERALL)
     {
         // we remove all other targets
         for (int i = targets.Count - 1; i >= 0; i--)
@@ -80,11 +81,11 @@ public class CameraFollow : Singleton<CameraFollow>
     }
 
     // ADD TARGET
-    public void AddTarget(MonoBehaviour mono, bool tp = false, float weight = 1f, float size = 3f)
+    public void AddTarget(MonoBehaviour mono, bool tp = false, float weight = 1f, float size = DEFAULT_SIZE_OVERALL)
     {
         AddTarget(mono.transform, tp, weight, size);
     }
-    public void AddTarget(Transform new_target, bool tp = false, float weight = 1f, float size = 3f)
+    public void AddTarget(Transform new_target, bool tp = false, float weight = 1f, float size = DEFAULT_SIZE_OVERALL)
     {
         if (new_target == SimpleTarget.transform) { add_target(SimpleTarget.Target, tp); return; }
 
@@ -289,7 +290,7 @@ public class CameraFollow : Singleton<CameraFollow>
     public float Weight; // weight for blending multiple targets
     public float Size; // desired camera size when focusing on this target. if multiple targets, size will be blended based on weight
 
-    public CameraTarget(Transform target, float weight = 1f, float size = 3f)
+    public CameraTarget(Transform target, float weight = 1f, float size = CameraFollow.DEFAULT_SIZE_OVERALL)
     {
         Target = target;
         gameObject = target.gameObject;

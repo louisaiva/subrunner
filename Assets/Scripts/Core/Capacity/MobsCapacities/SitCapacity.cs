@@ -15,6 +15,11 @@ public class SitCapacity : Capacity
 
 
 
+    // TODO : IMPROVE THIS SCRIPT, MAKE IT WORK WITH PLAYER INPUTS
+    // TODO : AND THAT WE CAN EXIT SOFA ALL THE TIME (NOT THE UI)
+    // do we even need an ui ?
+
+
     // SIT & STAND
     public void Sit(Sofa sofa, bool instant = false)
     {

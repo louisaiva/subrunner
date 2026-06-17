@@ -331,11 +331,16 @@ public class Item : Movable, EndlessInteractable
 
 
 
+    ///
+    //
+    /// DATA MANAGEMENT
+    //
+    ///
 
 
 
 
-    // DATA MANAGEMENT
+    // LOAD / GET DATA
     private List<string> dynamic_capacity_ids = new List<string>(); // this list is used to store the capacities that are loaded dynamically on grab, so we can unload them on drop
     public override void LoadData(CapableData data)
     {

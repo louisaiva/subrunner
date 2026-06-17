@@ -221,7 +221,7 @@ public class AnimPlayer : MonoBehaviour
         Anim anim = AnimBank.Instance.GetAnim(anim_name);
         if (log)
         {
-            Debug.Log($"(AnimPlayer - {Capable.ID}) Playing next pile anim : " + anim.name
+            Debug.Log($"(AnimPlayer - {(Capable.ID == null ? "Unknown" : Capable.ID)}) Playing next pile anim : " + anim.name
                 + (anim_name == anim.name
                 ? " (exact match)"
                 : " (" + anim_name + " was asked)"));

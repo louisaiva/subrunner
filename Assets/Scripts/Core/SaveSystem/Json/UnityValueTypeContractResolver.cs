@@ -9,6 +9,8 @@ using UnityEngine;
 
 public sealed class UnityValueTypeContractResolver : DefaultContractResolver
 {
+    private static bool log = false;
+
     protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
     {
         if (member == null) { return null; }
@@ -16,7 +18,7 @@ public sealed class UnityValueTypeContractResolver : DefaultContractResolver
         JsonProperty prop;
         if (backingField != null)
         {
-            // Debug.Log($"Creating property for backing field: {backingField.Name} of type {backingField.FieldType}");
+            if (log) { Debug.Log($"Creating property for backing field: {backingField.Name} of type {backingField.FieldType}"); }
             prop = base.CreateProperty(backingField, memberSerialization);
 
             // set the prop readable and writable based on the backing field's accessibility
@@ -25,7 +27,7 @@ public sealed class UnityValueTypeContractResolver : DefaultContractResolver
         }
         else { prop = base.CreateProperty(member, memberSerialization); }
 
-        Debug.Log($"Created JsonProperty: Name={prop.PropertyName}, Ignored={prop.Ignored}, Readable={prop.Readable}, Writable={prop.Writable}");
+        if (log) { Debug.Log($"Created JsonProperty: Name={prop.PropertyName}, Ignored={prop.Ignored}, Readable={prop.Readable}, Writable={prop.Writable}"); }
 
         return prop;
     }
@@ -36,12 +38,12 @@ public sealed class UnityValueTypeContractResolver : DefaultContractResolver
 
         if (member is PropertyInfo propertyInfo)
         {
-            // Debug.Log($"Checking property: {propertyInfo.Name} of type {propertyInfo.PropertyType}");
+            if (log) { Debug.Log($"Checking property: {propertyInfo.Name} of type {propertyInfo.PropertyType}"); }
 
             // we only want properties that have a SerializeField attribute !
             if (Attribute.IsDefined(propertyInfo, typeof(IncludeInDataAttribute), inherit: false))
             {
-                // Debug.Log($"Property {propertyInfo.Name} has IncludeInData attribute, will be serialized.");
+                if (log) { Debug.Log($"Property {propertyInfo.Name} has IncludeInData attribute, will be serialized."); }
                 return false;
             }
 
@@ -53,39 +55,39 @@ public sealed class UnityValueTypeContractResolver : DefaultContractResolver
 
             if (backingField != null && Attribute.IsDefined(backingField, typeof(SerializeField), inherit: false))
             {
-                // Debug.Log($"Backing field {backingField.Name} for property {propertyInfo.Name} has SerializeField attribute, will be serialized.");
+                if (log) { Debug.Log($"Backing field {backingField.Name} for property {propertyInfo.Name} has SerializeField attribute, will be serialized."); }
                 return false;
             }
-            // Debug.Log($"Property {propertyInfo.Name} does not have IncludeInData attribute and its backing field does not have SerializeField attribute, will be skipped.");
+            if (log) { Debug.Log($"Property {propertyInfo.Name} does not have IncludeInData attribute and its backing field does not have SerializeField attribute, will be skipped."); }
             return true;
         }
 
 
         if (member is not FieldInfo field)
         {
-            // Debug.Log($"Member {member.Name} ({member.MemberType}) is not a property or field, will be skipped.");
+            if (log) { Debug.Log($"Member {member.Name} ({member.MemberType}) is not a property or field, will be skipped."); }
             return true;
         }
 
         // for fields, we don't want RuntimeOnly, NonSerialized, JsonIgnore, or not Serializable attributes
         // all the rest is good !
-        // Debug.Log($"Checking field: {field.Name} of type {field.FieldType}");
+        if (log) { Debug.Log($"Checking field: {field.Name} of type {field.FieldType}"); }
 
         // checks attributes for Unity serialization
         // if (!Attribute.IsDefined(field, typeof(SerializableAttribute), inherit: false)) { return true; }
         if (Attribute.IsDefined(field, typeof(RuntimeOnlyAttribute), inherit: false))
         {
-            // Debug.Log($"Field {field.Name} has RuntimeOnly attribute, will be skipped.");
+            if (log) { Debug.Log($"Field {field.Name} has RuntimeOnly attribute, will be skipped."); }
             return true;
         }
         if (Attribute.IsDefined(field, typeof(NonSerializedAttribute), inherit: false))
         {
-            // Debug.Log($"Field {field.Name} has NonSerialized attribute, will be skipped.");
+            if (log) { Debug.Log($"Field {field.Name} has NonSerialized attribute, will be skipped."); }
             return true;
         }
         if (Attribute.IsDefined(field, typeof(JsonIgnoreAttribute), inherit: false))
         {
-            // Debug.Log($"Field {field.Name} has JsonIgnore attribute, will be skipped.");
+            if (log) { Debug.Log($"Field {field.Name} has JsonIgnore attribute, will be skipped."); }
             return true;
         }
 

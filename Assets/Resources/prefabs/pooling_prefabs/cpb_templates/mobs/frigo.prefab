@@ -497,8 +497,9 @@ MonoBehaviour:
     lock_orientation: 0
     one_shot: 0
   - priority: 4
-    capacity_playing: talk
-    capacities: []
+    capacity_playing: 
+    capacities:
+    - talk
     lock_orientation: 1
     one_shot: 0
   - priority: 3

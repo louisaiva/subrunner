@@ -138,6 +138,13 @@ public class World : BSOD_System<World>
     public bool log_loading_extended = false;
     public bool log_id_generation = false;
 
+
+    ///
+    //
+    /// MAIN ENTRY POINTS : WORLD LOADING / UNLOADING
+    //
+    ///
+
     // LOAD / UNLOAD WORLD
     public async Task LoadWorld(string world_id)
     {
@@ -285,49 +292,14 @@ public class World : BSOD_System<World>
 
 
 
-    // STATIC DATA EXTRACTION
-    public WorldData GetStaticData()
-    {
-        WorldData new_data = new WorldData
-        {
-            levels_ids = get_static_levels_ids(),
-            generated_ids_counters = data != null ? data.generated_ids_counters : new Dictionary<string, int>(),
-            creation_date = data != null ? data.creation_date : string.Empty,
-            last_update_date = data != null ? data.last_update_date : string.Empty,
-            color = data != null ? data.color : Color.white,
-            icon_path = data != null ? data.icon_path : "",
-            icon_name = data != null ? data.icon_name : "",
-            game_version = data != null ? data.game_version : Application.version
-        };
+    ///
+    //
+    /// OTHER HELPFUL METHODS
+    //
+    ///
 
-        return new_data;
-    }
-    private List<string> get_static_levels_ids()
-    {
-        // 1. check if we have data we return the levels_ids stored in it
-        if (data != null && data.levels_ids != null && data.levels_ids.Count > 0) { return data.levels_ids; }
 
-        // 2. if not we go statically get the levels ids from the children levels (only active ones)
-        Level[] levels = gameObject.GetComponentsInChildren<Level>();
-        List<string> level_ids = new List<string>();
-        foreach (Level level in levels) { level_ids.Add(level.ID); }
-        return level_ids;
-    }
-    public Level[] GetStaticLevels()
-    {
-        // only return the levels in the children that are ALSO in the levels_ids
-        List<string> levels_ids = get_static_levels_ids();
-        Level[] levels = gameObject.GetComponentsInChildren<Level>(includeInactive: true);
-        List<Level> filtered_levels = new List<Level>();
-        foreach (Level level in levels)
-        {
-            if (!levels_ids.Contains(level.ID)) { continue; }
-            filtered_levels.Add(level);
-        }
-        return filtered_levels.ToArray();
-    }
-
-    // ID GENERATION
+    // ID GENERATION / REGISTRATION
     private Dictionary<string, int> generated_ids_counters = new Dictionary<string, int>();
     public void RegisterUniqueID(string id)
     {
@@ -413,6 +385,59 @@ public class World : BSOD_System<World>
     {
         return get_id_prefix(id) == prefix;
     }
+
+
+
+    ///
+    //
+    /// DATA MANAGEMENT
+    //
+    ///
+
+
+    // GET STATIC DATA
+    public WorldData GetStaticData()
+    {
+        WorldData new_data = new WorldData
+        {
+            levels_ids = get_static_levels_ids(),
+            generated_ids_counters = data != null ? data.generated_ids_counters : new Dictionary<string, int>(),
+            creation_date = data != null ? data.creation_date : string.Empty,
+            last_update_date = data != null ? data.last_update_date : string.Empty,
+            color = data != null ? data.color : Color.white,
+            icon_path = data != null ? data.icon_path : "",
+            icon_name = data != null ? data.icon_name : "",
+            game_version = data != null ? data.game_version : Application.version
+        };
+
+        return new_data;
+    }
+    private List<string> get_static_levels_ids()
+    {
+        // 1. check if we have data we return the levels_ids stored in it
+        if (data != null && data.levels_ids != null && data.levels_ids.Count > 0) { return data.levels_ids; }
+
+        // 2. if not we go statically get the levels ids from the children levels (only active ones)
+        Level[] levels = gameObject.GetComponentsInChildren<Level>();
+        List<string> level_ids = new List<string>();
+        foreach (Level level in levels) { level_ids.Add(level.ID); }
+        return level_ids;
+    }
+    public Level[] GetStaticLevels()
+    {
+        // only return the levels in the children that are ALSO in the levels_ids
+        List<string> levels_ids = get_static_levels_ids();
+        Level[] levels = gameObject.GetComponentsInChildren<Level>(includeInactive: true);
+        List<Level> filtered_levels = new List<Level>();
+        foreach (Level level in levels)
+        {
+            if (!levels_ids.Contains(level.ID)) { continue; }
+            filtered_levels.Add(level);
+        }
+        return filtered_levels.ToArray();
+    }
+
+
 }
 
 

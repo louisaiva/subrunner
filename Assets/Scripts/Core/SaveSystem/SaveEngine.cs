@@ -721,7 +721,7 @@ public class SaveEngine : MonoBehaviour
         // saves the world save data to a single file in the worlds/world_id/save path
         WorldManager.EnsureWorldDataFolderExists(data.world.id);
 
-        // update world data
+        // create file
         bool just_created = !WorldManager.DoesWorldSaveDataExists(data.world.id);
         data.world.UpdateTime(just_created);
 

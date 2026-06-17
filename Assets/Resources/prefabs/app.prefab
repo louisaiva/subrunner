@@ -753,6 +753,34 @@ MonoBehaviour:
     base_spritesheets:
     - objects/interactives/crafters/3Dprinter/3Dprinter_mid
     keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: vent_big_ceil
+    variant_spritesheets:
+    - objects/deco/vent_big/vent_big_ceil
+    base_skin: vent_big
+    base_spritesheets:
+    - objects/deco/vent_big/vent_big_back_main
+    keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: vent_big_back_ground
+    variant_spritesheets:
+    - objects/deco/vent_big/vent_big_back_ground
+    base_skin: vent_big
+    base_spritesheets:
+    - objects/deco/vent_big/vent_big_back_main
+    keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: vent_big_fore_ground
+    variant_spritesheets:
+    - objects/deco/vent_big/vent_big_front_ground
+    base_skin: vent_big
+    base_spritesheets:
+    - objects/deco/vent_big/vent_big_back_main
+    keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: vent_big_wall
+    variant_spritesheets:
+    - objects/deco/vent_big/vent_big_front_main
+    base_skin: vent_big
+    base_spritesheets:
+    - objects/deco/vent_big/vent_big_back_main
+    keep_base_anim_if_spritesheet_not_found: 0
   log: 0
   log_LAFAC: 0
   log_variant_awake: 0
@@ -1225,6 +1253,7 @@ MonoBehaviour:
   save_as_one_file: 1
   log:
     Verbose: 4
+  log_capable_data_kind_checking: 0
   log_rooms:
     Verbose: 2
   log_capables:
@@ -1401,7 +1430,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsQuitting: 0
   LoadedSceneCount: 0
-  prototype: lots of templates :D
+  prototype: world templates
   log: 0
   log_stats: 0
 --- !u!114 &714515157948744320

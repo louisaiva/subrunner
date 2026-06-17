@@ -193,7 +193,9 @@ public class WorldManager : MonoBehaviour
     //
     ///
     private string world_templates_path = "data/world_templates"; // in this folder there are worldsavedata.json files
+    private string world_schematics_path = "data/world_schematics"; // in this folder there are levelschematics.json files
     private Dictionary<string, string> existing_worlds_templates = new Dictionary<string, string>(); // id, json
+    private Dictionary<(string, string), string> existing_worlds_schematics = new Dictionary<(string, string), string>(); // (world_id , level_id), json
     public void GatherExistingWorldsTemplates()
     {
         // we clear the existing worlds templates list
@@ -208,6 +210,26 @@ public class WorldManager : MonoBehaviour
             debug += " - " + json_asset.name + "\n";
         }
         if (log_world_data_loading_on_awake) { Debug.Log($"(WorldManager) Gathered {existing_worlds_templates.Count} existing world templates from path: {world_templates_path}\n{debug}"); }
+    
+        // we also load all the schematics we have to properly copy them when creating a new world from a template
+        existing_worlds_schematics.Clear();
+        TextAsset[] schematics_assets = Resources.LoadAll<TextAsset>(world_schematics_path);
+        debug = "";
+        foreach (TextAsset schematic_asset in schematics_assets)
+        {
+            // we get the world_id and level_id from the schematic asset name
+            string[] parts = schematic_asset.name.Split(new string[] { ")(" }, StringSplitOptions.None);
+            if (parts.Length != 2)
+            {
+                Debug.LogWarning($"(WorldManager) Failed to load schematic from asset: {schematic_asset.name} because it does not have the correct format. Expected format: 'world_id)(level_id'");
+                continue;
+            }
+            string world_id = parts[0];
+            string level_id = parts[1];
+            existing_worlds_schematics.Add((world_id, level_id), schematic_asset.text);
+            debug += " - " + world_id + ")(" + level_id + "\n";
+        }
+        if (log_world_data_loading_on_awake) { Debug.Log($"(WorldManager) Gathered {existing_worlds_schematics.Count} existing world schematics from path: {world_schematics_path}\n{debug}"); }
     }
 
 
@@ -434,6 +456,23 @@ public class WorldManager : MonoBehaviour
 
 
         SaveEngine.SaveWorldSaveData(new_world);
+
+        // and we gather the schematics for the new world if it has any, and save them to the new world schematics folder
+        foreach (var kvp in existing_worlds_schematics)
+        {
+            string world_id = kvp.Key.Item1;
+            if (world_id != world_template) { continue; }
+            string level_id = kvp.Key.Item2;
+            string schematic_json = kvp.Value;
+
+            // we ensure that the schematic hierarchy exists for the new world
+            EnsureSchematicHierarchy(world_name);
+
+            // and save the schematic json to the new world schematics folder
+            string path = Path.Combine("schematics", level_id + ".schematic");
+            AppManager.SaveJsonToWorldFolder(world_name, path, schematic_json);
+            if (log_create) { Debug.Log("(LevelBuilder) Saved schematic for level " + level_id + $"({world_name}) at {path} :\n" + schematic_json); }
+        }
 
         if (log_create) { Debug.Log($"(WorldManager) Created new world with world_id: {world_name}"); }
         UI_Manager.Instance.CloseInputPopup();

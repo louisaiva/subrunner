@@ -440,6 +440,12 @@ public class Capable : MonoBehaviour, Debuggable
 
 
 
+    ///
+    //
+    /// DATA MANAGEMENT
+    //
+    ///
+
 
 
     // LOAD / UNLOAD
