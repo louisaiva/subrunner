@@ -160,6 +160,12 @@ public class AppManager : MonoBehaviour
         Directory.CreateDirectory(path);
         return true;
     }
+    public static bool IsSaveASingleFile(string world_id)
+    {
+        // check if the world is a single save file or a folder structure
+        string path = Path.Combine(WorldManager.WorldsDataPath, world_id, "save");
+        return System.IO.File.Exists(path);
+    }
 
     // JSON DATA LOADING FROM ASSETS
     public static string[] LoadJsonsFromAssets(string data_folder)

@@ -68,23 +68,20 @@ public class SaveEngine : MonoBehaviour
     [SerializeField] private Loggable<SaveEngine> log;
     private static Loggable<SaveEngine> slog => LazyInstance != null ? LazyInstance.log : null;
     private static bool log_static => LazyInstance != null && LazyInstance.log.Verbose >= Verbosity.Extended;
-    [SerializeField] private Loggable<SaveEngine> log_capa;
-    private static Loggable<SaveEngine> s_log_capa => LazyInstance != null ? LazyInstance.log_capa : null;
     [SerializeField] private Loggable<SaveEngine> log_rooms;
     private static Loggable<SaveEngine> s_log_rooms => LazyInstance != null ? LazyInstance.log_rooms : null;
+    [SerializeField] private Loggable<SaveEngine> log_capables;
+    private static Loggable<SaveEngine> s_log_capables => LazyInstance != null ? LazyInstance.log_capables : null;
     [SerializeField] private Loggable<SaveEngine> log_clean;
     private static Loggable<SaveEngine> slog_clean => LazyInstance != null ? LazyInstance.log_clean : null;
 
-
     [Header("GetStaticData Logs")]
     public Loggable<Capable> log_gsd_capable;
-    // public Loggable<Capable> log_gsd_capacity;
-
 
 
     ///
     //
-    /// MAIN ENTRY POINTS
+    /// DYNAMIC WORLD SAVE
     //
     ///
 
@@ -224,12 +221,114 @@ public class SaveEngine : MonoBehaviour
 
         return save;
     }
-    public static void SaveAIOLevel(Level level, string world_id, bool save_rooms = true, bool save_capables = true)
+
+
+    ///
+    //
+    /// STATIC WORLD SAVE
+    //
+    ///
+
+    /// <summary>
+    /// This method is different from the dynamic save method because
+    /// it also updates the static data of rooms & chunks. this is
+    /// mainly (if not only) used by the World/LevelBuilder to save
+    /// the built levels and rooms and chunks to their static data files.
+    /// </summary>
+    public static void SaveAIOLevel(Level level, string world_id)
     {
-        // get the level data
-        slog?.Log($"Saving AIO level '{level.ID}' of world '{world_id}' (save_rooms: {save_rooms}, save_capables: {save_capables})");
+        bool folder = !AppManager.IsSaveASingleFile(world_id);
+        slog?.Log($"Saving AIO level '{level.ID}' of world '{world_id}' (save is a {(folder ? "folder structure" : "single file")})");
+
+        if (folder)
+        {
+            save_static_level_to_folder(level, world_id, save_rooms: true, save_capables: true);
+            return;
+        }
+
+        // else it is a file save
+        save_static_level_to_file(level, world_id, save_rooms: true, save_capables: true);
+    }
+    private static void save_static_level_to_file(Level level, string world_id, bool save_rooms = true, bool save_capables = true)
+    {
+        // we load the WSD
+        WorldSaveData save = GetWorldSave(world_id);
+
+        // replace the level data
         LevelData data = level.GetStaticData();
-        SaveLevelData(data, world_id);
+        bool found = false;
+        for (int i = 0; i < save.levels.Count; i++)
+        {
+            if (save.levels[i].id != data.id) { continue; }
+            save.levels[i] = data;
+            found = true;
+            break;
+        }
+        if (!found) { save.levels.Add(data); }
+
+        // replace rooms data
+        if (save_rooms)
+        {
+            List<Room> rooms = level.GetStaticRooms().ToList();
+            slog?.Log($"Saving {rooms.Count} rooms of level '{level.ID}'");
+            foreach (Room room in rooms)
+            {
+                // save the room data
+                s_log_rooms?.Log($"Saving room '{room.ID}' in world '{world_id}'");
+                RoomData rdata = room.GetStaticData();
+                found = false;
+                for (int i = 0; i < save.rooms.Count; i++)
+                {
+                    if (save.rooms[i].id != rdata.id) { continue; }
+                    save.rooms[i] = rdata;
+                    found = true;
+                    break;
+                }
+                if (!found) { save.rooms.Add(rdata); }
+
+                // and the chunks
+                List<Chunk> chunks = room.GetStaticChunks().ToList();
+                slog?.Log($"Saving {chunks.Count} chunks of room '{room.ID}'");
+                foreach (Chunk chunk in chunks)
+                {
+                    s_log_rooms?.Log($"Saving chunk '{chunk.ID}' in world '{world_id}'");
+                    ChunkData cdata = chunk.GetStaticData();
+                    found = false;
+                    for (int i = 0; i < save.chunks.Count; i++)
+                    {
+                        if (save.chunks[i].id != cdata.id) { continue; }
+                        save.chunks[i] = cdata;
+                        found = true;
+                        break;
+                    }
+                    if (!found) { save.chunks.Add(cdata); }
+                }
+            }
+        }
+
+        // replace capables data
+        if (save_capables)
+        {
+            List<Capable> capables = level.GetStaticCapables().ToList();
+            slog?.Log($"Saving {capables.Count} capables of level '{level.ID}'");
+            // Debug.Log($"(SaveEngine) Saving {capables.Count} capables of level '{level.ID}' : {string.Join(", ", capables.Select(c => c.ID))}");
+            foreach (Capable cap in capables)
+            {
+                if (log_static) { Debug.Log($"(SaveEngine) Saving capable '{cap.ID}' of level '{level.ID}'"); }
+                save_static_capable_to_wsd(cap, save);
+            }
+        }
+
+        // // todo here we save back the WSD to the single file
+        SaveWorldSaveData(save);
+
+        slog?.Log($"Finished saving AIO level '{level.ID}' of world '{world_id}' into single file !");
+
+    }
+    private static void save_static_level_to_folder(Level level, string world_id, bool save_rooms = true, bool save_capables = true)
+    {
+        LevelData data = level.GetStaticData();
+        SaveLevelDataInFolder(data, world_id);
 
         // check if we need to save the rooms also
         if (save_rooms)
@@ -238,10 +337,20 @@ public class SaveEngine : MonoBehaviour
             slog?.Log($"Saving {rooms.Count} rooms of level '{level.ID}'");
             foreach (Room room in rooms)
             {
-                SaveRoom(room, world_id);
+                // save the room data
+                s_log_rooms?.Log($"Saving room '{room.ID}' in world '{world_id}'");
+                RoomData rdata = room.GetStaticData();
+                SaveRoomDataInFolder(rdata, world_id);
+
+                // and the chunks
                 List<Chunk> chunks = room.GetStaticChunks().ToList();
                 slog?.Log($"Saving {chunks.Count} chunks of room '{room.ID}'");
-                foreach (Chunk chunk in chunks) { SaveChunk(chunk, world_id); }
+                foreach (Chunk chunk in chunks)
+                {
+                    s_log_rooms?.Log($"Saving chunk '{chunk.ID}' in world '{world_id}'");
+                    ChunkData cdata = chunk.GetStaticData();
+                    SaveChunkDataInFolder(cdata, world_id);
+                }
             }
         }
 
@@ -254,12 +363,89 @@ public class SaveEngine : MonoBehaviour
             foreach (Capable cap in capables)
             {
                 if (log_static) { Debug.Log($"(SaveEngine) Saving capable '{cap.ID}' of level '{level.ID}'"); }
-                SaveCapable(cap, world_id);
+                save_static_capable_to_folder(cap, world_id);
             }
         }
 
-        slog?.Log($"Finished saving AIO level '{level.ID}' of world '{world_id}'");
+        slog?.Log($"Finished saving AIO level '{level.ID}' of world '{world_id}' into folder structure !");
     }
+    private static void save_static_capable_to_folder(Capable capable, string world_id, bool save_inventory = true, bool save_capacities = true)
+    {
+        s_log_capables?.Log($"Saving capable '{capable.ID}' in world '{world_id}' (save_inventory: {save_inventory}, save_capacities: {save_capacities})");
+
+        s_log_capables?.LogSpecific($"Getting capable data '{capable.ID}'");
+        CapableData data = (CapableData)capable.GetStaticData();
+
+        s_log_capables?.LogSpecific($"Saving capable data for '{capable.ID}'");
+        s_log_capables?.LogSpecific($"Capable data is {(data != null ? "not null" : "null")} \n{(data != null ? JsonUtility.ToJson(data, true) : "")}");
+        SaveCapableDataInFolder(data, world_id);
+
+        if (save_capacities)
+        {
+            List<Capacity> capacities = capable.GetStaticCapacities();
+            s_log_capables?.LogExtended($"Saving {capacities.Count} capacities of capable '{capable.ID}'");
+            foreach (Capacity capa in capacities)
+            {
+                s_log_capables?.Log($"Saving capacity '{capa.ID}' in world '{world_id}'");
+                CapacityData cdata = capa.GetStaticData();
+                SaveCapacityDataInFolder(cdata, world_id);
+            }
+        }
+
+        if (save_inventory && capable.Inventory != null)
+        {
+            List<Item> items = capable.Inventory.GetStaticItems();
+            s_log_capables?.LogExtended($"Saving {items.Count} items of capable '{capable.ID}'");
+            foreach (Item item in items) { save_static_capable_to_folder(item, world_id, save_inventory, save_capacities); }
+        }
+    }
+    private static void save_static_capable_to_wsd(Capable capable, WorldSaveData wsd, bool save_inventory = true, bool save_capacities = true)
+    {
+        s_log_capables?.Log($"Saving capable '{capable.ID}' in WorldSaveData '{wsd.ID}' (save_inventory: {save_inventory}, save_capacities: {save_capacities})");
+
+        s_log_capables?.LogSpecific($"Getting capable data '{capable.ID}'");
+        CapableData data = (CapableData)capable.GetStaticData();
+
+        s_log_capables?.LogSpecific($"Saving capable data for '{capable.ID}' to wsd '{wsd.ID}'");
+        s_log_capables?.LogSpecific($"Capable data is {(data != null ? "not null" : "null")} \n{(data != null ? JsonUtility.ToJson(data, true) : "")}");
+        bool found = false;
+        for (int i = 0; i < wsd.capables.Count; i++)
+        {
+            if (wsd.capables[i].id != data.id) { continue; }
+            wsd.capables[i] = data;
+            found = true;
+            break;
+        }
+        if (!found) { wsd.capables.Add(data); }
+
+        if (save_capacities)
+        {
+            List<Capacity> capacities = capable.GetStaticCapacities();
+            s_log_capables?.LogExtended($"Saving {capacities.Count} capacities of capable '{capable.ID}'");
+            foreach (Capacity capa in capacities)
+            {
+                s_log_capables?.Log($"Saving capacity '{capa.ID}' in world '{wsd.ID}'");
+                CapacityData cdata = capa.GetStaticData();
+                found = false;
+                for (int i = 0; i < wsd.capacities.Count; i++)
+                {
+                    if (wsd.capacities[i].id != cdata.id) { continue; }
+                    wsd.capacities[i] = cdata;
+                    found = true;
+                    break;
+                }
+                if (!found) { wsd.capacities.Add(cdata); }
+            }
+        }
+
+        if (save_inventory && capable.Inventory != null)
+        {
+            List<Item> items = capable.Inventory.GetStaticItems();
+            s_log_capables?.LogExtended($"Saving {items.Count} items of capable '{capable.ID}'");
+            foreach (Item item in items) { save_static_capable_to_wsd(item, wsd, save_inventory, save_capacities); }
+        }
+    }
+
 
 
     ///
@@ -267,7 +453,7 @@ public class SaveEngine : MonoBehaviour
     /// LOADING SAVES
     //
     ///
-    
+
     private static WorldSaveData _loaded_save = null; // only one big world save data loaded at a time
     public static WorldSaveData LoadWorldSaveFromJson(string json, bool log=true)
     {
@@ -305,7 +491,7 @@ public class SaveEngine : MonoBehaviour
         // string world_file_path = Path.Combine(WorldManager.WorldsDataPath, id + ".json");
 
         // get the json
-        string json = AppManager.LoadJsonFromWorldsFolder(id + ".json");
+        string json = AppManager.LoadJsonFromWorldFolder(id, "save");
         if (string.IsNullOrEmpty(json))
         {
             if (log) { Debug.LogWarning($"(SaveEngine - Load World Save) World Save Data file not found: {id}.json"); }
@@ -410,7 +596,6 @@ public class SaveEngine : MonoBehaviour
         return true;
     }
 
-
     private static bool _log_capable_data_kind_checking = true;
     public static CapableData LoadCapableDataWithGoodKind(string json)
     {
@@ -486,13 +671,14 @@ public class SaveEngine : MonoBehaviour
     private static bool load_world_data_helper_from_file(string id, ref WorldDataHelper helper, bool log = true)
     {
         // get the json
-        string json = AppManager.LoadJsonFromWorldsFolder(id + ".json");
+        string json = AppManager.LoadJsonFromWorldFolder(id, "save");
         if (string.IsNullOrEmpty(json))
         {
             if (log) { Debug.LogWarning($"(SaveEngine - Load World Data Helper) World Data Helper file not found: {id}.json"); }
             return false;
         }
         helper = JsonConvert.DeserializeObject<WorldDataHelper>(json, one_file_settings);
+        helper.is_one_file = true;
         return true;
     }
     private static bool load_world_data_helper_from_folder(string id, ref WorldDataHelper helper, bool log = true)
@@ -511,66 +697,17 @@ public class SaveEngine : MonoBehaviour
         helper = new WorldDataHelper
         {
             world = data,
-            controller = controller_data
+            controller = controller_data,
+            is_one_file = false
         };
         return true;
     }
 
-    ///
-    //
-    /// SAVING STATIC OBJECTS
-    //
-    ///
-
-    public static void SaveRoom(Room room, string world_id)
-    {
-        s_log_rooms?.Log($"Saving room '{room.ID}' in world '{world_id}'");
-        RoomData data = room.GetStaticData();
-        SaveRoomData(data, world_id);
-    }
-    public static void SaveChunk(Chunk chunk, string world_id)
-    {
-        s_log_rooms?.Log($"Saving chunk '{chunk.ID}' in world '{world_id}'");
-        ChunkData data = chunk.GetStaticData();
-        SaveChunkData(data, world_id);
-    }
-    public static void SaveCapable(Capable capable, string world_id, bool save_inventory = true, bool save_capacities = true)
-    {
-        s_log_rooms?.Log($"Saving capable '{capable.ID}' in world '{world_id}' (save_inventory: {save_inventory}, save_capacities: {save_capacities})");
-
-        s_log_rooms?.LogSpecific($"Getting capable data '{capable.ID}'");
-        CapableData data = (CapableData)capable.GetStaticData();
-
-        s_log_rooms?.LogSpecific($"Saving capable data for '{capable.ID}'");
-        s_log_rooms?.LogSpecific($"Capable data is {(data != null ? "not null" : "null")} \n{(data != null ? JsonUtility.ToJson(data, true) : "")}");
-        SaveCapableData(data, world_id);
-
-        if (save_capacities)
-        {
-            List<Capacity> capacities = capable.GetStaticCapacities();
-            s_log_rooms?.LogExtended($"Saving {capacities.Count} capacities of capable '{capable.ID}'");
-            foreach (Capacity capa in capacities) { SaveCapacity(capa, world_id); }
-        }
-
-        if (save_inventory && capable.Inventory != null)
-        {
-            List<Item> items = capable.Inventory.GetStaticItems();
-            s_log_rooms?.LogExtended($"Saving {items.Count} items of capable '{capable.ID}'");
-            foreach (Item item in items) { SaveCapable(item, world_id, save_inventory, save_capacities); }
-        }
-    }
-    public static void SaveCapacity(Capacity capacity, string world_id)
-    {
-        s_log_rooms?.Log($"Saving capacity '{capacity.ID}' in world '{world_id}'");
-        CapacityData data = capacity.GetStaticData();
-        SaveCapacityData(data, world_id);
-    }
-
 
 
     ///
     //
-    /// SAVING DATA TO FILES
+    /// SAVING DATA TO DISK
     //
     ///
 
@@ -581,7 +718,8 @@ public class SaveEngine : MonoBehaviour
     }
     public static void SaveWorldSaveDataAsFile(WorldSaveData data)
     {
-        // saves the world save data to a single file
+        // saves the world save data to a single file in the worlds/world_id/save path
+        WorldManager.EnsureWorldDataFolderExists(data.world.id);
 
         // update world data
         bool just_created = !WorldManager.DoesWorldSaveDataExists(data.world.id);
@@ -603,23 +741,32 @@ public class SaveEngine : MonoBehaviour
         }
 
         // and we save the world save data to a single json file
-        string path = $"{data.world.id}.json";
-        slog?.Log($"Saving WORLD SAVE data (single file) to path: {path}\n{json}");
-        AppManager.SaveJsonToWorldsDataPath(path, json, slog.Verbose);
+        slog?.Log($"Saving WORLD SAVE data (single file) to path: {Path.Combine(WorldManager.GetWorldDataPath(data.world.id), "save")}\n{json}");
+        AppManager.SaveJsonToWorldFolder(data.world.id, "save", json, log_static);
     }
     public static void SaveWorldSaveDataAsFolder(WorldSaveData data)
     {
         // splits the save into small json data files into an unique world folder
-        SaveWorldData(data.world);
-        SaveControllerData(data.controller, data.world.id);
+        SaveWorldDataInFolder(data.world);
+        SaveControllerDataInFolder(data.controller, data.world.id);
 
-        foreach (LevelData level_data in data.levels) { SaveLevelData(level_data, data.world.id); }
-        foreach (RoomData room_data in data.rooms) { SaveRoomData(room_data, data.world.id); }
-        foreach (ChunkData chunk_data in data.chunks) { SaveChunkData(chunk_data, data.world.id); }
-        foreach (CapableData capable_data in data.capables) { SaveCapableData(capable_data, data.world.id); }
-        foreach (CapacityData capacity_data in data.capacities) { SaveCapacityData(capacity_data, data.world.id); }
+        foreach (LevelData level_data in data.levels) { SaveLevelDataInFolder(level_data, data.world.id); }
+        foreach (RoomData room_data in data.rooms) { SaveRoomDataInFolder(room_data, data.world.id); }
+        foreach (ChunkData chunk_data in data.chunks) { SaveChunkDataInFolder(chunk_data, data.world.id); }
+        foreach (CapableData capable_data in data.capables) { SaveCapableDataInFolder(capable_data, data.world.id); }
+        foreach (CapacityData capacity_data in data.capacities) { SaveCapacityDataInFolder(capacity_data, data.world.id); }
     }
-    public static void SaveWorldData(WorldData data)
+
+    /// <important>
+    /// all the following methods are used ONLY for saving data files into a FOLDER structure.
+    /// if you need to save a specific data into a FILE structure, you need to :
+    /// - (1.) load the world save data from the file
+    /// - (2.) update the specific data in the world save data
+    /// - (3.) save the world save data back to the file
+    /// this should NOT be done using the methods below. please do it in a higher level method
+    /// </important>
+
+    public static void SaveWorldDataInFolder(WorldData data)
     {
         bool just_created = WorldManager.EnsureWorldDataHierarchy(data.id);
         data.UpdateTime(just_created);
@@ -630,7 +777,7 @@ public class SaveEngine : MonoBehaviour
         s_log_rooms?.Log($"Saving WORLD data to path: {path}\n{json}");
         AppManager.SaveJsonToWorldFolder(data.id, path, json, log_static);
     }
-    public static void SaveControllerData(ControllerData data, string world_id)
+    public static void SaveControllerDataInFolder(ControllerData data, string world_id)
     {
         // updating controller with the player level/room/chunk before saving
         // data.UpdatePlayerLevelRoomChunk(slog);
@@ -641,15 +788,16 @@ public class SaveEngine : MonoBehaviour
         s_log_rooms?.Log($"Saving CONTROLLER data to path: {path}\n{json}");
         AppManager.SaveJsonToWorldFolder(world_id, path, json, log_static);
     }
-    public static void SaveLevelData(LevelData data, string world_id)
+    public static void SaveLevelDataInFolder(LevelData data, string world_id)
     {
-        // save the current LevelData to a json file
+        // save the current LevelData to a json file in the folder structure
         string json = JsonUtility.ToJson(data, true);
         string path = Path.Combine("levels", data.id + ".json");
         s_log_rooms?.Log($"Saving LEVEL data to path: {path}\n{json}");
         AppManager.SaveJsonToWorldFolder(world_id, path, json, log_static);
+        return;
     }
-    public static void SaveRoomData(RoomData data, string world_id)
+    public static void SaveRoomDataInFolder(RoomData data, string world_id)
     {
         // save the current RoomData to a json file
         string json = JsonUtility.ToJson(data, true);
@@ -657,7 +805,7 @@ public class SaveEngine : MonoBehaviour
         s_log_rooms?.LogVerySpecific($"Saving ROOM data to path: {path}\n{json}");
         AppManager.SaveJsonToWorldFolder(world_id, path, json, log_static);
     }
-    public static void SaveChunkData(ChunkData data, string world_id)
+    public static void SaveChunkDataInFolder(ChunkData data, string world_id)
     {
         // save the current ChunkData to a json file
         string json = JsonUtility.ToJson(data, true);
@@ -665,7 +813,7 @@ public class SaveEngine : MonoBehaviour
         s_log_rooms?.LogVerySpecific($"Saving CHUNK data to path: {path}\n{json}");
         AppManager.SaveJsonToWorldFolder(world_id, path, json, log_static);
     }
-    public static void SaveCapableData(CapableData data, string world_id)
+    public static void SaveCapableDataInFolder(CapableData data, string world_id)
     {
         // save the current CapableData to a json file
         string json = JsonUtility.ToJson(data, true);
@@ -673,7 +821,7 @@ public class SaveEngine : MonoBehaviour
         s_log_rooms?.LogVerySpecific($"Saving CAPABLE data to path: {path}\n{json}");
         AppManager.SaveJsonToWorldFolder(world_id, path, json, log_static);
     }
-    public static void SaveCapacityData(CapacityData data, string world_id)
+    public static void SaveCapacityDataInFolder(CapacityData data, string world_id)
     {
         // save the current CapacityData to a json file
         string json = JsonUtility.ToJson(data, true);
@@ -694,8 +842,10 @@ public class SaveEngine : MonoBehaviour
     /// careful, it does not make any backup, so make sure you know what you are doing
     /// </summary>
     /// <param name="world_id"></param>
+    // todo : make this work with single file structure too
     public static void CleanWorldSave(string world_id)
     {
+
         // we get the controller id
         ControllerData controller_data = Controller.LoadWorldControllerData(world_id);
         string controller_id = controller_data != null ? controller_data.controlled_capable_id : null;
@@ -785,7 +935,7 @@ public class SaveEngine : MonoBehaviour
                     // reset position
                     data.position = Vector2.zero;
                     string new_json = JsonUtility.ToJson(data, true);
-                    SaveCapableData(data, world_id);
+                    SaveCapableDataInFolder(data, world_id);
                     slog_clean?.Warning($"Reset position of controlled capable '{file_name}' to 0,0 instead of deleting it.");
 
                     // gather its capacities to not delete them

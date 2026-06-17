@@ -139,7 +139,7 @@ public class LevelDataManager : MonoBehaviour
     private void save_level_data(Level level, string world_id)
     {
         LevelData data = level.GetStaticData();
-        SaveEngine.SaveLevelData(data, world_id);
+        SaveEngine.SaveLevelDataInFolder(data, world_id);
 
         // check if we need to save the rooms also
         if (save_rooms_data) { save_chunks_level_data(level, world_id); }

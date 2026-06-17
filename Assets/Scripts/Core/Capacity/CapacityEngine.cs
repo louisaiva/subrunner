@@ -125,14 +125,19 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
     }
     public void LoadWorldCapacitiesData(string world_id)
     {
+        WorldSaveData world_save = SaveEngine.GetWorldSave(world_id);
+        if (world_save == null)
+        {
+            Debug.LogWarning($"(CapableEngine) World save data not found for world_id: {world_id}. No world capables data loaded.");
+            return;
+        }
+
         // we empty the capacities_data
         world_capacities_data = new Dictionary<string,CapacityData>();
         string log_capacities_details = "\n\n";
 
         // we load all the json files in the data path and get their kind
-        List<CapacityData> world_capacities = World.Save.capacities;
-        // string[] files = AppManager.LoadJsonsFromWorldFolder(world_id, "capacities");
-        // Dictionary<string, List<CapacityData>> json_by_kind = new Dictionary<string, List<CapacityData>>();
+        List<CapacityData> world_capacities = world_save.capacities;
         foreach (CapacityData data in world_capacities)
         {
             world_capacities_data.Add(data.id, data);

@@ -895,7 +895,7 @@ public class LevelBuilder : MonoBehaviour
         }
 
         // we make sure we have a world folder hierarchy for the world & level
-        WorldManager.EnsureWorldDataHierarchy(world_id);
+        WorldManager.EnsureSchematicHierarchy(world_id);
 
         var data = new LevelSchematic();
 
@@ -946,7 +946,7 @@ public class LevelBuilder : MonoBehaviour
 
 
         // we save the json in a file in assets/data/world_building.json
-        string path = Path.Combine("levels", level_id + ".schematic");
+        string path = Path.Combine("schematics", level_id + ".schematic");
         AppManager.SaveJsonToWorldFolder(world_id, path, json);
         if (log_data) { Debug.Log("(LevelBuilder) Saved schematic for " + level_id + $"({world_id}) at {path} :\n" + json); }
     }
@@ -957,7 +957,7 @@ public class LevelBuilder : MonoBehaviour
         // todo : think about how to handle single world save data & schematics, maybe
         // todo : we need to include schematics inside the world save data ?
 
-        string path = Path.Combine("levels", level + ".schematic");
+        string path = Path.Combine("schematics", level + ".schematic");
         string json = AppManager.LoadJsonFromWorldFolder(world, path);
         if (string.IsNullOrEmpty(json))
         {

@@ -37,6 +37,7 @@ public class UI_Writer : MonoBehaviour
 
     [Header("Logs")]
     public bool log_writing = false;
+    public bool log_color_tags = false;
 
     // AWAKE
     private void Awake()
@@ -264,7 +265,7 @@ public class UI_Writer : MonoBehaviour
 
         refined_writing = raw_writing.Replace("/.", "...").Replace("/l", string.Empty).Replace("\\n", "\n");
 
-        Debug.Log($"(UI_Writer) refined writing before colors : '{refined_writing}'\n");
+        if (log_color_tags) { Debug.Log($"(UI_Writer) refined writing before colors : '{refined_writing}'\n"); }
 
         // we find all the color tags and store their indexes
         int search_index = 0;
@@ -290,7 +291,7 @@ public class UI_Writer : MonoBehaviour
 
             // we have everything ! we can store the color index and continue searching
             color_indexes.Add(new TextColorIndex(start_tag_index - cumulated_offset, end_tag_index - cumulated_offset - start_tag_length, color_code));
-            Debug.Log($"(UI_Writer) found color tag : {color_code} at {start_tag_index} to {end_tag_index} (length {start_tag_length}), cumulated offset is {cumulated_offset}");
+            if (log_color_tags) { Debug.Log($"(UI_Writer) found color tag : {color_code} at {start_tag_index} to {end_tag_index} (length {start_tag_length}), cumulated offset is {cumulated_offset}"); }
             search_index = end_tag_index + 8; // we add 8 to skip the "</color>" tag
             cumulated_offset += start_tag_length + 8;
         }
@@ -302,7 +303,7 @@ public class UI_Writer : MonoBehaviour
             refined_writing = refined_writing.Remove(color_index.end_index, color_index.GetEndTag().Length);
         }
 
-        Debug.Log($"(UI_Writer) final refined writing : '{refined_writing}'\n");
+        if (log_color_tags) { Debug.Log($"(UI_Writer) final refined writing : '{refined_writing}'\n"); }
 
         return refined_writing;
     }

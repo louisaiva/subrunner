@@ -24,6 +24,8 @@ public class WorldBuilderCaller : MonoBehaviour
     }
     private async void unload_world_then_open_world_builder()
     {
+        // first we save the world and unload it
+        SaveEngine.SaveDynamicWorld();
         await WorldManager.LazyInstance.UnloadCurrentWorld();
         while (UI_Manager.Instance.IsInTransition) { await System.Threading.Tasks.Task.Yield(); }
         UI_Manager.Instance.StackPool("dev_world_builder");

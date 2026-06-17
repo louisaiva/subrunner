@@ -213,6 +213,12 @@ public class Perso : Movable, Hacker
         // on switch au game_over panel
         UI_Manager.Instance.SwitchTo("game_over",force:true,override_transition:true);
     }
+
+    public override ICapableData GetStaticData()
+    {
+        return new PersoData((CapableData)base.GetStaticData());
+    }
+
 }
 
 public class PersoData : CapableData

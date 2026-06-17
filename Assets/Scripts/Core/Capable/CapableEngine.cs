@@ -175,6 +175,13 @@ public class CapableEngine : BSOD_System<CapableEngine>
     }
     public void LoadWorldCapablesData(string world_id)
     {
+        WorldSaveData world_save = SaveEngine.GetWorldSave(world_id);
+        if (world_save == null)
+        {
+            Debug.LogWarning($"(CapableEngine) World save data not found for world_id: {world_id}. No world capables data loaded.");
+            return;
+        }
+
         // we empty the capables_data & runtime ids etc
         world_capables_data = new Dictionary<string, CapableData>();
         capables_hashs_by_ids = new Dictionary<string, int>();
@@ -183,10 +190,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
         string log_capables_details = "\n\n";
 
         // we load all the json files in the data path and get their kind
-        // string[] files = World.Save.capables(world_id, "capables");
-        Dictionary<string, List<CapableData>> data_by_kind = new Dictionary<string, List<CapableData>>();
-        // CapableData data;
-        List<CapableData> world_capables = World.Save.capables;
+        List<CapableData> world_capables = world_save.capables;
         foreach (CapableData data in world_capables)
         {
             if (log_awake_data_extended) { Debug.Log($"(CapableEngine) Loading capable data for '{data.id}' of type {data.GetType().Name}: \n{data.GetDetails()}"); }
@@ -200,58 +204,6 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
         if (log_world_data_loading) { Debug.Log("(CapableEngine) WORLD CAPABLES DATA LOADED : " + world_capables_data.Count + log_capables_details); }
     }
-    /* private CapableData loadCapableDataOfType(string json, string kind, ref string log, ref Dictionary<string, CapableData> data_by_id, bool generate_runtime = true)
-    {
-        // find the data type suited for this capable_type
-        // and extracts the json as this data type
-        CapableData data;
-
-        // first we check if we have a data for this precise kind
-        Type data_type = Type.GetType(kind + "Data");
-        if (data_type != null)
-        {
-            data = JsonUtility.FromJson(json, data_type) as CapableData;
-            if (log_awake_data_extended) { Debug.Log($"(CapableEngine) Loading capable data for '{data.id}' of type {data.GetType().Name}: \n{data.GetDetails()}\n\n{json}"); }
-            data_by_id.Add(data.id, data);
-            if (generate_runtime) { generate_runtime_id(data.id); }
-
-            log += data.GetDetails() + "\n";
-            return data;
-        }
-
-        // first we check if we have a data for this precise kind
-        Type data_type = Type.GetType(kind + "Data");
-
-        // we found no precise data type ://
-        // we check if we have an intermediary type
-        // ex : ItemData, DoorData
-        // (insert in the list below)
-        Type capable_type = Type.GetType(kind);
-
-        // PersoData
-        if (GameManager.IsKind(capable_type, typeof(Perso))) { data_type = typeof(PersoData); }
-        
-        // ItemData
-        else if (GameManager.IsKind(capable_type, typeof(Item))) { data_type = typeof(ItemData); }
-
-        // IAData
-        else if (GameManager.IsKind(capable_type, typeof(IA))) { data_type = typeof(IAData); }
-        
-        // DoorData
-        else if (GameManager.IsKind(capable_type, typeof(Door))) { data_type = typeof(DoorData); }
-
-        // no intermediary type -> we give a CapableData, basic
-        else { data_type = typeof(CapableData); }
-
-
-        // we finally extract the data
-        data = JsonUtility.FromJson(json, data_type) as CapableData;
-        if (log_awake_data_extended) { Debug.Log($"(CapableEngine) Loading capable data for '{data.id}' of type {data.GetType().Name}: \n{data.GetDetails()}\n\n{json}"); }
-        data_by_id.Add(data.id, data);
-        if (generate_runtime) { generate_runtime_id(data.id); }
-        log += data.GetDetails() + "\n";
-        return data;
-    } */
     private int generate_runtime_id(string id)
     {
         if (string.IsNullOrEmpty(id))

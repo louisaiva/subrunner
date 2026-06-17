@@ -149,26 +149,6 @@ public class WorldManager : MonoBehaviour
 
             if (log_world_data_loading_on_awake) { Debug.Log($"(WorldManager) Loaded world data for world_id: {world_id} from folder {world_folder}\n{world_data_helper.GetDetails()}"); }
         }
-
-        // we also check if we have direct "WorldSaveData" json files on the worldsdatapath root
-        string[] world_data_json_files = Directory.GetFiles(WorldsDataPath, "*.json", SearchOption.TopDirectoryOnly);
-        foreach (string world_data_json_file in world_data_json_files)
-        {
-            // we get the world_id from the file name
-            string world_id = Path.GetFileNameWithoutExtension(world_data_json_file);
-            if (existing_worlds_data.ContainsKey(world_id)) { continue; }
-
-            // we try to load the WorldDataHelper from the SaveEngine
-            WorldDataHelper w_helper = SaveEngine.GetWorldData(world_id);
-            if (w_helper == null || w_helper.world == null)
-            {
-                if (!hide_files_not_found) { Debug.LogWarning($"(WorldManager) Failed to load world data for world_id: {world_id} from file: {world_data_json_file}"); }
-                continue;
-            }
-            add_world_data_to_existing(w_helper, world_id);
-
-            if (log_world_data_loading_on_awake) { Debug.Log($"(WorldManager) Loaded world data for world_id: {world_id} from file: {world_data_json_file}\n\n{w_helper.GetDetails()}"); }
-        }
     }
     private void add_world_data_to_existing(WorldDataHelper whelper, string id)
     {
@@ -299,6 +279,38 @@ public class WorldManager : MonoBehaviour
         // we save the world data to a json file in the current world folder
         return world_folder_created;
     }
+    public static bool EnsureWorldDataFolderExists(string world_id)
+    {
+        if (string.IsNullOrEmpty(world_id))
+        {
+            if (log) { Debug.LogWarning("(WorldManager) Cannot ensure world data folder exists : world_id is null or empty."); }
+            return false;
+        }
+
+        // create the /worlds folder if it doesn't exist
+        AppManager.EnsureFolderExists(WorldsDataPath);
+
+        // then we do the same for the current world folder
+        string world_path = GetWorldDataPath(world_id);
+        bool world_folder_created = AppManager.EnsureFolderExists(world_path);
+
+        return world_folder_created;
+    }
+    public static bool EnsureSchematicHierarchy(string world_id)
+    {
+        if (string.IsNullOrEmpty(world_id))
+        {
+            if (log) { Debug.LogWarning("(WorldManager) Cannot ensure schematic hierarchy : world_id is null or empty."); }
+            return false;
+        }
+        // first we ensure that the world data folder exists
+        EnsureWorldDataFolderExists(world_id);
+
+        // then we ensure that there is a "schematics" folder in the world data folder
+        string schematics_path = Path.Combine(GetWorldDataPath(world_id), "schematics");
+        bool schematics_folder_created = AppManager.EnsureFolderExists(schematics_path);
+        return schematics_folder_created;
+    }
     public static bool DoesWorldSaveDataExists(string world_id)
     {
         if (string.IsNullOrEmpty(world_id))
@@ -307,7 +319,7 @@ public class WorldManager : MonoBehaviour
             return false;
         }
 
-        string world_data_path = Path.Combine(WorldsDataPath, world_id + ".json");
+        string world_data_path = Path.Combine(WorldsDataPath, world_id, "save");
         return System.IO.File.Exists(world_data_path);
     }
 
@@ -513,7 +525,7 @@ public class WorldManager : MonoBehaviour
 
         // we then create the level data and save it (which will create the hierarchy folders if needed)
         LevelData new_level_data = new LevelData() { id = level_id };
-        SaveEngine.SaveLevelData(new_level_data, SelectedWorld);
+        SaveEngine.SaveLevelDataInFolder(new_level_data, SelectedWorld);
         if (log_create) { Debug.Log($"(WorldManager) Created new level in world {SelectedWorld} with level_id: {level_id}"); }
 
         // then we need to mark the level as dirty ??

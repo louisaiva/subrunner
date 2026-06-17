@@ -1222,12 +1222,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee8634a91f626f418b742aa27838529, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SaveEngine
+  save_as_one_file: 1
   log:
     Verbose: 4
-  log_capa:
-    Verbose: 2
   log_rooms:
     Verbose: 2
+  log_capables:
+    Verbose: 5
   log_clean:
     Verbose: 4
   log_gsd_capable:
@@ -1509,7 +1510,6 @@ MonoBehaviour:
   - {fileID: -1480445524, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
   - {fileID: 2125860743, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
   - {fileID: 1774226192, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
-  auto_load_on_creation: 0
   log_icons_paths: 0
   log_world_data_loading_on_awake: 0
   hide_files_not_found: 1

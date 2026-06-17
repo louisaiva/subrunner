@@ -18,6 +18,7 @@ using Newtonsoft.Json;
     public List<ChunkData> chunks;
     public List<CapableData> capables;
     public List<CapacityData> capacities;
+    [RuntimeOnly] public string ID => world != null ? world.id : "null";
 
     public WorldSaveData()
     {
@@ -60,6 +61,8 @@ using Newtonsoft.Json;
 {
     public WorldData world;
     public ControllerData controller;
+
+    [RuntimeOnly] public bool is_one_file = false;
 
     public string GetDetails()
     {
