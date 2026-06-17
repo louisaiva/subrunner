@@ -1113,13 +1113,8 @@ public class CapableEngine : BSOD_System<CapableEngine>
         if (save == null) { return new List<CapableData>(); }
 
         List<CapableData> capables_data = new List<CapableData>();
-
-        // we load all the json files in the data path and convert them to CapableData objects
-        // string[] jsons = AppManager.LoadSpecificJsonsFromWorldFolder(world_id, "capables", capables_ids);
-        // foreach (string json in jsons)
         foreach (CapableData data in save.capables)
         {
-            // CapableData data = JsonUtility.FromJson<CapableData>(json);
             if (data == null) { continue; }
             if (!capables_ids.Contains(data.id)) { continue; }
             capables_data.Add(data);
@@ -1132,12 +1127,6 @@ public class CapableEngine : BSOD_System<CapableEngine>
         WorldSaveData save = SaveEngine.GetWorldSave(world_id);
         if (save == null) { return null; }
         return save.capables.Find(c => c.id == item_id);
-
-        /*
-        string path = Path.Combine("capables", item_id);
-        string json = AppManager.LoadJsonFromWorldFolder(world_id, path);
-        if (string.IsNullOrEmpty(json)) { return null; }
-        return JsonUtility.FromJson<CapableData>(json); */
     }
 
 }

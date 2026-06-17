@@ -68,6 +68,8 @@ public class SaveEngine : MonoBehaviour
     [SerializeField] private Loggable<SaveEngine> log;
     private static Loggable<SaveEngine> slog => LazyInstance != null ? LazyInstance.log : null;
     private static bool log_static => LazyInstance != null && LazyInstance.log.Verbose >= Verbosity.Extended;
+    [SerializeField] private bool log_capable_data_kind_checking = false;
+    private static bool _log_capable_data_kind_checking => LazyInstance != null ? LazyInstance.log_capable_data_kind_checking : false;
     [SerializeField] private Loggable<SaveEngine> log_rooms;
     private static Loggable<SaveEngine> s_log_rooms => LazyInstance != null ? LazyInstance.log_rooms : null;
     [SerializeField] private Loggable<SaveEngine> log_capables;
@@ -319,7 +321,6 @@ public class SaveEngine : MonoBehaviour
             }
         }
 
-        // // todo here we save back the WSD to the single file
         SaveWorldSaveData(save);
 
         slog?.Log($"Finished saving AIO level '{level.ID}' of world '{world_id}' into single file !");
@@ -596,7 +597,6 @@ public class SaveEngine : MonoBehaviour
         return true;
     }
 
-    private static bool _log_capable_data_kind_checking = true;
     public static CapableData LoadCapableDataWithGoodKind(string json)
     {
         // gather the kind of the capacity from the json
@@ -842,10 +842,122 @@ public class SaveEngine : MonoBehaviour
     /// careful, it does not make any backup, so make sure you know what you are doing
     /// </summary>
     /// <param name="world_id"></param>
-    // todo : make this work with single file structure too
     public static void CleanWorldSave(string world_id)
     {
+        bool folder = !AppManager.IsSaveASingleFile(world_id);
+        slog_clean?.Log($"Cleaning save for world '{world_id}' (save is a {(folder ? "folder structure" : "single file")})");
+        if (folder) { clean_world_save_in_folder(world_id); return; }
 
+        // else it is a file save
+        clean_world_save_in_file(world_id);
+    }
+    private static void clean_world_save_in_file(string world_id)
+    {
+        // we load the world save data
+        WorldSaveData wsd = GetWorldSave(world_id);
+        if (wsd == null)
+        {
+            slog_clean?.Warning($"Failed to load world save data for world '{world_id}' while trying to clean save. Aborting.");
+            return;
+        }
+
+        // we get the controller id
+        string controller_id = wsd.controller != null ? wsd.controller.controlled_capable_id : null;
+
+        // levels
+        if (wsd.levels == null || wsd.levels.Count == 0)
+        {
+            slog_clean?.Warning($"No levels found in world '{world_id}' while trying to clean save. Aborting.");
+            return;
+        }
+
+        slog_clean?.Log($"Cleaning save for world '{world_id}' (file structure)... Found {wsd.levels.Count} levels in the world. Gathering all rooms/chunks/capables/capacities in these levels");
+
+        // rooms
+        HashSet<string> rooms_in_levels = new HashSet<string>();
+        foreach (LevelData level_data in wsd.levels)
+        {
+            foreach (string room_id in level_data.rooms_ids) { rooms_in_levels.Add(room_id); }
+        }
+        List<RoomData> rooms_data = wsd.rooms.Where(r => rooms_in_levels.Contains(r.id)).ToList();
+        slog_clean?.LogExtended($"Found {rooms_data.Count} rooms in the levels of the world.");
+
+        // chunks
+        HashSet<string> chunks_in_levels = new HashSet<string>();
+        foreach (RoomData room_data in rooms_data)
+        {
+            foreach (string chunk_id in room_data.chunks_ids) { chunks_in_levels.Add(chunk_id); }
+        }
+        List<ChunkData> chunks_data = wsd.chunks.Where(c => chunks_in_levels.Contains(c.id)).ToList();
+        slog_clean?.LogExtended($"Found {chunks_data.Count} chunks in the levels of the world.");
+
+        // capables
+        HashSet<string> capables_in_levels = new HashSet<string>();
+        foreach (ChunkData chunk_data in chunks_data)
+        {
+            foreach (string capable_id in chunk_data.capables_ids) { capables_in_levels.Add(capable_id); }
+            foreach (string movable_id in chunk_data.movables_ids) { capables_in_levels.Add(movable_id); }
+        }
+        List<CapableData> capables_data = wsd.capables.Where(c => capables_in_levels.Contains(c.id)).ToList();
+
+        // gather the capacities + add all their inventories' items too
+        HashSet<string> capacities_in_levels = new HashSet<string>();
+        foreach (CapableData capable_data in capables_data)
+        {
+            gather_all_capable_and_capacities_in_capable_recursive_in_wsd(wsd, capable_data, ref capables_in_levels, ref capacities_in_levels, ref capables_data);
+        }
+
+        // we check if we have the controlled capable in the list of capables, if not we add it
+        CapableData controlled_capable = wsd.capables.FirstOrDefault(c => c.id == controller_id);
+        if (controlled_capable != null && !capables_data.Contains(controlled_capable))
+        {
+            slog_clean?.Warning($"Controlled capable '{controller_id}' is not in the list of capables in the levels of the world. Adding it to the list to avoid deleting it.");
+            capables_data.Add(controlled_capable);
+            capables_in_levels.Add(controller_id);
+
+            // here we also add all capacities & items of the controlled capable to the list of capacities in the levels, to avoid deleting them
+            gather_all_capable_and_capacities_in_capable_recursive_in_wsd(wsd, controlled_capable, ref capables_in_levels, ref capacities_in_levels, ref capables_data);
+
+            // reset position
+            controlled_capable.position = Vector2.zero;
+            slog_clean?.Warning($"Reset position of controlled capable '{controller_id}' to 0,0 instead of deleting it.");
+        }
+
+        // then we can gather all CapacityData
+        List<CapacityData> capacities_data = wsd.capacities.Where(c => capacities_in_levels.Contains(c.id)).ToList();
+        slog_clean?.LogExtended($"Found {capables_data.Count} capables and {capacities_in_levels.Count} capacities in the levels of the world (including inventories).");
+        slog_clean?.Log($"World has {rooms_in_levels.Count} rooms, {chunks_in_levels.Count} chunks, {capables_in_levels.Count} capables and {capacities_in_levels.Count} capacities in its levels. Now deleting all save files that are not in these lists...");
+
+
+        List<RoomData> rooms_to_delete = new List<RoomData>();
+        List<ChunkData> chunks_to_delete = new List<ChunkData>();
+        List<CapableData> capables_to_delete = new List<CapableData>();
+        List<CapacityData> capacities_to_delete = new List<CapacityData>();
+        if (slog_clean.Verbose >= Verbosity.Normal)
+        {
+            // now we go through the lists to log which ones are going to be deleted.
+            rooms_to_delete = wsd.rooms.Where(r => !rooms_in_levels.Contains(r.id)).ToList();
+            chunks_to_delete = wsd.chunks.Where(c => !chunks_in_levels.Contains(c.id)).ToList();
+            capables_to_delete = wsd.capables.Where(c => !capables_in_levels.Contains(c.id)).ToList();
+            capacities_to_delete = wsd.capacities.Where(c => !capacities_in_levels.Contains(c.id)).ToList();
+            foreach (RoomData room in rooms_to_delete) { slog_clean?.LogExtended($"Room '{room.id}' will be deleted from the world save data."); }
+            foreach (ChunkData chunk in chunks_to_delete) { slog_clean?.LogExtended($"Chunk '{chunk.id}' will be deleted from the world save data."); }
+            foreach (CapableData capable in capables_to_delete) { slog_clean?.LogExtended($"Capable '{capable.id}' will be deleted from the world save data."); }
+            foreach (CapacityData capacity in capacities_to_delete) { slog_clean?.LogExtended($"Capacity '{capacity.id}' will be deleted from the world save data."); }
+        }
+
+        // now we simply replace the lists in the world save data with the filtered ones
+        wsd.rooms = rooms_data;
+        wsd.chunks = chunks_data;
+        wsd.capables = capables_data;
+        wsd.capacities = capacities_data;
+
+        // and we save the world save data back to the file
+        SaveWorldSaveDataAsFile(wsd);
+        slog_clean?.Log($"Finished cleaning save for world '{world_id}' (single file)." + $" DELETED :    {rooms_to_delete.Count} rooms    ///    {chunks_to_delete.Count} chunks    ///    {capables_to_delete.Count} capables    ///    {capacities_to_delete.Count} capacities.");
+    }
+    private static void clean_world_save_in_folder(string world_id)
+    {
         // we get the controller id
         ControllerData controller_data = Controller.LoadWorldControllerData(world_id);
         string controller_id = controller_data != null ? controller_data.controlled_capable_id : null;
@@ -858,7 +970,7 @@ public class SaveEngine : MonoBehaviour
             return;
         }
 
-        slog_clean?.Log($"Cleaning save for world '{world_id}'... Found {levels_data.Count} levels in the world. Gathering all rooms/chunks/capables/capacities in these levels");
+        slog_clean?.Log($"Cleaning save for world '{world_id}' (folder structure)... Found {levels_data.Count} levels in the world. Gathering all rooms/chunks/capables/capacities in these levels");
 
         // gather all the rooms
         HashSet<string> rooms_in_levels = new HashSet<string>();
@@ -957,9 +1069,13 @@ public class SaveEngine : MonoBehaviour
             deleted_capacities++;
             slog_clean?.LogExtended($"Deleted '{file_name}' capacity save file: {path}");
         }
-    
-        slog_clean?.Log($"Finished cleaning save for world '{world_id}'. Deleted {deleted_rooms} rooms, {deleted_chunks} chunks, {deleted_capables} capables and {deleted_capacities} capacities.");
+
+        slog_clean?.Log($"Finished cleaning save for world '{world_id}' (folder structure). DELETED : {deleted_rooms} rooms, {deleted_chunks} chunks, {deleted_capables} capables and {deleted_capacities} capacities.");
+
     }
+    
+    // ! does it work with containers ??? i don't think so
+    // todo : make this work with containes as well
     private static void gather_all_capable_and_capacities_in_capable_recursive(string world_id, CapableData capable_data, ref HashSet<string> items_ids, ref HashSet<string> capacities_ids)
     {
         // we take the opportunity to gather the capacities ids too
@@ -982,6 +1098,31 @@ public class SaveEngine : MonoBehaviour
             CapableData item_data = CapableEngine.LoadWorldCapableData(world_id, item_id);
             if (item_data == null) { continue; }
             gather_all_capable_and_capacities_in_capable_recursive(world_id, item_data, ref items_ids, ref capacities_ids);
+        }
+    }
+    private static void gather_all_capable_and_capacities_in_capable_recursive_in_wsd(WorldSaveData wsd, CapableData capable_data, ref HashSet<string> items_ids, ref HashSet<string> capacities_ids, ref List<CapableData> capables)
+    {
+        // we take the opportunity to gather the capacities ids too
+        if (capable_data.capacities_ids != null)
+        {
+            foreach (string capa_id in capable_data.capacities_ids)
+            {
+                capacities_ids.Add(capa_id); // no need to check contains since it is a hashset
+            }
+        }
+
+        // and we recursively gather the items in the inventory of the capable
+        if (capable_data.inventory == null) { return; }
+        List<string> inv_items_ids = capable_data.inventory.GetAllItemsIds();
+        items_ids.UnionWith(inv_items_ids);
+
+        // and we gather the items in the inventories of the items in the inventory, and so on recursively
+        foreach (string item_id in inv_items_ids)
+        {
+            CapableData item_data = wsd.capables.FirstOrDefault(c => c.id == item_id);
+            if (item_data == null) { continue; }
+            if (!capables.Contains(item_data)) { capables.Add(item_data); }
+            gather_all_capable_and_capacities_in_capable_recursive_in_wsd(wsd, item_data, ref items_ids, ref capacities_ids, ref capables);
         }
     }
 }
