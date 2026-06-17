@@ -17,6 +17,7 @@ public class UI_Writer : MonoBehaviour
     private string target_writing = "";
     private List<int> pause_indexes = new List<int>();
     private List<int> dot_indexes = new List<int>();
+    private List<TextColorIndex> color_indexes = new List<TextColorIndex>();
     
     [Header("Speed parameters")]
     [SerializeField] private float caracters_per_sec = 50f;
@@ -83,6 +84,7 @@ public class UI_Writer : MonoBehaviour
     {
         // if disabled we don't start the coroutine
         if (!gameObject.activeInHierarchy) { return; }
+        if (raw_writing == null) { raw_writing = ""; }
 
         // checks if we need to write again (not necessary if this is the same description)
         // the good thing is the coroutine will continue executing so it's perfect
@@ -96,7 +98,7 @@ public class UI_Writer : MonoBehaviour
         }
 
         // we refine the description
-        string writing = refine_writing(raw_writing, out List<int> pause_indexes, out List<int> dot_indexes);
+        string writing = refine_writing(raw_writing, out List<int> pause_indexes, out List<int> dot_indexes, out List<TextColorIndex> color_indexes);
 
         // starts writing the refined description
         if (log_writing) { Debug.Log($"(UI_Writer) Writing : raw '{raw_writing}'\nrefined '{writing}'"); }
@@ -104,10 +106,12 @@ public class UI_Writer : MonoBehaviour
         this.target_writing = writing;
         this.pause_indexes = pause_indexes;
         this.dot_indexes = dot_indexes;
+        this.color_indexes = color_indexes;
         this.cursor = 0;
         label.text = "";
         writing_coroutine = StartCoroutine(write());
     }
+
     public IEnumerator write()
     {
         while (cursor < target_writing.Length)
@@ -143,8 +147,10 @@ public class UI_Writer : MonoBehaviour
                 play_pause = false; // we don't want to play both
             }
 
+            // we get the final text to write
+            // then we add the color tags and finally
             // we update the label
-            label.text = target_writing.Substring(0, next_cursor);
+            label.text = apply_color_tags(target_writing.Substring(0, next_cursor), next_cursor);
 
             // we play pause / dot if needed
             if (play_dot) { yield return write_dot(); dot_indexes.RemoveAt(0); }
@@ -194,11 +200,34 @@ public class UI_Writer : MonoBehaviour
         }
     }
 
-    // REFINING TEXT
-    private string refine_writing(string raw_writing, out List<int> pause_indexes, out List<int> dot_indexes)
+    // COLORS
+    private string apply_color_tags(string text, int next_cursor)
     {
+        // then we add the color tags if needed
+        int offset = 0;
+        foreach (TextColorIndex ci in color_indexes)
+        {
+            if (ci.start_index >= next_cursor) { break; } // we don't need to add any more color tags
+
+            // we add the start tag at the start index
+            text = text.Insert(ci.start_index + offset, ci.GetStartTag());
+            offset += ci.StartTagLength;
+
+            // we check if we can add the end tag (if the end index is below the next cursor)
+            if (ci.end_index >= next_cursor) { break; } // we don't need to add any more end tags
+            text = text.Insert(ci.end_index + offset, ci.GetEndTag());
+            offset += ci.EndTagLength;
+        }
+        return text;
+    }
+
+    // REFINING TEXT
+    private string refine_writing(string raw_writing, out List<int> pause_indexes, out List<int> dot_indexes, out List<TextColorIndex> color_indexes)
+    {
+        string refined_writing = "";
         pause_indexes = new List<int>();
         dot_indexes = new List<int>();
+        color_indexes = new List<TextColorIndex>();
         int refined_cursor = 0;
 
         // we go through all the description and try to find some special characters
@@ -229,12 +258,53 @@ public class UI_Writer : MonoBehaviour
                 i++;
                 continue;
             }
+            
             refined_cursor++;
         }
 
-        // todo check colors here
+        refined_writing = raw_writing.Replace("/.", "...").Replace("/l", string.Empty).Replace("\\n", "\n");
 
-        return raw_writing.Replace("/.", "...").Replace("/l", string.Empty).Replace("\\n", "\n");
+        Debug.Log($"(UI_Writer) refined writing before colors : '{refined_writing}'\n");
+
+        // we find all the color tags and store their indexes
+        int search_index = 0;
+        int cumulated_offset = 0; // bcz we will remove the color tags, each color tag index needs to be offsetted by the previous number of characters removed
+        while (search_index < refined_writing.Length)
+        {
+            int start_tag_index = refined_writing.IndexOf("<color=", search_index);
+            if (start_tag_index == -1) { break; }
+
+            // we have found a color tag ! we first gather the color code
+            string color_code = "";
+            int tmp_index;
+            for (tmp_index = start_tag_index + 7; tmp_index < refined_writing.Length; tmp_index++)
+            {
+                if (refined_writing[tmp_index] == '>') { break; }
+                color_code += refined_writing[tmp_index];
+            }
+            int start_tag_length = tmp_index + 1 - start_tag_index; // we add 1 to include the '>' character
+
+            // now we find the end tag
+            int end_tag_index = refined_writing.IndexOf("</color>", tmp_index);
+            if (end_tag_index == -1) { break; }
+
+            // we have everything ! we can store the color index and continue searching
+            color_indexes.Add(new TextColorIndex(start_tag_index - cumulated_offset, end_tag_index - cumulated_offset - start_tag_length, color_code));
+            Debug.Log($"(UI_Writer) found color tag : {color_code} at {start_tag_index} to {end_tag_index} (length {start_tag_length}), cumulated offset is {cumulated_offset}");
+            search_index = end_tag_index + 8; // we add 8 to skip the "</color>" tag
+            cumulated_offset += start_tag_length + 8;
+        }
+
+        // now we remove all the color tags from the refined writing
+        foreach (TextColorIndex color_index in color_indexes)
+        {
+            refined_writing = refined_writing.Remove(color_index.start_index, color_index.GetStartTag().Length);
+            refined_writing = refined_writing.Remove(color_index.end_index, color_index.GetEndTag().Length);
+        }
+
+        Debug.Log($"(UI_Writer) final refined writing : '{refined_writing}'\n");
+
+        return refined_writing;
     }
     private float calculate_chars_per_frame()
     {
@@ -258,4 +328,23 @@ public class UI_Writer : MonoBehaviour
         label.text = "";
     }
 
+}
+
+public class TextColorIndex
+{
+    public int start_index;
+    public int end_index;
+    public string color_code;
+
+    public TextColorIndex(int start, int end, string color_code)
+    {
+        this.start_index = start;
+        this.end_index = end;
+        this.color_code = color_code;
+    }
+
+    public string GetStartTag() => $"<color={color_code}>";
+    public int StartTagLength => 17; // "<color=#FF0000>".Length
+    public string GetEndTag() => "</color>";
+    public int EndTagLength => 8; // "</color>".Length
 }

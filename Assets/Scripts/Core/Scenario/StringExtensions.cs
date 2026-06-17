@@ -8,6 +8,8 @@ public static class StringExtensions
 
 /*
 
+"<color=#FF0000>"
+
 //Usage
 TextMeshProUGUI SomeTMProText;
 

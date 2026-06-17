@@ -49,29 +49,6 @@ using Newtonsoft.Json;
         };
         return helper;
     }
-
-    /* public WorldSaveData Duplicate(string new_world_name)
-    {
-        WorldSaveData duplicate = new WorldSaveData()
-        {
-            world = world.Duplicate(),
-            controller = controller.Duplicate(),
-            levels = new List<LevelData>(),
-            rooms = new List<RoomData>(),
-            chunks = new List<ChunkData>(),
-            capables = new List<CapableData>(),
-            capacities = new List<CapacityData>()
-        };
-        duplicate.world.id = new_world_name;
-
-        // duplicate lists
-        foreach (LevelData level in levels) { duplicate.levels.Add(level.Duplicate()); }
-        foreach (RoomData room in rooms) { duplicate.rooms.Add(room.Duplicate()); }
-        foreach (ChunkData chunk in chunks) { duplicate.chunks.Add(chunk.Duplicate()); }
-        foreach (CapableData capable in capables) { duplicate.capables.Add(capable.Duplicate() as CapableData); }
-        foreach (CapacityData capacity in capacities) { duplicate.capacities.Add(capacity.Duplicate() as CapacityData); }
-        return duplicate;
-    } */
 }
 
 

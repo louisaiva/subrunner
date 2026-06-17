@@ -418,13 +418,7 @@ public class WorldManager : MonoBehaviour
         WorldSaveData new_world = DuplicateTemplate(world_template, world_name);
         new_world.controller.play_intro_cinematic = true;
         new_world.controller.UpdatePlayerLevelRoomChunk();
-        // WorldData new_data = new WorldData() { id = world_name };
         existing_worlds_data.Add(world_name, new_world.ToWorldDataHelper());
-        // SaveEngine.SaveWorldData(new_data);
-
-        // and we create and save a default ControllerData for the world
-        // ControllerData controller_data = new ControllerData() { capable_template = "bob", stack_capable_ids = new List<string>() };
-        // SaveEngine.SaveControllerData(controller_data, world_name);
 
 
         SaveEngine.SaveWorldSaveData(new_world);
