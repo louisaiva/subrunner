@@ -402,7 +402,6 @@ Transform:
   - {fileID: 1132713896187957137}
   - {fileID: 7962870894152140665}
   - {fileID: 7176406588804957993}
-  - {fileID: 6909879791607955125}
   - {fileID: 253070033520226973}
   - {fileID: 7239059703818174697}
   - {fileID: 934573574474036947}
@@ -4590,7 +4589,7 @@ ParticleSystem:
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
-      m_Bits: 524360
+      m_Bits: 328
     maxCollisionShapes: 4096
     quality: 0
     voxelSize: 0.3
@@ -5731,64 +5730,6 @@ MonoBehaviour:
   m_UseMeshPrefab: {fileID: 0}
   m_CompressBounds: 0
   m_OverrideVector: {x: 1, y: 1, z: 1}
---- !u!1 &7864647994921689014
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6909879791607955125}
-  - component: {fileID: 4045093185960869967}
-  m_Layer: 0
-  m_Name: item_manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6909879791607955125
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7864647994921689014}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 8466870086659227338}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4045093185960869967
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7864647994921689014}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 48f144d3409d3a047b8ac745c4d10628, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weapon_slot: {fileID: 0}
-  shoes_pool: {fileID: 0}
-  cons1_slot: {fileID: 0}
-  cons2_slot: {fileID: 0}
-  cons3_slot: {fileID: 0}
-  cons4_slot: {fileID: 0}
-  laptop_renderer: {fileID: 0}
-  hack_renderer: {fileID: 0}
-  weapon_renderer: {fileID: 0}
-  shoes_renderer: {fileID: 0}
-  cons1_renderer: {fileID: 0}
-  cons2_renderer: {fileID: 0}
-  cons3_renderer: {fileID: 0}
-  cons4_renderer: {fileID: 0}
 --- !u!1 &8097505848442454113
 GameObject:
   m_ObjectHideFlags: 0

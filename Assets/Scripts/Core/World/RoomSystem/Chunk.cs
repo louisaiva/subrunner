@@ -266,7 +266,7 @@ public class Chunk : MonoBehaviour
             if (_contact_filter != null) { return _contact_filter.Value; }
             ContactFilter2D filter = new ContactFilter2D();
             filter = new ContactFilter2D();
-            filter.SetLayerMask(LayerMask.GetMask("Objects", "Feet"));
+            filter.SetLayerMask(LayerMask.GetMask("Objects", "Feet", "SemiGhosts"));
             filter.useTriggers = true;
             _contact_filter = filter;
             return filter;

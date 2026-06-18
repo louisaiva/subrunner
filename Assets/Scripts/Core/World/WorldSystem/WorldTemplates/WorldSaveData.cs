@@ -50,6 +50,74 @@ using Newtonsoft.Json;
         };
         return helper;
     }
+
+
+    public string GetDetails()
+    {
+        string details = "######## WORLD SAVE DATA DETAILS ########\n";
+        details += "world : \n" + world.GetDetails();
+        details += "\n";
+        details += "controller : \n" + controller.GetDetails();
+        details += "\n";
+
+
+        // levels
+        if (levels == null) { details += "levels : null\n"; }
+        else
+        {
+            details += "levels : " + levels.Count + " \n";
+            foreach (LevelData level in levels)
+            {
+                details += "   - " + level.id + "\n";
+            }
+        }
+
+        // rooms
+        if (rooms == null) { details += "rooms : null\n"; }
+        else
+        {
+            details += "rooms : " + rooms.Count + " \n";
+            foreach (RoomData room in rooms)
+            {
+                details += "   - " + room.id + "\n";
+            }
+        }
+
+        // chunks
+        if (chunks == null) { details += "chunks : null\n"; }
+        else
+        {
+            details += "chunks : " + chunks.Count + " \n";
+            foreach (ChunkData chunk in chunks)
+            {
+                details += "   - " + chunk.id + "\n";
+            }
+        }
+
+        // capables
+        if (capables == null) { details += "capables : null\n"; }
+        else
+        {
+            details += "capables : " + capables.Count + " \n";
+            foreach (CapableData capable in capables)
+            {
+                details += "   - " + capable.id + "\n";
+            }
+        }
+
+        // capacities
+        if (capacities == null) { details += "capacities : null\n"; }
+        else
+        {
+            details += "capacities : " + capacities.Count + " \n";
+            foreach (CapacityData capacity in capacities)
+            {
+                details += "   - " + capacity.id + "\n";
+            }
+        }
+        return details;
+    }
+
 }
 
 

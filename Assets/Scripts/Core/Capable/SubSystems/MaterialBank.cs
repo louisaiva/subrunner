@@ -150,6 +150,14 @@ public class MaterialBank : MonoBehaviour
             return instance.default_material;
         }
 
+        // check if this is a see through material
+        if (id.Contains("see_through"))
+        {
+            if (id == "see_through_unlit") { return instance.see_through_material_unlit; }
+            else if (id == "y_see_through_lit") { return instance.y_see_through_material_lit; }
+        }
+
+
         // try to find the material in cache
         if (instance.materials.TryGetValue(id, out Material material))
         {
@@ -160,7 +168,17 @@ public class MaterialBank : MonoBehaviour
         LogGetMaterial.Error($"Material with id: {id} not found in cache, returning default material");
         return instance.default_material;
     }
-
+    /* public static Material GetSharedMaterial(string id)
+    {
+        Material material = GetMaterial(id);
+        if (material == null)
+        {
+            LogGetMaterial.Error($"Material with id: {id} not found in cache, returning default material");
+            return instance.default_material;
+        }
+        return material;
+    } */
+    
     // MATERIAL GETTER
     public static string GetMaterialName(SpriteRenderer sr, string debug_cap_id = "not specified")
     {
@@ -175,6 +193,26 @@ public class MaterialBank : MonoBehaviour
 
         return mat_name;
     }
+
+
+    ///
+    //
+    /// SEE THROUGH HANDLER
+    //
+    ///
+    [Header("See Through materials")]
+    [SerializeField] private Material y_see_through_material_lit;
+    [SerializeField] private Material see_through_material_unlit;
+    /* public static Material GetSharedSeeThroughUnlit()
+    {
+        return instance.see_through_material_unlit;
+    }
+    public static Material GetSharedYSeeThroughLit()
+    {
+        return instance.y_see_through_material_lit;
+    } */
+
+
 }
 
 [Serializable] public class MaterialsPaths

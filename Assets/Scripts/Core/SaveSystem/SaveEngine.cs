@@ -312,14 +312,17 @@ public class SaveEngine : MonoBehaviour
         if (save_capables)
         {
             List<Capable> capables = level.GetStaticCapables().ToList();
+            List<string> done_ids = new List<string>();
             slog?.Log($"Saving {capables.Count} capables of level '{level.ID}'");
-            // Debug.Log($"(SaveEngine) Saving {capables.Count} capables of level '{level.ID}' : {string.Join(", ", capables.Select(c => c.ID))}");
+            s_log_capables?.LogExtended($"(SaveEngine - AIO) Level GetStaticCapables gathered {capables.Count} capables of level '{level.ID}' : {string.Join(", ", capables.Select(c => c.ID))}");
             foreach (Capable cap in capables)
             {
                 if (log_static) { Debug.Log($"(SaveEngine) Saving capable '{cap.ID}' of level '{level.ID}'"); }
-                save_static_capable_to_wsd(cap, save);
+                save_static_capable_to_wsd(cap, save, ref done_ids);
             }
         }
+
+        slog?.Log($"Constructed the WSD for saving AIO level '{level.ID}' of world '{world_id}' into single file. WSD is :" + save.GetDetails());
 
         SaveWorldSaveData(save);
 
@@ -400,8 +403,14 @@ public class SaveEngine : MonoBehaviour
             foreach (Item item in items) { save_static_capable_to_folder(item, world_id, save_inventory, save_capacities); }
         }
     }
-    private static void save_static_capable_to_wsd(Capable capable, WorldSaveData wsd, bool save_inventory = true, bool save_capacities = true)
+    private static void save_static_capable_to_wsd(Capable capable, WorldSaveData wsd, ref List<string> done_ids, bool save_inventory = true, bool save_capacities = true)
     {
+        if (done_ids.Contains(capable.ID))
+        {
+            s_log_capables?.Log($"Capable '{capable.ID}' already saved in WorldSaveData '{wsd.ID}', skipping...");
+            return;
+        }
+
         s_log_capables?.Log($"Saving capable '{capable.ID}' in WorldSaveData '{wsd.ID}' (save_inventory: {save_inventory}, save_capacities: {save_capacities})");
 
         s_log_capables?.LogSpecific($"Getting capable data '{capable.ID}'");
@@ -418,6 +427,7 @@ public class SaveEngine : MonoBehaviour
             break;
         }
         if (!found) { wsd.capables.Add(data); }
+        done_ids.Add(capable.ID);
 
         if (save_capacities)
         {
@@ -443,7 +453,7 @@ public class SaveEngine : MonoBehaviour
         {
             List<Item> items = capable.Inventory.GetStaticItems();
             s_log_capables?.LogExtended($"Saving {items.Count} items of capable '{capable.ID}'");
-            foreach (Item item in items) { save_static_capable_to_wsd(item, wsd, save_inventory, save_capacities); }
+            foreach (Item item in items) { save_static_capable_to_wsd(item, wsd, ref done_ids, save_inventory, save_capacities); }
         }
     }
 
@@ -487,6 +497,7 @@ public class SaveEngine : MonoBehaviour
         Debug.LogError($"(SaveEngine) Failed to load world save data for world '{world_id}' from both folder and file.");
         return null;
     }
+    public static void ClearWorldSave() { _loaded_save = null; }
     private static bool load_world_save_from_file(string id, ref WorldSaveData save, bool log = true)
     {
         // string world_file_path = Path.Combine(WorldManager.WorldsDataPath, id + ".json");
@@ -499,6 +510,7 @@ public class SaveEngine : MonoBehaviour
             return false;
         }
         save = JsonConvert.DeserializeObject<WorldSaveData>(json, one_file_settings);
+        save.world.id = id; // ensure the world id is set correctly
         return true;
     }
     private static bool load_world_save_from_folder(string id, ref WorldSaveData save, bool log = true)
@@ -594,6 +606,7 @@ public class SaveEngine : MonoBehaviour
         else if (log) { Debug.LogWarning($"(World) No capacities data files found in folder: {Path.Combine(world_path, "capacities")}"); }
 
         // if we reach this point, our save is complete and we return true
+        save.world.id = id; // ensure the world id is set correctly
         return true;
     }
 
@@ -848,11 +861,19 @@ public class SaveEngine : MonoBehaviour
         slog_clean?.Log($"Cleaning save for world '{world_id}' (save is a {(folder ? "folder structure" : "single file")})");
         if (folder) { clean_world_save_in_folder(world_id); return; }
 
-        // else it is a file save
-        clean_world_save_in_file(world_id);
+        try
+        {
+            clean_world_save_in_file(world_id);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"(SaveEngine) Exception while cleaning world save for world '{world_id}': {ex.Message}\n{ex.StackTrace}");
+        }
     }
     private static void clean_world_save_in_file(string world_id)
     {
+        ClearWorldSave(); // we potentially just saved things, so we clear so the wsd is up to date
+
         // we load the world save data
         WorldSaveData wsd = GetWorldSave(world_id);
         if (wsd == null)
@@ -892,19 +913,59 @@ public class SaveEngine : MonoBehaviour
         slog_clean?.LogExtended($"Found {chunks_data.Count} chunks in the levels of the world.");
 
         // capables
-        HashSet<string> capables_in_levels = new HashSet<string>();
+        List<string> capables_in_levels = new List<string>();
         foreach (ChunkData chunk_data in chunks_data)
         {
             foreach (string capable_id in chunk_data.capables_ids) { capables_in_levels.Add(capable_id); }
             foreach (string movable_id in chunk_data.movables_ids) { capables_in_levels.Add(movable_id); }
         }
-        List<CapableData> capables_data = wsd.capables.Where(c => capables_in_levels.Contains(c.id)).ToList();
+
+        // check if the controlled capable is not here we add it and reset position
+        bool controlled_capable_missing = false;
+        if (!string.IsNullOrEmpty(controller_id) && !capables_in_levels.Contains(controller_id))
+        {
+            slog_clean?.Warning($"Controlled capable '{controller_id}' is not in the list of capables in the levels of the world. Adding it to the list to avoid deleting it.");
+            capables_in_levels.Add(controller_id);
+            controlled_capable_missing = true;
+        }
+
+        // then we gather all CapableData
+        List<CapableData> capables_data = gather_all_capables_from_wsd_that_are_listed(wsd, capables_in_levels, out List<string> capacities_in_levels);
+        if (controlled_capable_missing)
+        {
+            // we also add all capacities & items of the controlled capable to the list of capacities in the levels, to avoid deleting them
+            CapableData controlled_capable = capables_data.FirstOrDefault(c => c.id == controller_id);
+            if (controlled_capable != null)
+            {
+                // reset position
+                controlled_capable.position = Vector2.zero;
+                slog_clean?.Warning($"Reset position of controlled capable '{controller_id}' to 0,0 instead of deleting it.");
+            }
+        }
+        capables_in_levels = capables_data.Select(c => c.id).ToList();
+
+
+        /*
+        List <CapableData> capables_data = wsd.capables.Where(c => capables_in_levels.Contains(c.id)).ToList();
+        List<CapableData> tmp_capables = new List<CapableData>(capables_data);
+
+
 
         // gather the capacities + add all their inventories' items too
         HashSet<string> capacities_in_levels = new HashSet<string>();
-        foreach (CapableData capable_data in capables_data)
+        List<CapableData> gathered_this_loop = new List<CapableData>();
+        while (tmp_capables.Count > 0)
         {
-            gather_all_capable_and_capacities_in_capable_recursive_in_wsd(wsd, capable_data, ref capables_in_levels, ref capacities_in_levels, ref capables_data);
+            CapableData capable_data = tmp_capables[0];
+            tmp_capables.RemoveAt(0);
+            gathered_this_loop.Clear();
+            gather_all_capable_and_capacities_in_capable_recursive_in_wsd(wsd, capable_data, ref capables_in_levels, ref capacities_in_levels, ref gathered_this_loop);
+            if (gathered_this_loop.Count == 0) { continue; }
+
+            // remove the gathered capables that are already in the list of capables to avoid infinite loop
+            gathered_this_loop.RemoveAll(c => capables_in_levels.Contains(c.id));
+            tmp_capables.AddRange(gathered_this_loop);
+            capables_data.AddRange(gathered_this_loop);
         }
 
         // we check if we have the controlled capable in the list of capables, if not we add it
@@ -922,6 +983,7 @@ public class SaveEngine : MonoBehaviour
             controlled_capable.position = Vector2.zero;
             slog_clean?.Warning($"Reset position of controlled capable '{controller_id}' to 0,0 instead of deleting it.");
         }
+        */
 
         // then we can gather all CapacityData
         List<CapacityData> capacities_data = wsd.capacities.Where(c => capacities_in_levels.Contains(c.id)).ToList();
@@ -1100,7 +1162,7 @@ public class SaveEngine : MonoBehaviour
             gather_all_capable_and_capacities_in_capable_recursive(world_id, item_data, ref items_ids, ref capacities_ids);
         }
     }
-    private static void gather_all_capable_and_capacities_in_capable_recursive_in_wsd(WorldSaveData wsd, CapableData capable_data, ref HashSet<string> items_ids, ref HashSet<string> capacities_ids, ref List<CapableData> capables)
+    /* private static void gather_all_capable_and_capacities_in_capable_recursive_in_wsd(WorldSaveData wsd, CapableData capable_data, ref HashSet<string> items_ids, ref HashSet<string> capacities_ids, ref List<CapableData> capables)
     {
         // we take the opportunity to gather the capacities ids too
         if (capable_data.capacities_ids != null)
@@ -1124,5 +1186,60 @@ public class SaveEngine : MonoBehaviour
             if (!capables.Contains(item_data)) { capables.Add(item_data); }
             gather_all_capable_and_capacities_in_capable_recursive_in_wsd(wsd, item_data, ref items_ids, ref capacities_ids, ref capables);
         }
+    } */
+
+    private static List<CapableData> gather_all_capables_from_wsd_that_are_listed(WorldSaveData wsd, List<string> capables_ids, out List<string> capacities_ids)
+    {
+        string tmp_log = "gathering capables for save cleaning...\n";
+        capacities_ids = new List<string>();
+
+        // capables
+        // we need to do a while loop until the capables_ids list is real empty
+        // bcz there can be capable in a capable in a capable in a capable etc etc etc
+        // so the max_iterations of the while loop is the highest intrication depth of
+        // capables in the world, but we limit it to 10 just in case (should never happen)
+        int iterations = 0;
+        int total_capables = 0;
+        List<CapableData> gathered_capables = new List<CapableData>();
+        List<string> added_capables_ids = new List<string>();
+        while (capables_ids.Count > 0 && iterations < 10)
+        {
+            iterations++;
+            tmp_log = "\n";
+            List<CapableData> capables_data = get_listed_capables_data_in_wsd(wsd, capables_ids);
+            capables_ids.Clear();
+            for (int i = 0; i < capables_data.Count; i++)
+            {
+                if (added_capables_ids.Contains(capables_data[i].id)) { continue; }
+                added_capables_ids.Add(capables_data[i].id);
+                gathered_capables.Add(capables_data[i]);
+
+                slog_clean?.LogOMGThatsVeryVerySpecific($"- '{capables_data[i].id}' -------------- {(capables_data[i].capacities_ids != null ? capables_data[i].capacities_ids.Count : 0)} capacities  /  {(capables_data[i].inventory != null ? capables_data[i].inventory.ItemsCount() : 0)} items\n");
+                if (capables_data[i].capacities_ids != null) { capacities_ids.AddRange(capables_data[i].capacities_ids); }
+                if (capables_data[i].inventory != null) { capables_ids.AddRange(capables_data[i].inventory.GetAllItemsIds()); }
+
+                // also check for containers
+                if (capables_data[i] is ContainerData container_data && container_data.contained_capable_ids != null)
+                {
+                    capables_ids.AddRange(container_data.contained_capable_ids);
+                }
+            }
+            slog_clean?.LogVerySpecific($"Gathered {capables_data.Count} capables ----- iteration {iterations} :{tmp_log}");
+            total_capables += capables_data.Count;
+        }
+        slog_clean?.LogSpecific($"Gathered total {total_capables} capables in {iterations} iterations.");
+
+        return gathered_capables;
     }
+    private static List<CapableData> get_listed_capables_data_in_wsd(WorldSaveData wsd, List<string> capables_ids)
+    {
+        List<CapableData> gathered_capables = new List<CapableData>();
+        foreach (string capable_id in capables_ids)
+        {
+            CapableData capable_data = wsd.capables.FirstOrDefault(c => c.id == capable_id);
+            if (capable_data != null) { gathered_capables.Add(capable_data); }
+        }
+        return gathered_capables;
+    }
+
 }

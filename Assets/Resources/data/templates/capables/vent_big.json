@@ -11,14 +11,16 @@
     },
     "layer": 29,
     "tag": "Untagged",
-    "capacities_ids": [],
+    "capacities_ids": [
+        "vent_big_wall_collider"
+    ],
     "anim_data": {
         "skin_kind": "",
         "skin": "vent_big",
         "anim_capacity_priorities": [
             {
                 "priority": 0,
-                "capacity_playing": "idle",
+                "capacity_playing": "",
                 "capacities": [
                     "idle"
                 ],
@@ -27,7 +29,7 @@
             },
             {
                 "priority": 1,
-                "capacity_playing": "idle_on",
+                "capacity_playing": "",
                 "capacities": [
                     "idle_on"
                 ],
@@ -35,7 +37,7 @@
                 "one_shot": false
             }
         ],
-        "current_capacity": "",
+        "current_capacity": "idle_on",
         "material_name": "objects",
         "sorting_layer_id": -667374433,
         "order_in_layer": 0,
@@ -134,11 +136,11 @@
                 },
                 "is_trigger": false,
                 "offset": {
-                    "x": -1.395021677017212,
+                    "x": -1.6450220346450806,
                     "y": 0.25
                 },
                 "size": {
-                    "x": 0.20995652675628663,
+                    "x": 0.7099565267562866,
                     "y": 0.5
                 }
             },
@@ -155,11 +157,11 @@
                 },
                 "is_trigger": false,
                 "offset": {
-                    "x": 1.298271894454956,
+                    "x": 1.5482720136642457,
                     "y": 0.25
                 },
                 "size": {
-                    "x": 0.40345656871795657,
+                    "x": 0.9034566283226013,
                     "y": 0.5
                 }
             }

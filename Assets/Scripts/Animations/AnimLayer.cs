@@ -217,10 +217,28 @@ public class AnimLayer : MonoBehaviour
 
         // load sr data
         Material mat = MaterialBank.GetMaterial(layer_data.material_name);
-        sr.material = mat;
+        bool is_see_through = mat.name.Contains("see_through");
+        if (is_see_through)
+        {
+            Debug.LogWarning("(AnimLayer) See through material (" + mat.name + ") detected on layer " + name + " of skin " + skin + " on capable '" + (leader?.Capable == null ? "null" : leader.Capable.ID) + "'");
+            sr.SetSharedMaterials(new List<Material> { mat });
+        }
+        else { sr.material = mat; }
         sr.sortingLayerID = layer_data.sorting_layer_id;
         sr.sortingOrder = layer_data.order_in_layer;
 
+        // load never flip & follow duration
+        never_flip = layer_data.never_flip;
+        follow_duration = layer_data.follow_duration;
+
+        if (is_see_through)
+        {
+            material = null;
+            visibleKeyword = null;
+            return;
+        }
+
+        
         // setup visibility keyword
         material = sr.material;
         if (has_material_keyword(mat, "_VISIBLE"))
@@ -229,10 +247,6 @@ public class AnimLayer : MonoBehaviour
         }
         else { visibleKeyword = null; }
         visible_on = true;
-
-        // load never flip & follow duration
-        never_flip = layer_data.never_flip;
-        follow_duration = layer_data.follow_duration;
     }
     private bool has_material_keyword(Material material, string name)
     {

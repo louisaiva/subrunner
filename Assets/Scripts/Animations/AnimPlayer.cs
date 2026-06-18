@@ -57,8 +57,8 @@ public class AnimPlayer : MonoBehaviour
 
 
     [Header("Current Animation")]
-    private string current_capacity = "";
-    public Anim current_anim = null;
+    [SerializeField] private string current_capacity = "";
+    private Anim current_anim = null;
     private float frame_timer = 0f;
     private int current_frame = -1; // if -1, the animation is over
     [SerializeField] private bool update_each_frame = true; // if false, it means that the animation is a single frame anim, we don't want to check it each frame
@@ -476,7 +476,10 @@ public class AnimPlayer : MonoBehaviour
         return time_played / anim_duration;
     }
 
-
+    /// <summary>
+    /// returns the current anim
+    /// </summary>
+    public Anim GetCurrentAnim() { return current_anim; }
 
 
 
@@ -771,6 +774,7 @@ public class AnimPlayer : MonoBehaviour
         };
 
         data.material_name = MaterialBank.GetMaterialName(Renderer, Capable.ID);
+        data.current_capacity = current_capacity;
 
 
         // get the layers by going through the hierarchy (so we can do it even when not playing)
@@ -834,7 +838,7 @@ public class AnimPlayer : MonoBehaviour
         AnimCapacityPriority new_priority = new AnimCapacityPriority(new List<string>(this.capacities))
         {
             priority = this.priority,
-            capacity_playing = "", // capacity playing is runtime only, means we don't duplicate it
+            capacity_playing = this.capacity_playing,
             lock_orientation = this.lock_orientation,
             one_shot = this.one_shot
         };

@@ -28,32 +28,37 @@ public class Shuriken : Item, Usable
         // we wait until the shuriken is thrown
         yield return new WaitUntil(() => Velocity.magnitude > 0f);
 
+        // we wait for the anim to be playing
+        yield return new WaitUntil(() => AnimPlayer.IsShowing("throw"));
+        Anim anim = AnimPlayer.GetCurrentAnim();
+        if (anim == null) { yield break; } // if the animation is null, we stop the coroutine
+
         // we wait for the shuriken to stop
-        while (Velocity.magnitude > 25f && GetComponent<AnimPlayer>().current_anim.capacity == "throw")
+        while (Velocity.magnitude > 25f && AnimPlayer.IsShowing("throw"))
         {
             // we adjust the animation speed to the shuriken speed
             float speed = Velocity.magnitude;
 
             if (speed > 1000f)
             {
-                GetComponent<AnimPlayer>().current_anim.speed = 3f;
+                anim.speed = 3f;
                 emission.rateOverTime = 30f;
                 current_speed = 30f;
             }
             else if (speed > 200f)
             {
-                GetComponent<AnimPlayer>().current_anim.speed = 2f;
+                anim.speed = 2f;
                 emission.rateOverTime = 20f;
                 current_speed = 20f;
             }
             else
             {
-                GetComponent<AnimPlayer>().current_anim.speed = 1f;
+                anim.speed = 1f;
                 emission.rateOverTime = 10f;
                 current_speed = 10f;
             }
 
-            if (debug_velocity) { Debug.Log("(Shuriken) shuriken animation speed : " + GetComponent<AnimPlayer>().current_anim.speed); }
+            if (debug_velocity) { Debug.Log("(Shuriken) shuriken animation speed : " + anim.speed); }
 
             // we orient the shuriken particle system
             orient_particle(Velocity.normalized);
@@ -65,8 +70,8 @@ public class Shuriken : Item, Usable
         if (log) { Debug.Log("(Shuriken) shuriken stopped"); }
 
         // we stop the animation
-        GetComponent<AnimPlayer>().current_anim.speed = 1f; // we set the speed to 1
-        GetComponent<AnimPlayer>().StopPlaying("throw");
+        anim.speed = 1f; // reset the speed to 1
+        AnimPlayer.StopPlaying("throw");
 
         // we remove the ghost effect
         RemoveEffect(Effect.SemiGhost);

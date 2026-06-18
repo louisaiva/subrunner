@@ -157,20 +157,13 @@ public class World : BSOD_System<World>
         /* */ load_status = WorldLoadStatus.LoadingWorld;
         ///
 
+        SaveEngine.ClearWorldSave(); // we clear the world save before loading a new one, to avoid having the previous world save data in memory
         save = SaveEngine.GetWorldSave(world_id);
         if (save == null)
         {
             if (log) { Debug.LogWarning($"(World) Failed to load world save data for world_id: {world_id} -- json is null."); }
             return;
         }
-
-        /* string json = extract_save_json(world_id);
-        save = JsonUtility.FromJson<WorldSaveData>(json);
-        if (json == null) */
-
-        // load the data inside the world save
-        // data = JsonUtility.FromJson<WorldData>(json);
-        data.id = world_id; // we set the world_id in the data for easier access to it later, even if it's not serialized
         if (log_loading_extended) { Debug.Log($"(World) Loaded world save data for world_id: {world_id}\n\n"); }
 
 
@@ -282,7 +275,8 @@ public class World : BSOD_System<World>
         await CapacityEngine.LazyInstance.UnloadWorldData(log_loading_extended);
 
         // we clear the world data
-        save = null; // ? really useful to clear the save data here ? maybe we will reload it in like 2 seconds
+        save = null;
+        SaveEngine.ClearWorldSave();
         if (log)
         {
             Debug.Log($"(World) ----------------------------------- WORLD UNLOADED : (in {Time.realtimeSinceStartup - start_time}s)");

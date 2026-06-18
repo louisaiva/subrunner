@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-4213347594283054643
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 10
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
@@ -7,8 +20,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: y_see_through_unlit
-  m_Shader: {fileID: -6465566751694194690, guid: 533bab6cf64db124c9cce054e283883f, type: 3}
+  m_Name: y_see_through_lit
+  m_Shader: {fileID: -6465566751694194690, guid: 88e5d52300fb47c45a429e8851673334, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -41,33 +54,22 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _EllipseOpacity: 1
-    - _EllipseSize: 0
-    - _EllipseSmoothness: 0.5
-    - _Y_Hit: 0
-    - _Y_Player: 18.82033
-    - _Y_Range: 0
-    - _lower_DY: 1.5
-    - _small_shadow_distance: 1
-    - _tiling_radius: 2
-    - _upper_DY: 2
+    - _EllipseOpacity: 0.51
+    - _EllipseSize: 4e-45
+    - _EllipseSmoothness: 0.626
+    - _Opacity: 0.51
+    - _Size: 2.6298356e-22
+    - _Smoothness: 0.626
+    - _Y_Hit: 1.5
+    - _Y_Player: 9.418907
+    - _Y_Range: 0.15
     m_Colors:
     - White: {r: 1, g: 1, b: 1, a: 1}
-    - _PlayerScreenPosition: {r: 0.5, g: 0.51500005, b: 10, a: 0}
-    - _PlayerWorldPosition: {r: -0.5, g: 0.5416667, b: 0, a: 0}
+    - _PlayerPosition: {r: 0, g: 0, b: 0, a: 0}
+    - _PlayerScreenPosition: {r: 0.5000002, g: 0.5399997, b: 10, a: 0}
+    - _Position: {r: 0.5000007, g: 0.52000046, b: 10, a: 0}
     - _Tint: {r: 1, g: 1, b: 1, a: 0}
+    - _player_pos: {r: 0.5, g: 0.5, b: 0, a: 0}
+    - _tint: {r: 1, g: 1, b: 1, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!114 &4800616314668381218
-MonoBehaviour:
-  m_ObjectHideFlags: 11
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 10
