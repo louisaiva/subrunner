@@ -6,8 +6,8 @@ using UnityEngine;
 public class ColliderCapacity : Capacity
 {
 
-    private List<CircleCollider2D> circles_colliders = new List<CircleCollider2D>();
-    private List<BoxCollider2D> box_colliders = new List<BoxCollider2D>();
+    protected List<CircleCollider2D> circles_colliders = new List<CircleCollider2D>();
+    protected List<BoxCollider2D> box_colliders = new List<BoxCollider2D>();
 
     // LOAD / UNLOAD DATA
     public override void LoadData(CapacityData data)

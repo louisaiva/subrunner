@@ -57,13 +57,14 @@ public interface IColliderData
     {
         ColliderData new_data = new ColliderData()
         {
-            local_position = this.local_position,
-            layerID = this.layerID,
-            pathfinding_area = this.pathfinding_area,
-            is_trigger = this.is_trigger,
-            offset = this.offset,
-            shadow_caster_data = this.shadow_caster_data.Duplicate()
         };
+
+        new_data.local_position = this.local_position;
+        new_data.layerID = this.layerID;
+        new_data.pathfinding_area = this.pathfinding_area;
+        new_data.is_trigger = this.is_trigger;
+        new_data.offset = this.offset;
+        new_data.shadow_caster_data = this.shadow_caster_data == null ? null : this.shadow_caster_data.Duplicate();
 
         return new_data;
     }

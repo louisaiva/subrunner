@@ -1,0 +1,40 @@
+﻿{
+    "<id>k__BackingField": "vent_big_attack",
+    "<owner_id>k__BackingField": "no_capable_id",
+    "kind": "ColliderAttackCapacity",
+    "local_position": {
+        "x": 0.0,
+        "y": 0.125
+    },
+    "layer": 28,
+    "tag": "Untagged",
+    "boxes": [
+        {
+            "local_position": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "layerID": 28,
+            "pathfinding_area": -1,
+            "shadow_caster_data": {
+                "cast_and_self": false,
+                "used_layers": []
+            },
+            "is_trigger": true,
+            "offset": {
+                "x": 0.0,
+                "y": 0.25
+            },
+            "size": {
+                "x": 2.700000047683716,
+                "y": 0.5
+            }
+        }
+    ],
+    "circles": [],
+    "excluded_tags": [],
+    "knockback_magnitude": 500.0,
+    "damage": 2.0,
+    "is_attacking": true,
+    "kills": 0
+}

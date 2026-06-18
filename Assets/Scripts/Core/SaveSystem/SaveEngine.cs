@@ -920,7 +920,7 @@ public class SaveEngine : MonoBehaviour
             foreach (string movable_id in chunk_data.movables_ids) { capables_in_levels.Add(movable_id); }
         }
 
-        // check if the controlled capable is not here we add it and reset position
+        // check if the controlled capable is not here we add it 
         bool controlled_capable_missing = false;
         if (!string.IsNullOrEmpty(controller_id) && !capables_in_levels.Contains(controller_id))
         {
@@ -931,59 +931,17 @@ public class SaveEngine : MonoBehaviour
 
         // then we gather all CapableData
         List<CapableData> capables_data = gather_all_capables_from_wsd_that_are_listed(wsd, capables_in_levels, out List<string> capacities_in_levels);
-        if (controlled_capable_missing)
+        if (controlled_capable_missing) // and reset position if needed
         {
-            // we also add all capacities & items of the controlled capable to the list of capacities in the levels, to avoid deleting them
             CapableData controlled_capable = capables_data.FirstOrDefault(c => c.id == controller_id);
             if (controlled_capable != null)
             {
-                // reset position
                 controlled_capable.position = Vector2.zero;
                 slog_clean?.Warning($"Reset position of controlled capable '{controller_id}' to 0,0 instead of deleting it.");
             }
         }
         capables_in_levels = capables_data.Select(c => c.id).ToList();
 
-
-        /*
-        List <CapableData> capables_data = wsd.capables.Where(c => capables_in_levels.Contains(c.id)).ToList();
-        List<CapableData> tmp_capables = new List<CapableData>(capables_data);
-
-
-
-        // gather the capacities + add all their inventories' items too
-        HashSet<string> capacities_in_levels = new HashSet<string>();
-        List<CapableData> gathered_this_loop = new List<CapableData>();
-        while (tmp_capables.Count > 0)
-        {
-            CapableData capable_data = tmp_capables[0];
-            tmp_capables.RemoveAt(0);
-            gathered_this_loop.Clear();
-            gather_all_capable_and_capacities_in_capable_recursive_in_wsd(wsd, capable_data, ref capables_in_levels, ref capacities_in_levels, ref gathered_this_loop);
-            if (gathered_this_loop.Count == 0) { continue; }
-
-            // remove the gathered capables that are already in the list of capables to avoid infinite loop
-            gathered_this_loop.RemoveAll(c => capables_in_levels.Contains(c.id));
-            tmp_capables.AddRange(gathered_this_loop);
-            capables_data.AddRange(gathered_this_loop);
-        }
-
-        // we check if we have the controlled capable in the list of capables, if not we add it
-        CapableData controlled_capable = wsd.capables.FirstOrDefault(c => c.id == controller_id);
-        if (controlled_capable != null && !capables_data.Contains(controlled_capable))
-        {
-            slog_clean?.Warning($"Controlled capable '{controller_id}' is not in the list of capables in the levels of the world. Adding it to the list to avoid deleting it.");
-            capables_data.Add(controlled_capable);
-            capables_in_levels.Add(controller_id);
-
-            // here we also add all capacities & items of the controlled capable to the list of capacities in the levels, to avoid deleting them
-            gather_all_capable_and_capacities_in_capable_recursive_in_wsd(wsd, controlled_capable, ref capables_in_levels, ref capacities_in_levels, ref capables_data);
-
-            // reset position
-            controlled_capable.position = Vector2.zero;
-            slog_clean?.Warning($"Reset position of controlled capable '{controller_id}' to 0,0 instead of deleting it.");
-        }
-        */
 
         // then we can gather all CapacityData
         List<CapacityData> capacities_data = wsd.capacities.Where(c => capacities_in_levels.Contains(c.id)).ToList();
@@ -1162,32 +1120,9 @@ public class SaveEngine : MonoBehaviour
             gather_all_capable_and_capacities_in_capable_recursive(world_id, item_data, ref items_ids, ref capacities_ids);
         }
     }
-    /* private static void gather_all_capable_and_capacities_in_capable_recursive_in_wsd(WorldSaveData wsd, CapableData capable_data, ref HashSet<string> items_ids, ref HashSet<string> capacities_ids, ref List<CapableData> capables)
-    {
-        // we take the opportunity to gather the capacities ids too
-        if (capable_data.capacities_ids != null)
-        {
-            foreach (string capa_id in capable_data.capacities_ids)
-            {
-                capacities_ids.Add(capa_id); // no need to check contains since it is a hashset
-            }
-        }
 
-        // and we recursively gather the items in the inventory of the capable
-        if (capable_data.inventory == null) { return; }
-        List<string> inv_items_ids = capable_data.inventory.GetAllItemsIds();
-        items_ids.UnionWith(inv_items_ids);
 
-        // and we gather the items in the inventories of the items in the inventory, and so on recursively
-        foreach (string item_id in inv_items_ids)
-        {
-            CapableData item_data = wsd.capables.FirstOrDefault(c => c.id == item_id);
-            if (item_data == null) { continue; }
-            if (!capables.Contains(item_data)) { capables.Add(item_data); }
-            gather_all_capable_and_capacities_in_capable_recursive_in_wsd(wsd, item_data, ref items_ids, ref capacities_ids, ref capables);
-        }
-    } */
-
+    // this method works well, should become the norm overall
     private static List<CapableData> gather_all_capables_from_wsd_that_are_listed(WorldSaveData wsd, List<string> capables_ids, out List<string> capacities_ids)
     {
         string tmp_log = "gathering capables for save cleaning...\n";
