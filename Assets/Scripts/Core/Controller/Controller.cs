@@ -486,13 +486,6 @@ public class Controller : MonoBehaviour
         CapableEngine.LazyInstance.OnCapableDespawned += handle_capable_despawned;
 
         if (log) { Debug.Log($"(Controller) CONTROLLER SUCCESSFULLY LOADED for '{world_id}' !\n{data.GetDetails()}"); }
-
-        // now we can launch the "intro" cinematics (only if this is the first spawn)
-        if (data.play_intro_cinematic) { UI_Manager.Instance.GetPool<UI_CinematicPool>()?.PlayCinematic("intro"); }
-        else { UI_Manager.Instance.SwitchToHUD(); }
-
-        // in all cases we remove the intro cinematic flag so we don't play it again
-        data.play_intro_cinematic = false;
     }
     public async Awaitable UnloadWorldData(bool log)
     {

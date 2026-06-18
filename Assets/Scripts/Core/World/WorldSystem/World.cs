@@ -205,8 +205,28 @@ public class World : BSOD_System<World>
         phase_time = Time.realtimeSinceStartup;
         await Controller.LazyInstance.LoadWorldData(world_id, log_loading_extended);
         if (fallback_spawn_point != null) { Controller.Capable.transform.position = fallback_spawn_point.position; } // debug only to tp quickly at launch
-        
+
         // ok so now we have a Controller.Capable defined if everything went ok ! We can determine it to load the right level
+
+
+
+        ///
+        //  5. WE PLAY CINEMATICS IF NEEDED
+        /* */
+        load_status = WorldLoadStatus.LoadingCinematics;
+        ///
+        if (log_loading_extended) { Debug.Log($"(World) ----------------------------------- LOADING CINEMATICS : (previous phase duration: {Time.realtimeSinceStartup - phase_time}s)"); }
+        phase_time = Time.realtimeSinceStartup;
+
+        // now we can launch the "intro" cinematics (only if this is the first spawn)
+        if (data.story_data == null || !data.story_data.intro_done)
+        {
+            data.story_data = new StoryData();
+            UI_Manager.Instance.GetPool<UI_CinematicPool>()?.PlayCinematic("intro");
+            data.story_data.intro_done = true;
+            if (log_loading_extended) { Debug.Log("(World - Cinematics) Playing intro cinematics"); }
+        }
+        else { UI_Manager.Instance.SwitchToHUD(); }
 
 
         ///
@@ -450,6 +470,11 @@ public class World : BSOD_System<World>
     public string icon_name;
     public Color color;
 
+
+    // story data
+    public StoryData story_data;
+
+
     public void UpdateTime(bool just_created = false)
     {
         game_version = Application.version;
@@ -506,6 +531,7 @@ public class World : BSOD_System<World>
     LoadingEngines,
     WaitingFrame,
     LoadingController,
+    LoadingCinematics,
     LoadingPlayerLevel,
     Loaded,
     Unloading

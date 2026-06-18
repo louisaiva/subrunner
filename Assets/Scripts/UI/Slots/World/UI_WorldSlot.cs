@@ -43,29 +43,27 @@ public class UI_WorldSlot : UI_EventButton, Descriptable
 
         string description = "";
         description += $"<b>subrunner {wdata.game_version}</b>\n".AddColor(get_color_version(wdata.game_version));
+
         description += "\n\n";
         description += $"modified : ".AddColor(Color.grey) + $"<b>{wdata.last_update_date}</b>\n";
         description += $"created : ".AddColor(Color.grey) + $"<b>{wdata.creation_date}</b>\n";
-        description += "\n\n\n";
 
+        description += "\n\n";
         description += $"controller : ".AddColor(Color.grey) + $"<b>{whelper.controller.controlled_capable_id}</b>\n";
+        description += "\n\n";
+        description += $"intro done : ".AddColor(Color.grey) + (wdata.story_data?.intro_done == true
+                    ? "<b>YES</b>".AddColor(Color.green)
+                    : "<b>NOPE</b>".AddColor(Color.red))
+                    + "\n";
+        description += $"met qwin : ".AddColor(Color.grey) + (wdata.story_data?.met_qwin == true
+                    ? "<b>YES</b>".AddColor(Color.green)
+                    : "<b>NOPE</b>".AddColor(Color.red))
+                    + "\n";
+        description += $"ate pasta : ".AddColor(Color.grey) + (wdata.story_data?.ate_pasta == true
+                    ? "<b>YES</b>".AddColor(Color.green)
+                    : "<b>NOPE</b>".AddColor(Color.red))
+                    + "\n";
 
-        /* description += $"<b>Levels</b> : ";
-
-        // we get the levels from the LevelEngine static method since the world is not loaded, which means
-        // data.levels_ids is necessary empty
-        List<LevelData> levels_data = LevelEngine.LoadWorldLevelsData(world_data.id);
-        List<string> levels_ids = levels_data.ConvertAll(level_data => level_data.id);
-        if (levels_ids == null || levels_ids.Count == 0)
-        {
-            description += "no levels :\\\\\\";
-            return description;
-        }
-        description += $"{levels_ids.Count} \n\n";
-        foreach (string id in levels_ids)
-        {
-            description += $"{id}  -\n";
-        } */
         return description;
     }
 
@@ -76,9 +74,9 @@ public class UI_WorldSlot : UI_EventButton, Descriptable
             int compare_to_current = AppManager.CompareVersion(version);
             if (compare_to_current == 0) { return Color.green; }
             if (Mathf.Abs(compare_to_current) > 100) { return Color.red; } // if the major version is different, it's a big deal
-            if (Mathf.Abs(compare_to_current) > 10) { return Color.orangeRed; } // if the minor version is different, it's a bit of a deal
-            // if (compare_to_current > 0) { return Color.lightGreen; } // the app version is newer than the world, should probably work fine
-            return Color.orange; // world version is newer than the app, might cause issues, better be careful
+            if (Mathf.Abs(compare_to_current) > 30) { return Color.orangeRed; } // if the minor version is different, it's a bit of a deal
+            if (Mathf.Abs(compare_to_current) > 10) { return Color.orange; } // if the minor version is different, it's a bit of a deal
+            return Color.yellow; // world version is newer than the app, might cause issues, better be careful
         }
         catch (Exception ex)
         {

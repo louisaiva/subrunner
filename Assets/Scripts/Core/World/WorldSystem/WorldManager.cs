@@ -450,7 +450,7 @@ public class WorldManager : MonoBehaviour
 
         // we then create the world data and save it (which will create the hierarchy folders if needed)
         WorldSaveData new_world = DuplicateTemplate(world_template, world_name);
-        new_world.controller.play_intro_cinematic = true;
+        new_world.world.story_data = new StoryData();
         new_world.controller.UpdatePlayerLevelRoomChunk();
         existing_worlds_data.Add(world_name, new_world.ToWorldDataHelper());
 

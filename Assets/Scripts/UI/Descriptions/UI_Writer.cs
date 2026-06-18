@@ -223,6 +223,9 @@ public class UI_Writer : MonoBehaviour
     }
 
     // REFINING TEXT
+    // todo : this method has an issue, when gathering colors we remove some characters,
+    // todo : which offsets the indexes, and so will offset the /l & /. special characters,
+    // todo : which will screw up the pauses and dots positions
     private string refine_writing(string raw_writing, out List<int> pause_indexes, out List<int> dot_indexes, out List<TextColorIndex> color_indexes)
     {
         string refined_writing = "";

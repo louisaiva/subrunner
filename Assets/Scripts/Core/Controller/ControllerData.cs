@@ -18,11 +18,6 @@ using UnityEngine;
     public string container_id;
 
 
-    // story
-    [RuntimeOnly] public bool play_intro_cinematic = false;
-
-
-
     // UpdatePlayerLevelRoomChunk
     public void UpdatePlayerLevelRoomChunk(Loggable<SaveEngine> slog = null)
     {
