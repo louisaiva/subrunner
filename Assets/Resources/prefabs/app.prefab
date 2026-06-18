@@ -781,6 +781,41 @@ MonoBehaviour:
     base_spritesheets:
     - objects/deco/vent_big/vent_big_back_main
     keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: lentils
+    variant_spritesheets:
+    - objects/items/food/lentils
+    base_skin: beans
+    base_spritesheets:
+    - objects/items/food/beans
+    keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: onion
+    variant_spritesheets:
+    - objects/items/food/oignon
+    base_skin: beans
+    base_spritesheets:
+    - objects/items/food/beans
+    keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: tomato_sauce
+    variant_spritesheets:
+    - objects/items/food/tomato_sauce
+    base_skin: beans
+    base_spritesheets:
+    - objects/items/food/beans
+    keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: plate
+    variant_spritesheets:
+    - objects/items/kitchen/plate/plate_base
+    base_skin: can
+    base_spritesheets:
+    - objects/items/food/empty_can
+    keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: plate_food
+    variant_spritesheets:
+    - objects/items/kitchen/plate/plate_food
+    base_skin: can
+    base_spritesheets:
+    - objects/items/food/empty_can
+    keep_base_anim_if_spritesheet_not_found: 0
   log: 0
   log_LAFAC: 0
   log_variant_awake: 0

@@ -110,7 +110,7 @@ public class MotorEngine : BSOD_System<MotorEngine>
         // we check if we have a corresponding MotorData for this IAData in the motors_unloading dictionary
         if (!motors_unloading.TryGetValue(id, out MotorData motor_data))
         {
-            Debug.LogError($"(MotorEngine) No MotorData found for IA '{id}' when adding to unloaded entities.");
+            Debug.LogWarning($"(MotorEngine) No MotorData found for IA '{id}' when adding to unloaded entities.");
             return null;
         }
 

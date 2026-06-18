@@ -481,6 +481,13 @@ public class AnimPlayer : MonoBehaviour
     /// </summary>
     public Anim GetCurrentAnim() { return current_anim; }
 
+    /// <summary>
+    /// returns true if we have the capacity somwhere in our ACP list. false otherwise
+    /// </summary>
+    public bool HasCapacity(string capacity)
+    {
+        return getAnimCapacityPriority(capacity) != null;
+    }
 
 
 

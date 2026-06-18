@@ -1,0 +1,115 @@
+﻿{
+    "<id>k__BackingField": "fridge",
+    "kind": "Chest",
+    "position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": -1.0
+    },
+    "layer": 29,
+    "tag": "Untagged",
+    "capacities_ids": [
+        "fridge_iic",
+        "chest_open",
+        "chest_close",
+        "hover"
+    ],
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "fridge",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "hover"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 2,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle_open"
+                ],
+                "lock_orientation": true,
+                "one_shot": false
+            },
+            {
+                "priority": 3,
+                "capacity_playing": "",
+                "capacities": [
+                    "open",
+                    "close"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            }
+        ],
+        "current_capacity": "",
+        "material_name": "objects",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "never_flip": false,
+        "layers": [],
+        "local_position": {
+            "x": 0.0,
+            "y": 0.0
+        }
+    },
+    "inventory": {
+        "item_pools_data": [
+            {
+                "item_type": 2,
+                "stacks_data": [],
+                "pool_id": "stuff",
+                "max_stacks": 6,
+                "min_stacks": 6,
+                "scalable": false,
+                "item_rule": "!virtual;food"
+            }
+        ],
+        "item_type": 2
+    },
+    "feet_data": {
+        "box_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 29,
+                "pathfinding_area": 1,
+                "shadow_caster_data": {
+                    "cast_and_self": false,
+                    "used_layers": []
+                },
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.12805938720703126
+                },
+                "size": {
+                    "x": 0.7498602867126465,
+                    "y": 0.2561187744140625
+                }
+            }
+        ],
+        "circle_colliders": []
+    },
+    "effects": [],
+    "effects_ttl": []
+}

@@ -636,6 +636,9 @@ public class SaveEngine : MonoBehaviour
         if (GameManager.IsKind(capable_type, typeof(Perso))) { data_type = typeof(PersoData); }
 
         // ItemData
+        else if (GameManager.IsKind(capable_type, typeof(Food))) { data_type = typeof(FoodData); }
+
+        // ItemData
         else if (GameManager.IsKind(capable_type, typeof(Item))) { data_type = typeof(ItemData); }
 
         // IAData

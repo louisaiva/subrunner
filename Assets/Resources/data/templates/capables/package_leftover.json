@@ -12,8 +12,8 @@
     "layer": 13,
     "tag": "Untagged",
     "capacities_ids": [
-        "hover",
-        "item_iic"
+        "item_iic",
+        "hover"
     ],
     "anim_data": {
         "skin_kind": "",
@@ -74,7 +74,26 @@
     },
     "feet_data": {
         "box_colliders": [],
-        "circle_colliders": []
+        "circle_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 26,
+                "pathfinding_area": -1,
+                "shadow_caster_data": {
+                    "cast_and_self": false,
+                    "used_layers": []
+                },
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.18000000715255738
+                },
+                "radius": 0.10000000149011612
+            }
+        ]
     },
     "effects": [],
     "effects_ttl": [],

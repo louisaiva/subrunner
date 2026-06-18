@@ -231,17 +231,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: pckg_front
   <orientation>k__BackingField: D
-  current_anim:
-    name: pckg_front.idle_open.D
-    sprites_paths:
-    - objects/interactives/box/bue_box_fg.bue_box_fg_14
-    sprites:
-    - {fileID: 1897152079, guid: 5fa38435125548742bfa254890273ad2, type: 3}
-    sprites_durations:
-    - 0
-    loop: 1
-    speed: 1
-    flipX: 0
+  current_capacity: 
   update_each_frame: 0
   anim_capacity_priorities:
   - priority: 0
@@ -277,7 +267,6 @@ GameObject:
   - component: {fileID: 7206343197171121091}
   - component: {fileID: 7629487890036740618}
   - component: {fileID: 7753409749146594640}
-  - component: {fileID: 2438384168400301997}
   m_Layer: 13
   m_Name: dead_box
   m_TagString: Untagged
@@ -298,6 +287,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 3810021570097211258}
   - {fileID: 2418775393204791573}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -347,6 +337,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -364,7 +355,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -403,16 +393,73 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
   capacity_template_id: hover
---- !u!114 &2438384168400301997
-MonoBehaviour:
+  capacity_template_ids:
+  - item_iic
+--- !u!1 &7321321770273123642
+GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6831872210500143280}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3810021570097211258}
+  - component: {fileID: 3596678792118570036}
+  m_Layer: 26
+  m_Name: feet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3810021570097211258
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7321321770273123642}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2639434519578746112}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &3596678792118570036
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7321321770273123642}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b38a876e5f6fba4ab1dde6d23fd0f96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
-  capacity_template_id: item_iic
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0.18}
+  m_Radius: 0.1

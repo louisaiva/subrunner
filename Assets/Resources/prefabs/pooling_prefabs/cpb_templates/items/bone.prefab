@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 7020607722277148866}
   - component: {fileID: 78135847452039840}
   - component: {fileID: 4461392762945517111}
-  - component: {fileID: 8388440855415188564}
   m_Layer: 24
   m_Name: bone
   m_TagString: Item
@@ -111,14 +110,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: bones
   <orientation>k__BackingField: D
-  current_anim:
-    name: 
-    sprites_paths: []
-    sprites: []
-    sprites_durations: []
-    loop: 1
-    speed: 1
-    flipX: 0
+  current_capacity: 
   update_each_frame: 1
   anim_capacity_priorities:
   - priority: 0
@@ -187,6 +179,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -204,7 +197,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 0}
@@ -242,19 +234,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
   capacity_template_id: hover
---- !u!114 &8388440855415188564
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3927794695775646843}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b38a876e5f6fba4ab1dde6d23fd0f96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
-  capacity_template_id: item_iic
+  capacity_template_ids:
+  - item_iic
 --- !u!1 &8910784274748376873
 GameObject:
   m_ObjectHideFlags: 0

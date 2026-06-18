@@ -15728,6 +15728,10 @@ MonoBehaviour:
       icon_path: Assets/Resources/spritesheets/ui/ui_icons/ui_icons.png
       icon_name: ui_icons_30
       color: {r: 0.7111707, g: 0.64907444, b: 0.9622642, a: 1}
+      story_data:
+        intro_done: 0
+        met_qwin: 0
+        ate_pasta: 0
     controller:
       capable_template: bob
       controlled_capable_id: bob-3
@@ -15736,7 +15740,6 @@ MonoBehaviour:
       player_room: sas
       player_chunk: sas-0
       container_id: 
-      play_intro_cinematic: 0
     levels:
     - <id>k__BackingField: -2
       rooms_ids:
@@ -63978,6 +63981,7 @@ MonoBehaviour:
   _grabbed: 1
   _placed: 0
   life_regen: 10
+  portions: 1
 --- !u!1 &365836133
 GameObject:
   m_ObjectHideFlags: 0
@@ -79724,6 +79728,7 @@ MonoBehaviour:
   _grabbed: 1
   _placed: 0
   life_regen: 10
+  portions: 1
 --- !u!1 &489927953
 GameObject:
   m_ObjectHideFlags: 0
@@ -86873,19 +86878,19 @@ MonoBehaviour:
     width: 35
     localization_key: 
   - id: bob_yummy
-    text: <color=#828282FF><i>ooooook</i></color> /l I need to eat something anyway..
-    width: 45
+    text: <color=#828282FF><i>ooooook</i></color>
+    width: 40
     localization_key: 
   - id: mmmh
-    text: /.
-    width: 30
+    text: I need to eat something anyway
+    width: 50
     localization_key: 
   - id: coool
     text: cooooool
     width: 35
     localization_key: 
   - id: pasta_time
-    text: Let's eat some more pasta !!!
+    text: Let's eat some <color=#e2d66dFF>pasta</color> !!!
     width: 50
     localization_key: 
   - id: frigo_hey_dude
@@ -138178,6 +138183,7 @@ MonoBehaviour:
   _grabbed: 1
   _placed: 0
   life_regen: 10
+  portions: 1
 --- !u!1 &906188570
 GameObject:
   m_ObjectHideFlags: 0
@@ -156281,6 +156287,7 @@ MonoBehaviour:
   _grabbed: 1
   _placed: 0
   life_regen: 10
+  portions: 1
 --- !u!1 &1054545912
 GameObject:
   m_ObjectHideFlags: 0
@@ -163562,8 +163569,15 @@ MonoBehaviour:
   - {fileID: 6192736764969982114, guid: 55e01ebe5ae95804c8ea23c577af912b, type: 3}
   - {fileID: 78135847452039840, guid: 4ef1b97214bcb9248a9f93c1049f1b1d, type: 3}
   food_templates:
-  - {fileID: 542729204817951620, guid: d37cd7385b0279f4ba5a04ad3c2f2b50, type: 3}
   - {fileID: 8665536444718687376, guid: 6149f663a4f9d8f42a675e0072eb4f51, type: 3}
+  - {fileID: 8665536444718687376, guid: 8577e83ddc6970a448247bba8b51edf4, type: 3}
+  - {fileID: 8665536444718687376, guid: 80d967c3e9a1fdd429cb4b018fa7b8d5, type: 3}
+  - {fileID: 542729204817951620, guid: d37cd7385b0279f4ba5a04ad3c2f2b50, type: 3}
+  - {fileID: 8665536444718687376, guid: 58b074b7d91bd7f4da9519a94c9ca3e6, type: 3}
+  - {fileID: 8665536444718687376, guid: f5de671cea71d7b41bc03785d0ecf423, type: 3}
+  - {fileID: 8617235489932818152, guid: 126ed8af7e0767e438af0ae3372b6c13, type: 3}
+  - {fileID: 7772219136801390095, guid: 2372ec4c67d844e41900c657e3a4c653, type: 3}
+  - {fileID: 7647431178272322623, guid: f860c2458f4bec443b7dfa9935683397, type: 3}
   modules_templates: []
   files_templates: []
   exploits_templates:
@@ -163589,6 +163603,7 @@ MonoBehaviour:
   - {fileID: 898889135811878911, guid: 72ff98b9feb11da4488b823b3e35fbd3, type: 3}
   - {fileID: 7629487890036740618, guid: 8d21b222d67565744a308e24fc090556, type: 3}
   - {fileID: 1995776913879646623, guid: afa1573aa69f9114c92ccd6cdd3fbd33, type: 3}
+  - {fileID: 7629487890036740618, guid: cc4680eb5e4a46c4ca1a2ffe3ce18a9d, type: 3}
 --- !u!1 &1111530484
 GameObject:
   m_ObjectHideFlags: 0
@@ -202895,7 +202910,6 @@ MonoBehaviour:
     player_room: 
     player_chunk: 
     container_id: 
-    play_intro_cinematic: 0
   pic: {fileID: 1409124454}
   hackable_navigator: {fileID: 598553482}
   exploit_navigator: {fileID: 598553481}
@@ -214230,6 +214244,7 @@ MonoBehaviour:
   _grabbed: 1
   _placed: 0
   life_regen: 10
+  portions: 1
 --- !u!1 &1472679188
 GameObject:
   m_ObjectHideFlags: 0
@@ -248868,6 +248883,7 @@ MonoBehaviour:
   _grabbed: 1
   _placed: 0
   life_regen: 10
+  portions: 1
 --- !u!1 &1738087575
 GameObject:
   m_ObjectHideFlags: 0
@@ -266608,21 +266624,20 @@ MonoBehaviour:
   - {fileID: 6429607554458301103, guid: aa5c060f687253f47956bf86f0332eaa, type: 3}
   chests_templates:
   - {fileID: 154305097020546142, guid: 5f1ebfa931fa4404bb6601a6a4c295fb, type: 3}
-  - {fileID: 3469911911898272934, guid: eb34b975321e2c54b9da5dea2116b204, type: 3}
-  - {fileID: 3469911911898272934, guid: f6ba44aed1e625b47843953acdeabdd2, type: 3}
   sofas_templates:
   - {fileID: 2994834708900692289, guid: 39875153e43666748bdd6fa0ec0b7ced, type: 3}
   - {fileID: 2994834708900692289, guid: 0e41efbd2420daa4290df1136cb9c78c, type: 3}
   spawners_templates:
   - {fileID: 5997114575170726373, guid: 45501413685587d4ebc84b76fe6952d2, type: 3}
   others_templates:
-  - {fileID: 7910803720122069419, guid: f2b8fd2b5e7b3ff4daf969a55d1bc33e, type: 3}
   - {fileID: 2137358931719857597, guid: 59030affd72e04848abbdde09f88dce6, type: 3}
   template_paths:
   - prefabs/pooling_prefabs/cpb_templates/objects/atrier
   - prefabs/pooling_prefabs/cpb_templates/objects/deco
   - prefabs/pooling_prefabs/cpb_templates/objects/kitchen
   - prefabs/pooling_prefabs/cpb_templates/objects/crafters
+  - prefabs/pooling_prefabs/cpb_templates/objects/chests
+  - prefabs/pooling_prefabs/cpb_templates/objects/boxes
 --- !u!1 &1817759213
 GameObject:
   m_ObjectHideFlags: 0
@@ -321896,6 +321911,7 @@ MonoBehaviour:
   _grabbed: 0
   _placed: 0
   life_regen: 10
+  portions: 1
 --- !u!224 &1964440143411938811
 RectTransform:
   m_ObjectHideFlags: 0
@@ -324724,6 +324740,7 @@ MonoBehaviour:
   _grabbed: 0
   _placed: 0
   life_regen: 10
+  portions: 1
 --- !u!224 &2441689269050122359
 RectTransform:
   m_ObjectHideFlags: 0
@@ -332777,6 +332794,7 @@ MonoBehaviour:
   _grabbed: 0
   _placed: 0
   life_regen: 10
+  portions: 1
 --- !u!222 &3909191898692331438
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -340627,6 +340645,7 @@ MonoBehaviour:
   _grabbed: 0
   _placed: 0
   life_regen: 10
+  portions: 1
 --- !u!224 &5202088766236295936
 RectTransform:
   m_ObjectHideFlags: 0
@@ -352232,6 +352251,7 @@ MonoBehaviour:
   _grabbed: 0
   _placed: 0
   life_regen: 10
+  portions: 1
 --- !u!1 &7059923338544651111
 GameObject:
   m_ObjectHideFlags: 0
@@ -358431,6 +358451,7 @@ MonoBehaviour:
   _grabbed: 0
   _placed: 0
   life_regen: 10
+  portions: 1
 --- !u!224 &8107450069164911966
 RectTransform:
   m_ObjectHideFlags: 0

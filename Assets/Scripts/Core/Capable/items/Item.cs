@@ -407,8 +407,7 @@ public class Item : Movable, EndlessInteractable
 
 
 // ITEM DATA
-[Serializable]
-public class ItemData : CapableData
+[Serializable] public class ItemData : CapableData
 {
     public string reference;
     public Color color;
