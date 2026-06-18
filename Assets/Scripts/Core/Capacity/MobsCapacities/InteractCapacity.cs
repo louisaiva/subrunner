@@ -124,6 +124,15 @@ public class InteractCapacity : Capacity
     // HANDLE INTERACT INPUT
     public void Interact(bool endless = false)
     {
+
+        // check if we are on a sofa // todo : or a container
+        if (TryGetSiblingCapacity(out SitCapacity sit_capacity) && sit_capacity.CurrentSofa != null)
+        {
+            sit_capacity.ExitSofa();
+            return;
+        }
+
+
         if (closest_hover == null) { return; }
         Capable interactive = closest_hover.Capable;
 

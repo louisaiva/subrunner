@@ -174,13 +174,13 @@ public class SceneLoader : MonoBehaviour
         // we hide the transitionner on the linux texts
         text_parents.GetComponent<Transitioner>().Hide(transition_duration);
 
-        // we show the ui_manager hud pool
+        /* // we show the ui_manager hud pool
         UI_Pool hud = UI_Manager.Instance.GetPool("hud");
         float old_transition_duration = hud.Settings.Duration;
         hud.Settings.Duration = transition_duration;
-        UI_Manager.Instance.SwitchTo("hud");
-        yield return null; // wait one frame to be sure that the manager took the home_appearance_duration value
-        hud.Settings.Duration = old_transition_duration;
+        UI_Manager.Instance.SwitchTo("hud"); */
+        // yield return null; // wait one frame to be sure that the manager took the home_appearance_duration value
+        // hud.Settings.Duration = old_transition_duration;
 
 
         // we hide the bg

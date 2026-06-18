@@ -106,6 +106,9 @@ public class SaveEngine : MonoBehaviour
 
         SaveWorldSaveData(save);
         slog?.Log($"Finished dynamic saving of world '{save.world.id}' !");
+
+        // notif
+        UI_Manager.Instance.GetPool<UI_HUD>()?.Notifier?.Notify("game saved !");
     }
     private static WorldSaveData generate_save_from_dynamic_world()
     {

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Sofa : Container, Interactable, Sittable
@@ -6,10 +7,17 @@ public class Sofa : Container, Interactable, Sittable
     public InteractCapacity Interactor => null;
     public InteractType InteractionType => InteractType.LivingRoom;
 
+
+    // standing & sitting positions
     [SerializeField] private Vector2 local_sitting_position;
     [SerializeField] private Vector2 local_standing_position;
     public Vector2 WorldSittingPosition { get { return transform.TransformPoint(local_sitting_position); } }
     public Vector2 WorldStandingPosition { get { return transform.TransformPoint(local_standing_position); } }
+
+
+
+
+
 
     // ON INTERACT
     public void OnInteract(Capable interactor)
@@ -35,6 +43,56 @@ public class Sofa : Container, Interactable, Sittable
         // we sit on the sofa
         capable.GetCapacity<SitCapacity>()?.Sit(this, instant: true);
     }
+
+
+
+
+
+
+    // SIBLING TV
+    private TV sibling_tv = null;
+    public TV SiblingTV
+    {
+        get
+        {
+            if (sibling_tv != null) { return sibling_tv; }
+
+            // we do a circle cast to find the closest TV
+            sibling_tv = find_sibling_tv();
+            return sibling_tv;
+        }
+    }
+    private TV find_sibling_tv()
+    {
+        float radius = 5f;
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, radius, LayerMask.GetMask("Interactives"));
+        List<TV> tvs = new List<TV>();
+        foreach (Collider2D collider in colliders)
+        {
+            if (collider.GetComponentInParent<TV>(includeInactive: true) is not TV tv) { continue; }
+            tvs.Add(tv);
+        }
+        if (tvs.Count == 0) { return null; }
+
+        // return closest one
+        TV closest_tv = null;
+        float closest_distance = float.MaxValue;
+        foreach (TV tv in tvs)
+        {
+            float distance = Vector2.Distance(transform.position, tv.transform.position);
+            if (distance > closest_distance) { continue; }
+            closest_distance = distance;
+            closest_tv = tv;
+        }
+        return closest_tv;
+    }
+
+
+
+
+
+
+
 
     // DATA MANAGEMENT
     public override void LoadData(CapableData data)

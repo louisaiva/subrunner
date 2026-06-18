@@ -276,6 +276,8 @@ public class World : BSOD_System<World>
         while (Controller.Capable == null || !Controller.Capable.Loaded) { await Task.Yield(); frames_waited++; }
         if (log) { Debug.Log($"(World) Player capable loaded after waiting {frames_waited} frames. Capable ID: {Controller.Capable.ID}"); }
         ChunkEngine.LazyInstance.RefreshPlayerChunk(Controller.Capable);
+
+        if (GameManager.State == GameState.Loading) { GameManager.State = GameState.Gaming; } // if we are loading, we switch to gaming state ! if not, we may be in cinematics, and so cinematics handle the state change, that's why we check if Loading only
     }
     public async Task UnloadWorld()
     {

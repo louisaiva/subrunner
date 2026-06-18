@@ -71,9 +71,15 @@ public class InputManager : MonoBehaviour
         // et certains listeners d'actions spécifiques
         inputs.settings.F1.performed += ctx => SettingsManager.Instance.Toggle("dev_minimap");
         // inputs.settings.F2.performed += ctx => SettingsManager.Instance.Toggle();
-        inputs.settings.F3.performed += ctx => SettingsManager.Instance.Toggle("debug");
+        inputs.settings.F3.performed += ctx => handle_f3();
         inputs.settings.F5.performed += ctx => WorldPlacer.LazyInstance?.AskAndThenStartPlacingObject();
         inputs.settings.F11.performed += ctx => SettingsManager.Instance.Toggle("fullscreen");
+    }
+    private void handle_f3()
+    {
+        StepSetting debug_setting = SettingsManager.Instance.GetSetting("debug") as StepSetting;
+        // Debug.Log("(InputManager) F3 pressed, debug setting: " + debug_setting);
+        debug_setting.ScrollLooping();
     }
 
     void Update()

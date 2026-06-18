@@ -790,6 +790,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8675282086257367053}
   - component: {fileID: 5691964806469254172}
+  - component: {fileID: 4049170812337294895}
   m_Layer: 29
   m_Name: feet
   m_TagString: Untagged
@@ -858,6 +859,22 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 2.7756433, y: 0.73348045}
   m_EdgeRadius: 0
+--- !u!114 &4049170812337294895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5278318845473247551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &5756745897776486919
 GameObject:
   m_ObjectHideFlags: 0
@@ -1115,17 +1132,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: sofa_R
   <orientation>k__BackingField: D
-  current_anim:
-    name: sofa_L.idle.D
-    sprites_paths:
-    - objects/interactives/living_room/sofa/sofa_mid2.sofa_mid2_0
-    sprites:
-    - {fileID: -975463569, guid: bcd8d77693d474f40b6ed20caf7106bb, type: 3}
-    sprites_durations:
-    - 0
-    loop: 1
-    speed: 1
-    flipX: 0
+  current_capacity: 
   update_each_frame: 0
   anim_capacity_priorities:
   - priority: 0
@@ -1612,6 +1619,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -1629,7 +1637,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}

@@ -816,6 +816,13 @@ MonoBehaviour:
     base_spritesheets:
     - objects/items/food/empty_can
     keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: TV_light
+    variant_spritesheets:
+    - objects/deco/tv/new_tv_light
+    base_skin: TV
+    base_spritesheets:
+    - objects/deco/tv/new_tv_tv
+    keep_base_anim_if_spritesheet_not_found: 0
   log: 0
   log_LAFAC: 0
   log_variant_awake: 0

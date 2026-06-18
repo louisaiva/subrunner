@@ -14,12 +14,6 @@ public class SitCapacity : Capacity
     private Coroutine sit_stand_coroutine;
 
 
-
-    // TODO : IMPROVE THIS SCRIPT, MAKE IT WORK WITH PLAYER INPUTS
-    // TODO : AND THAT WE CAN EXIT SOFA ALL THE TIME (NOT THE UI)
-    // do we even need an ui ?
-
-
     // SIT & STAND
     public void Sit(Sofa sofa, bool instant = false)
     {
@@ -34,7 +28,11 @@ public class SitCapacity : Capacity
         // we show the sofa UI if we are on hud
         if (GameManager.State == GameState.Gaming)
         {
-            UI_Manager.Instance.GetPool<UI_SofaPool>()?.ShowSofaUI(this);
+            UI_Manager.Instance.GetPool<UI_SofaPool>()?.ShowSofaUI(this, save_game: true);
+        }
+        else if (GameManager.State == GameState.Loading)
+        {
+            UI_Manager.Instance.GetPool<UI_SofaPool>()?.ShowSofaUI(this, save_game: false); // game is still loading, which means we just loaded the game, no need to save it directly
         }
 
         // sit instantly (when loading game)
@@ -72,6 +70,12 @@ public class SitCapacity : Capacity
             yield return null;
         }
 
+        // we turn on the TV if the sofa has one
+        if (current_sofa.SiblingTV != null)
+        {
+            current_sofa.SiblingTV.OnInteract(Capable);
+        }
+
         // finally we make the AnimPlayer play the idle sit animation
         AnimPlayer.Play("idle_sit");
         sit_stand_coroutine = null;
@@ -82,7 +86,13 @@ public class SitCapacity : Capacity
         if (current_sofa == null) { yield break; }
         if (Capable is not Movable movable) { yield break; }
 
-        // and the zip one
+        // we turn off the TV if the sofa has one
+        if (current_sofa.SiblingTV != null)
+        {
+            current_sofa.SiblingTV.OnHoverLost(Capable);
+        }
+
+        // play the zip one
         AnimPlayer.Play("zip");
         while (AnimPlayer.IsPlaying("zip"))
         {
@@ -121,6 +131,12 @@ public class SitCapacity : Capacity
         // we make the AnimPlayer play the idle sit animation
         AnimPlayer.AddToPile("idle_sit");
         sit_stand_coroutine = null;
+
+        // we turn on the TV if the sofa has one
+        if (current_sofa.SiblingTV != null)
+        {
+            current_sofa.SiblingTV.OnInteract(Capable);
+        }
     }
 
 
