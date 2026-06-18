@@ -25,6 +25,7 @@ public class Controller : MonoBehaviour
             return _Instance;
         }
     }
+    public const bool KEEP_SHOES_ON_DEATH = true;
 
     public static PersoData _perso;
     public static Perso Perso

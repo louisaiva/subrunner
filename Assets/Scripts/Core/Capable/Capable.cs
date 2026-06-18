@@ -397,6 +397,13 @@ public class Capable : MonoBehaviour, Debuggable
         List<Item> items = Inventory.Items;
         for (int i = items.Count - 1; i >= 0; i--)
         {
+            // check if we are the controlled capable & if this is shoes item
+            if (Controller.KEEP_SHOES_ON_DEATH && Controller.Capable != null && this == Controller.Capable && items[i] is Shoes shoes)
+            {
+                // we don't drop the shoes if we are the controlled capable & if the option is enabled
+                continue;
+            }
+
             DropEngine.Instance.Drop(this, items[i], parameters);
         }
     }
