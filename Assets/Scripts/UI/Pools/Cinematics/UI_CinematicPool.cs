@@ -35,14 +35,6 @@ public class UI_CinematicPool : UI_Pool
     {
         GameManager.State = GameState.Cinematic;
 
-        // here we can do some specific stuff maybe ?
-        // like linking all capables to their reference on the timeline for example
-        // we can also disable inputs this kind of things
-        /* if (Controller.LazyInstance != null)
-        {
-            Controller.LazyInstance.PIC.DisableInputs();
-        } */
-
         // we play the timeline if we have one
         if (current_timeline != null)
         {
@@ -62,10 +54,5 @@ public class UI_CinematicPool : UI_Pool
             current_timeline = null;
         }
 
-
-        /* if (Controller.LazyInstance != null)
-        {
-            Controller.LazyInstance.PIC.EnableInputs();
-        } */
     }
 }

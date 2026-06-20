@@ -49,6 +49,7 @@ public class Caller : MonoBehaviour
     }
 
 
+
     // WORLD MANAGER
     public void OpenWorldFolder() => AppManager.OpenWorldsFolder();
     public async void UnloadWorld() { await WorldManager.Instance?.UnloadCurrentWorld(); }
@@ -63,6 +64,15 @@ public class Caller : MonoBehaviour
     // OBJECT PLACER
     public void PlaceObject() => WorldPlacer.LazyInstance.AskAndThenStartPlacingObject();
 
+
+    // SOFA
+    public void ExitSofa()
+    {
+        if (Controller.Capable == null) { return; }
+        if (!Controller.Capable.TryGetCapacity(out SitCapacity sitter)) { return; }
+        if (sitter.CurrentSofa == null) { return; }
+        sitter.ExitSofa();
+    }
 
     // SETTINGS
     public void EnableSetting(string setting_name) => SettingsManager.Instance?.SetSetting(setting_name, 1f);

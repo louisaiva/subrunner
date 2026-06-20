@@ -39,7 +39,7 @@ public class Capable : MonoBehaviour, Debuggable
             if (value != Vector2.zero)
             {
                 orientation = value.normalized;
-                AnimPlayer.SetOrientation(orientation);
+                AnimPlayer?.SetOrientation(orientation);
             }
         }
     }

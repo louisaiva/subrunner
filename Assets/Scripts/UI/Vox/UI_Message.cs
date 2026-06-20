@@ -104,7 +104,7 @@ public class UI_Message : MonoBehaviour
 
 
     // GETTERS / SETTERS
-    public void SetColors(Color slot_color, Color text_color)
+    public void SetColors(Color slot_color, Color text_color, bool bold = false)
     {
         // this.slot_color = slot_color;
         // this.text_color = text_color;
@@ -118,6 +118,9 @@ public class UI_Message : MonoBehaviour
             graphic.color = slot_color;
         }
         notchRect.GetComponent<Graphic>().color = slot_color;
+
+        // and the bold effect to the text if needed
+        writer.SetBold(bold);
     }
     public void SetTalker(TalkCapacity talker)
     {

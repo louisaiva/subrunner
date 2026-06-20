@@ -4,16 +4,22 @@ using UnityEngine;
 
 public class UI_TimelineCapableCaller : MonoBehaviour
 {
+    [Header("Capable reference")]
     [SerializeField] protected string capable_id;
     [SerializeField] protected Capable capable;
+    [SerializeField] protected bool spawn_if_not_found = false;
     public Capable Capable { get { return capable; } }
+
+    [Header("Capable Start Position")]
+    [SerializeField] protected bool tp_on_start = false;
+    [SerializeField] protected Vector2 start_position;
 
 
 
     // INIT & CAPABLE CONNECTION
     public void OnEnable()
     {
-        if (!ConnectCapable()) { return; } 
+        if (!TryConnectCapable()) { return; } 
         gather_move_positions();
 
         // if we have more than 0 move positions, we add a MoveCapacity to the capable if it does not have one
@@ -25,7 +31,8 @@ public class UI_TimelineCapableCaller : MonoBehaviour
 
         Debug.Log("(UI_TimelineCapableCaller) Connected capable with id '" + capable.ID + "', and found " + move_positions.Count + " move positions");
     }
-    public virtual bool ConnectCapable()
+    public void ConnectCapable() { TryConnectCapable(); }
+    public virtual bool TryConnectCapable()
     {
         // check if we have a capable id
         if (string.IsNullOrEmpty(capable_id)) { return false; }
@@ -44,17 +51,38 @@ public class UI_TimelineCapableCaller : MonoBehaviour
             Debug.LogWarning("(UI_TimelineCapableCaller) No capable found with id " + capable_id);
 
             // we try to get the first one with the prefix
-            if (!CapableBank.LazyInstance.TryGetFirstCapableWithPrefix(World.Instance.GetPrefix(capable_id), out found_capable))
+            string prefix = World.Instance.GetPrefix(capable_id);
+            if (!CapableBank.LazyInstance.TryGetFirstCapableWithPrefix(prefix, out found_capable))
             {
-                Debug.LogError("(UI_TimelineCapableCaller) No capable found with prefix " + capable_id);
-                return false;
+                if (!spawn_if_not_found)
+                {
+                    Debug.LogError("(UI_TimelineCapableCaller) No capable found with prefix " + prefix);
+                    return false;
+                }
+
+                // else we try to make it spawn !
+                found_capable = CapableEngine.LazyInstance.LoadCapableInstantly(prefix);
+                if (found_capable == null)
+                {
+                    Debug.LogError($"(UI_TimelineCapableCaller) Could not spawn capable of prefix '{prefix}' and did not find existing one, so we won't connect capable...");
+                    return false;
+                }
+
+                // we successfully spawned a capable with the prefix !
+                Debug.Log($"(UI_TimelineCapableCaller) Spawned capable from prefix '{prefix}'");
             }
-            Debug.LogWarning("(UI_TimelineCapableCaller) Found capable with prefix " + capable_id + " : " + found_capable.ID);
         }
         capable = found_capable;
         Debug.Log("(UI_TimelineCapableCaller) Connected capable with id '" + found_capable.ID + "'");
 
         // todo : we switch the brain mode of the capable to CinematicMode
+
+        // if we have a start position, we tp the capable to it
+        if (tp_on_start)
+        {
+            found_capable.transform.position = start_position;
+            Debug.Log($"(UI_TimelineCapableCaller) Resetted position of capable to {start_position}");
+        }
 
         return true;
     }

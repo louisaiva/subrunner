@@ -8,7 +8,7 @@ public class UI_DoorCaller : UI_TimelineCapableCaller
     [SerializeField] private string room1;
     [SerializeField] private string room2; // rooms names to gather the door
 
-    public override bool ConnectCapable()
+    public override bool TryConnectCapable()
     {
         Door door = RoomEngine.LazyInstance.DoorEngine.GetDoorBetweenRooms(room1, room2);
         if (door == null) { Debug.LogError("(UI_DoorCaller) No door found between rooms '" + room1 + "' and '" + room2 + "'"); return false; }

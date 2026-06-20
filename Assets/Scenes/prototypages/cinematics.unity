@@ -4190,6 +4190,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI_TimelineCapableCaller
   capable_id: qg_sofa
   capable: {fileID: 0}
+  spawn_if_not_found: 0
+  tp_on_start: 0
+  start_position: {x: 0, y: 0}
   camera_target_size: 3
   positions_parent: []
   dialog_lines_ids: []
@@ -87036,7 +87039,7 @@ MonoBehaviour:
     localization_key: 
   - id: bob_yummy
     text: <color=#828282FF><i>ooooook</i></color>
-    width: 40
+    width: 42
     localization_key: 
   - id: mmmh
     text: I need to eat something anyway
@@ -87044,10 +87047,10 @@ MonoBehaviour:
     localization_key: 
   - id: coool
     text: cooooool
-    width: 35
+    width: 40
     localization_key: 
   - id: pasta_time
-    text: Let's eat some <color=#e2d66dFF>pasta</color> !!!
+    text: Let's eat some <color=#555500FF>pastas</color> !!!
     width: 50
     localization_key: 
   - id: frigo_hey_dude
@@ -87084,7 +87087,7 @@ MonoBehaviour:
     localization_key: 
   - id: bob_u_frigo
     text: lmao you are a fridge.
-    width: 60
+    width: 50
     localization_key: 
   - id: bob_not_again
     text: <color=#828282FF><i>noooooo</i></color> /l I am sooo hungry right nowww
@@ -171131,6 +171134,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI_TimelineCapableCaller
   capable_id: frigo
   capable: {fileID: 0}
+  spawn_if_not_found: 1
+  tp_on_start: 1
+  start_position: {x: 0.5, y: 3}
   camera_target_size: 5
   positions_parent:
   - {fileID: 990979030}
@@ -171166,6 +171172,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 25bcf83811e687747b8a4c4d98fe9a5d, type: 2}
     - {fileID: 11400000, guid: 7b6268e40b72fdd44b510db0ace9dbb9, type: 2}
     - {fileID: 11400000, guid: fc8e6de579e5f4a41a19b614ef727cdd, type: 2}
+    - {fileID: 11400000, guid: 1be420a46a41e304f90b2113f7c52fe9, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -171284,6 +171291,20 @@ MonoBehaviour:
         - m_Target: {fileID: 1166800307}
           m_TargetAssemblyTypeName: UI_TimelineCapableCaller, Assembly-CSharp
           m_MethodName: StopTargetingCamera
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1166800307}
+          m_TargetAssemblyTypeName: UI_TimelineCapableCaller, Assembly-CSharp
+          m_MethodName: ConnectCapable
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -188952,7 +188973,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1297316089}
         m_TargetAssemblyTypeName: Caller, Assembly-CSharp
-        m_MethodName: UnstackCurrentPool
+        m_MethodName: ExitSofa
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -244773,11 +244794,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI_DoorCaller
   capable_id: 
   capable: {fileID: 0}
+  spawn_if_not_found: 0
+  tp_on_start: 0
+  start_position: {x: 0, y: 0}
   camera_target_size: 3
   positions_parent: []
   dialog_lines_ids: []
   room1: d1
-  room2: b3
+  room2: e3
 --- !u!114 &1698806666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -246030,6 +246054,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI_TimelineCapableCaller
   capable_id: controller
   capable: {fileID: 0}
+  spawn_if_not_found: 0
+  tp_on_start: 0
+  start_position: {x: 0, y: 0}
   camera_target_size: 5
   positions_parent:
   - {fileID: 924343711}

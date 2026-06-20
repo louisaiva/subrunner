@@ -25,6 +25,12 @@ public class SitCapacity : Capacity
         
         sorting_capacity.ReceiveMovable(movable, sofa.WorldSittingPosition);
 
+        // we turn on the TV if the sofa has one
+        if (current_sofa.SiblingTV != null)
+        {
+            current_sofa.SiblingTV.OnInteract(Capable);
+        }
+        
         // we show the sofa UI if we are on hud
         if (GameManager.State == GameState.Gaming)
         {
@@ -50,6 +56,12 @@ public class SitCapacity : Capacity
     {
         StopAllCoroutines();
         sit_stand_coroutine = StartCoroutine(standCoroutine());
+
+        // we show the sofa UI if we are on hud
+        if (UI_Manager.Instance.CurrentPool == "sofa")
+        {
+            UI_Manager.Instance.UnstackCurrentPool();
+        }
     }
 
 
@@ -70,11 +82,6 @@ public class SitCapacity : Capacity
             yield return null;
         }
 
-        // we turn on the TV if the sofa has one
-        if (current_sofa.SiblingTV != null)
-        {
-            current_sofa.SiblingTV.OnInteract(Capable);
-        }
 
         // finally we make the AnimPlayer play the idle sit animation
         AnimPlayer.Play("idle_sit");

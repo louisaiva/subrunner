@@ -72,11 +72,24 @@ public class UI_Writer : MonoBehaviour
         Write(raw_writing_on_enable);
     }
 
-    // COLOR
+    // COLOR / BOLD
     public void SetColor(Color color)
     {
         label.color = color;
     }
+    public void SetBold(bool bold)
+    {
+        bool is_bold_set = (label.fontStyle & FontStyles.Bold) != 0;
+        if (!bold && is_bold_set)
+        {
+            label.fontStyle ^= FontStyles.Bold; // toggle operator, that's why we check if it is set before toggling it.
+        }
+        else if (bold)
+        {
+            label.fontStyle |= FontStyles.Bold;
+        }
+    }
+
 
     // WRITING
     private Coroutine writing_coroutine = null;

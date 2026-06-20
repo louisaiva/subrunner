@@ -197,21 +197,7 @@ public class World : BSOD_System<World>
 
 
         ///
-        //  4. WE LOAD THE CONTROLLER
-        /* */
-        load_status = WorldLoadStatus.LoadingController;
-        ///
-        if (log_loading_extended) { Debug.Log($"(World) ----------------------------------- LOADING CONTROLLER : (previous phase duration: {Time.realtimeSinceStartup - phase_time}s)"); }
-        phase_time = Time.realtimeSinceStartup;
-        await Controller.LazyInstance.LoadWorldData(world_id, log_loading_extended);
-        if (fallback_spawn_point != null) { Controller.Capable.transform.position = fallback_spawn_point.position; } // debug only to tp quickly at launch
-
-        // ok so now we have a Controller.Capable defined if everything went ok ! We can determine it to load the right level
-
-
-
-        ///
-        //  5. WE PLAY CINEMATICS IF NEEDED
+        //  4. WE PLAY CINEMATICS IF NEEDED
         /* */
         load_status = WorldLoadStatus.LoadingCinematics;
         ///
@@ -229,8 +215,22 @@ public class World : BSOD_System<World>
         else { UI_Manager.Instance.SwitchToHUD(); }
 
 
+
         ///
-        //  5. WE LOAD THE PLAYER LEVEL
+        //  5. WE LOAD THE CONTROLLER
+        /* */
+        load_status = WorldLoadStatus.LoadingController;
+        ///
+        if (log_loading_extended) { Debug.Log($"(World) ----------------------------------- LOADING CONTROLLER : (previous phase duration: {Time.realtimeSinceStartup - phase_time}s)"); }
+        phase_time = Time.realtimeSinceStartup;
+        await Controller.LazyInstance.LoadWorldData(world_id, log_loading_extended);
+        if (fallback_spawn_point != null) { Controller.Capable.transform.position = fallback_spawn_point.position; } // debug only to tp quickly at launch
+
+        // ok so now we have a Controller.Capable defined if everything went ok ! We can determine it to load the right level
+
+
+        ///
+        //  6. WE LOAD THE PLAYER LEVEL
         /* */
         load_status = WorldLoadStatus.LoadingPlayerLevel;
         ///

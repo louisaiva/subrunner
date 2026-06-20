@@ -19,9 +19,10 @@ public class TalkCapacity : Capacity
     [Header("Talking parameters")]
     [SerializeField] private string talk_anim = "talk";
 
-    [Header("Colors")]
+    [Header("Font Style")]
     [SerializeField] private Color slot_color = Color.white;
     [SerializeField] private Color text_color = Color.black;
+    [SerializeField] private bool bold = false;
 
 
     [Header("Talks (NEED TO BE IN A FILE OR IN MESSAGE LOADER)")]
@@ -172,7 +173,7 @@ public class TalkCapacity : Capacity
 
         // we set the msg as a child of the ui_messages_parent and we set its colors
         take_over_msg(msg, talker);
-        msg.SetColors(slot_color, text_color);
+        msg.SetColors(slot_color, text_color, bold);
         msg.StartWriting();
 
         // here we need to make sure that the canvas transitionner is shown

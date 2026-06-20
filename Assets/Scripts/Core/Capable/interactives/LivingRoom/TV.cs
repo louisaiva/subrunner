@@ -30,13 +30,12 @@ public class TV : Capable, Interactable, Openable
     }
     public void OnHoverLost(Capable interactor)
     {
-        if (!interactor.TryGetCapacity(out InteractCapacity interact_capacity)) { return; }
-        if (!interactors.Contains(interact_capacity)) { return; }
-        interactors.Remove(interact_capacity);
+        if (interactor.TryGetCapacity(out InteractCapacity interact_capacity) && interactors.Contains(interact_capacity))
+        { interactors.Remove(interact_capacity); }
 
         // if there is no more interactor we close the thing
-        if (interactors.Count == 0 && TryGetCapacity(out CloseCapacity close_capa)) { close_capa.Close(); }
-
+        if (interactors.Count == 0 && TryGetCapacity(out CloseCapacity close_capa))
+        { close_capa.Close(); }
     }
     
     /* /// <summary>
