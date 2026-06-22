@@ -8,6 +8,7 @@ public class SitCapacity : Capacity
     // like chairs, beds toilets etc
     private Sofa current_sofa;
     public Sofa CurrentSofa { get { return current_sofa;} }
+    public Container Container { get { return current_sofa; } }
     public bool IsSitting { get { return current_sofa != null; } }
 
     private Coroutine zap_coroutine;
@@ -15,9 +16,15 @@ public class SitCapacity : Capacity
 
 
     // SIT & STAND
-    public void Sit(Sofa sofa, bool instant = false)
+    public async void Sit(Sofa sofa, bool instant = false)
     {
         current_sofa = sofa;
+        
+        // Register the sofa as last sofa on the controller
+        if (Controller.Perso != null && Controller.Perso == Capable)
+        {
+            Controller.LazyInstance.RegisterLastSofa(sofa);
+        }
 
         // we disable the player's movements
         if (Capable is not Movable movable) { return; }
@@ -32,25 +39,29 @@ public class SitCapacity : Capacity
         }
         
         // we show the sofa UI if we are on hud
-        if (GameManager.State == GameState.Gaming)
+        if (GameManager.State == GameState.Gaming || GameManager.State == GameState.Loading)
         {
-            UI_Manager.Instance.GetPool<UI_SofaPool>()?.ShowSofaUI(this, save_game: true);
+            UI_Manager.Instance.GetPool<UI_SofaPool>()?.ShowSofaUI(this);
         }
-        else if (GameManager.State == GameState.Loading)
+        /* else if (GameManager.State == GameState.Loading)
         {
-            UI_Manager.Instance.GetPool<UI_SofaPool>()?.ShowSofaUI(this, save_game: false); // game is still loading, which means we just loaded the game, no need to save it directly
-        }
+            UI_Manager.Instance.GetPool<UI_SofaPool>()?.ShowSofaUI(this); // game is still loading, which means we just loaded the game, no need to save it directly
+        } */
 
         // sit instantly (when loading game)
-        if (instant)
+        if (instant) { sitInstantly(); }
+        else
         {
-            sitInstantly();
-            return;
+            // else we play the sit animation
+            StopAllCoroutines();
+            sit_stand_coroutine = StartCoroutine(sitCoroutine());
         }
 
-        // else we play the sit animation
-        StopAllCoroutines();
-        sit_stand_coroutine = StartCoroutine(sitCoroutine());
+        // then we wait for tv to show up and we save
+        if (GameManager.State != GameState.Gaming) { return; } // game is still loading, which means we just loaded the game, no need to save it directly
+        if (current_sofa.SiblingTV == null) { SaveEngine.SaveDynamicWorld(); return; }
+        while (!current_sofa.SiblingTV.AnimPlayer.IsShowing("idle_on")) { await System.Threading.Tasks.Task.Yield(); }
+        SaveEngine.SaveDynamicWorld();
     }
     public void ExitSofa()
     {

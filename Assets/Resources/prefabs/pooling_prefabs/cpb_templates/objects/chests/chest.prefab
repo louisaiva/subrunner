@@ -209,17 +209,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: blue_chest
   <orientation>k__BackingField: D
-  current_anim:
-    name: blue_chest.idle.D
-    sprites_paths:
-    - objects/interactives/chests/blue_chest.blue_chest_0
-    sprites:
-    - {fileID: -1768996122, guid: aec2946880ff3d74682b04f7091281a0, type: 3}
-    sprites_durations:
-    - 0
-    loop: 1
-    speed: 1
-    flipX: 0
+  current_capacity: 
   update_each_frame: 0
   anim_capacity_priorities:
   - priority: 0
@@ -274,6 +264,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -291,7 +282,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -319,6 +309,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
   capacity_template_id: hover
+  capacity_template_ids: []
 --- !u!114 &8638240914276982523
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -635,13 +626,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7267138962912758452}
     m_Modifications:
-    - target: {fileID: 4969225758402548500, guid: 2044e615d97940a42b74c4758d812471, type: 3}
-      propertyPath: data.<id>k__BackingField
-      value: chest_iic
-      objectReference: {fileID: 0}
     - target: {fileID: 5897701557624252165, guid: 2044e615d97940a42b74c4758d812471, type: 3}
       propertyPath: m_Name
-      value: iic
+      value: chest_iic
       objectReference: {fileID: 0}
     - target: {fileID: 7822831658197886261, guid: 2044e615d97940a42b74c4758d812471, type: 3}
       propertyPath: m_LocalPosition.x

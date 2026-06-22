@@ -15,6 +15,9 @@ public class UI_SofaPool : UI_SlottablePool
         UI_Manager.Instance.StackPool("sofa");
 
         // we save the game if needed
-        if (save_game) { SaveEngine.SaveDynamicWorld(); }
+        /* if (save_game)
+        {
+            SaveEngine.SaveDynamicWorld();
+        } */
     }
 }

@@ -48,7 +48,7 @@ public class CloseCapacity : Capacity
         (Capable as Openable).is_moving = true;
 
         // on joue l'animation
-        Capable.AnimPlayer.StopPlaying(idle_open_anim);
+        Capable.AnimPlayer.StopPlaying(idle_open_anim); // ? really useful here ? since we do it again in success_close, check the door's animplayer acp list to check if useful
         Capable.AnimPlayer.Play(close_anim, duration_override: closing_duration);
 
         // on joue le son

@@ -326,6 +326,21 @@ public class Item : Movable, EndlessInteractable
 
 
 
+    /// <summary>
+    /// this is for getting the real room of the capable,
+    /// which means either the room of it, either its Container/Upper inventory one.
+    /// </summary>
+    public override string GetRealRoom()
+    {
+        string room = base.GetRealRoom();
+        if (!string.IsNullOrEmpty(room)) { return room; }
+
+        // else the item is not in a container
+        // and not also on the ground EXCEPT if it was just dropped
+        if (!Grabbed) { return "item_was_just_dropped"; }
+
+        return Holder?.GetRealRoom();
+    }
 
 
 

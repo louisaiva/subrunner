@@ -40,8 +40,8 @@ public class LevelTranslator : MonoBehaviour
     public Chunk chunk_prefab;
 
     [Header("Doors & Lights")]
-    // public Door door_vertical_prefab;
-    // public Door door_horizontal_prefab;
+    public string vertical_door_template = "steel_door";
+    public string horizontal_door_template = "steel_door_LR";
     public Light2D light_prefab;
 
     [Header("Logs")]
@@ -428,9 +428,7 @@ public class LevelTranslator : MonoBehaviour
         if (need_to_be_created)
         {
             // we create the door
-            // Door door_prefab = door_visu.is_vertical ? door_vertical_prefab : door_horizontal_prefab;
-            string template = door_visu.is_vertical ? "steel_door" : "steel_door_LR";
-            // door = Instantiate(door_prefab, capables_parent);
+            string template = door_visu.is_vertical ? vertical_door_template : horizontal_door_template;
             door = (Door) CapableEngine.Instance.LoadCapableInstantly(template);
             door.AnimPlayer.Show();
             door.transform.SetParent(capables_parent);

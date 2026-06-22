@@ -99,6 +99,60 @@ MonoBehaviour:
     layer: 0
     tag: 
   log: 0
+--- !u!1 &2878031618386003763
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 880144740067598778}
+  - component: {fileID: 8641788864713709822}
+  m_Layer: 29
+  m_Name: vert_door_iic
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &880144740067598778
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2878031618386003763}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.5833334, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7133203487557890332}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8641788864713709822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2878031618386003763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 514e0124a48dbc34f818371f413cbf79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InputIndicationCapacity
+  data:
+    <id>k__BackingField: 
+    <owner_id>k__BackingField: 
+    kind: 
+    local_position: {x: 0, y: 0}
+    layer: 0
+    tag: 
+  log: 0
+  color: {r: 1, g: 0.87216246, b: 0, a: 1}
+  input_name: E
 --- !u!1 &3215138241643237806
 GameObject:
   m_ObjectHideFlags: 0
@@ -703,14 +757,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: steel_door
   <orientation>k__BackingField: D
-  current_anim:
-    name: 
-    sprites_paths: []
-    sprites: []
-    sprites_durations: []
-    loop: 1
-    speed: 1
-    flipX: 0
+  current_capacity: 
   update_each_frame: 1
   anim_capacity_priorities:
   - priority: 0
@@ -894,11 +941,12 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3300976171874288010}
-  - {fileID: 5896342750765136559}
-  - {fileID: 2083744977804685073}
-  - {fileID: 8965432188351416260}
   - {fileID: 7101634899643335958}
   - {fileID: 1466120630207909490}
+  - {fileID: 2083744977804685073}
+  - {fileID: 5896342750765136559}
+  - {fileID: 8965432188351416260}
+  - {fileID: 880144740067598778}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6429607554458301103
@@ -920,6 +968,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -937,7 +986,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 0}
@@ -970,6 +1018,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
   capacity_template_id: hover
+  capacity_template_ids: []
 --- !u!1001 &82590061318272792
 PrefabInstance:
   m_ObjectHideFlags: 0

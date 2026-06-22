@@ -413,6 +413,30 @@ public class Capable : MonoBehaviour, Debuggable
         DropEngine.Instance.Drop(this, item, parameters);
     }
 
+
+    ///
+    //
+    /// GETTERS & DEBUG
+    //
+    ///
+
+    /// <summary>
+    /// this is for getting the real room of the capable,
+    /// which means either the room of it, either its Container/Upper inventory one.
+    /// </summary>
+    public virtual string GetRealRoom()
+    {
+        if (TryGetCapacity(out SitCapacity sitter) && sitter.Container != null)
+        {
+            return sitter.Container.GetRealRoom();
+        }
+        if (!RoomEngine.Instance.TryGetCapableRoom(ID, out RoomData room)) { return ""; }
+        return room.id;
+    }
+
+
+
+
     // DEBUG
     protected virtual void OnDestroy()
     {
@@ -443,7 +467,6 @@ public class Capable : MonoBehaviour, Debuggable
 
         return text;
     }
-
 
 
 

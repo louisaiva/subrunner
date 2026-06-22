@@ -16,6 +16,7 @@ using UnityEngine;
 
     // last spawn
     public string container_id;
+    public string last_sofa_id;
 
 
     // UpdatePlayerLevelRoomChunk
@@ -88,7 +89,8 @@ using UnityEngine;
             player_level = this.player_level,
             player_room = this.player_room,
             player_chunk = this.player_chunk,
-            container_id = this.container_id
+            container_id = this.container_id,
+            last_sofa_id = this.last_sofa_id
         };
     }
 
@@ -102,6 +104,7 @@ using UnityEngine;
         details += $" - player room : {player_room}\n";
         details += $" - player chunk : {player_chunk}\n";
         details += $" - container id : {container_id}";
+        details += $" - last sofa id : {last_sofa_id}";
         return details;
     }
 }

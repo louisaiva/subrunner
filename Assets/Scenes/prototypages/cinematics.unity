@@ -15898,6 +15898,7 @@ MonoBehaviour:
       player_room: sas
       player_chunk: sas-0
       container_id: 
+      last_sofa_id: 
     levels:
     - <id>k__BackingField: -2
       rooms_ids:
@@ -57979,9 +57980,9 @@ MonoBehaviour:
   log_spawning: 0
   log_item_switching: 0
   hide_log_ownership_validation: 1
-  log_loading: 1
-  log_loading_extended: 1
-  log_visibility: 1
+  log_loading: 0
+  log_loading_extended: 0
+  log_visibility: 0
   hide_log_no_data_found: 1
   log_saving: 0
 --- !u!114 &313120230
@@ -71523,7 +71524,7 @@ MonoBehaviour:
   log_world_data_loading: 1
   log_spawning: 0
   log_loading: 0
-  log_loading_extended: 1
+  log_loading_extended: 0
   hide_log_no_data_found: 1
   log_saving: 0
   item_static_capacities_kinds:
@@ -203365,12 +203366,14 @@ MonoBehaviour:
     player_room: 
     player_chunk: 
     container_id: 
+    last_sofa_id: 
   pic: {fileID: 1409124454}
   hackable_navigator: {fileID: 598553482}
   exploit_navigator: {fileID: 598553481}
   see_through: {fileID: 531669800}
   log: 1
-  log_perso: 0
+  log_perso: 1
+  log_callbacks: 1
   enable_controller_animplayer_logs: 0
   respawn_template: 0
 --- !u!114 &1409124454
@@ -291331,6 +291334,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelTranslator
   room_prefab: {fileID: 444837707455398638, guid: f751c2da57386b74492b9f0924550953, type: 3}
   chunk_prefab: {fileID: 8185754384103082142, guid: ae6b0bfb8417b8d4a9eb59dbb48d8490, type: 3}
+  vertical_door_template: steel_door
+  horizontal_door_template: steel_door_LR
   light_prefab: {fileID: 6868193672575337090, guid: 48fbc03d9d2be7243abb9ef0b713e4e5, type: 3}
   log: 1
   log_translate_extended: 1

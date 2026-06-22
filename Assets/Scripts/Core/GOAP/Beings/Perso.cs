@@ -87,15 +87,13 @@ public class Perso : Movable, Hacker
 
 
     // CONTROL
-    private bool callbacks_set = false;
+    /* private bool callbacks_set = false;
     public override void OnControlled()
     {
-        // met les callbacks de notif
-        UI_Manager.Instance.GetPool("hud").GetComponent<UI_HUD>().Notifier.SetCallbacks(this);
 
         // mets les callbacks de settings
-        SettingsManager.Instance.RegisterCallback("skin", set_skin);
-        SettingsManager.Instance.RegisterCallback("ghost", set_ghost);
+        // SettingsManager.Instance.RegisterCallback("skin", set_skin);
+        // SettingsManager.Instance.RegisterCallback("ghost", set_ghost);
 
         // callbacks de health capacity
         HealthCapacity health_capacity = GetCapacity<HealthCapacity>();
@@ -104,15 +102,15 @@ public class Perso : Movable, Hacker
         health_capacity.OnDie += OnDie;
 
         callbacks_set = true;
+
+        Debug.Log("(Perso) on controlled called on '" + this.ID + $"', health capa is {health_capacity.ID}");
     }
     public override void OnUncontrolled()
     {
-        // enleve les callbacks de notif
-        UI_Manager.Instance?.GetPool<UI_HUD>()?.Notifier.RemoveCallbacks(this);
 
         // remove callbacks
-        SettingsManager.Instance.UnregisterCallback("skin", set_skin);
-        SettingsManager.Instance.UnregisterCallback("ghost", set_ghost);
+        // SettingsManager.Instance.UnregisterCallback("skin", set_skin);
+        // SettingsManager.Instance.UnregisterCallback("ghost", set_ghost);
 
         // callbacks de health capacity
         HealthCapacity health_capacity = GetCapacity<HealthCapacity>();
@@ -121,12 +119,14 @@ public class Perso : Movable, Hacker
         health_capacity.OnDie -= OnDie;
 
         callbacks_set = false;
-    }
-    protected override void OnDestroy()
+
+        Debug.Log("(Perso) on uncontrolled called on '" + this.ID + "'");
+    } */
+    /* protected override void OnDestroy()
     {
         base.OnDestroy();
         if (callbacks_set) { OnUncontrolled(); }
-    }
+    } */
 
     ///
     //
@@ -135,7 +135,7 @@ public class Perso : Movable, Hacker
     ///
 
     // METAMORPH & GHOST
-    private void set_skin(Setting skin_setting)
+    public void SetSkin(Setting skin_setting)
     {
         set_skin(skin_setting.ToString());
     }
@@ -146,7 +146,7 @@ public class Perso : Movable, Hacker
         // we set the new skin
         AnimPlayer.Skin = skin_name;
     }
-    private void set_ghost(Setting ghost_setting)
+    public void SetGhost(Setting ghost_setting)
     {
         bool is_ghost = ghost_setting.Value >= 0.5f;  
         if (is_ghost && AnimPlayer.Skin != "ghost") { enable_ghost(); }
@@ -182,7 +182,7 @@ public class Perso : Movable, Hacker
     // HEAL & DAMAGE CALLBACKS
     public void OnLifeAdded(float life)
     {
-        if (Controller.Perso == null || Controller.Perso != this) { return; } // if we are not the controlled perso, we do nothing
+        // if (Controller.Perso == null || Controller.Perso != this) { return; } // if we are not the controlled perso, we do nothing
 
         // si on est sur le hud, on met à jour le chroma du PostProcessManager
         if (!UI_Manager.Instance.IsOnHUD()) { return; }
@@ -190,7 +190,9 @@ public class Perso : Movable, Hacker
     }
     public void OnDamageTaken(float damage, Force knockback = null)
     {
-        if (Controller.Perso == null || Controller.Perso != this) { return; } // if we are not the controlled perso, we do nothing
+        Debug.Log("(Perso) On Damage Taken !");
+
+        // if (Controller.Perso == null || Controller.Perso != this) { return; } // if we are not the controlled perso, we do nothing
 
         // we make a little screenshake if perso
         float shake_magnitude = damage / GetCapacity<HealthCapacity>().Health;
@@ -202,7 +204,9 @@ public class Perso : Movable, Hacker
     }
     public void OnDie(CapableData capable_data)
     {
-        if (Controller.Perso == null || Controller.Perso != this) { return; } // if we are not the controlled perso, we do nothing
+        Debug.Log("(Perso) On Die called !");
+
+        // if (Controller.Perso == null || Controller.Perso != this) { return; } // if we are not the controlled perso, we do nothing
 
         Deaths += 1; // on incrémente le nombre de morts du perso
         Debug.Log("YOU DIED");

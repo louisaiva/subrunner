@@ -79,8 +79,22 @@ public class Controller : MonoBehaviour
     [Header("Logs")]
     [SerializeField] private bool log;
     [SerializeField] private bool log_perso;
-    // [SerializeField] private bool enable_controller_inventory_logs;
+    [SerializeField] private bool log_callbacks;
     [SerializeField] private bool enable_controller_animplayer_logs;
+
+
+    private void OnEnable()
+    {
+        // mets les callbacks de settings
+        SettingsManager.Instance.RegisterCallback("skin", OnControllerSetSkin);
+        SettingsManager.Instance.RegisterCallback("ghost", OnControllerSetGhost);
+    }
+    private void OnDisable()
+    {
+        // remove callbacks
+        SettingsManager.Instance.UnregisterCallback("skin", OnControllerSetSkin);
+        SettingsManager.Instance.UnregisterCallback("ghost", OnControllerSetGhost);
+    }
 
 
     ///
@@ -235,6 +249,8 @@ public class Controller : MonoBehaviour
         controlled_capable.OnControlled();
         OnCapableControlled?.Invoke(controlled_capable);
 
+        // met les callbacks de notif
+        UI_Manager.Instance.GetPool("hud").GetComponent<UI_HUD>().Notifier.SetCallbacks(controlled_capable);
 
         // we refresh the player chunk through ChunkEngine
         ChunkEngine.LazyInstance.RefreshPlayerChunk(capable);
@@ -251,12 +267,16 @@ public class Controller : MonoBehaviour
             if (log_perso) { Debug.Log($"(Controller) perso uncontrolled: {_perso.id}, Controller.Perso is now null"); }
             _perso = null;
         }
+
         if (!controlled_capable.Loaded)
         {
             // si pas loadé bah on a rien besoin de faire
             controlled_capable = null;
             return;
         }
+
+        // enleve les callbacks de notif
+        UI_Manager.Instance?.GetPool<UI_HUD>()?.Notifier.RemoveCallbacks(controlled_capable);
 
         uncontrol_capacities(controlled_capable);
 
@@ -274,11 +294,13 @@ public class Controller : MonoBehaviour
         CameraFollow.Instance.AddTarget(capa);
 
         // register to the being died event of the new capable
-        /* if (capa.TryGetCapacity(out HealthCapacity hcapa))
+        if (capa.TryGetCapacity(out HealthCapacity hcapa))
         {
-            hcapa.OnDie += handle_being_died;
-            if (log) { Debug.Log($"(Controller) Registered to OnDie event of capable with id {capa.ID}."); }
-        } */
+            hcapa.OnDie += OnControllerDied;
+            hcapa.OnHeal += OnControllerHealed;
+            hcapa.OnTakeDamage += OnControllerTookDamage;
+            if (log) { Debug.Log($"(Controller) Registered to health capa events ({hcapa.ID}) of capable '{capa.ID}'"); }
+        }
 
         // on ajoute le callback de changement de skin
         refresh_skin_based_parameters(capa.Skin);
@@ -322,11 +344,13 @@ public class Controller : MonoBehaviour
         capa.AnimPlayer.OnSkinChange -= refresh_skin_based_parameters; // on enlève le callback de changement de skin
 
         // register to the being died event of the new capable
-        /* if (capa.TryGetCapacity(out HealthCapacity hcapa))
+        if (capa.TryGetCapacity(out HealthCapacity hcapa))
         {
-            hcapa.OnDie -= handle_being_died;
-            if (log) { Debug.Log($"(Controller) Unregistered from OnDie event of capable with id {capa.ID}."); }
-        } */
+            hcapa.OnDie -= OnControllerDied;
+            hcapa.OnHeal -= OnControllerHealed;
+            hcapa.OnTakeDamage -= OnControllerTookDamage;
+            if (log) { Debug.Log($"(Controller) Unregistered to health capa events ({hcapa.ID}) of capable '{capa.ID}'"); }
+        }
 
 
         // clear les inputs & stoppe les déplacements
@@ -377,9 +401,63 @@ public class Controller : MonoBehaviour
     }
 
 
+
+
+
     ///
     //
-    /// DESPAWN / RESPAWN METHODS
+    /// PERSO CALLBACKS
+    //
+    ///
+
+    public void OnControllerDied(CapableData cdata)
+    {
+        if (Capable == null) { return; }
+        if (log_callbacks) { Debug.Log($"(Controller) '{cdata.id}' just died !! (controller.capable is '{Capable.ID}')"); }
+    }
+    public void OnControllerHealed(float heal_amount)
+    {
+        if (Capable == null) { return; }
+        if (log_callbacks) { Debug.Log($"(Controller) '{Capable.ID}' just healed {heal_amount} of life !!"); }
+
+        // si on est sur le hud, on met à jour le chroma du PostProcessManager
+        if (!UI_Manager.Instance.IsOnHUD()) { return; }
+        PostProcessManager.Instance.UpdateChroma();
+        
+    }
+    public void OnControllerTookDamage(float damage_took, Force knockback)
+    {
+        if (Capable == null) { return; }
+        if (log_callbacks) { Debug.Log($"(Controller) '{Capable.ID}' just took {damage_took} of damage (aoutch)"); }
+
+        // we make a little screenshake if perso
+        float shake_magnitude = damage_took / Capable.GetCapacity<HealthCapacity>().Health;
+        CameraShaker.Instance.Shake(shake_magnitude);
+
+        // we shake the colors of the life bar
+        if (!UI_Manager.Instance.IsOnHUD()) { return; }
+        UI_Manager.Instance.GetPool<UI_HUD>().PersoTookDamage();
+    }
+    private void OnControllerSetSkin(Setting setting)
+    {
+        if (Perso == null) { return; }
+        Perso.SetSkin(setting);
+    }
+    private void OnControllerSetGhost(Setting setting)
+    {
+        if (Perso == null) { return; }
+        Perso.SetGhost(setting);
+    }
+
+
+
+
+
+
+
+    ///
+    //
+    /// DESPAWN / RESPAWN / SOFA METHODS
     //
     ///
 
@@ -388,6 +466,17 @@ public class Controller : MonoBehaviour
     {
         // if (log) { Debug.Log($"(Controller) capable with id {data.id} despawned, uncontrolling it if it was controlled"); }
         Uncontrol(data.id);
+    }
+
+    // LAST SOFA REGISTRATION
+    public void RegisterLastSofa(Sofa sofa)
+    {
+        if (string.IsNullOrEmpty(sofa.ID))
+        {
+            Debug.LogError("(Controller - RegisterLastSofa) Sofa parameter has a null or empty ID...");
+            return;
+        }
+        data.last_sofa_id = sofa.ID;
     }
 
     // RESPAWN
@@ -412,8 +501,14 @@ public class Controller : MonoBehaviour
         }
         new_data.controlled_capable_id = capable.id;
 
-        // set position to 0,0
-        capable.position = Vector3.zero;
+        // apply the last sofa id
+        SofaData last_sofa = (SofaData) CapableEngine.LazyInstance.GetCapableDataFromID(new_data.last_sofa_id);
+        if (last_sofa == null) { capable.position = Vector3.zero; }
+        else
+        {
+            last_sofa.contained_capable_ids.Add(capable.id);
+            new_data.container_id = new_data.last_sofa_id;
+        }
 
         // we get the capacity ids
         List<CapacityData> capacities_data = CapacityEngine.LazyInstance.GetCapacitiesDataFromIDs(capable.capacities_ids);

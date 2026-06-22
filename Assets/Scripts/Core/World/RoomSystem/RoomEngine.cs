@@ -205,7 +205,22 @@ public class RoomEngine : BSOD_System<RoomEngine>
         }
         return capables_data;
     }
+    public bool TryGetCapableRoom(string capable_id, out RoomData room)
+    {
+        room = null;
+        if (!ChunkEngine.Instance.TryGetCapableChunk(capable_id, out ChunkData chunk)) { return false; }
 
+        // find the room of the chunk
+        if (string.IsNullOrEmpty(chunk.room_id))
+        {
+            Debug.LogError($"(RoomEngine - TryGetCapableRoom) '{capable_id}' is in chunk '{chunk.id}' but this chunk has no room or empty !");
+            return false;
+        }
+        
+        room = GetRoomDataFromID(chunk.room_id);
+        if (room == null) { return false; }
+        return true;
+    }
 
     // STATIC GETTERS
     public static List<RoomData> LoadWorldRoomsData(string world_id, List<string> room_ids)

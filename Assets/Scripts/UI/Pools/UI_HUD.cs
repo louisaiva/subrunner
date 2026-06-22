@@ -16,7 +16,7 @@ public class UI_HUD : UI_Pool
         if (Controller.Capable == null || Controller.Capable.Inventory == null) { return; }
         ItemBar.AttachToInventory(Controller.Capable.Inventory);
     }
-    protected override void after_removed_from_stack()
+    protected override void after_hiding()
     {
         // we clear the item bar
         ItemBar.Clear();

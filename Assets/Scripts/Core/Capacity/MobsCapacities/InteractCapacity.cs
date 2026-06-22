@@ -152,15 +152,24 @@ public class InteractCapacity : Capacity
         Capable interacted_capable = hover.Capable;
         if (interacted_capable == null) { return; }
 
-        // we check if it's an Interactable or an Item
+        // we check if we can interact with it
         if (interacted_capable is not Interactable interactive) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + interacted_capable.name + " but it is no Interactable"); } return; }
         if (!interact_types.Contains(interactive.InteractionType)) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + interactive.name + " but its type is not allowed"); } return; }
-        if (interactive is Item item && !item.ValidateRule(ItemRule)) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + interactive.name + " but it is excluded by the rule"); } return; } // we check if the item is excluded by the rule
+        if (interactive is Item item && !item.ValidateRule(ItemRule)) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + interactive.name + " but it is excluded by the rule"); } return; }
+        if (interactive is not Door)
+        {
 
-        // we check if the capable is already hovered
+            // check that room of Capable & room of Interactable are the same (if not same room we don't do nothing)
+            // this is here and not upper because it can be a heavy call. AND NOT ON DOOR BC WE WANT TO BE ABLE TO ALWAYS INTERACT WITH THEM
+            string room_of_capable = Capable.GetRealRoom();
+            if (string.IsNullOrEmpty(room_of_capable)) { if (log_triggers) { Debug.Log($"(InteractCapacity) capable '{Capable.ID}' (interactor) has null or empty room, can't hover."); } return; }
+            string room_of_interactable = interacted_capable.GetRealRoom();
+            if (string.IsNullOrEmpty(room_of_interactable)) { if (log_triggers) { Debug.Log($"(InteractCapacity) capable '{interacted_capable.ID}' (interactable) has null or empty room, can't hover."); } return; }
+            if (room_of_capable != room_of_interactable && room_of_interactable != "item_was_just_dropped") { if (log_triggers) { Debug.Log($"(InteractCapacity) '{Capable.ID}' (room : '{room_of_capable}') tried to interact with '{interacted_capable.ID}' (room : '{room_of_interactable}') but they are in different rooms"); } return; }
+
+        }
+
         if (hover == closest_hover) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + interactive.name + " but it is already hovered"); } return; }
-
-        // or if it's already in the waiting hovers
         if (waiting_hovers.Contains(hover)) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + interactive.name + " but it is already in the waiting hovers"); } return; }
 
         // we add the capable to the waiting hovers
