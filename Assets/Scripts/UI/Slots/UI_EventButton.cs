@@ -78,14 +78,17 @@ public class UI_EventButton : UI_Button, Colorant
 
     // COLORANT
     public Color HoverColor => baseColor;
-    public void SetColors(Color base_color, Color clicked_color)
+    public void SetColors(Color hover_color, Color clicked_color)
     {
         // special case for UI_EventButton the colors are inversed (the base color is the base color of the icon when not hovered -> means its the clicked one)
         baseColor = clicked_color;
-        hoverColor = base_color;
+        hoverColor = hover_color;
 
         // we change the icon color
-        if (btn_icon != null) { btn_icon.color = iconHoverColor; }
+        if (btn_icon != null)
+        {
+            btn_icon.color = Hovered ? iconHoverColor : baseColor;
+        }
         image.color = Hovered ? baseColor : hoverColor; // and the main image color
 
         // we color all colorers
@@ -94,5 +97,9 @@ public class UI_EventButton : UI_Button, Colorant
         {
             colorers[i].ApplyColor(baseColor);
         }
+    }
+    public void SetColor(Color color)
+    {
+        SetColors(this.hoverColor, color);
     }
 }

@@ -11745,7 +11745,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &117402598
 Transform:
   m_ObjectHideFlags: 0
@@ -81672,6 +81672,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputIndicationEngine
   input_indication: {fileID: 117402598}
+  current_iic: {fileID: 0}
+  IFs:
+  - {fileID: 2019508911}
+  - {fileID: 1305851482}
   log:
     Verbose: 2
 --- !u!1 &508457655
@@ -190811,6 +190815,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7346549046311238487, guid: da227f607e8661e4a858b45433a715e2, type: 3}
+      propertyPath: log
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7346549046311238487, guid: da227f607e8661e4a858b45433a715e2, type: 3}
       propertyPath: baseColor.b
       value: 0.42352942
       objectReference: {fileID: 0}
@@ -190869,6 +190877,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5073313702871382076, guid: da227f607e8661e4a858b45433a715e2, type: 3}
   m_PrefabInstance: {fileID: 1305851478}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1305851482 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7346549046311238487, guid: da227f607e8661e4a858b45433a715e2, type: 3}
+  m_PrefabInstance: {fileID: 1305851478}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1305851480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4643933dcfef75c4a8e3f28259998e3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_EventButton
 --- !u!1 &1307131276
 GameObject:
   m_ObjectHideFlags: 0
@@ -290215,6 +290234,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7346549046311238487, guid: da227f607e8661e4a858b45433a715e2, type: 3}
+      propertyPath: log
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7346549046311238487, guid: da227f607e8661e4a858b45433a715e2, type: 3}
       propertyPath: baseColor.b
       value: 0.42352942
       objectReference: {fileID: 0}
@@ -290273,6 +290296,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5073313702871382076, guid: da227f607e8661e4a858b45433a715e2, type: 3}
   m_PrefabInstance: {fileID: 2019508907}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2019508911 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7346549046311238487, guid: da227f607e8661e4a858b45433a715e2, type: 3}
+  m_PrefabInstance: {fileID: 2019508907}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2019508909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4643933dcfef75c4a8e3f28259998e3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_EventButton
 --- !u!1 &2019676161
 GameObject:
   m_ObjectHideFlags: 0

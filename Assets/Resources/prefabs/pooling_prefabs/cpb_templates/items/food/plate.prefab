@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4947518456057425643}
   - component: {fileID: 7020607722277148866}
-  - component: {fileID: 7242041909808936916}
   - component: {fileID: 7647431178272322623}
+  - component: {fileID: 7242041909808936916}
   m_Layer: 24
   m_Name: plate
   m_TagString: Item
@@ -63,21 +63,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!114 &7242041909808936916
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3927794695775646843}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b38a876e5f6fba4ab1dde6d23fd0f96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
-  capacity_template_id: hover
-  capacity_template_ids:
-  - item_iic
 --- !u!114 &7647431178272322623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,6 +127,22 @@ MonoBehaviour:
   _grabbed: 0
   _placed: 0
   life_regen: 100
+  portions: 1
+--- !u!114 &7242041909808936916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3927794695775646843}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b38a876e5f6fba4ab1dde6d23fd0f96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
+  capacity_template_id: hover
+  capacity_template_ids:
+  - item_iic
 --- !u!1 &6978885730201922813
 GameObject:
   m_ObjectHideFlags: 0

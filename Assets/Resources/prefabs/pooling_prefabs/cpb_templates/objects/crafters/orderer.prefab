@@ -211,14 +211,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: orderer
   <orientation>k__BackingField: D
-  current_anim:
-    name: 
-    sprites_paths: []
-    sprites: []
-    sprites_durations: []
-    loop: 1
-    speed: 1
-    flipX: 0
+  current_capacity: 
   update_each_frame: 1
   anim_capacity_priorities:
   - priority: 0
@@ -252,7 +245,7 @@ GameObject:
   - component: {fileID: 1463753166168479044}
   - component: {fileID: 781385553851586166}
   m_Layer: 29
-  m_Name: dummy_iic
+  m_Name: orderer_iic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

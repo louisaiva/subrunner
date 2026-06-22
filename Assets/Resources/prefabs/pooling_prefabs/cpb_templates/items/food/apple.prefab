@@ -111,14 +111,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: apple
   <orientation>k__BackingField: D
-  current_anim:
-    name: 
-    sprites_paths: []
-    sprites: []
-    sprites_durations: []
-    loop: 1
-    speed: 1
-    flipX: 0
+  current_capacity: 
   update_each_frame: 1
   anim_capacity_priorities:
   - priority: 0
@@ -187,6 +180,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -204,7 +198,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 0}
@@ -230,6 +223,7 @@ MonoBehaviour:
   _grabbed: 0
   _placed: 0
   life_regen: 10
+  portions: 1
 --- !u!114 &1240882897994268450
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -243,6 +237,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
   capacity_template_id: hover
+  capacity_template_ids: []
 --- !u!1 &5449753267372051723
 GameObject:
   m_ObjectHideFlags: 0
@@ -254,7 +249,7 @@ GameObject:
   - component: {fileID: 3675096929854353947}
   - component: {fileID: 7029950754191301512}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: item_iic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -288,14 +283,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputIndicationCapacity
   data:
-    <id>k__BackingField: item_iic
+    <id>k__BackingField: 
     <owner_id>k__BackingField: 
     kind: 
     local_position: {x: 0, y: 0}
     layer: 0
     tag: 
   log: 0
-  color: {r: 0.78823537, g: 0.8980393, b: 0.5568628, a: 1}
+  color: {r: 1, g: 0.87058824, b: 0, a: 1}
   input_name: E
 --- !u!1 &8910784274748376873
 GameObject:

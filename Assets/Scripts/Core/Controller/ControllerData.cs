@@ -103,8 +103,8 @@ using UnityEngine;
         details += $" - player level : {player_level}\n";
         details += $" - player room : {player_room}\n";
         details += $" - player chunk : {player_chunk}\n";
-        details += $" - container id : {container_id}";
-        details += $" - last sofa id : {last_sofa_id}";
+        details += $" - container id : {container_id}\n";
+        details += $" - last sofa id : {last_sofa_id}\n";
         return details;
     }
 }
