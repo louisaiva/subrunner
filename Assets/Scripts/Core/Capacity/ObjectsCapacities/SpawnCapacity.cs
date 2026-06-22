@@ -58,7 +58,7 @@ public class SpawnCapacity : Capacity
         if (entity_layer_connected)
         {
             set_entity_layer_skin(template);
-            entity_layer.Show();
+            entity_layer.EnableRenderer();
         }
 
         // we make the main capable play an animation
@@ -68,7 +68,7 @@ public class SpawnCapacity : Capacity
         if (spawn_after_animation && entity_layer_connected)
         {
             while (Capable.AnimPlayer.IsPlaying(spawn_anim_name)) { await System.Threading.Tasks.Task.Yield(); }
-            entity_layer.Hide();
+            entity_layer.DisableRenderer();
         }
 
         // we spawn & load the entity
@@ -148,12 +148,12 @@ public class SpawnCapacity : Capacity
         entity_layer_connected = false;
         if (entity_layer != null)
         {
-            entity_layer.Hide();
+            entity_layer.DisableRenderer();
             Capable leader = capable_data.Capable;
 
-            if (leader == null)
+            if (leader == null || leader.AnimPlayer == null)
             {
-                Debug.LogError("(SpawnCapacity) could not connect entity_layer to animplayer leader cause capable is null");
+                Debug.LogError($"(SpawnCapacity) could not connect entity_layer to animplayer leader cause {(leader == null ? "leader" : "leader's AnimPlayer")} is null");
             }
             else
             {

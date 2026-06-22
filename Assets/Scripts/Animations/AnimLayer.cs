@@ -56,11 +56,7 @@ public class AnimLayer : MonoBehaviour
     [SerializeField] private bool already_assigned = false;
     public void AssignLeader(AnimPlayer leader)
     {
-        if (already_assigned)
-        {
-            UnassignLeader();
-            return;
-        }
+        if (already_assigned) { UnassignLeader(); }
         this.leader = leader;
         leader.OnAnimPlayedAtFrame += PlayAtFrame;
         leader.OnOrientationChanged += SetOrientation;
@@ -171,8 +167,8 @@ public class AnimLayer : MonoBehaviour
 
 
     // RENDERER MANAGEMENT / VISIBILITY
-    // public void DisableRenderer() { sr.enabled = false; } // ? obsolete ???
-    // public void EnableRenderer() { sr.enabled = true; } // ? obsolete ???
+    public void DisableRenderer() { sr.enabled = false; } // ? obsolete ???
+    public void EnableRenderer() { sr.enabled = true; } // ? obsolete ???
 
     [Header("Visibility (debug only)")]
     [SerializeField] private bool visible_on; // RTO
@@ -181,7 +177,7 @@ public class AnimLayer : MonoBehaviour
         visible_on = false;
         if (visibleKeyword == null)
         {
-            sr.enabled = false;
+            // sr.enabled = false;
             return;
         }
         material.SetKeyword(visibleKeyword.Value, false);
@@ -191,7 +187,7 @@ public class AnimLayer : MonoBehaviour
         visible_on = true;
         if (visibleKeyword == null)
         {
-            sr.enabled = true;
+            // sr.enabled = true;
             return;
         }
         material.SetKeyword(visibleKeyword.Value, true);

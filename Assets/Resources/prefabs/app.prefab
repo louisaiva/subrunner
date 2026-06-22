@@ -602,6 +602,13 @@ MonoBehaviour:
     base_spritesheets:
     - objects/interactives/spawners/robot_spawner_base
     keep_base_anim_if_spritesheet_not_found: 1
+  - variant_name: robot_sp_zombo
+    variant_spritesheets:
+    - objects/interactives/spawners/robot_spawner_zombo
+    base_skin: robot_sp
+    base_spritesheets:
+    - objects/interactives/spawners/robot_spawner_base
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: dev_face
     variant_spritesheets:
     - beings/devs/dev_face
