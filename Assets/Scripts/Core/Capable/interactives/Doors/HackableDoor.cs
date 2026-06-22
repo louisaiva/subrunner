@@ -14,7 +14,7 @@ public class HackableDoor : Door, Lockable
     private HoverCapacity hoverer;
 
     // START
-    protected override void Start()
+    /* protected override void Start()
     {
         base.Start();
 
@@ -24,7 +24,7 @@ public class HackableDoor : Door, Lockable
 
         // we play the idle_locked if we are locked
         if (Locked) { AnimPlayer.Play("idle_locked"); }
-    }
+    } */
 
     // INTERACTION
     public override void OnInteract(Capable interactor)

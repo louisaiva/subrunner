@@ -44,7 +44,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 399a332d3e93e3c42bd5bab3967d5a52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cooldown: 0
-  debug: 0
+  data:
+    <id>k__BackingField: 
+    <owner_id>k__BackingField: 
+    kind: 
+    local_position: {x: 0, y: 0}
+    layer: 0
+    tag: 
+  log: 0
   opening_duration: 0.15
-  close_capacity: {fileID: 0}
+  open_anim: open
+  hover_open_anim: hover
+  idle_open_anim: idle_open

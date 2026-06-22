@@ -79,24 +79,6 @@ public class Door : Capable, Interactable, Openable
     public event Action<Door> OnDoorOpen;
     public event Action<Door> OnDoorClose;
 
-    // START
-    protected virtual void Start()
-    {
-        // check if we are an insider we don't even start
-        if (!CapableEngine.Instance.IsOutsider(this.ID)) { return; }
-
-        // if vertical on set l'Orientaion à "up"
-        if (is_vertical && (Orientation == Vector2.right || Orientation == Vector2.left)) { Orientation = Vector2.up; }
-        else if (!is_vertical && (Orientation == Vector2.up || Orientation == Vector2.down)) { Orientation = Vector2.left; }
-
-        // on récupère les composants
-        shadow_caster = door_collider.GetComponent<ShadowCaster2D>();
-
-        // on close
-        if (Closer is not null && Closer.Able) { Close(silently: true); }
-    }
-
-
 
     // INTERACTABLE
     public InteractCapacity Interactor { get; set; }
@@ -112,29 +94,24 @@ public class Door : Capable, Interactable, Openable
     }
 
     // OPENABLE
-    public void Open(bool silently = false)
+    public void Open()
     {
         // on désactive le collider
         door_collider.enabled = false;
-
-        // on désactive le ShadowCaster2D
         if (shadow_caster != null) { shadow_caster.enabled = false; }
 
-        Opener.Open(play_anim_and_sound: !silently);
-        if (!silently) { OnDoorOpen?.Invoke(this); }
+        Opener.Open();
+        OnDoorOpen?.Invoke(this);
     }
-    public void Close(bool silently = false)
+    public void Close()
     {
         // on reactive le collider
         door_collider.enabled = true;
-
-        // on reactive le ShadowCaster2D
         if (shadow_caster != null) { shadow_caster.enabled = true; }
 
-        Closer.Close(play_anim_and_sound: !silently);
-        if (!silently) { OnDoorClose?.Invoke(this); }
+        Closer.Close();
+        OnDoorClose?.Invoke(this);
     }
-
     public void OpenInstantly()
     {
         // on désactive le collider & ShadowCaster2D
@@ -281,7 +258,7 @@ public class Door : Capable, Interactable, Openable
             room1_id = this.room1_id,
             room2_id = this.room2_id,
             if_switcher = this.if_switcher.Duplicate(),
-            is_open = this.is_open
+            is_open = false // we close every door by default when getting static data
         };
 
         return static_data;
@@ -306,7 +283,7 @@ public class Door : Capable, Interactable, Openable
     public bool dont_touch_sorting_layer;
     public string room1_id;
     public string room2_id;
-    public bool is_open; // DYNAMIC DATA
+    public bool is_open;
     public IFPositionSwitcher if_switcher;
 
 

@@ -10,7 +10,7 @@ public class UI_HUD : UI_Pool
     public UI_GraphicColorSweeper XP_BarSweeper;
     public UI_GraphicColorSweeper XP_IconSweeper;
 
-    protected override void before_adding_to_stack()
+    protected override void before_showing()
     {
         // check if we have a controller
         if (Controller.Capable == null || Controller.Capable.Inventory == null) { return; }

@@ -40,28 +40,19 @@ public class CloseCapacity : Capacity
     }
 
 
-    // START
-    private void Start()
-    {
-        Close(false);
-    }
-
     // CLOSING
-    public virtual void Close(bool play_anim_and_sound = true)
+    public virtual void Close()
     {
         // on supprime les invokes de l'ouverture si il y en a
         open_capacity?.CancelOpenInvoke();
         (Capable as Openable).is_moving = true;
 
         // on joue l'animation
-        if (play_anim_and_sound)
-        {
-            Capable.AnimPlayer.StopPlaying(idle_open_anim);
-            Capable.AnimPlayer.Play(close_anim, duration_override: closing_duration);
+        Capable.AnimPlayer.StopPlaying(idle_open_anim);
+        Capable.AnimPlayer.Play(close_anim, duration_override: closing_duration);
 
-            // on joue le son
-            AudioEngine.Instance.Play("close", Capable.Skin, Capable.gameObject);
-        }
+        // on joue le son
+        AudioEngine.Instance.Play("close", Capable.Skin, Capable.gameObject);
         Invoke("success_close", closing_duration);
 
 
@@ -76,10 +67,14 @@ public class CloseCapacity : Capacity
     }
     protected virtual void success_close()
     {
-        // on ouvre le coffre
-        if (Capable == null || Capable is not Openable openable)
+        if (Capable == null)
         {
-            if (log) { Debug.LogError("(CloseCapacity) " + Capable?.ID + " is null or not openable !"); }
+            Debug.LogError("(OpenCapacity) Can't close because our Capable is null");
+            return;
+        }
+        if (Capable is not Openable openable)
+        {
+            Debug.LogError("(OpenCapacity) Can't close because our Capable is not openable : " + Capable.ID + $" (loaded ? {Capable.Loaded})");
             return;
         }
         openable.is_open = false;
@@ -88,16 +83,12 @@ public class CloseCapacity : Capacity
         // on joue l'animation
         GetSiblingCapacity<HoverCapacity>()?.ChangeAnimation(hover_close_anim);
         Capable.AnimPlayer.Play("idle");
+        Capable.AnimPlayer.StopPlaying(idle_open_anim);
 
         // on fait les vérifications pour les portes
-        if (Capable is Door door && !door.DontTouchSortingLayer)
-        {
-            Capable.AnimPlayer.Renderer.sortingLayerName = "main";
-            Capable.AnimPlayer.Renderer.sortingOrder = 0;
-        }
-        if (Capable is Door door2) { door2.UpdateIF(door2.Orientation); }
+        if (Capable is Door door) { door.UpdateIF(door.Orientation); }
 
-        if (log) { Debug.Log(Capable.name + " is closed !"); }
+        if (log) { Debug.Log(Capable.ID + " is now closed !"); }
     }
     public virtual void CloseInstantly()
     {

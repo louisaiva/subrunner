@@ -40,26 +40,20 @@ public class OpenCapacity : Capacity
     }
 
     // OPENING
-    public virtual void Open(bool play_anim_and_sound = true)
+    public virtual void Open()
     {
         // on supprime les invokes de l'ouverture si il y en a
         close_capacity?.CancelCloseInvoke();
 
-        // on ouvre le coffre
+        // on ouvre le bail
         (Capable as Openable).is_moving = true;
 
-        // on joue l'animation
-        if (play_anim_and_sound)
-        {
-            Capable.AnimPlayer.Play(open_anim, duration_override: opening_duration);
-
-            // on joue le son
-            AudioEngine.Instance.Play("open", Capable.Skin, Capable.gameObject);
-        }
+        // on joue l'animation & le son
+        Capable.AnimPlayer.Play(open_anim, duration_override: opening_duration);
+        AudioEngine.Instance.Play("open", Capable.Skin, Capable.gameObject);
         
-        // on joue l'animation
+        // on attend
         Invoke("success_open", opening_duration);
-
         if (log) { Debug.Log(Capable.name + " is opening..."); }
     }
     protected virtual void success_open()
@@ -72,7 +66,7 @@ public class OpenCapacity : Capacity
         }
         if (Capable is not Openable openable)
         {
-            Debug.LogError("(OpenCapacity) Can't open because our Capable is not openable : " + Capable.name + $" (loaded ? {Capable.Loaded})");
+            Debug.LogError("(OpenCapacity) Can't open because our Capable is not openable : " + Capable.ID + $" (loaded ? {Capable.Loaded})");
             return;
         }
         openable.is_open = true;
@@ -82,9 +76,8 @@ public class OpenCapacity : Capacity
         Capable.AnimPlayer.AddToPile(idle_open_anim);
         GetSiblingCapacity<HoverCapacity>()?.ChangeAnimation(hover_open_anim);
 
-        if (log) { Debug.Log(Capable.ID + " is open !"); }
+        if (log) { Debug.Log(Capable.ID + " is now open !"); }
     }
-
     public virtual void OpenInstantly()
     {
         // on supprime tous les invokes si on en a
