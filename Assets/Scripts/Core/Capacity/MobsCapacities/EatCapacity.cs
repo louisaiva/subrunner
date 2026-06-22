@@ -135,7 +135,7 @@ public class EatCapacity : Capacity
 
 
     // LOAD / UNLOAD DATA
-    public override void LoadData(CapacityData data)
+    public override void LoadData(CapacityData data, CapableData capable_data)
     {
         if (data is not EatData edata) { return; }
 
@@ -146,7 +146,8 @@ public class EatCapacity : Capacity
         // load entity data
         this.hunger = edata.hunger;
 
-        base.LoadData(data);
+        // ? is there a reason we load the data at the end ????
+        base.LoadData(data, capable_data);
     }
 
     // SAVE DYNAMIC DATA

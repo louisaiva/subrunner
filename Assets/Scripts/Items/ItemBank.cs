@@ -154,12 +154,12 @@ public class ItemBank : MonoBehaviour
         if (log) { Debug.Log("(ItemBank) Instanciating " + reference + " module prefab !!"); }
         return module;
     }
-    public Module CreateRandomModule(List<string> module_references)
+    /* public Module CreateRandomModule(List<string> module_references)
     {
         // we get a random reference
         string random_ref = module_references[UnityEngine.Random.Range(0, module_references.Count)];
         return CreateModule(random_ref);
-    }
+    } */
 
 
     // UI_ITEM GENERATOR

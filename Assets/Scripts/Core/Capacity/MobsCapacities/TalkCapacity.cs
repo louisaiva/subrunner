@@ -680,9 +680,9 @@ public class TalkCapacity : Capacity
     ///
 
     // LOAD / UNLOAD DATA
-    public override void LoadData(CapacityData data)
+    public override void LoadData(CapacityData data, CapableData capable_data)
     {
-        base.LoadData(data);
+        base.LoadData(data, capable_data);
 
         _ = main_transitioner.Hide(0f);
         // talk_members = new List<TalkCapacity>() { this };

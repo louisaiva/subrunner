@@ -485,14 +485,15 @@ public class Capable : MonoBehaviour, Debuggable
             AddEffect(data.effects[i], data.effects_ttl[i]);
         }
         // if (this is Movable movable && HasEffect(Effect.BeingCarried)) { movable.DisableMovements(); }
-        
+
+
+        // we fire the data loaded event BEFORE loading capacities so they can access
+        // the Capable from the CapableData
+        data.OnLoaded(this);
 
         // we load the capacities
         if (CapableEngine.Instance.log_loading_extended) { Debug.Log($"(Capable - LoadData) Calling CapacitySystem loading for capacities : {string.Join(" ", data.capacities_ids)}"); }
         this.capacities = CapacityEngine.Instance.LoadCapacities(data.capacities_ids, this);
-
-        // we fire the data loaded event
-        data.OnLoaded(this);
     }
     public virtual void UnloadData()
     {

@@ -338,7 +338,7 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
 
         if (log_loading_extended) { Debug.Log($"(CapacityEngine - Load) Loading capacity '{data.id}' \n{data.GetDetails()}"); }
 
-        Capacity capacity = CapacityBank.Instance.Load(data);
+        Capacity capacity = CapacityBank.Instance.Load(data, capable_data);
         loaded_capacities_data.Add(data.id, data);
         if (log_loading) { Debug.Log("(CapacityEngine) Loaded " + data.id); }
         return capacity;

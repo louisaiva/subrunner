@@ -136,9 +136,9 @@ public class HoverCapacity : Capacity
 
 
     // LOAD / UNLOAD DATA
-    public override void LoadData(CapacityData data)
+    public override void LoadData(CapacityData data, CapableData capable_data)
     {
-        base.LoadData(data);
+        base.LoadData(data, capable_data);
 
         if (data is not HoverCapacityData hover_data) { return; }
         if (hover_data.hover_collider_data == null) { return; }

@@ -204,7 +204,7 @@ public class HealthCapacity : Capacity
 
 
     // LOAD / UNLOAD DATA
-    public override void LoadData(CapacityData data)
+    public override void LoadData(CapacityData data, CapableData capable_data)
     {
         if (data is not HealthCapacityData hdata) { return; }
 
@@ -224,7 +224,8 @@ public class HealthCapacity : Capacity
             _health_colliders.Add(ColliderBank.Instance.LoadCollider(colldata,transform));
         }
 
-        base.LoadData(data);
+        // ? is there a reason we load the data at the end ????
+        base.LoadData(data, capable_data);
     }
     public override void UnloadData()
     {

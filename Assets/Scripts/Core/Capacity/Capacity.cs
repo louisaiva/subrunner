@@ -52,7 +52,7 @@ public class Capacity : MonoBehaviour
 
 
     // LOAD / UNLAOD
-    public virtual void LoadData(CapacityData data)
+    public virtual void LoadData(CapacityData data, CapableData capable_data)
     {
         this.data = data;
         this.name = data.id;

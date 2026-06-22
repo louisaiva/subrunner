@@ -162,7 +162,7 @@ public class MotorCapacity : Capacity
 
 
     // LOAD / UNLOAD DATA
-    public override void LoadData(CapacityData data)
+    public override void LoadData(CapacityData data, CapableData capable_data)
     {
         if (data is not MotorData motor_data) { return; }
 
@@ -175,7 +175,10 @@ public class MotorCapacity : Capacity
 
         Agent.Initialize(); // we refresh the injected data for the agent
 
-        base.LoadData(data); // set this before the rest so the data is set
+
+        // set this before the rest so the data is set
+        // ? yes but is there a reason why we don't set it at the top of method ?
+        base.LoadData(data, capable_data); 
 
 
         // we log

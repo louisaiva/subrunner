@@ -23,9 +23,10 @@ public class ModuleSpawner : Capable, EndlessInteractable
         if (spawner == null) { spawner = GetCapacity<SpawnCapacity>(); }
 
         // we get a random module from the bank
-        Module module = ItemBank.Instance.CreateRandomModule(module_references);
-        spawner.Spawn(module.gameObject);
-        if (log) { Debug.Log("(ModuleSpawner) " + name + " spawned module " + module.Reference); }
+        string random_module_template = module_references[UnityEngine.Random.Range(0, module_references.Count)];
+        // Module module = ItemBank.Instance.CreateModule(random_module_template); // we don't do this anymore cause everything is template based now
+        spawner.Spawn(random_module_template);
+        if (log) { Debug.Log("(ModuleSpawner) " + name + " spawned module " + random_module_template); }
     }
 
     public void OnEndlessInteract(Capable interactor) { if (authorize_interact_endlessly) { OnInteract(interactor); } }

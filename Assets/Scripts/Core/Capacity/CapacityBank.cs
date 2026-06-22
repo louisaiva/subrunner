@@ -126,7 +126,7 @@ public class CapacityBank : MonoBehaviour
 
 
     // LOAD CAPACITIES
-    public Capacity Load(CapacityData data)
+    public Capacity Load(CapacityData data, CapableData capable_data)
     {
         // we first try to extract of the right kind from the pool
         Capacity capacity = extractFromPool(data.kind);
@@ -135,7 +135,7 @@ public class CapacityBank : MonoBehaviour
         if (capacity != null)
         {
             // we load its data
-            capacity.LoadData(data);
+            capacity.LoadData(data, capable_data);
             capacity.gameObject.SetActive(true);
             loaded_capacities.Add(capacity);
             return capacity;
@@ -153,7 +153,7 @@ public class CapacityBank : MonoBehaviour
         else { capacity = Instantiate(capacities_prefabs[capa_type]).GetComponent<Capacity>(); }
 
         // then we can load the data
-        capacity.LoadData(data);
+        capacity.LoadData(data, capable_data);
         loaded_capacities.Add(capacity);
         return capacity;
     }

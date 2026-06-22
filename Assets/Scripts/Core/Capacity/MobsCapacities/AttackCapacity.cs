@@ -432,7 +432,7 @@ public class AttackCapacity : CooldownCapacity
 
 
     // LOAD / UNLOAD DATA
-    public override void LoadData(CapacityData data)
+    public override void LoadData(CapacityData data, CapableData capable_data)
     {
         if (data is not AttackData adata) { return; }
 
@@ -453,7 +453,8 @@ public class AttackCapacity : CooldownCapacity
         // and damage
         damage = adata.damage;
 
-        base.LoadData(data);
+        // ? is there a reason we load the data at the end ????
+        base.LoadData(data, capable_data);
     }
     public override void UnloadData()
     {

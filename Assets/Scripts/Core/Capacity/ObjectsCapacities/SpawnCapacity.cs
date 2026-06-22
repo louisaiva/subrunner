@@ -9,9 +9,9 @@ using UnityEngine;
 public class SpawnCapacity : Capacity
 {
     [Header("Spawn parameters")]
-    public GameObject entity_prefab;
+    // public GameObject entity_prefab;
     public string base_entity_id; // the id of the entity to spawn
-    public Transform entity_parent; // the transform that will be the parent of the spawned entity
+    // public Transform entity_parent; // the transform that will be the parent of the spawned entity
     private int entity_count = 0;
 
     [Header("Spawn Force")]
@@ -28,49 +28,56 @@ public class SpawnCapacity : Capacity
     [Header("Spawn Animation")]
     [SerializeField] private bool spawn_after_animation = false; // if true, the entity will be spawned at the end of the animation, otherwise it will be spawned at the start of the animation
     [SerializeField] private string spawn_anim_name = "spawn"; // the name of the spawn animation in the AnimPlayer
-    private AnimLayer entity_layer; // the animation layer of the entity spawning animation
-
-    // START
-    private void Start()
+    private AnimLayer _entity_layer; // the animation layer of the entity spawning animation
+    private AnimLayer entity_layer
     {
-        // cache the entity layer
-        entity_layer = GetComponent<AnimLayer>();
+        get
+        {
+            if (_entity_layer != null) { return _entity_layer; }
+            _entity_layer = GetComponent<AnimLayer>();
+            return _entity_layer;
+        }
     }
+    private bool entity_layer_connected = false;
 
     // USE
     public override void Use(Capable capable)
     {
-        // we spawn & load the entity
-        GameObject entity = null;
-        if (CapableEngine.Instance != null && !string.IsNullOrEmpty(base_entity_id))
-        {
-            Capable entity_capable = CapableEngine.Instance.SpawnCapable(base_entity_id);
-            if (entity_capable != null) { entity = entity_capable.gameObject; }
-            else if (log) { Debug.LogWarning("(SpawnCapacity) Could not spawn entity with id " + base_entity_id); }
-        }
-        else { entity = Instantiate(entity_prefab); }
-        if (entity == null) { return; }
-
         // we apply spawn parameters to the entity (spawn force, etc)
-        Spawn(entity);
+        Spawn(base_entity_id);
     }
-    public async void Spawn(GameObject entity)
+    public async void Spawn(string template)
     {
-        entity.SetActive(false);
-
+        if (string.IsNullOrEmpty(template))
+        {
+            if (log) { Debug.LogError("(SpawnCapacity - Spawn) template is null or empty, canot spawn entity."); }
+            return;
+        }
+        
         // we find the entity_layer new skin name based on the capable skin + "_" + entity skin
-        if (entity_layer != null) { set_entity_layer_skin(entity); }
+        if (entity_layer_connected)
+        {
+            set_entity_layer_skin(template);
+            entity_layer.Show();
+        }
 
         // we make the main capable play an animation
         Capable.AnimPlayer.Play(spawn_anim_name);
 
         // if we spawn after the animation we wait for it to finish
-        if (spawn_after_animation)
+        if (spawn_after_animation && entity_layer_connected)
         {
             while (Capable.AnimPlayer.IsPlaying(spawn_anim_name)) { await System.Threading.Tasks.Task.Yield(); }
+            entity_layer.Hide();
         }
 
-        entity.SetActive(true);
+        // we spawn & load the entity
+        Capable entity = CapableEngine.Instance.SpawnCapable(template);
+        if (entity == null)
+        {
+            if (log) { Debug.LogWarning("(SpawnCapacity) Could not spawn entity with template " + template); }
+            return;
+        }
 
         // we get a random spawn position
         Vector2 spawn_position = transform.parent.position + ((Vector3)local_spawn_position);
@@ -81,13 +88,6 @@ public class SpawnCapacity : Capacity
 
         // we apply the position & parent to entity
         entity.transform.position = spawn_position;
-        if (entity_parent != null)
-        {
-            entity.transform.parent = entity_parent;
-        }
-
-        // we rename the entity
-        // entity.name = entity_prefab.name + "_" + entity_count;
 
         // we create a spawn force
         string force_debug = "";
@@ -104,14 +104,10 @@ public class SpawnCapacity : Capacity
     }
 
     // low level spawning
-    private void set_entity_layer_skin(GameObject entity)
+    private void set_entity_layer_skin(string entity_skin)
     {
-        // we get the entity anim player
-        Capable entity_capable = entity.GetComponent<Capable>();
-        if (entity_capable == null) { return; }
-
         // we get the skin name based on the capable skin + "_" + entity skin
-        string skin_name = Capable.Skin + "_" + entity_capable.Skin;
+        string skin_name = Capable.Skin + "_" + entity_skin;
 
         // we set the skin of the entity layer to the new skin
         entity_layer.skin = skin_name;
@@ -143,11 +139,29 @@ public class SpawnCapacity : Capacity
 
 
     // LOAD / UNLOAD DATA
-    public override void LoadData(CapacityData data)
+    public override void LoadData(CapacityData data, CapableData capable_data)
     {
-        base.LoadData(data);
+        base.LoadData(data, capable_data);
 
         if (data is not SpawnCapacityData spawn_data) { return; }
+
+        entity_layer_connected = false;
+        if (entity_layer != null)
+        {
+            entity_layer.Hide();
+            Capable leader = capable_data.Capable;
+
+            if (leader == null)
+            {
+                Debug.LogError("(SpawnCapacity) could not connect entity_layer to animplayer leader cause capable is null");
+            }
+            else
+            {
+                entity_layer.AssignLeader(leader.AnimPlayer);
+                entity_layer_connected = true;
+                // Debug.Log($"(SpawnCapacity) successfully connected entity_layer of '{ID}' to the leader animplayer of '{leader.ID}'");
+            }
+        }
 
         // we set all the spawn parameters
         this.base_entity_id = spawn_data.base_entity_id;
@@ -156,6 +170,7 @@ public class SpawnCapacity : Capacity
         this.spawn_radius = spawn_data.spawn_radius;
         this.spawn_rate = spawn_data.spawn_rate;
         this.spawn_anim_name = spawn_data.spawn_anim_name;
+        this.spawn_after_animation = spawn_data.spawn_after_animation;
 
     }
 
@@ -169,7 +184,8 @@ public class SpawnCapacity : Capacity
             local_spawn_position = this.local_spawn_position,
             spawn_radius = this.spawn_radius,
             spawn_rate = this.spawn_rate,
-            spawn_anim_name = this.spawn_anim_name
+            spawn_anim_name = this.spawn_anim_name,
+            spawn_after_animation = this.spawn_after_animation
         };
 
         return static_data;
@@ -188,6 +204,7 @@ public class SpawnCapacity : Capacity
     public Vector2 local_spawn_position; // or the center of the spawn circle if spawn_radius > 0
     public float spawn_radius = 0.5f; // the spawn is randowmized in a circle of this radius
     public float spawn_rate = 0f; // one entity is spawned each x seconds - needs to be > 0 to spawn continuously
+    public bool spawn_after_animation = false;
 
 
     // CONSTRUCTOR
@@ -204,7 +221,9 @@ public class SpawnCapacity : Capacity
             spawn_radius = this.spawn_radius,
             spawn_rate = this.spawn_rate,
 
-            spawn_anim_name = this.spawn_anim_name
+            spawn_anim_name = this.spawn_anim_name,
+            spawn_after_animation = this.spawn_after_animation
+
         };
     }
 
@@ -219,6 +238,7 @@ public class SpawnCapacity : Capacity
         details += $"  - spawn radius: {spawn_radius} \n";
         details += $"  - spawn rate: {spawn_rate} \n";
         details += $"  - spawn animation name: {spawn_anim_name} \n";
+        details += $"  - spawn after animation: {spawn_after_animation} \n";
 
         return base.GetDetails() + details;
     }

@@ -8217,9 +8217,7 @@ MonoBehaviour:
     layer: 0
     tag: Untagged
   log: 0
-  entity_prefab: {fileID: 8595018692463036030, guid: 9335e7a21b0076445bb2076cdd42f63d, type: 3}
   base_entity_id: cat
-  entity_parent: {fileID: 0}
   spawn_force: 200
   local_spawn_position: {x: 0, y: 0.1}
   spawn_radius: 0.5
@@ -31590,9 +31588,7 @@ MonoBehaviour:
     layer: 0
     tag: Untagged
   log: 0
-  entity_prefab: {fileID: 8595018692463036030, guid: 9335e7a21b0076445bb2076cdd42f63d, type: 3}
   base_entity_id: zombo
-  entity_parent: {fileID: 0}
   spawn_force: 200
   local_spawn_position: {x: 0, y: 0.1}
   spawn_radius: 0.5
@@ -48253,9 +48249,7 @@ MonoBehaviour:
     layer: 0
     tag: 
   log: 0
-  entity_prefab: {fileID: 0}
   base_entity_id: noby
-  entity_parent: {fileID: 0}
   spawn_force: 200
   local_spawn_position: {x: 0, y: 0.1}
   spawn_radius: 0.5
@@ -113736,9 +113730,7 @@ MonoBehaviour:
     layer: 0
     tag: Untagged
   log: 0
-  entity_prefab: {fileID: 8595018692463036030, guid: 9335e7a21b0076445bb2076cdd42f63d, type: 3}
   base_entity_id: noby
-  entity_parent: {fileID: 0}
   spawn_force: 200
   local_spawn_position: {x: 0, y: 0.1}
   spawn_radius: 0.5
@@ -136109,9 +136101,7 @@ MonoBehaviour:
     layer: 0
     tag: Untagged
   log: 0
-  entity_prefab: {fileID: 8595018692463036030, guid: 9335e7a21b0076445bb2076cdd42f63d, type: 3}
   base_entity_id: dev
-  entity_parent: {fileID: 0}
   spawn_force: 200
   local_spawn_position: {x: 0, y: 0.1}
   spawn_radius: 0.5
@@ -225415,9 +225405,7 @@ MonoBehaviour:
     layer: 0
     tag: 
   log: 0
-  entity_prefab: {fileID: 8595018692463036030, guid: 49036ff354d09d34e9290ae12cfbd3ee, type: 3}
   base_entity_id: dev
-  entity_parent: {fileID: 0}
   spawn_force: 200
   local_spawn_position: {x: 0, y: 0.1}
   spawn_radius: 0.5
@@ -246639,9 +246627,7 @@ MonoBehaviour:
     layer: 0
     tag: 
   log: 0
-  entity_prefab: {fileID: 0}
   base_entity_id: qwin
-  entity_parent: {fileID: 0}
   spawn_force: 200
   local_spawn_position: {x: 0, y: 0.1}
   spawn_radius: 0.5
@@ -249116,9 +249102,7 @@ MonoBehaviour:
     layer: 0
     tag: 
   log: 0
-  entity_prefab: {fileID: 0}
   base_entity_id: zombo
-  entity_parent: {fileID: 0}
   spawn_force: 200
   local_spawn_position: {x: 0, y: 0.1}
   spawn_radius: 0.5
@@ -256515,9 +256499,7 @@ MonoBehaviour:
     layer: 0
     tag: 
   log: 0
-  entity_prefab: {fileID: 0}
   base_entity_id: cat
-  entity_parent: {fileID: 0}
   spawn_force: 200
   local_spawn_position: {x: 0, y: 0.1}
   spawn_radius: 0.5
@@ -267405,9 +267387,6 @@ MonoBehaviour:
   - {fileID: 6429607554458301103, guid: aa5c060f687253f47956bf86f0332eaa, type: 3}
   chests_templates:
   - {fileID: 154305097020546142, guid: 5f1ebfa931fa4404bb6601a6a4c295fb, type: 3}
-  sofas_templates: []
-  spawners_templates:
-  - {fileID: 5997114575170726373, guid: 45501413685587d4ebc84b76fe6952d2, type: 3}
   others_templates:
   - {fileID: 2137358931719857597, guid: 59030affd72e04848abbdde09f88dce6, type: 3}
   template_paths:
@@ -267418,6 +267397,7 @@ MonoBehaviour:
   - prefabs/pooling_prefabs/cpb_templates/objects/chests
   - prefabs/pooling_prefabs/cpb_templates/objects/boxes
   - prefabs/pooling_prefabs/cpb_templates/objects/living_room
+  - prefabs/pooling_prefabs/cpb_templates/objects/spawners
 --- !u!1 &1817759213
 GameObject:
   m_ObjectHideFlags: 0
@@ -277331,9 +277311,7 @@ MonoBehaviour:
     layer: 0
     tag: Untagged
   log: 0
-  entity_prefab: {fileID: 8595018692463036030, guid: 9335e7a21b0076445bb2076cdd42f63d, type: 3}
   base_entity_id: qwin
-  entity_parent: {fileID: 0}
   spawn_force: 200
   local_spawn_position: {x: 0, y: 0.1}
   spawn_radius: 0.5

@@ -170,7 +170,7 @@ public class WalkCapacity : Capacity
 
 
     // LOAD / UNLOAD DATA
-    public override void LoadData(CapacityData data)
+    public override void LoadData(CapacityData data, CapableData capable_data)
     {
         if (data is not WalkData wdata) { return; }
 
@@ -190,7 +190,8 @@ public class WalkCapacity : Capacity
         // reset walk speed
         speed = 0f;
 
-        base.LoadData(data);
+        // ? is there a reason we load the data NOT at the start of the method ????
+        base.LoadData(data, capable_data);
 
         // reset audio
         if (walk_sound.isValid())

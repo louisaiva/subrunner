@@ -9,6 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4852169073912546303}
+  - component: {fileID: 2847901383037185377}
+  - component: {fileID: 2484598252863937588}
   - component: {fileID: 7000362555019179176}
   m_Layer: 0
   m_Name: spawn
@@ -32,6 +34,94 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &2847901383037185377
+SpriteRenderer:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5955687957909413019}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 0492ef63fae80104aba5b578a11a5f94, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: -667374433
+  m_SortingLayer: 3
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_Sprite: {fileID: 436672490, guid: 7d5487b2cc105504c9cc6aa29d66bac8, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1.5, y: 1.5}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_SpriteSortPoint: 1
+--- !u!114 &2484598252863937588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5955687957909413019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99e50a270b0678149b8e69f6921838eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimLayer
+  skin: none
+  leader: {fileID: 0}
+  current_anim:
+    name: 
+    sprites_paths: []
+    sprites: []
+    sprites_durations: []
+    loop: 1
+    speed: 1
+    flipX: 0
+  follow_duration: 0
+  never_flip: 0
+  log: 0
+  log_frames: 0
+  log_assign: 0
+  already_assigned: 0
+  visible_on: 0
 --- !u!114 &7000362555019179176
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44,10 +134,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9aff7eab60510f842becfae1c26ed751, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cooldown: 0
+  data:
+    <id>k__BackingField: 
+    <owner_id>k__BackingField: 
+    kind: 
+    local_position: {x: 0, y: 0}
+    layer: 0
+    tag: 
+  log: 0
   entity_prefab: {fileID: 8595018692463036030, guid: 9335e7a21b0076445bb2076cdd42f63d, type: 3}
+  base_entity_id: 
   entity_parent: {fileID: 0}
+  spawn_force: 0
   local_spawn_position: {x: 0, y: 1}
   spawn_radius: 0.5
   spawn_rate: 0
-  debug: 0
+  spawn_after_animation: 0
+  spawn_anim_name: spawn

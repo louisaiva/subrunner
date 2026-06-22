@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+[Obsolete("Every capable has an AnimPlayer now. No SpriteCapacity needed anymore")]
 public class SpriteCapacity : Capacity
 {
     private SpriteRenderer _spriteRenderer;
@@ -25,7 +26,7 @@ public class SpriteCapacity : Capacity
     ///
 
     // LOAD / UNLOAD DATA
-    public override void LoadData(CapacityData data)
+    public override void LoadData(CapacityData data, CapableData capable_data)
     {
         if (data is not SpriteData sdata) { return; }
 
@@ -43,7 +44,8 @@ public class SpriteCapacity : Capacity
             if (index >= 0) { sr.sprite = random_sprites[UnityEngine.Random.Range(0, random_sprites.Count)]; }
         }
 
-        base.LoadData(data);
+        // ? is there a reason we load the data at the end ????
+        base.LoadData(data, capable_data);
     }
 
     // GET STATIC DATA

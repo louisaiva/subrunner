@@ -64,7 +64,7 @@ public class DodgeCapacity : CooldownCapacity
 
 
     // LOAD / UNLOAD DATA
-    public override void LoadData(CapacityData data)
+    public override void LoadData(CapacityData data, CapableData capable_data)
     {
         if (data is not DodgeData ddata) { return; }
 
@@ -72,7 +72,8 @@ public class DodgeCapacity : CooldownCapacity
         dodge_magnitude = ddata.dodge_magnitude;
         dodge_duration = ddata.dodge_duration;
 
-        base.LoadData(data);
+        // ? is there a reason we load the data at the end ????
+        base.LoadData(data, capable_data);
     }
 
     // GET STATIC DATA
