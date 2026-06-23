@@ -36,6 +36,10 @@ public class InputFeedback : MonoBehaviour
         defineCallbacks();
         OnEnable();
     }
+    protected void OnDestroy()
+    {
+        
+    }
 
     // DEFINE CALLBACKS
     protected virtual void defineCallbacks()

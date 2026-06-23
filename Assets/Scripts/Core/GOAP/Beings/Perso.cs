@@ -180,7 +180,7 @@ public class Perso : Movable, Hacker
     }
 
     // HEAL & DAMAGE CALLBACKS
-    public void OnLifeAdded(float life)
+    /* public void OnLifeAdded(float life)
     {
         // if (Controller.Perso == null || Controller.Perso != this) { return; } // if we are not the controlled perso, we do nothing
 
@@ -216,7 +216,7 @@ public class Perso : Movable, Hacker
 
         // on switch au game_over panel
         UI_Manager.Instance.SwitchTo("game_over",force:true,override_transition:true);
-    }
+    } */
 
     public override ICapableData GetStaticData()
     {

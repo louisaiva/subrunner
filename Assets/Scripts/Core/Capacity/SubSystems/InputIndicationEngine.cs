@@ -8,13 +8,15 @@ public class InputIndicationEngine : MonoBehaviour
     [SerializeField] private Transform input_indication;
     [SerializeField] private InputIndicationCapacity current_iic = null;
 
-    [Header("UI_EventFeedbacks")]
-    [SerializeField] private List<UI_EventButton> IFs;
+    // [Header("UI_EventFeedbacks")]
+    // [SerializeField] private List<UI_EventButton> IFs;
+    [Header("Action Switcher")]
+    [SerializeField] private ActionSwitcher switcher;
 
     public Loggable<InputIndicationEngine> log;
     
     // SETTING & CALLBACK
-    private void Start()
+    /* private void Start()
     {
         SettingsManager.Instance.RegisterCallback("show_interaction_feedbacks", ToggleEngine);
     }
@@ -22,7 +24,7 @@ public class InputIndicationEngine : MonoBehaviour
     {
         SettingsManager.Instance.UnregisterCallback("show_interaction_feedbacks", ToggleEngine);
     }
-    private void ToggleEngine(Setting setting) { gameObject.SetActive(setting.Value > 0.5f); }
+    private void ToggleEngine(Setting setting) { gameObject.SetActive(setting.Value > 0.5f); } */
     
     private void Update()
     {
@@ -47,12 +49,14 @@ public class InputIndicationEngine : MonoBehaviour
 
         // we set the IF position and color
         input_indication.position = current_iic.transform.position;
-        foreach (UI_EventButton IF in IFs)
+        switcher.SwitchAction(current_iic.InputName);
+        switcher.SetColor(current_iic.Color);
+        /* foreach (UI_EventButton IF in IFs)
         {
             IF.SetColor(current_iic.Color);
-        }
+        } */
 
-        // todo : we set the feedback action
+        // // todo : we set the feedback action
 
         // we show the IF
         input_indication.gameObject.SetActive(true);

@@ -34,7 +34,6 @@ public class ActionSwitcher : MonoBehaviour
 
     public void SwitchAction(string action_name)
     {
-        
         // we get the binding names of the action
         InputManager.Instance.GetActionBindingForAction(action_name, ref kb_ref, ref gm_ref);
 

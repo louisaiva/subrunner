@@ -126,6 +126,10 @@ public class HealthCapacity : Capacity
 
         // trigger OnTakeDamage event
         OnTakeDamage?.Invoke(damage, knockback);
+        if (Controller.Capable != null && Controller.Capable == Capable)
+        {
+            Controller.LazyInstance.OnControllerTookDamage(damage, knockback);
+        }
 
         // check if dead
         if (health <= 0f)
@@ -163,6 +167,11 @@ public class HealthCapacity : Capacity
             exp_capacity.ReleaseXP();
         }
 
+        if (Controller.Capable != null && Controller.Capable == Capable)
+        {
+            Controller.LazyInstance.OnControllerDied(Capable.data);
+        }
+
         OnDie?.Invoke(Capable.data);
     }
 
@@ -183,6 +192,10 @@ public class HealthCapacity : Capacity
 
         // trigger OnHeal event
         OnHeal?.Invoke(life);
+
+        if (Controller.Capable == null) { return; }
+        if (Controller.Capable != Capable) { return; }
+        Controller.LazyInstance.OnControllerHealed(life);
     }
     public void Heal(int nb_heal = 2)
     {

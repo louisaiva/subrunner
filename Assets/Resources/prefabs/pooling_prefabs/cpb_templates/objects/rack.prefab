@@ -59,6 +59,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -76,7 +77,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: -1}
@@ -109,6 +109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
   capacity_template_id: hover
+  capacity_template_ids: []
 --- !u!114 &8624548467500115027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -380,17 +381,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: server
   <orientation>k__BackingField: D
-  current_anim:
-    name: server.idle.D
-    sprites_paths:
-    - objects/interactives/computers/servers/server.server_0
-    sprites:
-    - {fileID: -1970685298, guid: d48e6c1f64b0ea54680bca34fde86829, type: 3}
-    sprites_durations:
-    - 0
-    loop: 1
-    speed: 1
-    flipX: 0
+  current_capacity: 
   update_each_frame: 0
   anim_capacity_priorities:
   - priority: 0
@@ -466,7 +457,7 @@ MonoBehaviour:
     tag: 
   log: 0
   color: {r: 1, g: 0.87216246, b: 0, a: 1}
-  input_name: E
+  input_name: perso/interact
 --- !u!1 &4238215814724287153
 GameObject:
   m_ObjectHideFlags: 0
@@ -724,17 +715,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: server
   <orientation>k__BackingField: D
-  current_anim:
-    name: server.idle.D
-    sprites_paths:
-    - objects/interactives/computers/servers/server.server_0
-    sprites:
-    - {fileID: -1970685298, guid: d48e6c1f64b0ea54680bca34fde86829, type: 3}
-    sprites_durations:
-    - 0
-    loop: 1
-    speed: 1
-    flipX: 0
+  current_capacity: 
   update_each_frame: 0
   anim_capacity_priorities:
   - priority: 0
@@ -1030,32 +1011,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: rack_bg
   <orientation>k__BackingField: D
-  current_anim:
-    name: rack_bg.idle.D
-    sprites_paths:
-    - objects/interactives/computers/servers/blue_server_fg.blue_server_fg_9
-    - objects/interactives/computers/servers/blue_server_fg.blue_server_fg_9
-    - objects/interactives/computers/servers/blue_server_fg.blue_server_fg_10
-    - objects/interactives/computers/servers/blue_server_fg.blue_server_fg_11
-    - objects/interactives/computers/servers/blue_server_fg.blue_server_fg_12
-    - objects/interactives/computers/servers/blue_server_fg.blue_server_fg_9
-    sprites:
-    - {fileID: -1779627578, guid: 734d496d65569974ca8d5134457adcb5, type: 3}
-    - {fileID: -1779627578, guid: 734d496d65569974ca8d5134457adcb5, type: 3}
-    - {fileID: 1700822742, guid: 734d496d65569974ca8d5134457adcb5, type: 3}
-    - {fileID: 676696886, guid: 734d496d65569974ca8d5134457adcb5, type: 3}
-    - {fileID: -1595201754, guid: 734d496d65569974ca8d5134457adcb5, type: 3}
-    - {fileID: -1779627578, guid: 734d496d65569974ca8d5134457adcb5, type: 3}
-    sprites_durations:
-    - 0.4
-    - 0.6166667
-    - 0.100000024
-    - 0.116666675
-    - 0.100000024
-    - 0
-    loop: 1
-    speed: 1
-    flipX: 0
+  current_capacity: 
   update_each_frame: 1
   anim_capacity_priorities:
   - priority: 0
@@ -1204,17 +1160,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: server
   <orientation>k__BackingField: D
-  current_anim:
-    name: server.idle.D
-    sprites_paths:
-    - objects/interactives/computers/servers/server.server_0
-    sprites:
-    - {fileID: -1970685298, guid: d48e6c1f64b0ea54680bca34fde86829, type: 3}
-    sprites_durations:
-    - 0
-    loop: 1
-    speed: 1
-    flipX: 0
+  current_capacity: 
   update_each_frame: 0
   anim_capacity_priorities:
   - priority: 0
@@ -1343,17 +1289,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: server
   <orientation>k__BackingField: D
-  current_anim:
-    name: server.idle.D
-    sprites_paths:
-    - objects/interactives/computers/servers/server.server_0
-    sprites:
-    - {fileID: -1970685298, guid: d48e6c1f64b0ea54680bca34fde86829, type: 3}
-    sprites_durations:
-    - 0
-    loop: 1
-    speed: 1
-    flipX: 0
+  current_capacity: 
   update_each_frame: 0
   anim_capacity_priorities:
   - priority: 0

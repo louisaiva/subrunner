@@ -293,15 +293,6 @@ public class Controller : MonoBehaviour
         // on refresh la cam
         CameraFollow.Instance.AddTarget(capa);
 
-        // register to the being died event of the new capable
-        if (capa.TryGetCapacity(out HealthCapacity hcapa))
-        {
-            hcapa.OnDie += OnControllerDied;
-            hcapa.OnHeal += OnControllerHealed;
-            hcapa.OnTakeDamage += OnControllerTookDamage;
-            if (log) { Debug.Log($"(Controller) Registered to health capa events ({hcapa.ID}) of capable '{capa.ID}'"); }
-        }
-
         // on ajoute le callback de changement de skin
         refresh_skin_based_parameters(capa.Skin);
         capa.AnimPlayer.OnSkinChange += refresh_skin_based_parameters;
@@ -342,16 +333,6 @@ public class Controller : MonoBehaviour
     private void uncontrol_capacities(Capable capa)
     {
         capa.AnimPlayer.OnSkinChange -= refresh_skin_based_parameters; // on enlève le callback de changement de skin
-
-        // register to the being died event of the new capable
-        if (capa.TryGetCapacity(out HealthCapacity hcapa))
-        {
-            hcapa.OnDie -= OnControllerDied;
-            hcapa.OnHeal -= OnControllerHealed;
-            hcapa.OnTakeDamage -= OnControllerTookDamage;
-            if (log) { Debug.Log($"(Controller) Unregistered to health capa events ({hcapa.ID}) of capable '{capa.ID}'"); }
-        }
-
 
         // clear les inputs & stoppe les déplacements
         capa.ClearInputs();
@@ -414,6 +395,21 @@ public class Controller : MonoBehaviour
     {
         if (Capable == null) { return; }
         if (log_callbacks) { Debug.Log($"(Controller) '{cdata.id}' just died !! (controller.capable is '{Capable.ID}')"); }
+
+        // we do the biggest screenshake
+        CameraShaker.Instance.Shake(4f);
+
+        if (stack.Count >= 1) { return; } // it is ok ! we will just control the previous one in the stack
+
+        // else we have no entity to control, we need to call Perso.Die
+        Perso.Deaths += 1; // on incrémente le nombre de morts du perso
+        Debug.Log("YOU DIED");
+
+        // on affiche un floating text
+        FloatingDmgProvider.Instance.TextManager.addFloatingText("YOU DIED", transform.position + new Vector3(0, 0.5f, 0), "red");
+
+        // on switch au game_over panel
+        UI_Manager.Instance.SwitchTo("game_over", force: true, override_transition: true);
     }
     public void OnControllerHealed(float heal_amount)
     {

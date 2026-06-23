@@ -156,6 +156,7 @@ public class InputManager : MonoBehaviour
     {
         // on découpe via / pour avoir l'inputMap
         string[] action_name_parts = action_name.Split('/');
+        if (action_name_parts.Length < 2) { return null; }
         string inputMap = action_name_parts[0];
         action_name = action_name_parts[1];
 

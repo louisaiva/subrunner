@@ -43,10 +43,6 @@ public class SitCapacity : Capacity
         {
             UI_Manager.Instance.GetPool<UI_SofaPool>()?.ShowSofaUI(this);
         }
-        /* else if (GameManager.State == GameState.Loading)
-        {
-            UI_Manager.Instance.GetPool<UI_SofaPool>()?.ShowSofaUI(this); // game is still loading, which means we just loaded the game, no need to save it directly
-        } */
 
         // sit instantly (when loading game)
         if (instant) { sitInstantly(); }
@@ -60,7 +56,16 @@ public class SitCapacity : Capacity
         // then we wait for tv to show up and we save
         if (GameManager.State != GameState.Gaming) { return; } // game is still loading, which means we just loaded the game, no need to save it directly
         if (current_sofa.SiblingTV == null) { SaveEngine.SaveDynamicWorld(); return; }
-        while (!current_sofa.SiblingTV.AnimPlayer.IsShowing("idle_on")) { await System.Threading.Tasks.Task.Yield(); }
+        bool tv_is_off = true;
+        while (tv_is_off)
+        {
+            await System.Threading.Tasks.Task.Yield();
+            if (current_sofa == null) { return; } // we quit the sofa early probably
+            if (!current_sofa.SiblingTV.AnimPlayer.IsShowing("idle_on")) { continue; }
+            
+            // the tv is showing idle_on, which means it is now turned on !
+            tv_is_off = false;
+        }
         SaveEngine.SaveDynamicWorld();
     }
     public void ExitSofa()
