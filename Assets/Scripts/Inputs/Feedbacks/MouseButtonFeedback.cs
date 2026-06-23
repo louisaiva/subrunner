@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 /// <summary>
 /// This class is used to give feedback to the player when they are pressing a mouse button
 /// </summary>
@@ -9,9 +10,9 @@ public class MouseButtonFeedback : InputImageFeedback
     [SerializeField] protected string mouse_reference;
 
     // START
-    protected override void Start()
+    public override void InitializeWithAction(InputAction action)
     {
-        base.Start();
+        base.InitializeWithAction(action);
 
         // we get the sprite from the bank
         Sprite sprite = bank.GetMouseFeedbackIcon(mouse_reference);

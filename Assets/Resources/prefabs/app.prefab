@@ -299,6 +299,187 @@ MonoBehaviour:
   - name: trashbag
     spritesheet: {fileID: 2800000, guid: 1a52f4ea1fbe0e847aedbddba2923364, type: 3}
   log_extraction: 1
+--- !u!1 &2951109597033676031
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8548040743407300463}
+  - component: {fileID: 5706312843379261329}
+  m_Layer: 0
+  m_Name: input_feedback_bank
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8548040743407300463
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2951109597033676031}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8927479603836050084}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5706312843379261329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2951109597033676031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 426aa5e823416fc4eb1f9a13dcefc433, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IF_Bank
+  kb_prefabs:
+  - binding: space
+    prefab: {fileID: 6380900198815103699, guid: b87cee870d89f0942a7705ef524cada4, type: 3}
+  - binding: ctrl
+    prefab: {fileID: 6380900198815103699, guid: 0a0f56a06d3934645840965143e092b8, type: 3}
+  - binding: alt
+    prefab: {fileID: 6380900198815103699, guid: 2baa7802f4276084ca0d0e717d371fad, type: 3}
+  - binding: back
+    prefab: {fileID: 6380900198815103699, guid: bd5a57588e15d8249a6b4683beb1dca8, type: 3}
+  - binding: esc
+    prefab: {fileID: 6380900198815103699, guid: 167d8c9cd91520d4992c267305cc35da, type: 3}
+  - binding: enter
+    prefab: {fileID: 6380900198815103699, guid: aa0fe22ae6436384da4a2a475a23b227, type: 3}
+  - binding: caps_lock
+    prefab: {fileID: 6380900198815103699, guid: 1afd22ac8068e95479adb498d0855a55, type: 3}
+  - binding: shift
+    prefab: {fileID: 6380900198815103699, guid: a208b6aad2e519744a5579e5a8ea2b7d, type: 3}
+  - binding: tab
+    prefab: {fileID: 6380900198815103699, guid: 0bc0d69156bab9642b0101825027cb94, type: 3}
+  - binding: leftButton
+    prefab: {fileID: 3108864666224874082, guid: dcbd5867d8fc43e4eb37b8a2a2aacfd9, type: 3}
+  - binding: rightButton
+    prefab: {fileID: 3108864666224874082, guid: afc182bab5bef7f4ca563d0cb0bb89b8, type: 3}
+  - binding: middleButton
+    prefab: {fileID: 3108864666224874082, guid: f17c2c0520111914ca3f6ad5c4d3b1ef, type: 3}
+  - binding: scroll/y
+    prefab: {fileID: 7548748504900186489, guid: 523c4f83643d1c548a5aa6c5d7c4a451, type: 3}
+  - binding: delta
+    prefab: {fileID: 4680699838927715344, guid: 42664570f8cbd354ebfaa9267cb4860f, type: 3}
+  gm_prefabs:
+  - binding: buttonNorth
+    prefab: {fileID: 6380900198815103699, guid: c13ef01974f589640a64adc94044efb7, type: 3}
+  - binding: buttonEast
+    prefab: {fileID: 6380900198815103699, guid: 6d3ab8603848ff843a5ab7dcdb01a47d, type: 3}
+  - binding: buttonSouth
+    prefab: {fileID: 6380900198815103699, guid: 299a199f1a67c6c469c1ae8d35da505b, type: 3}
+  - binding: buttonWest
+    prefab: {fileID: 6380900198815103699, guid: ec4d2f72cd4d741449789ec0863b900b, type: 3}
+  - binding: leftStick
+    prefab: {fileID: 7812301186420496611, guid: 44ecfd6c9430d814cb017d42913f3113, type: 3}
+  - binding: rightStick
+    prefab: {fileID: 7812301186420496611, guid: b45e0e02d5a5f8d4ca1493f18e855a64, type: 3}
+  - binding: dpad/left
+    prefab: {fileID: 6380900198815103699, guid: 2713403951078274c83101b13bd7db6a, type: 3}
+  - binding: dpad/right
+    prefab: {fileID: 6380900198815103699, guid: 090c975dbc0ae594cba1d166eed3431a, type: 3}
+  - binding: dpad/up
+    prefab: {fileID: 6380900198815103699, guid: a03639acd52ff0d44acc0dbd07804761, type: 3}
+  - binding: dpad/down
+    prefab: {fileID: 6380900198815103699, guid: 742eed424243c474e8927d80d862dc15, type: 3}
+  - binding: leftTrigger
+    prefab: {fileID: 6380900198815103699, guid: a497bd3b4e821aa44afcbc9ff7f3ead1, type: 3}
+  - binding: rightTrigger
+    prefab: {fileID: 6380900198815103699, guid: 7eee79283ef7f994fa5000bedde4e632, type: 3}
+  - binding: leftShoulder
+    prefab: {fileID: 6380900198815103699, guid: 378133c1e9570fe489eae7d88c8f5c42, type: 3}
+  - binding: rightShoulder
+    prefab: {fileID: 6380900198815103699, guid: c03caf890cdac5c4eb9b59f39db95a81, type: 3}
+  - binding: select
+    prefab: {fileID: 6380900198815103699, guid: 9f706e51ebf7e004d8cfea42624ba102, type: 3}
+  - binding: start
+    prefab: {fileID: 6380900198815103699, guid: 460a9c12e8b59594aade722a1ce9abc7, type: 3}
+  icons:
+  - binding: a
+    icon: {fileID: -1121951427, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: b
+    icon: {fileID: -886139674, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: c
+    icon: {fileID: 549083054, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: d
+    icon: {fileID: -1320788995, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: e
+    icon: {fileID: 2019427888, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: f
+    icon: {fileID: -50895975, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: g
+    icon: {fileID: 1749010496, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: h
+    icon: {fileID: -36781563, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: i
+    icon: {fileID: -182866132, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: j
+    icon: {fileID: 660013757, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: k
+    icon: {fileID: -520101315, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: l
+    icon: {fileID: 315392991, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: m
+    icon: {fileID: -816361991, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: n
+    icon: {fileID: -694943665, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: o
+    icon: {fileID: 1061435302, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: p
+    icon: {fileID: -247672919, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: q
+    icon: {fileID: -71927283, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: r
+    icon: {fileID: -767498254, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: s
+    icon: {fileID: 1376572436, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: t
+    icon: {fileID: 1014698412, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: u
+    icon: {fileID: 1210825579, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: v
+    icon: {fileID: -1838332267, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: w
+    icon: {fileID: -1213930971, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: x
+    icon: {fileID: 1529835776, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: y
+    icon: {fileID: -1272382786, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: z
+    icon: {fileID: -244889203, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: 0
+    icon: {fileID: 1098025630, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: 1
+    icon: {fileID: 260707161, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: 2
+    icon: {fileID: 2099979644, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: 3
+    icon: {fileID: 1320393611, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: 4
+    icon: {fileID: -474297441, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: 5
+    icon: {fileID: 1578225582, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: 6
+    icon: {fileID: 1258933037, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: 7
+    icon: {fileID: 1614285163, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: 8
+    icon: {fileID: -834103212, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: 9
+    icon: {fileID: 649449379, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  key_prefab: {fileID: 6380900198815103699, guid: 609aea6603e0fd54996bd2806f7d0226, type: 3}
+  log_dynamic_bindings: 1
 --- !u!1 &3811816626350204236
 GameObject:
   m_ObjectHideFlags: 0
@@ -1909,7 +2090,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 8548040743407300463}
   m_Father: {fileID: 3744786912224508728}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5080253961778756880
@@ -1937,6 +2119,21 @@ MonoBehaviour:
   BUTTON_ENDLESSLY_LONG_DELAY: 0.1
   log: 0
   log_input_maps_enabled: 0
+  pool_bindings:
+  - pool_id: shoes
+    action: {fileID: 8033976421120227725, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
+  - pool_id: weapon
+    action: {fileID: -434995693547253189, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
+  - pool_id: conso_1
+    action: {fileID: -3688550093384576572, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
+  - pool_id: conso_2
+    action: {fileID: -3880059270893562645, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
+  - pool_id: conso_3
+    action: {fileID: -4262771316648623490, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
+  - pool_id: conso_4
+    action: {fileID: -1930622271626256489, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
+  - pool_id: device
+    action: {fileID: -8837052246538266762, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
 --- !u!114 &366426076817473775
 MonoBehaviour:
   m_ObjectHideFlags: 0

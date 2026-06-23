@@ -36,7 +36,7 @@ public class InputImageFeedback : InputFeedback, Colorant
     [SerializeField] private TextMeshProUGUI label;
 
 
-    protected override void Start()
+    public override void InitializeWithAction(InputAction action)
     {
         // we verify the image & the input
         if (log)
@@ -45,7 +45,7 @@ public class InputImageFeedback : InputFeedback, Colorant
             if (input == null) { Debug.LogWarning("(InputImageFeedback : " + name + " ) input is not set ! you should assign it in the inspector"); }
         }
 
-        base.Start();
+        base.InitializeWithAction(action);
     }
 
     public override void OnInput()

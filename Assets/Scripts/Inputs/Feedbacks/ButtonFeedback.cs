@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 /// <summary>
 /// This class is used to give feedback to the player when they are pressing a button
 /// </summary>
@@ -11,9 +12,9 @@ public class ButtonFeedback : InputImageFeedback
 
 
     // START
-    protected override void Start()
+    public override void InitializeWithAction(InputAction action)
     {
-        base.Start();
+        base.InitializeWithAction(action);
 
         // we get the sprite from the bank
         Sprite sprite = bank.GetInputFeedbackSprite(button_reference, !always_full);

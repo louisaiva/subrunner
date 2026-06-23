@@ -292,6 +292,19 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -1245,10 +1258,10 @@ TextureImporter:
       name: ui_letters_43
       rect:
         serializedVersion: 2
-        x: 1033
+        x: 1032
         y: 0
-        width: 23
-        height: 23
+        width: 24
+        height: 24
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1355,10 +1368,10 @@ TextureImporter:
       name: ui_letters_48
       rect:
         serializedVersion: 2
-        x: 1152
+        x: 1153
         y: 0
-        width: 24
-        height: 24
+        width: 23
+        height: 23
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1377,9 +1390,9 @@ TextureImporter:
       name: ui_letters_49
       rect:
         serializedVersion: 2
-        x: 1177
+        x: 1176
         y: 0
-        width: 23
+        width: 24
         height: 24
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -1527,6 +1540,94 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: ui_letters_56
+      rect:
+        serializedVersion: 2
+        x: 1344
+        y: 0
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ab16f9e75b34c54994e891975415429
+      internalID: 1475267832
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_letters_57
+      rect:
+        serializedVersion: 2
+        x: 1368
+        y: 0
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: facc303bae3c0274f8c6f133f4f05545
+      internalID: 1689058557
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_letters_58
+      rect:
+        serializedVersion: 2
+        x: 1392
+        y: 0
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b0ae62c2ca1e9824cba4c102f8c131b4
+      internalID: 327116336
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_letters_59
+      rect:
+        serializedVersion: 2
+        x: 1416
+        y: 0
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b60f5cc5fcd707b469f84bacc4911a94
+      internalID: -776992526
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -1595,6 +1696,10 @@ TextureImporter:
       ui_letters_53: -693506092
       ui_letters_54: 1580258710
       ui_letters_55: -454586345
+      ui_letters_56: 1475267832
+      ui_letters_57: 1689058557
+      ui_letters_58: 327116336
+      ui_letters_59: -776992526
       ui_letters_6: 1749010496
       ui_letters_7: -36781563
       ui_letters_8: -182866132

@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UI_ItemBar : MonoBehaviour
 {
@@ -122,6 +124,18 @@ public class UI_ItemBar : MonoBehaviour
         ItemStack stack = pool.Stacks[0];
         new_stack.Init(stack);
         item_stacks.Add(new_stack);
+
+        // todo : here we apply item' colors to the UI_EventButton found
+        Item item = stack.Item;
+        if (item == null) { return; }
+        ActionSwitcher switcher = new_stack.GetComponentInChildren<ActionSwitcher>(includeInactive:true);
+        switcher.SwitchAction(InputManager.Instance.GetActionFromItemPool(pool));
+        switcher.SetColor(item.Color);
+
+        // we also set the color of the notch
+        Graphic notch = new_stack.transform.Find("notch").GetComponent<Graphic>();
+        if (notch == null) { return; }
+        notch.color = item.Color;
     }
 
     // UPDATE

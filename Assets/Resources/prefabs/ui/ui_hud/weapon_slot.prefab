@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 778631113440154848}
   - component: {fileID: 3781386181132235210}
   - component: {fileID: 884199982667765647}
+  - component: {fileID: 7163510045459676997}
   m_Layer: 5
   m_Name: ef_slot_1
   m_TagString: Untagged
@@ -69,6 +70,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SettingSwitcher
   setting_name: show_hud_feedbacks
   value_to_enable: 1
+--- !u!114 &7163510045459676997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2210318537266748961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0091beb0d7b7f1448bd304962c16937b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ActionSwitcher
+  action_ref: 
+  kb_ref: 
+  gm_ref: 
+  gm_btn: {fileID: 0}
+  gm_joy: {fileID: 0}
+  kb_key: {fileID: 0}
+  kb_space: {fileID: 0}
+  ms_btn: {fileID: 0}
+  ms_scroll: {fileID: 0}
+  ms_move: {fileID: 0}
+  kb: {fileID: 8729695378946536215}
+  gmpd: {fileID: 8123126112161964181}
 --- !u!1 &2566856195353205430
 GameObject:
   m_ObjectHideFlags: 0

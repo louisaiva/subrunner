@@ -39,4 +39,16 @@ public class InputSwitcher : MonoBehaviour
             gmpds[i].SetActive(input_type == "gamepad");
         }
     }
+
+    // CHANGE IFs
+    public void ClearIFs()
+    {
+        kbs = new List<GameObject>();
+        gmpds = new List<GameObject>();
+    }
+    public void AddIF(GameObject IF, bool gamepad = true)
+    {
+        if (gamepad) { gmpds.Add(IF); }
+        else { kbs.Add(IF); }
+    }
 }

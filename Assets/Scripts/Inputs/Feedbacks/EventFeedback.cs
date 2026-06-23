@@ -9,13 +9,15 @@ using UnityEngine;
 public class EventFeedback : InputFeedback
 {
     [Header("UI Button Feedback")]
-    private UI_Button ui_button;
-
-    // START
-    protected void Awake()
+    private UI_Button _ui_button;
+    private UI_Button ui_button
     {
-        // we get the ui_button
-        ui_button = GetComponent<UI_Button>();
+        get
+        {
+            if (_ui_button != null) { return _ui_button; }
+            _ui_button = GetComponent<UI_Button>();
+            return _ui_button;
+        }
     }
 
     // INPUT / RESET

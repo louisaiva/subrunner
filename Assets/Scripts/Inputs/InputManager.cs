@@ -3,9 +3,30 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 using System;
 using System.Collections;
+using Unity.VisualScripting;
+using System.Collections.Generic;
+using System.Linq;
 
 public class InputManager : MonoBehaviour
 {
+
+
+
+    /// SUBSYSTEMS
+    private IF_Bank _if_bank;
+    public IF_Bank IF_Bank
+    {
+        get
+        {
+            if (_if_bank != null) { return _if_bank; }
+            _if_bank = GetComponentInChildren<IF_Bank>(includeInactive:true);
+            return _if_bank;
+        }
+    }
+
+
+
+
     [Header("INPUT MANAGER")]
     [SerializeField] private string current_input_type = "keyboard"; // keyboard or gamepad
     public string CurrentInputType => current_input_type;
@@ -49,6 +70,7 @@ public class InputManager : MonoBehaviour
 
         // on crée les inputs
         inputs = new PlayerInputActions();
+        IF_Bank.GenerateDynamicKeyboardBindings(inputs.feedbacks);
 
         // on active les inputs
         inputs.perso.Enable();
@@ -153,6 +175,33 @@ public class InputManager : MonoBehaviour
         // on retourne l'action
         return action;
     }
+    public void GetActionBindingForAction(string action_name, ref string kb_key, ref string gm_key)
+    {
+        InputAction input = getActionFromString(action_name);
+        if (input == null) { return; }
+
+        var bindings = input.bindings;
+        Debug.Log($"(InputManager) Action '{action_name}' found {bindings.Count} bindings :");
+        foreach (InputBinding binding in bindings)
+        {
+            string[] schems = binding.groups.Split(";");
+            string first_part = binding.path.Split("/").FirstOrDefault() + "/";
+            string reference = binding.path.Replace(first_part, "");
+            Debug.Log($"(InputManager) Biding is {reference} on schem(s) {string.Join(" & ", schems)} : {binding}");
+            if (schems.Contains("keyboard")) { kb_key = reference; }
+            else if (schems.Contains("xbox")) { gm_key = reference; }
+        }
+    }
+    public void GetActionBindingForAction(InputActionReference reference, out string kb_key, out string gm_key)
+    {
+        kb_key = null;
+        gm_key = null;
+
+        InputAction input = GetAction(reference);
+        if (input == null) { return; }
+
+        Debug.Log($"(InputManager) Getting action binding for '{reference}' found action : {input}");
+    }
     public Vector2 PersoMovementInputs
     {
         get
@@ -169,6 +218,26 @@ public class InputManager : MonoBehaviour
             else { return inputs.camera.move.ReadValue<Vector2>().normalized; } // keyboard inputs need to be normalized to avoid diagonal advantage
         }
     }
+
+
+
+    // ITEM POOL <-> BINDING
+    [Header("Binding of Item Pools")]
+    [SerializeField] private List<ItemPoolBinding> pool_bindings;
+    public string GetActionFromItemPool(ItemPool pool)
+    {
+        foreach (ItemPoolBinding ipb in pool_bindings)
+        {
+            if (ipb.pool_id != pool.PoolID) { continue; }
+            return ipb.action.name;
+        }
+        Debug.LogWarning("(InputManager) Could not find action name for pool : '" + pool.PoolID + "'");
+        return null;
+    }
+
+
+
+
 
     // INPUTS MAP TOGGLING
     public event Action<bool> OnPersoInputsToggled = delegate { };
@@ -220,4 +289,10 @@ public class InputManager : MonoBehaviour
         OnInputTypeChanged = null;
     }
 
+}
+
+[Serializable] public class ItemPoolBinding
+{
+    public string pool_id;
+    public InputActionReference action;
 }

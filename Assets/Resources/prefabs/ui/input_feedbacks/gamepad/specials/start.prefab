@@ -28,14 +28,14 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 179888517669031523}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 50, y: 50}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8142430821907032214
 CanvasRenderer:
@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 640655095, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  m_Sprite: {fileID: 1689058557, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 7346549046311238487}
   - component: {fileID: 6380900198815103699}
   m_Layer: 5
-  m_Name: EF_Back
+  m_Name: start
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -110,11 +110,11 @@ RectTransform:
   - {fileID: 7678300829082841868}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 24, y: 88}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 50, y: 50}
-  m_Pivot: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6630606658291393220
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -138,11 +138,11 @@ MonoBehaviour:
   _hovered: 0
   _disabled: 0
   log: 0
+  image: {fileID: 7823995079441963331}
   base_sprite: {fileID: -637157629, guid: 0c2e8aec6434f89f2990c31d371eeb8f, type: 3}
   hover_sprite: {fileID: -1479922351, guid: 0c2e8aec6434f89f2990c31d371eeb8f, type: 3}
   down_sprite: {fileID: -1618646064, guid: 0c2e8aec6434f89f2990c31d371eeb8f, type: 3}
   disabled_sprite: {fileID: -968096919, guid: 0c2e8aec6434f89f2990c31d371eeb8f, type: 3}
-  image: {fileID: 7823995079441963331}
   baseColor: {r: 0, g: 1, b: 0, a: 1}
   hoverColor: {r: 1, g: 1, b: 1, a: 1}
   iconHoverColor: {r: 0.16470589, g: 0.16862746, b: 0.18039216, a: 1}
@@ -163,7 +163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9700594bf9719a84ab428608cacc971e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EventFeedback
-  input: {fileID: 0}
+  input: {fileID: 8133894275186218001, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
   use_press_and_release: 0
   log: 0
 --- !u!1 &6692910758973241245
@@ -198,10 +198,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 179888517669031523}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 50, y: 50}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2309979325355092982
 CanvasRenderer:

@@ -1810,7 +1810,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""mouse_R"",
                     ""type"": ""Button"",
                     ""id"": ""f2e39677-478d-4cca-8d51-e418c4ed4785"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -1819,7 +1819,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""mouse_C"",
                     ""type"": ""Button"",
                     ""id"": ""16166abe-0ff8-4467-b335-8affad0ade9f"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -1846,7 +1846,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""pad_L"",
                     ""type"": ""Button"",
                     ""id"": ""55c071a9-821b-4a18-928e-e7eb0751dbd7"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -1855,7 +1855,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""pad_R"",
                     ""type"": ""Button"",
                     ""id"": ""f1218775-971e-402a-85ff-781decf0dfdc"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -1864,7 +1864,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""pad_D"",
                     ""type"": ""Button"",
                     ""id"": ""0a52d7fe-4b9a-40ba-93e6-a049bb545403"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -1873,7 +1873,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""pad_U"",
                     ""type"": ""Button"",
                     ""id"": ""6ed7152d-0a4f-4423-83e8-0fa54b2aa8ee"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -1891,7 +1891,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""joy_LC"",
                     ""type"": ""Button"",
                     ""id"": ""ecba427f-9395-4214-800a-8c55b014447e"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -1909,7 +1909,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""joy_RC"",
                     ""type"": ""Button"",
                     ""id"": ""57ee078b-36bf-489e-b2bc-ddff1d8975f7"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -1918,7 +1918,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""dpad_L"",
                     ""type"": ""Button"",
                     ""id"": ""4d717252-d20c-494e-9c73-8996c58f8869"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -1927,7 +1927,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""dpad_R"",
                     ""type"": ""Button"",
                     ""id"": ""55275c40-dbf4-40ed-99f7-2caf812ed55d"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -1936,7 +1936,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""dpad_D"",
                     ""type"": ""Button"",
                     ""id"": ""b73338b8-ba6f-4acb-935b-3915c79bc511"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -1945,7 +1945,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""dpad_U"",
                     ""type"": ""Button"",
                     ""id"": ""cd53bf0e-e009-49fc-bd7e-a1b5e819ea33"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -1954,7 +1954,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""start"",
                     ""type"": ""Button"",
                     ""id"": ""b8bec320-5683-4fa1-ba0a-6c1601566207"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -1963,7 +1963,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""select"",
                     ""type"": ""Button"",
                     ""id"": ""81faaaee-2d51-461d-96e1-e8d456117ab8"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -1972,7 +1972,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""RT"",
                     ""type"": ""Button"",
                     ""id"": ""269d5f43-84ef-4ec0-b29e-52d7de317ac5"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -1981,7 +1981,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""RB"",
                     ""type"": ""Button"",
                     ""id"": ""51ca1158-74ad-474c-b7ac-94cec8eab4ed"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -1990,7 +1990,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""LT"",
                     ""type"": ""Button"",
                     ""id"": ""9412a9bb-0987-4a83-9823-7defcc9edeb7"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -1999,7 +1999,88 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""LB"",
                     ""type"": ""Button"",
                     ""id"": ""e59a00f7-aefa-419e-acfc-ef038ba9adeb"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""space"",
+                    ""type"": ""Button"",
+                    ""id"": ""4268ef78-4dfe-4eee-9d6a-00d132c558b1"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""esc"",
+                    ""type"": ""Button"",
+                    ""id"": ""0fa4d3ad-89a9-4819-99a9-951a1ba2b7a4"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""back"",
+                    ""type"": ""Button"",
+                    ""id"": ""5d88abce-e056-41df-9145-7425660802cc"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""enter"",
+                    ""type"": ""Button"",
+                    ""id"": ""be8be6bb-a6d4-42db-bad9-853411c5ab68"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ctrl"",
+                    ""type"": ""Button"",
+                    ""id"": ""461fad4c-af38-4e60-8f42-48012ec57531"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""tab"",
+                    ""type"": ""Button"",
+                    ""id"": ""971730c2-d8ea-4533-8c76-d109d5c8e1df"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""shift"",
+                    ""type"": ""Button"",
+                    ""id"": ""0847c480-859f-417e-b9be-558cea76f93c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""lock_shift"",
+                    ""type"": ""Button"",
+                    ""id"": ""d0f6c56b-2016-436e-859e-5a712bb8cba4"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""alt"",
+                    ""type"": ""Button"",
+                    ""id"": ""dc2bd199-905a-493e-98e9-f21d3eee3050"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -2012,7 +2093,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";keyboard"",
                     ""action"": ""mouse_L"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -2023,7 +2104,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";keyboard"",
                     ""action"": ""mouse_R"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -2034,7 +2115,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Mouse>/middleButton"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";keyboard"",
                     ""action"": ""mouse_C"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -2045,7 +2126,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Mouse>/scroll/y"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";keyboard"",
                     ""action"": ""mouse_scroll"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -2056,7 +2137,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";keyboard"",
                     ""action"": ""mouse_move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -2067,7 +2148,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/buttonWest"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";xbox"",
                     ""action"": ""pad_L"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -2078,7 +2159,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";xbox"",
                     ""action"": ""pad_D"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -2089,7 +2170,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/buttonNorth"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";xbox"",
                     ""action"": ""pad_U"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -2100,7 +2181,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";xbox"",
                     ""action"": ""pad_R"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -2111,7 +2192,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";xbox"",
                     ""action"": ""joy_L"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -2122,7 +2203,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";xbox"",
                     ""action"": ""joy_R"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -2133,7 +2214,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/leftStickPress"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";xbox"",
                     ""action"": ""joy_LC"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -2144,7 +2225,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/rightStickPress"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";xbox"",
                     ""action"": ""joy_RC"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -2155,7 +2236,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/dpad/left"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";xbox"",
                     ""action"": ""dpad_L"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -2166,7 +2247,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/dpad/right"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";xbox"",
                     ""action"": ""dpad_R"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -2177,7 +2258,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/dpad/down"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";xbox"",
                     ""action"": ""dpad_D"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -2188,7 +2269,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/dpad/up"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";xbox"",
                     ""action"": ""dpad_U"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -2199,7 +2280,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/start"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";xbox"",
                     ""action"": ""start"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -2210,7 +2291,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/select"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";xbox"",
                     ""action"": ""select"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -2221,7 +2302,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/rightTrigger"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";xbox"",
                     ""action"": ""RT"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -2232,7 +2313,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";xbox"",
                     ""action"": ""RB"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -2243,7 +2324,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/leftTrigger"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";xbox"",
                     ""action"": ""LT"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -2254,8 +2335,107 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/leftShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";xbox"",
                     ""action"": ""LB"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""df6cf4f5-1824-436d-a168-e85fe15488e9"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";keyboard"",
+                    ""action"": ""space"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dd573244-5ecd-4f93-915f-79713dba896d"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";keyboard"",
+                    ""action"": ""esc"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d12073a7-642a-4726-9736-c766b6a9561b"",
+                    ""path"": ""<Keyboard>/backspace"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";keyboard"",
+                    ""action"": ""back"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ce9e46f6-4b65-408f-a1f4-77b57e671b56"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";keyboard"",
+                    ""action"": ""enter"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""43fbfa64-f067-428a-a6e1-ea64fd6211b4"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";keyboard"",
+                    ""action"": ""ctrl"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""87fd5e5f-28ec-4624-94f4-357e377b4852"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";keyboard"",
+                    ""action"": ""tab"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d705df4e-d118-4bd3-978f-0c0bfd2986f8"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";keyboard"",
+                    ""action"": ""shift"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""58ec14b2-65de-4244-9505-7fe725982e97"",
+                    ""path"": ""<Keyboard>/capsLock"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";keyboard"",
+                    ""action"": ""lock_shift"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9b6f15dc-756a-42b9-a296-68f1e49a6a6b"",
+                    ""path"": ""<Keyboard>/alt"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";keyboard"",
+                    ""action"": ""alt"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -2545,6 +2725,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_feedbacks_RB = m_feedbacks.FindAction("RB", throwIfNotFound: true);
         m_feedbacks_LT = m_feedbacks.FindAction("LT", throwIfNotFound: true);
         m_feedbacks_LB = m_feedbacks.FindAction("LB", throwIfNotFound: true);
+        m_feedbacks_space = m_feedbacks.FindAction("space", throwIfNotFound: true);
+        m_feedbacks_esc = m_feedbacks.FindAction("esc", throwIfNotFound: true);
+        m_feedbacks_back = m_feedbacks.FindAction("back", throwIfNotFound: true);
+        m_feedbacks_enter = m_feedbacks.FindAction("enter", throwIfNotFound: true);
+        m_feedbacks_ctrl = m_feedbacks.FindAction("ctrl", throwIfNotFound: true);
+        m_feedbacks_tab = m_feedbacks.FindAction("tab", throwIfNotFound: true);
+        m_feedbacks_shift = m_feedbacks.FindAction("shift", throwIfNotFound: true);
+        m_feedbacks_lock_shift = m_feedbacks.FindAction("lock_shift", throwIfNotFound: true);
+        m_feedbacks_alt = m_feedbacks.FindAction("alt", throwIfNotFound: true);
         // settings
         m_settings = asset.FindActionMap("settings", throwIfNotFound: true);
         m_settings_F11 = m_settings.FindAction("F11", throwIfNotFound: true);
@@ -3551,6 +3740,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_feedbacks_RB;
     private readonly InputAction m_feedbacks_LT;
     private readonly InputAction m_feedbacks_LB;
+    private readonly InputAction m_feedbacks_space;
+    private readonly InputAction m_feedbacks_esc;
+    private readonly InputAction m_feedbacks_back;
+    private readonly InputAction m_feedbacks_enter;
+    private readonly InputAction m_feedbacks_ctrl;
+    private readonly InputAction m_feedbacks_tab;
+    private readonly InputAction m_feedbacks_shift;
+    private readonly InputAction m_feedbacks_lock_shift;
+    private readonly InputAction m_feedbacks_alt;
     /// <summary>
     /// Provides access to input actions defined in input action map "feedbacks".
     /// </summary>
@@ -3655,6 +3853,42 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @LB => m_Wrapper.m_feedbacks_LB;
         /// <summary>
+        /// Provides access to the underlying input action "feedbacks/space".
+        /// </summary>
+        public InputAction @space => m_Wrapper.m_feedbacks_space;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/esc".
+        /// </summary>
+        public InputAction @esc => m_Wrapper.m_feedbacks_esc;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/back".
+        /// </summary>
+        public InputAction @back => m_Wrapper.m_feedbacks_back;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/enter".
+        /// </summary>
+        public InputAction @enter => m_Wrapper.m_feedbacks_enter;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/ctrl".
+        /// </summary>
+        public InputAction @ctrl => m_Wrapper.m_feedbacks_ctrl;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/tab".
+        /// </summary>
+        public InputAction @tab => m_Wrapper.m_feedbacks_tab;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/shift".
+        /// </summary>
+        public InputAction @shift => m_Wrapper.m_feedbacks_shift;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/lock_shift".
+        /// </summary>
+        public InputAction @lock_shift => m_Wrapper.m_feedbacks_lock_shift;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/alt".
+        /// </summary>
+        public InputAction @alt => m_Wrapper.m_feedbacks_alt;
+        /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
         public InputActionMap Get() { return m_Wrapper.m_feedbacks; }
@@ -3749,6 +3983,33 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @LB.started += instance.OnLB;
             @LB.performed += instance.OnLB;
             @LB.canceled += instance.OnLB;
+            @space.started += instance.OnSpace;
+            @space.performed += instance.OnSpace;
+            @space.canceled += instance.OnSpace;
+            @esc.started += instance.OnEsc;
+            @esc.performed += instance.OnEsc;
+            @esc.canceled += instance.OnEsc;
+            @back.started += instance.OnBack;
+            @back.performed += instance.OnBack;
+            @back.canceled += instance.OnBack;
+            @enter.started += instance.OnEnter;
+            @enter.performed += instance.OnEnter;
+            @enter.canceled += instance.OnEnter;
+            @ctrl.started += instance.OnCtrl;
+            @ctrl.performed += instance.OnCtrl;
+            @ctrl.canceled += instance.OnCtrl;
+            @tab.started += instance.OnTab;
+            @tab.performed += instance.OnTab;
+            @tab.canceled += instance.OnTab;
+            @shift.started += instance.OnShift;
+            @shift.performed += instance.OnShift;
+            @shift.canceled += instance.OnShift;
+            @lock_shift.started += instance.OnLock_shift;
+            @lock_shift.performed += instance.OnLock_shift;
+            @lock_shift.canceled += instance.OnLock_shift;
+            @alt.started += instance.OnAlt;
+            @alt.performed += instance.OnAlt;
+            @alt.canceled += instance.OnAlt;
         }
 
         /// <summary>
@@ -3829,6 +4090,33 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @LB.started -= instance.OnLB;
             @LB.performed -= instance.OnLB;
             @LB.canceled -= instance.OnLB;
+            @space.started -= instance.OnSpace;
+            @space.performed -= instance.OnSpace;
+            @space.canceled -= instance.OnSpace;
+            @esc.started -= instance.OnEsc;
+            @esc.performed -= instance.OnEsc;
+            @esc.canceled -= instance.OnEsc;
+            @back.started -= instance.OnBack;
+            @back.performed -= instance.OnBack;
+            @back.canceled -= instance.OnBack;
+            @enter.started -= instance.OnEnter;
+            @enter.performed -= instance.OnEnter;
+            @enter.canceled -= instance.OnEnter;
+            @ctrl.started -= instance.OnCtrl;
+            @ctrl.performed -= instance.OnCtrl;
+            @ctrl.canceled -= instance.OnCtrl;
+            @tab.started -= instance.OnTab;
+            @tab.performed -= instance.OnTab;
+            @tab.canceled -= instance.OnTab;
+            @shift.started -= instance.OnShift;
+            @shift.performed -= instance.OnShift;
+            @shift.canceled -= instance.OnShift;
+            @lock_shift.started -= instance.OnLock_shift;
+            @lock_shift.performed -= instance.OnLock_shift;
+            @lock_shift.canceled -= instance.OnLock_shift;
+            @alt.started -= instance.OnAlt;
+            @alt.performed -= instance.OnAlt;
+            @alt.canceled -= instance.OnAlt;
         }
 
         /// <summary>
@@ -4615,6 +4903,69 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnLB(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "space" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSpace(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "esc" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnEsc(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "back" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnBack(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "enter" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnEnter(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ctrl" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnCtrl(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "tab" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnTab(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "shift" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnShift(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "lock_shift" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnLock_shift(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "alt" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnAlt(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "settings" which allows adding and removing callbacks.

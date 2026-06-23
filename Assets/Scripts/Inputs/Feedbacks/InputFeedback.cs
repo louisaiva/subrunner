@@ -23,15 +23,17 @@ public class InputFeedback : MonoBehaviour
     public bool log = false;
 
     // START
-    protected virtual void Start()
+    protected void Start()
     {
-
         // we get the input manager & input
         input_manager = InputManager.Instance;
-        action = input_manager.GetAction(input);
-
+        if (input == null) { return; }
+        InitializeWithAction(input_manager.GetAction(input));
+    }
+    public virtual void InitializeWithAction(InputAction action)
+    {
+        this.action = action;
         defineCallbacks();
-
         OnEnable();
     }
 

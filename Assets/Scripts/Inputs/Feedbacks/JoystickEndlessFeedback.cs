@@ -13,9 +13,9 @@ public class JoystickEndlessFeedback : JoystickFeedback
     private Color saved_clicked_color;
     protected System.Action<Vector2> endless_callback;
 
-    protected override void Start()
+    public override void InitializeWithAction(InputAction action)
     {
-        base.Start();
+        base.InitializeWithAction(action);
 
         // we save the clicked color
         saved_clicked_color = clicked_color;
