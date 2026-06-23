@@ -102,7 +102,7 @@ public class IF_Bank : MonoBehaviour
             if (ifp.binding != binding) { continue; }
             return ifp.prefab;
         }
-        Debug.LogWarning("(IF_Bank) No InputFeedback found on manual keyboards IFs for binding : " + binding);
+        // Debug.LogWarning("(IF_Bank) No InputFeedback found on manual keyboards IFs for binding : " + binding);
         return null;
     }
     private InputFeedback GetGamepadIF(string binding)

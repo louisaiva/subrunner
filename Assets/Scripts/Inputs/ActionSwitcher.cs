@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -8,7 +9,7 @@ public class ActionSwitcher : MonoBehaviour
 {
     [Header("Current Action")]
     // [SerializeField] private InputActionReference action_ref;
-    [SerializeField] private string action_ref;
+    // [SerializeField] private string action_ref;
     [SerializeField] private string kb_ref;
     [SerializeField] private string gm_ref;
 
@@ -27,15 +28,17 @@ public class ActionSwitcher : MonoBehaviour
         }
     }
 
+    [Header("Logs")]
+    [SerializeField] private bool log = false;
+
 
     public void SwitchAction(string action_name)
     {
-        action_ref = action_name;
         
         // we get the binding names of the action
         InputManager.Instance.GetActionBindingForAction(action_name, ref kb_ref, ref gm_ref);
 
-        Debug.Log($"(ActionSwitcher) Got 2 bindings for action '{action_name}' :         keyboard : '{kb_ref}'         ///            gamepad : '{gm_ref}'");
+        if (log) { Debug.Log($"(ActionSwitcher) Got 2 bindings for action '{action_name}' :         keyboard : '{kb_ref}'         ///            gamepad : '{gm_ref}'"); }
 
         // kb = 
         InputFeedback new_gm = InputManager.Instance.IF_Bank.Instantiate(gm_ref, gmpd.transform.parent, gamepad: true);

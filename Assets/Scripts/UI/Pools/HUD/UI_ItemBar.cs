@@ -125,7 +125,7 @@ public class UI_ItemBar : MonoBehaviour
         new_stack.Init(stack);
         item_stacks.Add(new_stack);
 
-        // todo : here we apply item' colors to the UI_EventButton found
+        // switch action, apply color to EFs
         Item item = stack.Item;
         if (item == null) { return; }
         ActionSwitcher switcher = new_stack.GetComponentInChildren<ActionSwitcher>(includeInactive:true);

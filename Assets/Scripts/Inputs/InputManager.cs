@@ -55,6 +55,7 @@ public class InputManager : MonoBehaviour
     [Header("Logs")]
     public bool log = false;
     public bool log_input_maps_enabled = false;
+    public bool log_get_bindings = false;
 
     // AWAKE & SINGLETON LOGIC
     public static InputManager Instance { get; private set; }
@@ -181,26 +182,16 @@ public class InputManager : MonoBehaviour
         if (input == null) { return; }
 
         var bindings = input.bindings;
-        Debug.Log($"(InputManager) Action '{action_name}' found {bindings.Count} bindings :");
+        if (log_get_bindings) { Debug.Log($"(InputManager) Action '{action_name}' found {bindings.Count} bindings :"); }
         foreach (InputBinding binding in bindings)
         {
             string[] schems = binding.groups.Split(";");
             string first_part = binding.path.Split("/").FirstOrDefault() + "/";
             string reference = binding.path.Replace(first_part, "");
-            Debug.Log($"(InputManager) Biding is {reference} on schem(s) {string.Join(" & ", schems)} : {binding}");
+            if (log_get_bindings) { Debug.Log($"(InputManager) Biding is {reference} on schem(s) {string.Join(" & ", schems)} : {binding}"); }
             if (schems.Contains("keyboard")) { kb_key = reference; }
             else if (schems.Contains("xbox")) { gm_key = reference; }
         }
-    }
-    public void GetActionBindingForAction(InputActionReference reference, out string kb_key, out string gm_key)
-    {
-        kb_key = null;
-        gm_key = null;
-
-        InputAction input = GetAction(reference);
-        if (input == null) { return; }
-
-        Debug.Log($"(InputManager) Getting action binding for '{reference}' found action : {input}");
     }
     public Vector2 PersoMovementInputs
     {
@@ -231,10 +222,9 @@ public class InputManager : MonoBehaviour
             if (ipb.pool_id != pool.PoolID) { continue; }
             return ipb.action.name;
         }
-        Debug.LogWarning("(InputManager) Could not find action name for pool : '" + pool.PoolID + "'");
+        Debug.LogError("(InputManager) Could not find action name for pool : '" + pool.PoolID + "'");
         return null;
     }
-
 
 
 
