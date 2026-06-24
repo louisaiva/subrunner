@@ -6,7 +6,7 @@ public interface Interactable
 
     public string ID { get; }
     public string name { get; }
-    public InteractCapacity Interactor { get; } // there is only ONE because it's the one that is Controlled
+    public InteractCapacity Interactor { get; } // there is only ONE because it's the one that is Controlled // todo : maybe make this from HoverBasedInteractCapacity
     public InteractType InteractionType { get; }
     public void OnInteract(Capable interactor);
 }

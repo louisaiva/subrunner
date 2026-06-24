@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 /// <summary>
-/// Item is a Movable that can be grabbed by other Capables with GrabCapacity + InteractCapacity.
+/// Item is a Movable that can be grabbed by other Capables with InteractCapacity.
 /// </summary>
 public class Item : Movable, EndlessInteractable
 {

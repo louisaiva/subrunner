@@ -1660,7 +1660,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsQuitting: 0
   LoadedSceneCount: 0
-  prototype: world templates
+  prototype: InteractAction<T> !!! + npc grabs on ground items
   log: 0
   log_stats: 0
 --- !u!114 &714515157948744320
@@ -1682,10 +1682,12 @@ MonoBehaviour:
   LOG_WANDER_TARGET_SENSOR: 0
   LOG_HUNGER_SENSOR: 0
   LOG_CLOSEST_FOOD_SENSOR: 0
+  LOG_CLOSEST_TRASH_SENSOR: 0
   LOG_CLOSEST_BEING_SENSOR: 0
   LOG_IA_ACTION: 0
   LOG_ATTACK_ACTION: 0
   LOG_EAT_ACTION: 0
+  LOG_INTERACT_ACTION: 0
 --- !u!1 &7353222153576522049
 GameObject:
   m_ObjectHideFlags: 0
@@ -2119,6 +2121,7 @@ MonoBehaviour:
   BUTTON_ENDLESSLY_LONG_DELAY: 0.1
   log: 0
   log_input_maps_enabled: 0
+  log_get_bindings: 0
   pool_bindings:
   - pool_id: shoes
     action: {fileID: 8033976421120227725, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}

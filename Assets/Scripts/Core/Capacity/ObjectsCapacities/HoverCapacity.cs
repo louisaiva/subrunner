@@ -159,7 +159,7 @@ public class HoverCapacity : Capacity
         // we tell the hoverers we don't exist anymore
         while (hoverers.Count > 0)
         {
-            hoverers[0].GetCapacity<InteractCapacity>()?.HoverLostItself(this);
+            hoverers[0].GetCapacity<HoverBasedInteractCapacity>()?.HoverLostItself(this);
         }
         this.hoverers.Clear();
 

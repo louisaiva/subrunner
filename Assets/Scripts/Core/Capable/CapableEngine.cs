@@ -117,6 +117,9 @@ public class CapableEngine : BSOD_System<CapableEngine>
         await MotorEngine.Instance.LoadWorldData(world_id, log);
         if (log) { Debug.Log($"(CapableEngine) Loaded DoorEngine & MotorEngine sub systems"); }
 
+        TrashEngine.GatherExistingTrashes(ref world_capables_data, log);
+        if (log) { Debug.Log($"(CapableEngine) Gathered existing trashes in TrashEngine"); }
+
 
         await Task.Yield();
 

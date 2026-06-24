@@ -300,11 +300,11 @@ public class Inventory : MonoBehaviour, ItemStorer
 
         // check if we are the interactable (so we look for the interactor)
         // typically we are dropping an item from a Chest's UI_Inventory
-        if (Capable is Interactable)
+        if (Capable is Interactable interactive)
         {
             // this is the other capable
             s += "we are the interactable\n";
-            InteractCapacity interactor = (Capable as Interactable).Interactor;
+            InteractCapacity interactor = interactive.Interactor;
 
             // check if we have an interactor
             if (interactor == null) { if (log) { Debug.LogWarning(s + "we don't have an interactor\n"); } return null; }
@@ -319,12 +319,11 @@ public class Inventory : MonoBehaviour, ItemStorer
         }
 
         // check if we are the interactor (so we look for the interactable)
-        // typically we are dropping from an item our perso_quick_inventory or the UI_InventoryMenu
-        else if (Capable.GetCapacity<InteractCapacity>() != null)
+        // typically we are dropping an item from our the UI_InventoryMenu
+        else if (Capable.TryGetCapacity(out HoverBasedInteractCapacity interactor))
         {
             // this is our capable
             s += "we are the interactor\n";
-            InteractCapacity interactor = Capable.GetCapacity<InteractCapacity>();
 
             // check if we have an interactable
             Capable interactable = interactor.interactable as Capable;

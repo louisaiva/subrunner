@@ -2,7 +2,6 @@
 using UnityEngine;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 
 
 public class Pot : Item, Usable
@@ -11,15 +10,16 @@ public class Pot : Item, Usable
     [SerializeField] private bool log_temp = false;
 
     [Header("Components")]
-    private InteractCapacity interactor = null;
+    private HoverBasedInteractCapacity interactor = null;
     private event Action<Item> OnUsabilityChanged = delegate { };
     private UI_InventoryMenu inventory_menu = null;
 
     // AWAKE & START
-    protected override void Awake()
+    // todo : move this logic (awake & start) to LoadData() / UnloadData()
+    /* protected override void Awake()
     {
         base.Awake();
-        interactor = GetCapacity<InteractCapacity>();
+        interactor = GetCapacity<HoverBasedInteractCapacity>();
         interactor.OnHoverSelect += (capable) => update_usability();
         interactor.OnHoverDeselect += (capable) => update_usability();
 
@@ -39,7 +39,7 @@ public class Pot : Item, Usable
     {
         base.Start();
         inventory_menu = UI_Manager.Instance.GetPool("inventory") as UI_InventoryMenu;
-    }
+    } */
 
 
     // USABLE

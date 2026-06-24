@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6234543502669162689}
-  - component: {fileID: 8252522207981929358}
+  - component: {fileID: 7256395232087590496}
+  - component: {fileID: 5448652197415061413}
   m_Layer: 15
-  m_Name: interact
+  m_Name: interact_hover_based
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,7 +33,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8252522207981929358
+--- !u!114 &7256395232087590496
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,9 +42,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2301345579811965954}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f06e0fc4dc091574fb313edf8d1af894, type: 3}
+  m_Script: {fileID: 11500000, guid: cf27dc626725fa7458f52bd1d477caf7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::HoverBasedInteractCapacity
   data:
     <id>k__BackingField: 
     <owner_id>k__BackingField: 
@@ -54,3 +55,43 @@ MonoBehaviour:
   log: 0
   interact_types: 
   item_rule: 
+  log_triggers: 0
+  closest_hover: {fileID: 0}
+  waiting_hovers: []
+--- !u!70 &5448652197415061413
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2301345579811965954}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 16384
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0.000000020686041, y: 0.1735271}
+  m_Size: {x: 3.5, y: 2.5}
+  m_Direction: 1

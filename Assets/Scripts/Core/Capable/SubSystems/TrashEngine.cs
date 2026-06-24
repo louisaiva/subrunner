@@ -10,7 +10,19 @@ public class TrashEngine : MonoBehaviour
     private Dictionary<string,List<ItemData>> on_floor_trashes = new Dictionary<string, List<ItemData>>();
 
 
-    // CLEAR SUBSYSTEM
+    // LOAD & CLEAR CACHE
+    public void GatherExistingTrashes(ref Dictionary<string, CapableData> world_capables, bool log)
+    {
+        foreach (KeyValuePair<string, CapableData> kvp in world_capables)
+        {
+            if (kvp.Value is not ItemData item) { continue; }
+            if (item.is_grabbed) { continue; }
+
+            // try to extract the level of it
+            if (!LevelEngine.LazyInstance.TryGetCapableLevel(item.id, out LevelData level)) { continue; }
+            add_trash_to_level(item, level.id);
+        }
+    }
     public void ClearCache(bool log)
     {
         on_floor_trashes.Clear();
@@ -47,15 +59,18 @@ public class TrashEngine : MonoBehaviour
         if (!LevelEngine.Instance.TryGetRoomLevel(chunk.room_id, out LevelData level)) { return; }
 
         // we add the item to the level item list
-        if (!on_floor_trashes.ContainsKey(level.id))
-        {
-            on_floor_trashes[level.id] = new List<ItemData>();
-        }
-        else if (on_floor_trashes[level.id].Contains(item)) { return; }
-        on_floor_trashes[level.id].Add(item);
-        if (log_trash) { Debug.Log($"(TrashEngine) Trash '{item.id} just appeared on '{level.id}' level"); }
+        add_trash_to_level(item, level.id);
     }
-    List<string> to_clean = new List<string>();
+    private void add_trash_to_level(ItemData item, string level_id)
+    {
+        if (!on_floor_trashes.ContainsKey(level_id))
+        {
+            on_floor_trashes[level_id] = new List<ItemData>();
+        }
+        else if (on_floor_trashes[level_id].Contains(item)) { return; }
+        on_floor_trashes[level_id].Add(item);
+        if (log_trash) { Debug.Log($"(TrashEngine) Trash '{item.id} just appeared on '{level_id}' level"); }
+    }
     private void capable_disappeared(string id, ChunkData chunk)
     {
         // if (log_trash) { Debug.Log($"(TrashEngine) Detected disappearing capable '{cdata.id}' : {cdata.GetDetails()}"); }
