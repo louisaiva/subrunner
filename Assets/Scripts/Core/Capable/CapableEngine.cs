@@ -10,6 +10,16 @@ public class CapableEngine : BSOD_System<CapableEngine>
 {
 
     // SUB SYSTEMS
+    private static TrashEngine _trash_engine;
+    public static TrashEngine TrashEngine
+    {
+        get
+        {
+            if (_trash_engine != null) { return _trash_engine; }
+            _trash_engine = LazyInstance.GetComponentInChildren<TrashEngine>(includeInactive:true);
+            return _trash_engine;
+        }
+    }
 
 
 
@@ -120,6 +130,9 @@ public class CapableEngine : BSOD_System<CapableEngine>
     {
         // we DON'T unload the templates data since it is valid for all worlds
 
+        if (log) { Debug.Log($"(CapableEngine) clearing sub systems cache"); }
+        CapableBank.Instance.ClearSubSystemsCache(log); // clears AnimLayerBank, ColliderBank
+        TrashEngine.ClearCache(log);
 
         // we unload all loaded capables
         if (log) { Debug.Log($"(CapableEngine) clearing loaded capables data"); }
@@ -127,9 +140,6 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
         if (log) { Debug.Log($"(CapableEngine) destroying all loaded capables"); }
         CapableBank.Instance.DestroyAllCapablesInstantly(log);
-
-        if (log) { Debug.Log($"(CapableEngine) clearing sub systems cache"); }
-        CapableBank.Instance.ClearSubSystemsCache(log); // clears AnimLayerBank, ColliderBank
 
 
         // we clear the world capables data, runtime ids, etc

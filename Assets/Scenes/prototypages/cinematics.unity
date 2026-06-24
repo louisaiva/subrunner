@@ -15725,7 +15725,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::World
   load_status: 0
-  world_to_load: dd3
+  world_to_load: proto_doors_1
   save:
     world:
       game_version: 1.5.1c
@@ -57805,6 +57805,7 @@ Transform:
   - {fileID: 1548161798}
   - {fileID: 474280245}
   - {fileID: 906188571}
+  - {fileID: 538790497}
   m_Father: {fileID: 1492137541}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &313120229
@@ -86295,6 +86296,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 538673600}
   m_CullTransparentMesh: 1
+--- !u!1 &538790496
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 538790497}
+  - component: {fileID: 538790498}
+  m_Layer: 0
+  m_Name: trash_engine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &538790497
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 538790496}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 313120228}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &538790498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 538790496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8e925b5b69db0b43a0fd2fafd3f4473, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TrashEngine
+  log_trash: 1
 --- !u!1 &539687956
 GameObject:
   m_ObjectHideFlags: 0
@@ -101142,6 +101188,51 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
+--- !u!1 &655942032
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 655942033}
+  - component: {fileID: 655942034}
+  m_Layer: 0
+  m_Name: detectors
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &655942033
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 655942032}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1862415627}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &655942034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 655942032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c71ccf54fa70064e9dde4cc1ac0b1fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldTrashDetector
+  log: 1
 --- !u!1 &657279783
 GameObject:
   m_ObjectHideFlags: 0
@@ -121097,6 +121188,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 714515157948744320, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: LOG_INTERACT_ACTION
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 714515157948744320, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: LOG_CLOSEST_TRASH_SENSOR
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3744786912224508728, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -246817,7 +246916,7 @@ MonoBehaviour:
   gm_ref: 
   kb: {fileID: 1305851480}
   gmpd: {fileID: 2019508909}
-  log: 1
+  log: 0
 --- !u!114 &1719146114
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -270820,7 +270919,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 655942033}
   m_Father: {fileID: 1492137541}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1862415628
@@ -350369,7 +350469,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pool_stack: []
   hud_stack: hud
-  log: 1
+  log: 0
   log_extended: 0
 --- !u!114 &6740274404158655516
 MonoBehaviour:

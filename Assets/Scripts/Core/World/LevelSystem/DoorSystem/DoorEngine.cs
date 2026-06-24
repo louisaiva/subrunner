@@ -34,7 +34,7 @@ public class DoorEngine : MonoBehaviour
         CapableBank.Instance.OnCapableUnloading += HandleDoorUnloaded;
 
         // register to room engine on capable added to room
-        ChunkEngine.Instance.OnCapableAddedToRoom += on_capable_enter_chunk;
+        ChunkEngine.Instance.OnCapableAddedToChunk += on_capable_enter_chunk;
         ChunkEngine.Instance.OnPlayerChunkChange += UpdateRoomsVisibility;
         if (log) { Debug.Log($"(DoorEngine) Registered callbacks to CapableBank and RoomEngine events"); }
 
@@ -47,7 +47,7 @@ public class DoorEngine : MonoBehaviour
     {
         CapableBank.Instance.OnCapableLoaded -= HandleDoorLoaded;
         CapableBank.Instance.OnCapableUnloading -= HandleDoorUnloaded;
-        ChunkEngine.Instance.OnCapableAddedToRoom -= on_capable_enter_chunk;
+        ChunkEngine.Instance.OnCapableAddedToChunk -= on_capable_enter_chunk;
         ChunkEngine.Instance.OnPlayerChunkChange -= UpdateRoomsVisibility;
 
         door_graph = null;

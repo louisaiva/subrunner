@@ -254,6 +254,18 @@ public class LevelEngine : BSOD_System<LevelEngine>
         level_data = GetRoomLevelData(room_id);
         return level_data != null;
     }
+    public bool TryGetCapableLevel(string capable_id, out LevelData level)
+    {
+        level = null;
+        if (!RoomEngine.Instance.TryGetCapableRoom(capable_id, out RoomData room)) { return false; }
+
+        // find the level of the room
+        level = GetRoomLevelData(room.id);
+        if (level == null) { return false; }
+        return true;
+    }
+
+
 
     // STATIC GETTERS
     public static List<LevelData> LoadWorldLevelsData(string world_id)

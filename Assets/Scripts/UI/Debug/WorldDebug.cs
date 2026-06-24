@@ -31,8 +31,8 @@ public class WorldDebug : MonoBehaviour, MultipleDebuggable
         // register to world events
         LevelEngine.Instance.OnLevelChange += handle_level_change;
         ChunkEngine.Instance.OnPlayerChunkChange += handle_chunk_change;
-        ChunkEngine.Instance.OnCapableAddedToRoom += handle_capable_added_or_remove_to_from_chunk;
-        ChunkEngine.Instance.OnCapableRemovedFromRoom += handle_capable_added_or_remove_to_from_chunk;
+        ChunkEngine.Instance.OnCapableAddedToChunk += handle_capable_added_or_remove_to_from_chunk;
+        ChunkEngine.Instance.OnCapableRemovedFromChunk += handle_capable_added_or_remove_to_from_chunk;
     }
 
     // EVENTS HANDLERS

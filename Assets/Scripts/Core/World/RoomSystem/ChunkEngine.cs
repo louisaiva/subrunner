@@ -44,8 +44,8 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
     private Dictionary<string, HashSet<string>> chunkByCapableIDs = new Dictionary<string, HashSet<string>>(); // we keep track of all capables in each room (capables + movables)
     private Dictionary<string, int> dirtyCapablesIDs = new Dictionary<string, int>(); // capables that don't have any room assigned / just changed rooms, waiting for new assignment. the int is a priority flag
     private Dictionary<string, Dictionary<string, ScoreBiasState>> chunk_score_biases = new Dictionary<string, Dictionary<string, ScoreBiasState>>();
-    public Action<string, ChunkData> OnCapableAddedToRoom = delegate { };
-    public Action<string, ChunkData> OnCapableRemovedFromRoom = delegate { };
+    public Action<string, ChunkData> OnCapableAddedToChunk = delegate { };
+    public Action<string, ChunkData> OnCapableRemovedFromChunk = delegate { };
 
     // CAPABLES ATTACHING
     private Dictionary<string, float> capables_attach_times = new Dictionary<string, float>();
@@ -320,7 +320,7 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
         else if (is_movable && !room.movables_ids.Contains(entity_id)) { room.movables_ids.Add(entity_id); }
 
         // we invoke the event
-        OnCapableAddedToRoom?.Invoke(entity_id, room);
+        OnCapableAddedToChunk?.Invoke(entity_id, room);
     }
     /// <summary>
     /// this method removes the capable id from the room data and from the room engine dicts.
@@ -341,7 +341,7 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
         if (room.movables_ids.Contains(entity_id)) { room.movables_ids.Remove(entity_id); }
 
         // we invoke the event
-        OnCapableRemovedFromRoom?.Invoke(entity_id, room);
+        OnCapableRemovedFromChunk?.Invoke(entity_id, room);
     }
 
 

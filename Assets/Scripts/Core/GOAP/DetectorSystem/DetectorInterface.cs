@@ -10,6 +10,11 @@ public interface FoodDetector : Detector
 {
     public Food FindClosestFood(CapableData looker_data, EatData edata);
 }
+public interface TrashDetector : Detector
+{
+    public ItemData FindClosestTrash(CapableData looker_data, bool force_loaded = false);
+    public ItemData FindClosestInteractableTrash(CapableData looker_data, InteractData idata, bool force_loaded = false);
+}
 public interface HealthDetector : Detector
 {
     public HealthCapacity FindClosestHealthCapacity(IAData looker_data);

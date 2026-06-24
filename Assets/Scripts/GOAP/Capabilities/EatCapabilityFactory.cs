@@ -10,7 +10,8 @@ namespace subrunner.goap
             var builder = new CapabilityBuilder("FoodCapability");
 
             builder.AddGoal<EatGoal>()
-                .AddCondition<Hunger>(Comparison.SmallerThanOrEqual, 20);
+                .AddCondition<Hunger>(Comparison.SmallerThanOrEqual, 20)
+                .SetBaseCost(50);
 
             builder.AddAction<EatAction>()
                 .AddEffect<Hunger>(EffectType.Decrease)

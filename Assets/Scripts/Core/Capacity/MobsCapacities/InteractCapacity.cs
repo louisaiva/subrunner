@@ -134,12 +134,11 @@ public class InteractCapacity : Capacity
 
 
         if (closest_hover == null) { return; }
-        Capable interactive = closest_hover.Capable;
-
-        // interact with interactable & select + grab items
-        if (interactive is Interactable interactable && !endless) { interactable.OnInteract(Capable); }
-        else if (interactive is EndlessInteractable interactable_endless && endless) { interactable_endless.OnEndlessInteract(Capable); }
+        Capable capable = closest_hover.Capable;
+        if (capable is not Interactable interactable) { return; }
+        InteractWithInteractable(interactable, endless);
     }
+    
 
     // TRIGGER ENTER
     private void OnTriggerEnter2D(Collider2D other)
@@ -153,28 +152,14 @@ public class InteractCapacity : Capacity
         if (interacted_capable == null) { return; }
 
         // we check if we can interact with it
-        if (interacted_capable is not Interactable interactive) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + interacted_capable.name + " but it is no Interactable"); } return; }
-        if (!interact_types.Contains(interactive.InteractionType)) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + interactive.name + " but its type is not allowed"); } return; }
-        if (interactive is Item item && !item.ValidateRule(ItemRule)) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + interactive.name + " but it is excluded by the rule"); } return; }
-        if (interactive is not Door)
-        {
-            // check that room of Capable & room of Interactable are the same
-            // this is here and not upper because it can be a heavy call. AND NOT ON DOOR BC WE WANT TO BE ABLE TO ALWAYS INTERACT WITH THEM
-            // also, if at least one the rooms can't be find, it means the thing was just unfreed,
-            // so we consider we can interact with anything (maybe we just dropped an item or quit a sofa)
-            string room_of_capable = Capable.GetRealRoom();
-            string room_of_interactable = interacted_capable.GetRealRoom();
-            if (!string.IsNullOrEmpty(room_of_capable)
-                && !string.IsNullOrEmpty(room_of_interactable) 
-                && room_of_capable != room_of_interactable) { if (log_triggers) { Debug.Log($"(InteractCapacity) '{Capable.ID}' (room : '{room_of_capable}') tried to interact with '{interacted_capable.ID}' (room : '{room_of_interactable}') but they are in different rooms"); } return; }
-        }
-        if (hover == closest_hover) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + interactive.name + " but it is already hovered"); } return; }
-        if (waiting_hovers.Contains(hover)) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + interactive.name + " but it is already in the waiting hovers"); } return; }
+        if (!CanInteractWithCapable(interacted_capable)) { return; }
+        if (hover == closest_hover) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + interacted_capable.ID + " but it is already hovered"); } return; }
+        if (waiting_hovers.Contains(hover)) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + interacted_capable.ID + " but it is already in the waiting hovers"); } return; }
 
         // we add the capable to the waiting hovers
         waiting_hovers.Add(hover);
 
-        if (log) { Debug.Log("(InteractCapacity) " + interactive.name + " added to waiting hovers"); }
+        if (log) { Debug.Log("(InteractCapacity) " + interacted_capable.ID + " added to waiting hovers"); }
     }
     private void OnTriggerExit2D(Collider2D other)
     {
@@ -219,6 +204,46 @@ public class InteractCapacity : Capacity
         if (!waiting_hovers.Contains(hover)) { return; }
         waiting_hovers.Remove(hover);
     }
+
+
+
+    ///
+    //
+    /// MANUAL INTERACTION
+    //
+    ///
+
+    /// <summary>
+    /// This method is a manual implementation of the main Interact()
+    /// method, i.e. for IAs with actions that need to interact with capable
+    /// without needing to go through a hover/etc kind of thing
+    /// </summary>
+    public void InteractWithInteractable(Interactable interactive, bool endless = false)
+    {
+        // interact with interactable & select + grab items
+        if (!endless) { interactable.OnInteract(Capable); }
+        else if (interactive is EndlessInteractable interactable_endless && endless) { interactable_endless.OnEndlessInteract(Capable); }
+    }
+    public bool CanInteractWithCapable(Capable interacted_capable)
+    {
+        if (interacted_capable is not Interactable interactive) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + interacted_capable.name + " but it is no Interactable"); } return false; }
+        if (!interact_types.Contains(interactive.InteractionType)) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + interactive.name + " but its type is not allowed"); } return false; }
+        if (interactive is Item item && !item.ValidateRule(ItemRule)) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + interactive.name + " but it is excluded by the rule"); } return false; }
+    
+        // check that room of Capable & room of Interactable are the same
+        // this is here and not upper because it can be a heavy call. AND NOT ON DOOR BC WE WANT TO BE ABLE TO ALWAYS INTERACT WITH THEM
+        if (interactive is Door) { return true; }
+        // also, if at least one the rooms can't be find, it means the thing was just unfreed,
+        // so we consider we can interact with anything (maybe we just dropped an item or quit a sofa)
+        string room_of_capable = Capable.GetRealRoom();
+        string room_of_interactable = interacted_capable.GetRealRoom();
+        if (!string.IsNullOrEmpty(room_of_capable)
+            && !string.IsNullOrEmpty(room_of_interactable)
+            && room_of_capable != room_of_interactable) { if (log_triggers) { Debug.Log($"(InteractCapacity) '{Capable.ID}' (room : '{room_of_capable}') tried to interact with '{interacted_capable.ID}' (room : '{room_of_interactable}') but they are in different rooms"); } return false; }
+
+        return true;        
+    }
+
 
 
 

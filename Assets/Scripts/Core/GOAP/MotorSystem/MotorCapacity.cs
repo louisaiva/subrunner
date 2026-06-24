@@ -15,6 +15,7 @@ using UnityEngine;
 /// </summary>
 public class MotorCapacity : Capacity
 {
+    public IA IA => (IA) Capable;
 
     [Header("Components")]
     private AgentBehaviour _agent; // doer
@@ -84,24 +85,26 @@ public class MotorCapacity : Capacity
         Provider.Events.OnGoalCompleted -= this.OnGoalCompleted;
     }
 
-    // GOAL DELEGATES
-    private void OnNoActionFound(IGoalRequest request) { request_suited_goal(); }
-    private void OnActionEnd(IAction action) { request_suited_goal(); }
-    private void OnGoalCompleted(IGoal goal) { request_suited_goal(); }
+    // IA ACTION DELEGATES
+    private void OnNoActionFound(IGoalRequest request) { IA.OnNoActionFound(request); }
+    private void OnActionEnd(IAction action) { IA.OnActionEnd(action); }
+    private void OnGoalCompleted(IGoal goal) { IA.OnGoalCompleted(goal); }
+
 
     // DETERMINE GOAL
-    protected void request_suited_goal()
+    public void RequestSuitedGoal()
     {
         if (mdata == null) { return; }
 
         // we request the goal
-        request_goal(Provider.AgentType.GetGoals());
+        RequestGoals(Provider.AgentType.GetGoals());
     }
-    protected void request_goal<T>() where T : GoalBase
+    public void RequestGoal<T>() where T : GoalBase
     {
         if (log_goals) { Debug.Log($"(MotorCapacity) {data.owner_id} is requesting goal of type '{typeof(T).Name}'"); }
         Provider.RequestGoal<T>();
     }
+    /*
     protected void request_goal(string goal_type)
     {
         Type goal = convert_string_to_goals(goal_type);
@@ -114,8 +117,8 @@ public class MotorCapacity : Capacity
 
         if (log_goals) { Debug.Log($"(MotorCapacity) {data.owner_id} is requesting goal of type '{goal_type}'"); }
         Provider.RequestGoal(goal);
-    }
-    protected void request_goal(List<IGoal> goals)
+    } */
+    public void RequestGoals(List<IGoal> goals)
     {
         Type[] goal_types = new Type[goals.Count];
         for (int i = 0; i < goals.Count; i++)
@@ -125,7 +128,7 @@ public class MotorCapacity : Capacity
         if (log_goals) { Debug.Log($"(MotorCapacity) {data.owner_id} is requesting goals of types '{string.Join(", ", goal_types.Select(t => t.Name))}'"); }
         Provider.RequestGoal(goal_types);
     }
-    protected Type convert_string_to_goals(string goal_type)
+    /* protected Type convert_string_to_goals(string goal_type)
     {
         // todo : debug why the Type.GetType(goal_type) does not work and delete this very not convenient method
         switch (goal_type)
@@ -138,7 +141,7 @@ public class MotorCapacity : Capacity
                 return typeof(EatGoal);
         }
         return null;
-    }
+    } */
 
 
 
@@ -197,7 +200,7 @@ public class MotorCapacity : Capacity
             motor_data.local_world_data.ClearAndPopulateRuntimeData(Provider.WorldData);
         }
         
-        request_suited_goal();
+        RequestSuitedGoal();
     }
     public override void UnloadData()
     {

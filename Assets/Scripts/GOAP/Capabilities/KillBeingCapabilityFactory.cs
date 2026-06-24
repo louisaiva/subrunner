@@ -10,7 +10,8 @@ namespace subrunner.goap
             var builder = new CapabilityBuilder("KillBeingCapability");
 
             builder.AddGoal<KillBeingGoal>()
-                .AddCondition<BeingHealth>(Comparison.SmallerThanOrEqual, 0);
+                .AddCondition<BeingHealth>(Comparison.SmallerThanOrEqual, 0)
+                .SetBaseCost(60);
 
             builder.AddAction<AttackAction>()
                 .AddEffect<BeingHealth>(EffectType.Decrease)

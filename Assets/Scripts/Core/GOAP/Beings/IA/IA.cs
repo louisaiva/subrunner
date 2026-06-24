@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CrashKonijn.Agent.Core;
+using CrashKonijn.Goap.Core;
 using Pathfinding;
 using subrunner.goap;
 using UnityEngine;
@@ -61,6 +63,31 @@ public class IA : Movable
         // we set the tag
         gameObject.tag = base_tag;
     }
+
+
+    // GOAL VIRTUAL METHODS
+    // ? are these methods really useful ? we want to make a brain rather than this i think...
+    public virtual void OnNoActionFound(IGoalRequest request)
+    {
+        GetCapacity<MotorCapacity>()?.RequestSuitedGoal();
+    }
+    public virtual void OnActionEnd(IAction action)
+    {
+        GetCapacity<MotorCapacity>()?.RequestSuitedGoal();
+    }
+    public virtual void OnGoalCompleted(IGoal goal)
+    {
+        GetCapacity<MotorCapacity>()?.RequestSuitedGoal();
+    }
+
+
+
+
+
+
+
+
+
 
     // LATE UPDATE
     protected override void LateUpdate()

@@ -111,6 +111,11 @@ public class Item : Movable, EndlessInteractable
     /// <returns>true if the item pass the rule, false otherwise</returns>
     public bool ValidateRule(string rule)
     {
+        return ValidateRule(rule, Reference, GetType());
+    }
+    public static bool ValidateRule(string rule, string reference, Type type)
+    {
+
         // all items passes an empty rule
         if (rule == "") { return true; }
 
@@ -120,7 +125,7 @@ public class Item : Movable, EndlessInteractable
             string[] rules = rule.Split('|');
             for (int i = 0; i < rules.Length; i++)
             {
-                if (ValidateRule(rules[i])) { return true; }
+                if (ValidateRule(rules[i], reference, type)) { return true; }
             }
             return false;
         }
@@ -131,7 +136,7 @@ public class Item : Movable, EndlessInteractable
             string[] rules = rule.Split(';');
             for (int i = 0; i < rules.Length; i++)
             {
-                if (!ValidateRule(rules[i])) { return false; }
+                if (!ValidateRule(rules[i], reference, type)) { return false; }
             }
             return true;
         }
@@ -142,7 +147,7 @@ public class Item : Movable, EndlessInteractable
             string[] rules = rule.Split(',');
             for (int i = 0; i < rules.Length; i++)
             {
-                if (ValidateRule(rules[i])) { return true; }
+                if (ValidateRule(rules[i], reference, type)) { return true; }
             }
             return false;
         }
@@ -150,34 +155,35 @@ public class Item : Movable, EndlessInteractable
         // we have only one rule, we check the rule
 
         // [NOT] - check for negation
-        if (rule.StartsWith("!")) { return !ValidateRule(rule.Substring(1)); }
+        if (rule.StartsWith("!")) { return !ValidateRule(rule.Substring(1), reference, type); }
 
         // check special rule
-        if (rule == "usable") { return this is Usable; }
-        if (rule == "device") { return this is Device; }
+        if (rule == "usable") { return GameManager.IsKind(type, typeof(Usable)); }
+        if (rule == "device") { return GameManager.IsKind(type, typeof(Device)); }
         if (rule == "virtual")
         {
-            // if (this is File) { return true; }
-            if (this.Reference.StartsWith("key:")) { return true; }
-            if (this.Reference.StartsWith("file:")) { return true; }
-            if (this.Reference.StartsWith("program:")) { return true; }
-            if (this.Reference.StartsWith("exploit:")) { return true; }
+            if (reference.StartsWith("key:")) { return true; }
+            if (reference.StartsWith("file:")) { return true; }
+            if (reference.StartsWith("program:")) { return true; }
+            if (reference.StartsWith("exploit:")) { return true; }
             return false;
         }
 
         // specific item -> we check if the item is the same
-        if (rule.Contains(":")) { return Reference == rule; }
+        if (rule.Contains(":")) { return reference == rule; }
 
         // we check if the item is in the category
-        if (Reference.Contains(rule)) { return true; }
+        if (reference.Contains(rule)) { return true; }
 
         return false;
     }
-    public static bool ValidateRule(string rule, Item item)
+    public static bool ValidateRule(string rule, string reference, string type_name)
     {
-        if (item == null) { return false; }
-        return item.ValidateRule(rule);
+        // we get the type from the name
+        return ValidateRule(rule, reference, Type.GetType(type_name));
     }
+
+
 
     // START
     protected override void Start()
@@ -460,6 +466,14 @@ public class Item : Movable, EndlessInteractable
     }
 
 
+
+    // VALIDATE RULE
+    public bool ValidateRule(string rule)
+    {
+        // todo : fix
+        // ! kind is the kind of the data, not the item !!! 
+        return Item.ValidateRule(rule, reference, kind);
+    }
 
 
 

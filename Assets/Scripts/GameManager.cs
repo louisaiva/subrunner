@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour
     // KIND & TYPE CHECKING
     public static bool IsKind(Type kind, Type ref_kind)
     {
-        bool is_same_or_subclass = kind == ref_kind || kind.IsSubclassOf(ref_kind);
+        bool is_same_or_subclass = kind == ref_kind || kind.IsSubclassOf(ref_kind) || ref_kind.IsAssignableFrom(kind);
         return is_same_or_subclass;
     }
     public static bool IsKind(string kind, string ref_kind)

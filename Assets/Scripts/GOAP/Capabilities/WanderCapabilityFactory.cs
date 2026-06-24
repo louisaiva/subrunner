@@ -11,7 +11,7 @@ namespace subrunner.goap
 
             builder.AddGoal<WanderGoal>()
                 .AddCondition<IsWandering>(Comparison.GreaterThanOrEqual, 1)
-                .SetBaseCost(2);
+                .SetBaseCost(100);
 
             builder.AddAction<WanderAction>()
                 .AddEffect<IsWandering>(EffectType.Increase)

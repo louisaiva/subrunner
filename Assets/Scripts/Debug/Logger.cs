@@ -30,12 +30,14 @@ public class Logger : MonoBehaviour
     public bool LOG_WANDER_TARGET_SENSOR = false;
     public bool LOG_HUNGER_SENSOR = false;
     public bool LOG_CLOSEST_FOOD_SENSOR = false;
+    public bool LOG_CLOSEST_TRASH_SENSOR = false;
     public bool LOG_CLOSEST_BEING_SENSOR = false;
 
     [Header("GOAP Actions Logs")]
     public bool LOG_IA_ACTION = false;
     public bool LOG_ATTACK_ACTION = false;
     public bool LOG_EAT_ACTION = false;
+    public bool LOG_INTERACT_ACTION = false;
 
 
     public static void Error(string message, Verbosity verbose)

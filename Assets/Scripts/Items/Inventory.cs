@@ -256,10 +256,10 @@ public class Inventory : MonoBehaviour, ItemStorer
 
 
     // SPECIFIC GETTERS
-    public Usable GetShoes() { return get_item_from_rule_in_itempool("shoes") as Usable; }
-    public Usable GetWeapon() { return get_item_from_rule_in_itempool("weapon") as Usable; }
+    public Usable GetShoes() { return (Usable) get_item_from_rule_in_itempool("shoes"); }
+    public Usable GetWeapon() { return (Usable) get_item_from_rule_in_itempool("weapon"); }
+    public Usable GetConso(int index) { return (Usable) get_item_from_rule_in_itempool("conso_" + index); }
     public Device GetDeviceItem() { return get_item_from_rule_in_itempool("device","device") as Device; }
-    public Usable GetConso(int index) { return get_item_from_rule_in_itempool("conso_" + index) as Usable; }
     private Item get_item_from_rule_in_itempool(string pool_id,string rule="usable")
     {
         // checks if we have the pool
