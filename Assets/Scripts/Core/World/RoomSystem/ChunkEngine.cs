@@ -872,20 +872,20 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
     private ChunkData GetCapableChunk(string capable_id)
     {
         // check if we have the capable in our dictionaries
-        string room_id;
-        if (chunkByCapableID.TryGetValue(capable_id, out string id_1)) { room_id = id_1; }
-        else if (chunkByMovableID.TryGetValue(capable_id, out string id_2)) { room_id = id_2; }
+        string chunk_id;
+        if (chunkByCapableID.TryGetValue(capable_id, out string id_1)) { chunk_id = id_1; }
+        else if (chunkByMovableID.TryGetValue(capable_id, out string id_2)) { chunk_id = id_2; }
         else { return null; }
-        return chunks_data.TryGetValue(room_id, out ChunkData room) ? room : null;
+        return chunks_data.TryGetValue(chunk_id, out ChunkData chunk) ? chunk : null;
     }
     public bool IsInAChunk(string capable_id)
     {
         return GetCapableChunk(capable_id) != null;
     }
-    public bool TryGetCapableChunk(string capable_id, out ChunkData room)
+    public bool TryGetCapableChunk(string capable_id, out ChunkData chunk)
     {
-        room = GetCapableChunk(capable_id);
-        return room != null;
+        chunk = GetCapableChunk(capable_id);
+        return chunk != null;
     }
     public List<ChunkData> GetChunksDataFromIDs(ICollection<string> rooms_ids)
     {

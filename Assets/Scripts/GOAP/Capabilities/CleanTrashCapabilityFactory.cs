@@ -13,7 +13,7 @@ namespace subrunner.goap
                 .AddCondition<TrashOnFloor>(Comparison.SmallerThanOrEqual, 0)
                 .SetBaseCost(10);
 
-            builder.AddAction<InteractAction<Item>>()
+            builder.AddAction<PersistantInteractAction<Item>>()
                 .AddCondition<SameRoom>(Comparison.GreaterThanOrEqual, 1)
                 .AddEffect<TrashOnFloor>(EffectType.Decrease)
                 .SetTarget<ClosestTrash>()

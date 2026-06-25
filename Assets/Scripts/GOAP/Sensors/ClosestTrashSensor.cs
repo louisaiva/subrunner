@@ -39,12 +39,17 @@ namespace subrunner.goap
 
             // ensure that the agent has no left actions in the plan
             if (!ia.TryGetCapacity(out MotorCapacity mc)) { return target; }
-            // Debug.Log($"(WanderLoadedSensor - Sense) {ia.data.id} has current plan :      {mc.GetPendingActionsDetails()}");
-            if (mc.StillHasPendingActions())
+            if (!string.IsNullOrEmpty(mc.mdata.destination_room_id))
+            {
+                if (Logger.LazyInstance.LOG_CLOSEST_TRASH_SENSOR) { Debug.Log($"(ClosestFoodSensor - Sense) {agent} already has a destination room set : {mc.mdata.destination_room_id}. We don't sense a new target."); }
+                return target;
+            }
+            // Debug.Log($"(ClosestFoodSensor - Sense) {ia.data.id} has current plan :      {mc.GetPendingActionsDetails()}");
+            /* if (mc.StillHasPendingActions())
             {
                 if (Logger.LazyInstance.LOG_CLOSEST_TRASH_SENSOR) { Debug.Log($"(ClosestFoodSensor - Sense) {agent} still has pending actions !! We don't sense"); }
                 return target;
-            }
+            } */
 
 
             // Debug.Log($"(ClosestFoodSensor) {ia.name} is sensing closest food...");
@@ -53,11 +58,10 @@ namespace subrunner.goap
 
             // find the closest food
             ItemData closest_trash = detector.FindClosestInteractableTrash(ia.data, idata, force_loaded:true);
-            Capable closestTrash = closest_trash?.Capable;
-            if (closestTrash == null) { return null; }
+            if (closest_trash == null) { return null; }
 
             // now we try to extract the room at the position
-            if (RoomEngine.Instance.TryGetCapableRoom(closestTrash.ID, out RoomData room))
+            if (RoomEngine.Instance.TryGetCapableRoom(closest_trash.id, out RoomData room))
             {
                 mc.mdata.destination_room_id = room.id;
                 // if (Logger.LazyInstance.LOG_WANDER_TARGET_SENSOR) { Debug.Log($"(WanderLoadedSensor) {agent} has a new room destination {room.id}"); }
@@ -66,9 +70,9 @@ namespace subrunner.goap
             // If the target is already set, we update it
             if (target is CapableTarget captarg)
             {
-                return captarg.SetCapable(closestTrash);
+                return captarg.SetCapableData(closest_trash);
             }
-            return new CapableTarget(closestTrash);
+            return new CapableTarget(closest_trash);
         }
     }
 }

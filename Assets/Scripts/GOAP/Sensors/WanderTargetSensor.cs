@@ -34,9 +34,14 @@ namespace subrunner.goap
             // ensure that the agent has no left actions in the plan
             if (!ia.TryGetCapacity(out MotorCapacity mc)) { return existingTarget; }
             // Debug.Log($"(WanderLoadedSensor - Sense) {ia.data.id} has current plan :      {mc.GetPendingActionsDetails()}");
-            if (mc.StillHasPendingActions())
+            /* if (mc.StillHasPendingActions())
             {
                 if (Logger.LazyInstance.LOG_WANDER_TARGET_SENSOR) { Debug.Log($"(WanderLoadedSensor - Sense) {agent} still has pending actions !! We don't sense"); }
+                return existingTarget;
+            } */
+            if (!string.IsNullOrEmpty(mc.mdata.destination_room_id))
+            {
+                if (Logger.LazyInstance.LOG_WANDER_TARGET_SENSOR) { Debug.Log($"(WanderLoadedSensor - Sense) {agent} already has a destination room set : {mc.mdata.destination_room_id}. We don't sense a new wander target."); }
                 return existingTarget;
             }
 
