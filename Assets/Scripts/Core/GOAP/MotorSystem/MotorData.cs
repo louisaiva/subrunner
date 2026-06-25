@@ -11,7 +11,10 @@ using UnityEngine;
 [Serializable] public class MotorData : CapacityData
 {
     public string agent_type;
-    
+    [RuntimeOnly] public string current_room_id;
+    [RuntimeOnly] public string destination_room_id; // main room destination aim of the ia. // todo : can be switched to a stack<string> to handle sub destinations objectives
+
+
     // LOCAL WORLD DATA
     public SerializableLocalWorldData local_world_data = new SerializableLocalWorldData();
 

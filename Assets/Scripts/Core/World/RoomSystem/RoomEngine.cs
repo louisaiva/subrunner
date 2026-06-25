@@ -31,12 +31,12 @@ public class RoomEngine : BSOD_System<RoomEngine>
     }
 
 
-    private DoorEngine _door_engine;
-    public DoorEngine DoorEngine
+    private static DoorEngine _door_engine;
+    public static DoorEngine DoorEngine
     {
         get
         {
-            if (_door_engine == null) { _door_engine = GetComponentInChildren<DoorEngine>(includeInactive: true); }
+            if (_door_engine == null) { _door_engine = LazyInstance.GetComponentInChildren<DoorEngine>(includeInactive: true); }
             return _door_engine;
         }
     }
@@ -220,6 +220,12 @@ public class RoomEngine : BSOD_System<RoomEngine>
         room = GetRoomDataFromID(chunk.room_id);
         if (room == null) { return false; }
         return true;
+    }
+    public RoomData GetRoomAtPositionInLevel(Vector2 position, string level_id = null)
+    {
+        ChunkData chunk = ChunkEngine.Instance.GetChunkAtPositionInLevel(position, level_id);
+        if (chunk == null) { return null; }
+        return GetRoomDataFromID(chunk.room_id);
     }
 
     // STATIC GETTERS

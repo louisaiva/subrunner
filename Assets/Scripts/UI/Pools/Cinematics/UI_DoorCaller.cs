@@ -10,7 +10,7 @@ public class UI_DoorCaller : UI_TimelineCapableCaller
 
     public override bool TryConnectCapable()
     {
-        Door door = RoomEngine.LazyInstance.DoorEngine.GetDoorBetweenRooms(room1, room2);
+        Door door = RoomEngine.DoorEngine.GetDoorBetweenRooms(room1, room2);
         if (door == null) { Debug.LogError("(UI_DoorCaller) No door found between rooms '" + room1 + "' and '" + room2 + "'"); return false; }
         capable = door;
         Debug.Log("(UI_TimelineCapableCaller) Connected door with id '" + door.ID + "'");

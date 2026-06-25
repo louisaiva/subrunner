@@ -59,7 +59,7 @@ public class Chunk : MonoBehaviour
         ChunkEngine.Instance.LightsEngine.LoadLights(data.lights_data, data.id);
 
         // show the tilemaps
-        // RoomEngine.Instance.DoorEngine.ShowRoom(data.room_id);
+        // RoomEngine.DoorEngine.ShowRoom(data.room_id);
 
         // here we need to load all the capables that we hold in data.capables_ids
         if ((data.capables_ids != null && data.capables_ids.Count > 0) || (data.movables_ids != null && data.movables_ids.Count > 0))

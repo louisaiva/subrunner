@@ -66,7 +66,6 @@ namespace subrunner.goap
         private Vector2 waypoint_movement = Vector2.zero; // the movement towards the current waypoint
 
 
-
         [Header("Current Path")]
         [SerializeField] private Vector2 current_waypoint_destination;
         private int current_waypoint_index = -1; // the current waypoint on the path

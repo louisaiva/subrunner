@@ -315,6 +315,22 @@ public class Door : Capable, Interactable, Openable
         details += $"  - IFPositionSwitcher : \n{if_switcher.GetDetails()}\n";
         return details;
     }
+
+    // RUNTIME HELP METHODS
+    public bool GetPositionInsideRoom(string room, out Vector2 position)
+    {
+        position = Position;
+        if (room != room1_id && room != room2_id) { return false; }
+        if (room == room1_id)
+        {
+            position += .5f * (is_vertical ? Vector2.up : Vector2.right);
+        }
+        else
+        {
+            position += .5f * (is_vertical ? Vector2.down : Vector2.left);
+        }
+        return true;
+    }
 }
 
 [Serializable] public class IFPositionSwitcher

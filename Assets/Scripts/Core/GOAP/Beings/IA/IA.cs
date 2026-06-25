@@ -16,8 +16,6 @@ using UnityEngine;
 public class IA : Movable
 {
     [Header("IA")]
-    // public float exploration_radius = 3f; // the radius of exploration for the IA
-                                          // todo must be part of an IAData class or struct that influence a curiosity parameter
     [SerializeField] private string base_tag = "IA";
     public string BaseTag => base_tag;
 

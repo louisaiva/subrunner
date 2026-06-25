@@ -113,7 +113,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
         world_data_loaded = true;
 
         // finally we can load the sub systems
-        await RoomEngine.Instance.DoorEngine.LoadWorldData(world_id, log);
+        await RoomEngine.DoorEngine.LoadWorldData(world_id, log);
         await MotorEngine.Instance.LoadWorldData(world_id, log);
         if (log) { Debug.Log($"(CapableEngine) Loaded DoorEngine & MotorEngine sub systems"); }
 
@@ -811,14 +811,14 @@ public class CapableEngine : BSOD_System<CapableEngine>
         {
             // we get the 2 rooms of the door
             // chunk = ChunkEngine.Instance.GetChunkDataFromID(ddata.room1_id);
-            if (RoomEngine.Instance.DoorEngine.IsRoomVisible(ddata.room1_id))
+            if (RoomEngine.DoorEngine.IsRoomVisible(ddata.room1_id))
             {
                 capable.AnimPlayer.Show();
                 if (log_loading_extended) { Debug.Log($"(CapableSystem - Load) Door {data.id} ({ddata.room1_id} - {ddata.room2_id}) has room1 visible --> SHOWING DOOR"); }
                 return;
             }
             // chunk = ChunkEngine.Instance.GetChunkDataFromID(ddata.room2_id);
-            if (RoomEngine.Instance.DoorEngine.IsRoomVisible(ddata.room2_id))
+            if (RoomEngine.DoorEngine.IsRoomVisible(ddata.room2_id))
             {
                 capable.AnimPlayer.Show();
                 if (log_loading_extended) { Debug.Log($"(CapableSystem - Load) Door {data.id} ({ddata.room1_id} - {ddata.room2_id}) has room2 visible --> SHOWING DOOR"); }
@@ -857,7 +857,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
             }
         }
 
-        if (!RoomEngine.Instance.DoorEngine.IsRoomVisible(chunk.room_id))
+        if (!RoomEngine.DoorEngine.IsRoomVisible(chunk.room_id))
         {
             capable.AnimPlayer.Hide();
             if (log_visibility) { Debug.Log($"(CapableSystem - Load) Capable {data.id} is in room {chunk.id} which is not visible --> HIDING CAPABLE"); }

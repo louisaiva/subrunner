@@ -113,8 +113,8 @@ using UnityEngine;
         if (log_loading) { Debug.Log("(ChunkLoader) Loaded " + chunk_id); }
 
         // hide the room (and so the just loaded chunk's capables) if the room is not visible, otherwise show it
-        if (!RoomEngine.Instance.DoorEngine.IsRoomVisible(data.room_id)) { RoomEngine.Instance.DoorEngine.HideRoom(data.room_id); }
-        else { RoomEngine.Instance.DoorEngine.ShowRoom(data.room_id); }
+        if (!RoomEngine.DoorEngine.IsRoomVisible(data.room_id)) { RoomEngine.DoorEngine.HideRoom(data.room_id); }
+        else { RoomEngine.DoorEngine.ShowRoom(data.room_id); }
         return true;
     }
     public bool UnloadChunk(string chunk_id /*, out CapableUnloadTask task*/) // for later

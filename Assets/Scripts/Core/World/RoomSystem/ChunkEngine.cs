@@ -257,7 +257,7 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
         }
 
         // we query the spatial map for the rooms at the position
-        string room_id = spatial_map.GetRoomAtPosition(world_position);
+        string room_id = spatial_map.GetChunkAtPosition(world_position);
         if (string.IsNullOrEmpty(room_id)) { return null; }
         if (!chunks_data.TryGetValue(room_id, out ChunkData room)) { return null; }
         return room;
@@ -275,7 +275,7 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
         }
 
         // we query the spatial map for the rooms at the position
-        return spatial_map.IsPositionInsideRoom(world_position, room_id);
+        return spatial_map.IsPositionInsideChunk(world_position, room_id);
     }
     protected LevelSpatialMap2D CurrentSpatialMap
     {
@@ -899,7 +899,7 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
     }
     public ChunkData GetChunkDataFromID(string room_id)
     {
-        return chunks_data.TryGetValue(room_id, out ChunkData room) ? room : null;
+        return chunks_data.TryGetValue(room_id, out ChunkData chunk) ? chunk : null;
     }
     public bool IsAnyChunkLoaded(List<string> chunks_ids)
     {
@@ -908,6 +908,29 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
             if (loader.IsChunkLoaded(chunk_id)) { return true; }
         }
         return false;
+    }
+    public ChunkData GetChunkAtPositionInLevel(Vector2 position, string level_id = null)
+    {
+        if (level_id != LevelEngine.Instance.CurrentLevelID && level_id != null)
+        {
+            // not same level, we can't do a raycast, we return the level spatial map "raycast" (less precise)
+            if (!spatial_maps_by_level_id.TryGetValue(level_id, out LevelSpatialMap2D map)) { return null; }
+            return GetChunkDataFromID(map.GetChunkAtPosition(position));
+        }
+
+        // here we are in the current level, we can try to do a raycast ! (more precise)
+        float ray_radius = 0.1f;
+        RaycastHit2D[] hits = Physics2D.CircleCastAll(position, ray_radius, Vector2.zero, 0f, LayerMask.GetMask("Rooms"));
+        // Debug.Log($"(RoomEngine) Raycast at position {position} found {hits.Length} hits : \n - {string.Join("\n - ", hits.Select(h => h.collider.name))}");
+        foreach (var hit in hits)
+        {
+            if (hit.collider.TryGetComponent(out Chunk chunk)) { return chunk.data; }
+        }
+
+        // if we got nothing, it means the chunk is potentially not loaded (will be fixed [mid-term])
+        // and then we can re do a map get chunk at position (less precise)
+        if (!spatial_maps_by_level_id.TryGetValue(LevelEngine.Instance.CurrentLevelID, out LevelSpatialMap2D map2)) { return null; }
+        return GetChunkDataFromID(map2.GetChunkAtPosition(position));
     }
 
 
@@ -1090,12 +1113,12 @@ public class LevelSpatialMap2D
     };
 
     /// <summary>
-    /// retrieves the best matching room at the given world position using the spatial map.
-    /// If multiple, it returns the room with the closest bounds center to the position.
-    /// If still tie, returns the first one. Returns null if no room found at the position.
+    /// retrieves the best matching chunk at the given world position using the spatial map.
+    /// If multiple, it returns the chunk with the closest bounds center to the position.
+    /// If still tie, returns the first one. Returns null if no chunk found at the position.
     /// </summary>
     /// <param name="world_position"></param>
-    public string GetRoomAtPosition(Vector2 world_position)
+    public string GetChunkAtPosition(Vector2 world_position)
     {
         string best_room = null;
         float best_distance = float.MaxValue;
@@ -1130,9 +1153,9 @@ public class LevelSpatialMap2D
 
 
     /// <summary>
-    /// check if position is inside room
+    /// check if position is inside chunk
     /// </summary>
-    public bool IsPositionInsideRoom(Vector2 world_position, string room_id)
+    public bool IsPositionInsideChunk(Vector2 world_position, string room_id)
     {
         if (!roomBoundsCellsByID.TryGetValue(room_id, out Bounds2D bounds)) { return false; }
         return bounds.Contains(world_position);

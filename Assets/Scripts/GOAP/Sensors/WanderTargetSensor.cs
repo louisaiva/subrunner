@@ -49,6 +49,17 @@ namespace subrunner.goap
 
             if (Logger.LazyInstance.LOG_WANDER_TARGET_SENSOR) { Debug.Log($"(WanderLoadedSensor - Sense) {agent} senses a new position target at {random_position}"); }
 
+            // now we try to extract the room at the position
+            if (ia.TryGetCapacity(out MotorCapacity mc))
+            {
+                RoomData room = RoomEngine.Instance.GetRoomAtPositionInLevel(random_position);
+                if (room != null)
+                {
+                    mc.mdata.destination_room_id = room.id;
+                    if (Logger.LazyInstance.LOG_WANDER_TARGET_SENSOR) { Debug.Log($"(WanderLoadedSensor) {agent} has a new room destination {room.id}"); }
+                }
+            }
+
             // and we return the position as a PositionTarget
             if (existingTarget is PositionTarget existingTargetPosition)
             {

@@ -47,7 +47,7 @@ public class MotorCapacity : Capacity
         }
     }
 
-    private MotorData mdata => (MotorData)data;
+    public MotorData mdata => (MotorData)data;
     public IActionData currentActionData => Agent?.ActionState?.Data;
     private string last_agent_type = "";
 

@@ -30,6 +30,9 @@ namespace subrunner.goap
                 + $" with capacity '{data.interactor.ID}'");
             }
             data.interactor.InteractWithInteractable(interactive);
+
+            // todo : maybe here we can wait a little ???
+
             return ActionRunState.Completed;
         }
 
