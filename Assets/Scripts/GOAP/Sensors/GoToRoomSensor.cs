@@ -86,7 +86,7 @@ namespace subrunner.goap
 
             // Get a cached reference to the DataBehaviour on the agent
             MotorCapacity mc = references.GetCachedComponent<MotorCapacity>();
-            if (mc == null || mc.mdata == null) { return false; }
+            if (mc == null || mc.mdata == null || mc.IA == null) { return false; }
 
             // feed the current room
             mc.mdata.current_room_id = mc.IA.GetRealRoom();

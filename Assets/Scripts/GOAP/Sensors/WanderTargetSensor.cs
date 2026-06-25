@@ -30,6 +30,18 @@ namespace subrunner.goap
                 }
             }
 
+
+            // ensure that the agent has no left actions in the plan
+            if (!ia.TryGetCapacity(out MotorCapacity mc)) { return existingTarget; }
+            // Debug.Log($"(WanderLoadedSensor - Sense) {ia.data.id} has current plan :      {mc.GetPendingActionsDetails()}");
+            if (mc.StillHasPendingActions())
+            {
+                if (Logger.LazyInstance.LOG_WANDER_TARGET_SENSOR) { Debug.Log($"(WanderLoadedSensor - Sense) {agent} still has pending actions !! We don't sense"); }
+                return existingTarget;
+            }
+
+
+
             /* if (Logger.LazyInstance.LOG_WANDER_TARGET_SENSOR)
             {
                 Debug.Log($"(WanderLoadedSensor - Sense) {agent} is sensing a new wander target for IA {ia.name}");
@@ -50,14 +62,11 @@ namespace subrunner.goap
             if (Logger.LazyInstance.LOG_WANDER_TARGET_SENSOR) { Debug.Log($"(WanderLoadedSensor - Sense) {agent} senses a new position target at {random_position}"); }
 
             // now we try to extract the room at the position
-            if (ia.TryGetCapacity(out MotorCapacity mc))
+            RoomData room = RoomEngine.Instance.GetRoomAtPositionInLevel(random_position);
+            if (room != null)
             {
-                RoomData room = RoomEngine.Instance.GetRoomAtPositionInLevel(random_position);
-                if (room != null)
-                {
-                    mc.mdata.destination_room_id = room.id;
-                    if (Logger.LazyInstance.LOG_WANDER_TARGET_SENSOR) { Debug.Log($"(WanderLoadedSensor) {agent} has a new room destination {room.id}"); }
-                }
+                mc.mdata.destination_room_id = room.id;
+                // if (Logger.LazyInstance.LOG_WANDER_TARGET_SENSOR) { Debug.Log($"(WanderLoadedSensor) {agent} has a new room destination {room.id}"); }
             }
 
             // and we return the position as a PositionTarget

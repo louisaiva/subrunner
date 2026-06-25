@@ -14,6 +14,7 @@ namespace subrunner.goap
                 .SetBaseCost(10);
 
             builder.AddAction<InteractAction<Item>>()
+                .AddCondition<SameRoom>(Comparison.GreaterThanOrEqual, 1)
                 .AddEffect<TrashOnFloor>(EffectType.Decrease)
                 .SetTarget<ClosestTrash>()
                 .SetStoppingDistance(0.3f);
@@ -23,6 +24,20 @@ namespace subrunner.goap
 
             builder.AddWorldSensor<TrashOnFloorSensor>()
                 .SetKey<TrashOnFloor>();
+
+
+
+            // GO TO NEXT ROOM + DOOR OPENING
+            builder.AddAction<GoToNextRoomAction>()
+                .AddCondition<NextRoomAccessible>(Comparison.GreaterThanOrEqual, 1)
+                .AddEffect<SameRoom>(EffectType.Increase)
+                .SetTarget<RoomTarget>();
+
+            builder.AddAction<InteractAction<Door>>()
+                .AddEffect<NextRoomAccessible>(EffectType.Increase)
+                .SetTarget<DoorTarget>();
+
+            builder.AddMultiSensor<GoToRoomSensor>();
 
             return builder.Build();
         }

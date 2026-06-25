@@ -15,7 +15,14 @@ using UnityEngine;
 /// </summary>
 public class MotorCapacity : Capacity
 {
-    public IA IA => (IA) Capable;
+    public IA IA
+    {
+        get
+        {
+            if (Capable == null) { return null; }
+            return (IA)Capable;
+        }
+    }
 
     [Header("Components")]
     private AgentBehaviour _agent; // doer
@@ -52,10 +59,16 @@ public class MotorCapacity : Capacity
     private string last_agent_type = "";
 
 
+    // pending actions
+    private List<IGoapAction> pending_actions = new List<IGoapAction>();
+    private IGoapAction current_action = null;
+
+
     [Header("Logs")]
     [SerializeField] private bool log_agent_type = false;
-    [SerializeField] private bool log_goals = false;
     [SerializeField] private bool log_world_state_loading = false;
+    [SerializeField] private bool log_goals = false;
+    [SerializeField] private bool log_pending_actions = false;
 
 
     // AWAKE
@@ -64,30 +77,50 @@ public class MotorCapacity : Capacity
         // the only thing we do here is assign the goap action provider to the "none" agent
         Provider.AgentType = MotorEngine.Goap.GetAgentType("none");
         if (log_agent_type) { Debug.Log($"(MotorCapacity) Assigned GoapActionProvider to agent type 'none'"); }
+        // provider & agent are always the same on a MotorCapacity bc it is instantiated together etc so we can register/unregister callbacks during the awake / on destroy
+        register_callbacks();
     }
-
+    private void OnDestroy() { unregister_callbacks(); } 
 
     // ON ENABLE / DISABLE
-    private void OnEnable()
+    private void register_callbacks()
     {
         // subscribe to the agent's events
         // agent.Events.OnMove += this.check_distance_to_target;
         Provider.Events.OnNoActionFound += this.OnNoActionFound;
-        Provider.Events.OnActionEnd += this.OnActionEnd;
         Provider.Events.OnGoalCompleted += this.OnGoalCompleted;
+        Agent.Events.OnActionStart += this.OnActionStart;
+        Agent.Events.OnActionEnd += this.OnActionEnd;
     }
-    private void OnDisable()
+    private void unregister_callbacks()
     {
         // unsubscribe to the agent's events
         // agent.Events.OnMove -= this.check_distance_to_target;
         Provider.Events.OnNoActionFound -= this.OnNoActionFound;
-        Provider.Events.OnActionEnd -= this.OnActionEnd;
         Provider.Events.OnGoalCompleted -= this.OnGoalCompleted;
+        Agent.Events.OnActionStart -= this.OnActionStart;
+        Agent.Events.OnActionEnd -= this.OnActionEnd;
     }
+
+
 
     // IA ACTION DELEGATES
     private void OnNoActionFound(IGoalRequest request) { IA.OnNoActionFound(request); }
-    private void OnActionEnd(IAction action) { IA.OnActionEnd(action); }
+    private void OnActionStart(IAction action)
+    {
+        if (log_pending_actions) { Debug.Log($"(MotorCapacity) Current action started : {action?.GetType().Name ?? "null"}"); }
+        update_pending_actions(action as IGoapAction);
+    }
+    private void OnActionEnd(IAction action)
+    {
+        if (current_action == action)
+        {
+            current_action = null;
+            if (log_pending_actions) { Debug.Log($"(MotorCapacity) Current action ended : {action?.GetType().Name ?? "null"}"); }
+        }
+
+        IA.OnActionEnd(action);
+    }
     private void OnGoalCompleted(IGoal goal) { IA.OnGoalCompleted(goal); }
 
 
@@ -104,20 +137,6 @@ public class MotorCapacity : Capacity
         if (log_goals) { Debug.Log($"(MotorCapacity) {data.owner_id} is requesting goal of type '{typeof(T).Name}'"); }
         Provider.RequestGoal<T>();
     }
-    /*
-    protected void request_goal(string goal_type)
-    {
-        Type goal = convert_string_to_goals(goal_type);
-
-        if (goal == null)
-        {
-            if (log_goals) { Debug.LogWarning($"(MotorCapacity - request_goal) Goal {goal_type} not found for {data.owner_id}"); }
-            return;
-        }
-
-        if (log_goals) { Debug.Log($"(MotorCapacity) {data.owner_id} is requesting goal of type '{goal_type}'"); }
-        Provider.RequestGoal(goal);
-    } */
     public void RequestGoals(List<IGoal> goals)
     {
         Type[] goal_types = new Type[goals.Count];
@@ -128,20 +147,6 @@ public class MotorCapacity : Capacity
         if (log_goals) { Debug.Log($"(MotorCapacity) {data.owner_id} is requesting goals of types '{string.Join(", ", goal_types.Select(t => t.Name))}'"); }
         Provider.RequestGoal(goal_types);
     }
-    /* protected Type convert_string_to_goals(string goal_type)
-    {
-        // todo : debug why the Type.GetType(goal_type) does not work and delete this very not convenient method
-        switch (goal_type)
-        {
-            case "WanderGoal":
-                return typeof(WanderGoal);
-            case "KillBeingGoal":
-                return typeof(KillBeingGoal);
-            case "EatGoal":
-                return typeof(EatGoal);
-        }
-        return null;
-    } */
 
 
 
@@ -151,9 +156,45 @@ public class MotorCapacity : Capacity
         if (Agent == null) { return; }
         Agent.StopAction(resolveAction: true);
     }
+    private void update_pending_actions(IGoapAction action)
+    {
+        // updates pending & current actions
+        IConnectable[] plan = Provider?.CurrentPlan?.Plan;
+        if (plan == null || plan.Length == 0)
+        {
+            pending_actions.Clear();
+            current_action = action;
+            Debug.Log($"(MotorCapacity) No plan found, pending actions cleared and current action set to {action?.GetType().Name ?? "null"}");
+            return;
+        }
 
-
-
+        // we update the pending actions list
+        pending_actions.Clear();
+        bool found_current = false;
+        for (int i = 0; i < plan.Length; i++)
+        {
+            if (plan[i] is not IGoapAction i_action) { continue; }
+            if (i_action == action)
+            {
+                found_current = true;
+                current_action = i_action;
+                continue;
+            }
+            if (!found_current) { continue; } // we only want NOT done actions
+            pending_actions.Add(i_action);
+        }
+        Debug.Log($"(MotorCapacity) Updated pending actions : {GetPendingActionsDetails()}");
+    }
+    public bool StillHasPendingActions()
+    {
+        return pending_actions.Count > 0;
+    }
+    public string GetPendingActionsDetails()
+    {
+        string debug = $"[{current_action?.GetType().Name ?? "null"}] >> ";
+        debug += pending_actions.Count > 0 ? string.Join(" >> ", pending_actions.Select(a => a.GetType().Name)) : "none";
+        return debug;
+    }
 
 
 
@@ -175,12 +216,13 @@ public class MotorCapacity : Capacity
         // we set the provider's agent type
         Provider.AgentType = MotorEngine.Goap.GetAgentType(motor_data.agent_type);
         if (log_agent_type) { Debug.Log($"(MotorCapacity) {data.owner_id} set GoapActionProvider agent type to '{motor_data.agent_type}' from data"); }
-
         Agent.Initialize(); // we refresh the injected data for the agent
+        // Provider.Receiver = Agent;
 
 
         // set this before the rest so the data is set
         // ? yes but is there a reason why we don't set it at the top of method ?
+            // -> yes I think the Provider must be initialized properly before we have a data
         base.LoadData(data, capable_data); 
 
 

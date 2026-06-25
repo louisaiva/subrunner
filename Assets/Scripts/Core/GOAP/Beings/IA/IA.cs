@@ -47,6 +47,7 @@ public class IA : Movable
     private int frame_counter_since_loaded = 0;
     public bool JustLoaded { get { return just_loaded; } }
 
+
     [Header("Social Data")]
     public SocialData SocialData;
 
@@ -67,19 +68,21 @@ public class IA : Movable
     // ? are these methods really useful ? we want to make a brain rather than this i think...
     public virtual void OnNoActionFound(IGoalRequest request)
     {
+        // Debug.LogWarning($"(IA) No action found for goal request : {request}");
         GetCapacity<MotorCapacity>()?.RequestSuitedGoal();
     }
     public virtual void OnActionEnd(IAction action)
     {
-        GetCapacity<MotorCapacity>()?.RequestSuitedGoal();
+        // Debug.Log($"(IA) Action ended : {action.GetType().Name}");
+        if (!TryGetCapacity(out MotorCapacity mc)) { return; }
+        if (mc.StillHasPendingActions()) { return; } // if there are still pending actions, we don't request a new goal yet
+        mc.RequestSuitedGoal();
     }
     public virtual void OnGoalCompleted(IGoal goal)
     {
+        // Debug.Log($"(IA) Goal completed : {goal.GetType().Name}");
         GetCapacity<MotorCapacity>()?.RequestSuitedGoal();
     }
-
-
-
 
 
 

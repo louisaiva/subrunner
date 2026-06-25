@@ -1,5 +1,6 @@
 ﻿using System;
 using CrashKonijn.Agent.Core;
+// using UnityEngine;
 
 namespace CrashKonijn.Agent.Runtime
 {
@@ -10,6 +11,7 @@ namespace CrashKonijn.Agent.Runtime
 
         public void ActionStart(IAction action)
         {
+            // Debug.Log($"(AgentEvents) ActionStart called for {action.GetType().Name}");
             this.OnActionStart?.Invoke(action);
         }
 
@@ -17,6 +19,7 @@ namespace CrashKonijn.Agent.Runtime
 
         public void ActionEnd(IAction action)
         {
+            // Debug.Log($"(AgentEvents) ActionEnd called for {action.GetType().Name}");
             this.OnActionEnd?.Invoke(action);
         }
 
