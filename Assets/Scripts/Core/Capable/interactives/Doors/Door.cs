@@ -333,11 +333,11 @@ public class Door : Capable, Interactable, Openable
         if (room != room1_id && room != room2_id) { return false; }
         if (room == room1_id)
         {
-            position += .5f * (is_vertical ? Vector2.up : Vector2.right);
+            position += .75f * (is_vertical ? Vector2.up : Vector2.right);
         }
         else
         {
-            position += .5f * (is_vertical ? Vector2.down : Vector2.left);
+            position += .75f * (is_vertical ? Vector2.down : Vector2.left);
         }
         return true;
     }

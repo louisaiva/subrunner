@@ -53,7 +53,7 @@ namespace subrunner.goap
             // find the closest food
             ItemData closest_trash = detector.FindClosestInteractableTrash(ia.data, idata, force_loaded:true);
             if (closest_trash == null) { return null; }
-            mc.mdata.SetDestination(goal, closest_trash.GetRealRoom());
+            mc.mdata.SetDestination(goal, closest_trash.room);
 
             // If the target is already set, we update it
             if (target is CapableTarget captarg)

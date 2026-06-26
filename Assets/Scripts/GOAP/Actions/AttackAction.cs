@@ -24,6 +24,23 @@ namespace subrunner.goap
         [Header("Logs")]
         public bool log_start_target_info = false;
 
+        // DATA
+        public class Data : IA_ActionData
+        {
+            public CapableTarget CapableTarget
+            {
+                get
+                {
+                    if (Target is CapableTarget capable_target) { return capable_target; }
+                    return null;
+                }
+            }
+
+            public Action<CapableData> target_changed_room_callback;
+
+            public AttackCapacity attack_capacity { get; set; }
+            public float this_action_stop_distance { get; set; } // we cache this at start to be used in the IsInRange override
+        }
 
         // START
         public override void Start(IMonoAgent agent, Data data)
@@ -35,13 +52,18 @@ namespace subrunner.goap
             data.ia.GetCapacity<WalkCapacity>()?.EnableRun(); // we make sure we chase the target by running
 
             data.attack_capacity = data.ia.GetCapacity<AttackCapacity>();
-            // data.CapableTarget = data.Target is CapableTarget target ? target.Capable : null;
             if (data.CapableTarget == null || !data.CapableTarget.IsValid())
             {
                 if (Logger.LazyInstance.LOG_ATTACK_ACTION) { Debug.LogWarning($"(AttackAction) {data.ia.ID} has no valid target for AttackAction"); }
                 agent.StopAction(resolveAction: true);
                 return;
             }
+
+            // we register to the target changing room callback
+            data.target_changed_room_callback = (ctx) => on_target_changed_room(agent, data);
+            data.CapableTarget.CapableData.OnRoomChanged += data.target_changed_room_callback;
+
+
             if (!data.CapableTarget.Loaded)
             {
                 // we have a target but it is not loaded
@@ -173,7 +195,7 @@ namespace subrunner.goap
             return distance <= data.this_action_stop_distance;
         }
 
-        // TAKE DAMAGE
+        // CALLBACKS
         public override void TakeDamage(IMonoAgent agent, Data data)
         {
             base.TakeDamage(agent, data);
@@ -184,6 +206,16 @@ namespace subrunner.goap
                 last_result.StopWatchingTheAttack(data.attack_capacity, AttackActionStatus.TookDamage);
             }
         }
+        private void on_target_changed_room(IMonoAgent agent, Data data)
+        {
+            Debug.Log($"(AttackAction) {data.ia.ID} target {data.CapableTarget.CapableID} just changed room !!".AddColor(Color.aliceBlue));
+            if (data.ia.TryGetCapacity(out MotorCapacity mc)) { mc.mdata.ClearDestination(typeof(KillBeingGoal)); }
+            agent.StopAction(resolveAction: true);
+            // Stop(agent, data); // we simply stops the action when the target changes room, will recalculate the good action
+        }
+
+
+        // STOP
         public override void Stop(IMonoAgent agent, Data data)
         {
             base.Stop(agent, data);
@@ -197,20 +229,14 @@ namespace subrunner.goap
             }
         }
 
-        // DATA
-        public class Data : IA_ActionData
+        // END
+        public override void End(IMonoAgent agent, Data data)
         {
-            public CapableTarget CapableTarget
-            {
-                get
-                {
-                    if (Target is CapableTarget capable_target) { return capable_target; }
-                    return null;
-                }
-            }
+            base.End(agent, data);
 
-            public AttackCapacity attack_capacity { get; set; }
-            public float this_action_stop_distance { get; set; } // we cache this at start to be used in the IsInRange override
+            if (data.target_changed_room_callback == null) { return; }
+            data.CapableTarget.CapableData.OnRoomChanged -= data.target_changed_room_callback;
+            data.target_changed_room_callback = null;
         }
     }
 

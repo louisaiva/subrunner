@@ -64,6 +64,7 @@ public interface ICapableData : IData
 
     // EVENTS
     public event Action<CapableData> OnPositionChanged;
+    public event Action<CapableData> OnRoomChanged;
     public event Action<Capable, CapableData> OnCapableLoaded;
     public event Action<Capable, CapableData> OnCapableUnloaded;
 
@@ -88,12 +89,25 @@ public interface ICapableData : IData
         OnCapableUnloaded?.Invoke(capable, this);
         loaded_assigned_capable = null;
     }
-    public virtual string GetRealRoom()
+    public void OnChangedRoom(RoomData room)
     {
-        if (string.IsNullOrEmpty(id)) { return ""; }
-        if (Capable != null) { return Capable.GetRealRoom(); }
-        if (!RoomEngine.Instance.TryGetCapableRoom(id, out RoomData room)) { return ""; }
-        return room.id;
+        _room = room.id;
+        OnRoomChanged?.Invoke(this);
+    }
+    [RuntimeOnly] private string _room;
+    [RuntimeOnly] public string room
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(_room))
+            {
+                if (string.IsNullOrEmpty(id)) { _room = ""; }
+                else if (Capable != null) { _room = Capable.GetRealRoom(); }
+                else if (!RoomEngine.Instance.TryGetCapableRoom(id, out RoomData rdata)) { _room = ""; }
+                else { _room = rdata.id; }
+            }
+            return _room;
+        }
     }
 
     // CONSTRUCTORS

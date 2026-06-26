@@ -95,6 +95,9 @@ public class CapableEngine : BSOD_System<CapableEngine>
     {
         if (log) { Debug.Log($"(CapableEngine) Loading world data for world_id: {world_id}"); }
 
+        // registers to roomengine's capable room transfers
+        RoomEngine.LazyInstance.OnCapableChangedRoom += HandleCapableChangedRoom;
+
         // load templates data
         if (!templates_loaded)
         {
@@ -132,6 +135,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
     public override async Task UnloadWorldData(bool log)
     {
         // we DON'T unload the templates data since it is valid for all worlds
+        RoomEngine.LazyInstance.OnCapableChangedRoom -= HandleCapableChangedRoom;
 
         if (log) { Debug.Log($"(CapableEngine) clearing sub systems cache"); }
         CapableBank.Instance.ClearSubSystemsCache(log); // clears AnimLayerBank, ColliderBank
@@ -1012,6 +1016,19 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
 
 
+
+
+    ///
+    //
+    /// 3.5. CALLBACKS
+    //
+    ///
+
+    private void HandleCapableChangedRoom(string capid, RoomData rdata)
+    {
+        if (!world_capables_data.TryGetValue(capid, out CapableData cdata)) { return; }
+        cdata.OnChangedRoom(rdata);
+    }
 
 
     ///

@@ -6,6 +6,26 @@ using UnityEngine;
 
 namespace subrunner.goap
 {
+    public class GoToRoomSensor : GoToRoomSensor<WorldKeyBase, WorldKeyBase, TargetKeyBase, TargetKeyBase, IGoal>
+    {
+        public static string GetNextRoomAlongPath(string start, string dest, out DoorData door)
+        {
+            door = null;
+            if (string.Equals(start, dest)) { return start; }
+            door = RoomEngine.DoorEngine.GetNextDoorAlongPath(start, dest);
+            if (door == null)
+            {
+                Debug.LogError($"(GoToRoomSensor) Could not find the next door data along path between {start} & {dest}");
+                return null;
+            }
+
+            // we get the room id that is NOT current_room
+            return door.room1_id == start ?
+                            door.room2_id :
+                            door.room1_id;
+        }
+    }
+
     public class GoToRoomSensor<SameT,AccessibleT, RoomT, DoorT, GoalT> : MultiSensorBase
         where SameT : WorldKeyBase
         where AccessibleT : WorldKeyBase
@@ -15,6 +35,7 @@ namespace subrunner.goap
     {
         // protected virtual System.Type GoalType => typeof(/* IGoal */ WanderGoal); // set wander goal as default
         private static bool log_created = true;
+
 
         // The Created method is called when the sensor is created
         // This can be used to gather references to objects in the scene
@@ -73,18 +94,9 @@ namespace subrunner.goap
                     }
                     return null;
                 }
-                DoorData next_door = RoomEngine.DoorEngine.GetNextDoorAlongPath(current_room, destination);
-                if (next_door == null)
-                {
-                    Debug.LogError($"(GoToRoomSensor) Could not find the next door data along path between {current_room} & {destination}");
-                    return null;
-                }
-
-                // we get the room id that is NOT current_room
-                string other_room_id = next_door.room1_id == current_room ?
-                                                next_door.room2_id :
-                                                next_door.room1_id;
-
+                
+                string other_room_id = GoToRoomSensor.GetNextRoomAlongPath(current_room, destination, out DoorData next_door);
+                if (next_door == null) { return null; }
                 if (!next_door.GetPositionInsideRoom(other_room_id, out Vector2 position)) { return null; }
 
                 if (Logger.LazyInstance.LOG_GTR_SENSOR)

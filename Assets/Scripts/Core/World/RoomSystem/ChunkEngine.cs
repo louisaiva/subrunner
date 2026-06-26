@@ -46,6 +46,7 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
     private Dictionary<string, Dictionary<string, ScoreBiasState>> chunk_score_biases = new Dictionary<string, Dictionary<string, ScoreBiasState>>();
     public Action<string, ChunkData> OnCapableAddedToChunk = delegate { };
     public Action<string, ChunkData> OnCapableRemovedFromChunk = delegate { };
+    public Action<string, ChunkData, ChunkData> OnCapableChangedChunk = delegate { };
 
     // CAPABLES ATTACHING
     private Dictionary<string, float> capables_attach_times = new Dictionary<string, float>();
@@ -546,6 +547,7 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
             if (log_chunk_transfers) { Debug.Log($"(ChunkEngine) [{out_chunk_id}] >> {capable_id} >> [{in_chunk_id}]"); }
             if (current_chunk != null) { removeCapableFromChunk(capable_id, current_chunk); }
             addCapableToChunk(capable_id, best_chunk, CapableEngine.Instance.IsMovable(capable_id));
+            OnCapableChangedChunk?.Invoke(capable_id, current_chunk, best_chunk);
             if (log_ticks) { log_tick += $"    - TRANSFERED TO NEW CHUNK !!! : {best_chunk.id}\n"; }
 
             // check if the new chunk is unloading (or unloaded and not loading) and if yes we need to unload the entity as well

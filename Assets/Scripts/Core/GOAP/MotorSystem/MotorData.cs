@@ -52,11 +52,6 @@ using UnityEngine;
 
 
     // DESTINATIONS & CURRENT ROOM MANAGEMENT
-    [RuntimeOnly] public string CurrentRoom => current_room_id;
-    public void UpdateCurrentRoom()
-    {
-        current_room_id = OwnerData.GetRealRoom();
-    }
     public bool SetDestination(Type goal, string destination)
     {
         if (string.IsNullOrEmpty(destination)) { return false; }
@@ -90,11 +85,8 @@ using UnityEngine;
 
         if (RoomEngine.DoorEngine == null) { return false; }
         if (goal == null) { return false; }
-
-        // feed the current room
-        UpdateCurrentRoom();
-        if (string.IsNullOrEmpty(CurrentRoom)) { return false; }
-        current_room = CurrentRoom;
+        if (string.IsNullOrEmpty(OwnerData?.room)) { return false; }
+        current_room = OwnerData.room;
         TryGetDestination(goal, out destination);
         // even if no destination, we are good !
         return true;

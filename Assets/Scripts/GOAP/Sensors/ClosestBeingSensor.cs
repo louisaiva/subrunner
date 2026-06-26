@@ -39,15 +39,15 @@ namespace subrunner.goap
                 }
             }
 
-
             HealthCapacity closestHealth = health_detector.FindClosestHealthCapacity(iaData);
-            if (closestHealth == null) { return null; }
+            if (closestHealth == null || closestHealth.Capable == null) { return null; }
+            if (ia.TryGetCapacity(out MotorCapacity mc))
+            {
+                mc.mdata.SetDestination(typeof(KillBeingGoal), closestHealth.Capable.data.room);
+            }
 
             // If the target is a transform target, set the target to the closest being
-            if (target is CapableTarget transformTarget)
-            {
-                return transformTarget.SetCapable(closestHealth.Capable);
-            }
+            if (target is CapableTarget captarg) { return captarg.SetCapable(closestHealth.Capable); }
             return new CapableTarget(closestHealth.Capable);
         }
     }

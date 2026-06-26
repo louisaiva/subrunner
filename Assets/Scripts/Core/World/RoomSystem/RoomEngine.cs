@@ -61,10 +61,15 @@ public class RoomEngine : BSOD_System<RoomEngine>
     {
         loadRoomsData(world_id);
 
+        // register to chunkengine events
+        ChunkEngine.LazyInstance.OnCapableChangedChunk += OnCapableChangedChunk;
+
         if (log) { Debug.Log($"(RoomEngine) ROOM ENGINE SUCCESSFULLY LOADED : {world_id}"); }
     }
     public override async Task UnloadWorldData(bool log)
     {
+        ChunkEngine.LazyInstance.OnCapableChangedChunk -= OnCapableChangedChunk;
+
         // clear sub systems caches
         TilemapEngine.ClearTilemaps(log);
         await DoorEngine.UnloadWorldData(log);
@@ -138,6 +143,20 @@ public class RoomEngine : BSOD_System<RoomEngine>
     public void HideTilemaps(RoomData room_data) => TilemapEngine.HideTilemaps(room_data.id);
 
 
+    ///
+    //
+    /// CAPABLE TRANSFER CALLBACKS
+    //
+    ///
+    public Action<string, RoomData> OnCapableChangedRoom = delegate {};
+    private void OnCapableChangedChunk(string capable_id, ChunkData from, ChunkData to)
+    {
+        if (to == null) { return; }
+        if (from != null && from.room_id == to.room_id) { return; } // stays in same room
+        string to_room = to.room_id;
+        if (!rooms_data.TryGetValue(to_room, out RoomData room)) { return; }        
+        OnCapableChangedRoom?.Invoke(capable_id, room);
+    }
 
 
     ///
@@ -204,6 +223,12 @@ public class RoomEngine : BSOD_System<RoomEngine>
             capables_data.AddRange(CapableEngine.Instance.GetCapablesDataFromIDs(chunk_data.capables_ids.Concat(chunk_data.movables_ids).ToList()));
         }
         return capables_data;
+    }
+    public bool TryGetCapableRoom(CapableData cdata, out RoomData room)
+    {
+        if (TryGetCapableRoom(cdata.id, out room)) { return true; }
+        room = GetRoomAtPositionInLevel(cdata.Position);
+        return room != null;
     }
     public bool TryGetCapableRoom(string capable_id, out RoomData room)
     {

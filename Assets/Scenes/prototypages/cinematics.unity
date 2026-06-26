@@ -10886,7 +10886,7 @@ MonoBehaviour:
   chunk_distance: 2
   log_awake_data: 1
   log_ticks: 0
-  log_chunk_transfers: 0
+  log_chunk_transfers: 1
   log_loaded_area_transfers: 0
   log_best_match_calcul: 0
   log_spatial_queries: 0
@@ -133378,12 +133378,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 714515157948744320, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: LOG_CLOSEST_TRASH_SENSOR
+      propertyPath: LOG_CLOSEST_BEING_SENSOR
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 714515157948744320, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: LOG_CLOSEST_TRASH_SENSOR
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 714515157948744320, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: LOG_WANDER_TARGET_SENSOR
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3744786912224508728, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: m_LocalPosition.x
