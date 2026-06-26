@@ -108,7 +108,7 @@ public class MotorCapacity : Capacity
     private void OnNoActionFound(IGoalRequest request) { IA.OnNoActionFound(request); }
     private void OnActionStart(IAction action)
     {
-        if (log_pending_actions) { Debug.Log($"(MotorCapacity) Current action started : {action?.GetType().Name ?? "null"}"); }
+        if (log_pending_actions) { Debug.Log($"(MotorCapacity) Current action started : {action?.GetType().GetFriendlyName() ?? "null"}"); }
         update_pending_actions(action as IGoapAction);
     }
     private void OnActionEnd(IAction action)
@@ -116,7 +116,7 @@ public class MotorCapacity : Capacity
         if (current_action == action)
         {
             current_action = null;
-            if (log_pending_actions) { Debug.Log($"(MotorCapacity) Current action ended : {action?.GetType().Name ?? "null"}"); }
+            if (log_pending_actions) { Debug.Log($"(MotorCapacity) Current action ended : {action?.GetType().GetFriendlyName() ?? "null"}"); }
         }
 
         IA.OnActionEnd(action);
@@ -183,7 +183,7 @@ public class MotorCapacity : Capacity
             if (!found_current) { continue; } // we only want NOT done actions
             pending_actions.Add(i_action);
         }
-        Debug.Log($"(MotorCapacity) Updated pending actions : {GetPendingActionsDetails()}");
+        if (log_pending_actions) { Debug.Log($"(MotorCapacity) Updated pending actions : {GetPendingActionsDetails()}"); }
     }
     public bool StillHasPendingActions()
     {
@@ -191,9 +191,15 @@ public class MotorCapacity : Capacity
     }
     public string GetPendingActionsDetails()
     {
-        string debug = $"[{current_action?.GetType().Name ?? "null"}] >> ";
-        debug += pending_actions.Count > 0 ? string.Join(" >> ", pending_actions.Select(a => a.GetType().Name)) : "none";
+        string debug = $"[{current_action?.GetType().GetFriendlyName() ?? "null"}] >> ";
+        debug += pending_actions.Count > 0 ? string.Join(" >> ", pending_actions.Select(a => a.GetType().GetFriendlyName())) : "none";
         return debug;
+    }
+    public Type GetCurrentGoal()
+    {
+        if (Provider.CurrentPlan == null) { return null; }
+        if (Provider.CurrentPlan.Goal == null) { return null; }
+        return Provider.CurrentPlan.Goal.GetType();
     }
 
 

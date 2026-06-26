@@ -1,6 +1,46 @@
 ﻿{
     "<id>k__BackingField": "spider_walk",
     "<owner_id>k__BackingField": "no_capable_id",
+    "_owner": {
+        "<id>k__BackingField": "",
+        "kind": "",
+        "position": {
+            "x": 0.0,
+            "y": 0.0
+        },
+        "orientation": {
+            "x": 0.0,
+            "y": 0.0
+        },
+        "layer": 0,
+        "tag": "",
+        "capacities_ids": [],
+        "anim_data": {
+            "skin_kind": "",
+            "skin": "",
+            "anim_capacity_priorities": [],
+            "current_capacity": "",
+            "material_name": "",
+            "sorting_layer_id": 0,
+            "order_in_layer": 0,
+            "never_flip": false,
+            "layers": [],
+            "local_position": {
+                "x": 0.0,
+                "y": 0.0
+            }
+        },
+        "inventory": {
+            "item_pools_data": [],
+            "item_type": 0
+        },
+        "feet_data": {
+            "box_colliders": [],
+            "circle_colliders": []
+        },
+        "effects": [],
+        "effects_ttl": []
+    },
     "kind": "WalkCapacity",
     "local_position": {
         "x": 0.0,
@@ -18,8 +58,8 @@
         "a": 0.0
     },
     "particles_rate": 0.0,
-    "max_walk_speed": 3.0262911319732668,
-    "max_run_speed": 6.281315803527832,
+    "max_walk_speed": 3.279142141342163,
+    "max_run_speed": 6.392025947570801,
     "walk_percentage_target": 0.0,
     "is_running": false
 }

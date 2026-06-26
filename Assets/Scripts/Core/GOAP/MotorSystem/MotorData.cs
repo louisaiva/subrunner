@@ -12,7 +12,8 @@ using UnityEngine;
 {
     public string agent_type;
     [RuntimeOnly] public string current_room_id;
-    [RuntimeOnly] public string destination_room_id; // main room destination aim of the ia. // todo : can be switched to a stack<string> to handle sub destinations objectives
+    [/* InstanceSpecific,  */RuntimeOnly] public Dictionary<Type, string> room_destinations = new Dictionary<Type, string>(); // main room destinations per goal of the ia.
+    
 
 
     // LOCAL WORLD DATA
@@ -48,6 +49,56 @@ using UnityEngine;
         return base.GetDetails() + details;
     }
 
+
+
+    // DESTINATIONS & CURRENT ROOM MANAGEMENT
+    [RuntimeOnly] public string CurrentRoom => current_room_id;
+    public void UpdateCurrentRoom()
+    {
+        current_room_id = OwnerData.GetRealRoom();
+    }
+    public bool SetDestination(Type goal, string destination)
+    {
+        if (string.IsNullOrEmpty(destination)) { return false; }
+        if (goal == null) { return false; }
+
+        if (room_destinations.ContainsKey(goal))
+        {
+            room_destinations[goal] = destination;
+            return true;
+        }
+
+        room_destinations.Add(goal, destination);
+        return true;
+    }
+    public void ClearDestination(Type goal)
+    {
+        if (goal == null) { return; }
+        if (!room_destinations.ContainsKey(goal)) { return; }
+        room_destinations.Remove(goal);
+    }
+    public bool TryGetDestination(Type goal, out string destination)
+    {
+        if (goal == null) { destination = null; return false; }
+        if (!room_destinations.TryGetValue(goal, out destination)) { return false; }
+        return !string.IsNullOrEmpty(destination);
+    }
+    public bool ExtractCurrentAndDestinationRooms(Type goal, out string current_room, out string destination)
+    {
+        current_room = "";
+        destination = "";
+
+        if (RoomEngine.DoorEngine == null) { return false; }
+        if (goal == null) { return false; }
+
+        // feed the current room
+        UpdateCurrentRoom();
+        if (string.IsNullOrEmpty(CurrentRoom)) { return false; }
+        current_room = CurrentRoom;
+        TryGetDestination(goal, out destination);
+        // even if no destination, we are good !
+        return true;
+    }
 }
 
 

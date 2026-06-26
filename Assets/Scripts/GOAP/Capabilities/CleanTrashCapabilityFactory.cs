@@ -13,8 +13,8 @@ namespace subrunner.goap
                 .AddCondition<TrashOnFloor>(Comparison.SmallerThanOrEqual, 0)
                 .SetBaseCost(10);
 
-            builder.AddAction<PersistantInteractAction<Item>>()
-                .AddCondition<SameRoom>(Comparison.GreaterThanOrEqual, 1)
+            builder.AddAction<InteractAction<Item, CleanTrashGoal>>()
+                .AddCondition<TrashSameRoom>(Comparison.GreaterThanOrEqual, 1)
                 .AddEffect<TrashOnFloor>(EffectType.Decrease)
                 .SetTarget<ClosestTrash>()
                 .SetStoppingDistance(0.3f);
@@ -28,16 +28,16 @@ namespace subrunner.goap
 
 
             // GO TO NEXT ROOM + DOOR OPENING
-            builder.AddAction<GoToNextRoomAction>()
-                .AddCondition<NextRoomAccessible>(Comparison.GreaterThanOrEqual, 1)
-                .AddEffect<SameRoom>(EffectType.Increase)
-                .SetTarget<RoomTarget>();
+            builder.AddAction<GoToNextRoomAction<CleanTrashGoal>>()
+                .AddCondition<TrashRoomAccessible>(Comparison.GreaterThanOrEqual, 1)
+                .AddEffect<TrashSameRoom>(EffectType.Increase)
+                .SetTarget<TrashRoomTarget>();
+                
+            builder.AddAction<OpenDoorAction>()
+                .AddEffect<TrashRoomAccessible>(EffectType.Increase)
+                .SetTarget<TrashDoorTarget>();
 
-            builder.AddAction<InteractAction<Door>>()
-                .AddEffect<NextRoomAccessible>(EffectType.Increase)
-                .SetTarget<DoorTarget>();
-
-            builder.AddMultiSensor<GoToRoomSensor>();
+            builder.AddMultiSensor<GoToRoomSensor<TrashSameRoom, TrashRoomAccessible, TrashRoomTarget, TrashDoorTarget, CleanTrashGoal>>();
 
             return builder.Build();
         }

@@ -1,5 +1,6 @@
 #pragma warning disable 1998
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -86,7 +87,7 @@ public class DoorEngine : MonoBehaviour
         {
             room1 = door_graph.GetRoomNode(room_1.id),
             room2 = door_graph.GetRoomNode(room_2.id),
-            state = door_data.is_open ? LinkState.Open : LinkState.RequireInteraction,
+            State = door_data.is_open ? LinkState.Open : LinkState.RequireInteraction,
             door_id = door_data.id,
         };
 
@@ -135,7 +136,7 @@ public class DoorEngine : MonoBehaviour
         // we mark the link as open in the graph
         RoomLink link = door_graph.GetDoorLink(door.ID);
         if (link == null) { Debug.LogError($"(DoorEngine) Could not find link for door id: {door.ID}"); return; }
-        link.state = LinkState.Open;
+        link.State = LinkState.Open;
 
         UpdateRoomsVisibility();
     }
@@ -144,7 +145,7 @@ public class DoorEngine : MonoBehaviour
         // we mark the link as closed in the graph
         RoomLink link = door_graph.GetDoorLink(door.ID);
         if (link == null) { Debug.LogError($"(DoorEngine) Could not find link for door id: {door.ID}"); return; }
-        link.state = LinkState.RequireInteraction;
+        link.State = LinkState.RequireInteraction;
 
         UpdateRoomsVisibility();
     }
@@ -413,7 +414,7 @@ public class DoorEngine : MonoBehaviour
         if (path == null) { return false; }
         if (path.Count == 0) { return true; } // we already in the room !
         // todo : add a AccessibilityFilter parameter to precise the LinkStates to consider rooms are accessible
-        return path[0].state == LinkState.Open;
+        return path[0].State == LinkState.Open;
     }
     public DoorData GetNextDoorAlongPath(string start, string dest)
     {
@@ -422,7 +423,10 @@ public class DoorEngine : MonoBehaviour
         if (path.Count == 0) { return null; } // are we already in the room ? or path is corrupted
         return CapableEngine.Instance.GetCapableDataFromID(path[0].door_id) as DoorData;
     }
-
+    public RoomLink GetLinkBetweenRooms(string room1, string room2)
+    {
+        return door_graph.GetLinkBetweenRooms(room1, room2);
+    }
 
     // INTERNAL CLASSES
     private class DoorGraph
@@ -460,6 +464,14 @@ public class DoorEngine : MonoBehaviour
             }
             return null;
         }
+        public RoomLink GetLinkBetweenRooms(string a, string b)
+        {
+            RoomNode anode = GetRoomNode(a);
+            if (a == null) { return null; }
+            RoomNode bnode = GetRoomNode(b);
+            if (b == null) { return null; }
+            return GetLinkBetweenRooms(anode,bnode);
+        }
 
         // get all doors linked to a room
         public List<string> GetDoorIDsLinkedToRoom(string room_id)
@@ -488,7 +500,7 @@ public class DoorEngine : MonoBehaviour
             List<RoomNode> neighbours = new List<RoomNode>();
             foreach (RoomLink link in links)
             {
-                if (link.state != LinkState.Open) { continue; }
+                if (link.State != LinkState.Open) { continue; }
                 if (link.room1.ID == room_id) { neighbours.Add(link.room2); }
                 else if (link.room2.ID == room_id) { neighbours.Add(link.room1); }
             }
@@ -643,25 +655,36 @@ public class DoorEngine : MonoBehaviour
                 if (link == null) { details += "- Link is null\n"; continue; }
                 if (link.room1 == null) { details += $"- Link id: {link.ID} has null room1\n"; continue; }
                 if (link.room2 == null) { details += $"- Link id: {link.ID} has null room2\n"; continue; }
-                details += $"- Link id: {link.ID}, between room {link.room1.ID} and room {link.room2.ID}, state: {link.state}\n";
+                details += $"- Link id: {link.ID}, between room {link.room1.ID} and room {link.room2.ID}, state: {link.State}\n";
             }
             return details;
         }
     }
-    private class RoomNode
+    public class RoomNode
     {
         public RoomData data;
         public string ID => data.id;
     }
-    private class RoomLink
+    public class RoomLink
     {
         public RoomNode room1;
         public RoomNode room2;
-        public LinkState state; // todo update the state dynamically
+        public Action<RoomLink> OnStateChanged;
+        private LinkState _state;
+        public LinkState State
+        {
+            get => _state;
+            set
+            {
+                _state = value;
+                OnStateChanged?.Invoke(this);
+            }
+        }
         public string door_id;
         public string ID => door_id;
+        public bool IsOpen => State == LinkState.Open;
     }
-    private enum LinkState
+    public enum LinkState
     {
         Open,
         RequireInteraction,

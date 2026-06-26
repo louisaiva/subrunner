@@ -18,7 +18,7 @@ namespace subrunner.goap
             // here we can reset the room destination in the motor data !
             if (data.ia.TryGetCapacity(out MotorCapacity mc))
             {
-                if (mc.mdata != null) { mc.mdata.destination_room_id = ""; }
+                mc.mdata.ClearDestination(typeof(WanderGoal));
             }
         }
     }

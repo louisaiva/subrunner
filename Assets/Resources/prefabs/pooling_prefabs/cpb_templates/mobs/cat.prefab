@@ -174,14 +174,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: cat
   <orientation>k__BackingField: D
-  current_anim:
-    name: 
-    sprites_paths: []
-    sprites: []
-    sprites_durations: []
-    loop: 1
-    speed: 1
-    flipX: 0
+  current_capacity: 
   update_each_frame: 1
   anim_capacity_priorities:
   - priority: 0
@@ -313,6 +306,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -330,7 +324,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 0}
@@ -360,7 +353,6 @@ MonoBehaviour:
     - rat
     - cyber_rat
     - qwin
-    - dev
   log_actions: 0
 --- !u!1001 &347420623141943002
 PrefabInstance:

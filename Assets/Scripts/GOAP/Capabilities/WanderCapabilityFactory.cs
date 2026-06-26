@@ -1,3 +1,4 @@
+using CrashKonijn.Agent.Core;
 using CrashKonijn.Goap.Core;
 using CrashKonijn.Goap.Runtime;
 
@@ -21,18 +22,16 @@ namespace subrunner.goap
             builder.AddTargetSensor<WanderTargetSensor>()
                 .SetTarget<WanderTarget>();
 
-            builder.AddAction<GoToNextRoomAction>()
+            builder.AddAction<GoToNextRoomAction<WanderGoal>>()
                 .AddCondition<NextRoomAccessible>(Comparison.GreaterThanOrEqual, 1)
                 .AddEffect<SameRoom>(EffectType.Increase)
                 .SetTarget<RoomTarget>();
-            
-            builder.AddAction<InteractAction<Door>>()
+
+            builder.AddAction<OpenDoorAction>()
                 .AddEffect<NextRoomAccessible>(EffectType.Increase)
                 .SetTarget<DoorTarget>();
 
-            builder.AddMultiSensor<GoToRoomSensor>();
-            // builder.AddTargetSensor<TravelRoomSensor>()
-            // .SetTarget<DoorTarget>();
+            builder.AddMultiSensor<GoToRoomSensor<SameRoom,NextRoomAccessible, RoomTarget, DoorTarget, WanderGoal>>();
 
             return builder.Build();
         }

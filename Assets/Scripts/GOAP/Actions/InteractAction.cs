@@ -1,10 +1,11 @@
 using CrashKonijn.Agent.Core;
+using CrashKonijn.Goap.Core;
 using CrashKonijn.Goap.Runtime;
 using UnityEngine;
 
 namespace subrunner.goap
 {
-    public class InteractAction<T> : IA_Action<InteractAction<T>.Data> where T : Interactable
+    public class InteractAction<T, GoalT> : IA_Action<InteractAction<T, GoalT>.Data> where T : Interactable where GoalT : IGoal
     {
 
         // START
@@ -31,9 +32,17 @@ namespace subrunner.goap
             }
             data.interactor.InteractWithInteractable(interactive);
 
-            // todo : maybe here we can wait a little ???
+            return ActionRunState.WaitThenComplete(.5f);
+        }
 
-            return ActionRunState.Completed;
+        // OVERRIDES
+        public override void End(IMonoAgent agent, Data data)
+        {
+            // here we can reset the room destination in the motor data !
+            if (data.ia.TryGetCapacity(out MotorCapacity mc))
+            {
+                mc.mdata.ClearDestination(typeof(GoalT));
+            }
         }
 
         // DATA

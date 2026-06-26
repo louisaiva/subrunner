@@ -3,6 +3,7 @@ using CrashKonijn.Goap.Runtime;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.AI;
+using System;
 
 namespace subrunner.goap
 {
@@ -24,24 +25,16 @@ namespace subrunner.goap
                     if (Logger.LazyInstance.LOG_WANDER_TARGET_SENSOR) { Debug.Log($"(WanderLoadedSensor - Sense) {ia.data.id} just loaded and has an existing target : {existingTarget}. We keep it."); }
                     return existingTarget;
                 }
-                else
-                {
-                    if (Logger.LazyInstance.LOG_WANDER_TARGET_SENSOR) { Debug.Log($"(WanderLoadedSensor - Sense) {ia.data.id} just loaded but has no existing target : {existingTarget}"); }
-                }
+                else if (Logger.LazyInstance.LOG_WANDER_TARGET_SENSOR) { Debug.Log($"(WanderLoadedSensor - Sense) {ia.data.id} just loaded but has no existing target : {existingTarget}"); }
             }
 
 
             // ensure that the agent has no left actions in the plan
-            if (!ia.TryGetCapacity(out MotorCapacity mc)) { return existingTarget; }
-            // Debug.Log($"(WanderLoadedSensor - Sense) {ia.data.id} has current plan :      {mc.GetPendingActionsDetails()}");
-            /* if (mc.StillHasPendingActions())
+            if (!ia.TryGetCapacity(out MotorCapacity mc)) { return null; }
+            Type goal = typeof(WanderGoal);
+            if (mc.mdata.TryGetDestination(goal, out string destination))
             {
-                if (Logger.LazyInstance.LOG_WANDER_TARGET_SENSOR) { Debug.Log($"(WanderLoadedSensor - Sense) {agent} still has pending actions !! We don't sense"); }
-                return existingTarget;
-            } */
-            if (!string.IsNullOrEmpty(mc.mdata.destination_room_id))
-            {
-                if (Logger.LazyInstance.LOG_WANDER_TARGET_SENSOR) { Debug.Log($"(WanderLoadedSensor - Sense) {agent} already has a destination room set : {mc.mdata.destination_room_id}. We don't sense a new wander target."); }
+                if (Logger.LazyInstance.LOG_WANDER_TARGET_SENSOR) { Debug.Log($"(WanderLoadedSensor - Sense) {agent} already has a destination room set : {destination}. We don't sense a new wander target."); }
                 return existingTarget;
             }
 
@@ -57,7 +50,6 @@ namespace subrunner.goap
             if (random_position == default)
             {
                 if (Logger.LazyInstance.LOG_WANDER_TARGET_SENSOR) { Debug.LogWarning("(WanderLoadedSensor - Sense) No walkable position found on the nav mesh for : " + ia.name); }
-                if (existingTarget is PositionTarget) { return existingTarget; }
                 return null;
             }
 
@@ -67,12 +59,11 @@ namespace subrunner.goap
             if (Logger.LazyInstance.LOG_WANDER_TARGET_SENSOR) { Debug.Log($"(WanderLoadedSensor - Sense) {agent} senses a new position target at {random_position}"); }
 
             // now we try to extract the room at the position
-            RoomData room = RoomEngine.Instance.GetRoomAtPositionInLevel(random_position);
-            if (room != null)
-            {
-                mc.mdata.destination_room_id = room.id;
-                // if (Logger.LazyInstance.LOG_WANDER_TARGET_SENSOR) { Debug.Log($"(WanderLoadedSensor) {agent} has a new room destination {room.id}"); }
-            }
+            mc.mdata.SetDestination
+            (
+                goal,
+                RoomEngine.Instance.GetRoomAtPositionInLevel(random_position)?.id
+            );
 
             // and we return the position as a PositionTarget
             if (existingTarget is PositionTarget existingTargetPosition)
@@ -107,7 +98,7 @@ namespace subrunner.goap
         private Vector3 getRandomPositionOnNavMesh(Vector2 center, float range, NavMeshQueryFilter? filter = null)
         {
             // pick a random position on the nav mesh
-            Vector3 randomPosition = (Vector3)center + Random.insideUnitSphere * range;
+            Vector3 randomPosition = (Vector3)center + UnityEngine.Random.insideUnitSphere * range;
 
             NavMeshHit hit;
             if (NavMesh.SamplePosition(randomPosition, out hit, 10f, filter == null ? defaultFilter : filter.Value))

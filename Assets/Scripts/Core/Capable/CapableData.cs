@@ -88,7 +88,13 @@ public interface ICapableData : IData
         OnCapableUnloaded?.Invoke(capable, this);
         loaded_assigned_capable = null;
     }
-
+    public virtual string GetRealRoom()
+    {
+        if (string.IsNullOrEmpty(id)) { return ""; }
+        if (Capable != null) { return Capable.GetRealRoom(); }
+        if (!RoomEngine.Instance.TryGetCapableRoom(id, out RoomData room)) { return ""; }
+        return room.id;
+    }
 
     // CONSTRUCTORS
     public CapableData() { }
@@ -173,6 +179,8 @@ public interface ICapableData : IData
         position = new_position;
         OnPositionChanged?.Invoke(this);
     }
+
+
 }
 
 
