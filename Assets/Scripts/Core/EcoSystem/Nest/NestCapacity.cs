@@ -46,8 +46,6 @@ public class NestCapacity : Capacity
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log($"(NestCapacity) {other.gameObject.name} just entered trigger of nest {ID} !!".AddColor(Color.violet));
-
         if (ndata.spawn_mode != NestSpawnMode.Trigger) { return; }
         
         // we spawn them all !
@@ -226,7 +224,6 @@ public class NestCapacity : Capacity
         string id = entities_to_spawn[0];
         stored_entities.Remove(id);
         entities_to_spawn.RemoveAt(0);
-        Debug.Log($"(NestData) nest {this.id} just extracted {id} for spawning. Stored entities in nest are now : " + StoreDetails(Color.violet, Color.magenta));
         return id;
     }
 

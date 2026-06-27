@@ -218017,9 +218017,10 @@ MonoBehaviour:
     population: 15
     alive_population: 0
     wait_for_corpse_despawn: 0
-  log_species_gain_entity: 1
-  log_species_loss_entity: 1
-  log_new_nest: 1
+  log_species_gain_entity: 0
+  log_species_loss_entity: 0
+  log_new_nest: 0
+  log_tick_nests_details: 0
   tick_delay: 0.1
 --- !u!1 &1492781062
 GameObject:
