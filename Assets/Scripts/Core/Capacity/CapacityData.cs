@@ -14,17 +14,6 @@ public interface ICapacityData : IData
 {
     [field: SerializeField] public string id { get; set; }
     [field: SerializeField] public string owner_id { get; set; }
-    [RuntimeOnly] public CapableData _owner;
-    [RuntimeOnly] public CapableData OwnerData
-    {
-        get
-        {
-            if (_owner != null) { return _owner; }
-            _owner = CapableEngine.LazyInstance.GetCapableDataFromID(owner_id);
-            return _owner;
-        }
-    }
-
     public string kind; // used to determine which kind of capacity it is. i.e. open,close,hover,interact etc (CapableBank uses this to instantiate the right prefab)
     public Vector2 local_position;
     public int layer = 0;
@@ -82,5 +71,42 @@ public interface ICapacityData : IData
         details += $"  - layer : {LayerMask.LayerToName(layer)} ({layer})\n";
         details += $"  - tag : {tag}\n";
         return details;
+    }
+
+
+
+    ///
+    //
+    /// RUNTIME FIELDS
+    //
+    ///
+
+    // LOADED CAPABLE REFERENCE
+    public event Action<Capacity, CapacityData> OnCapacityLoaded;
+    public event Action<Capacity, CapacityData> OnCapacityUnloaded;
+    [RuntimeOnly, NonSerialized] private Capacity _loaded_capacity;
+    [RuntimeOnly] public Capacity Capacity { get { return _loaded_capacity; } }
+    public virtual void OnLoaded(Capacity capa)
+    {
+        _loaded_capacity = capa;
+        OnCapacityLoaded?.Invoke(capa, this);
+    }
+    public virtual void OnUnloaded(Capacity capa)
+    {
+        OnCapacityUnloaded?.Invoke(capa, this);
+        _loaded_capacity = null;
+    }
+
+
+    // OWNER REF
+    [RuntimeOnly, NonSerialized] public CapableData _owner;
+    [RuntimeOnly] public CapableData OwnerData
+    {
+        get
+        {
+            if (_owner != null) { return _owner; }
+            _owner = CapableEngine.LazyInstance.GetCapableDataFromID(owner_id);
+            return _owner;
+        }
     }
 }

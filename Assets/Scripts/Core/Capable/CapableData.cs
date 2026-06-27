@@ -61,55 +61,6 @@ public interface ICapableData : IData
     [InstanceSpecific] public List<Effect> effects;
     [InstanceSpecific] public List<float> effects_ttl; // time to live for each effect, in seconds
 
-
-    // EVENTS
-    public event Action<CapableData> OnPositionChanged;
-    public event Action<CapableData> OnRoomChanged;
-    public event Action<Capable, CapableData> OnCapableLoaded;
-    public event Action<Capable, CapableData> OnCapableUnloaded;
-
-    // RUNTIME ONLY
-    [RuntimeOnly, NonSerialized] private Capable loaded_assigned_capable;
-    [RuntimeOnly] public Capable Capable { get { return loaded_assigned_capable; } }
-    [RuntimeOnly] public Vector2 Position
-    {
-        get
-        {
-            if (loaded_assigned_capable is not null && loaded_assigned_capable.Loaded) { return loaded_assigned_capable.transform.position; }
-            return this.position;
-        }
-    }
-    public virtual void OnLoaded(Capable capable)
-    {
-        loaded_assigned_capable = capable;
-        OnCapableLoaded?.Invoke(capable, this);
-    }
-    public virtual void OnUnloaded(Capable capable)
-    {
-        OnCapableUnloaded?.Invoke(capable, this);
-        loaded_assigned_capable = null;
-    }
-    public void OnChangedRoom(RoomData room)
-    {
-        _room = room.id;
-        OnRoomChanged?.Invoke(this);
-    }
-    [RuntimeOnly] private string _room;
-    [RuntimeOnly] public string room
-    {
-        get
-        {
-            if (string.IsNullOrEmpty(_room))
-            {
-                if (string.IsNullOrEmpty(id)) { _room = ""; }
-                else if (Capable != null) { _room = Capable.GetRealRoom(); }
-                else if (!RoomEngine.Instance.TryGetCapableRoom(id, out RoomData rdata)) { _room = ""; }
-                else { _room = rdata.id; }
-            }
-            return _room;
-        }
-    }
-
     // CONSTRUCTORS
     public CapableData() { }
     protected CapableData(CapableData parent) { copy_from_parent(parent); }
@@ -192,6 +143,72 @@ public interface ICapableData : IData
     {
         position = new_position;
         OnPositionChanged?.Invoke(this);
+    }
+
+
+
+
+
+
+
+
+    ///
+    //
+    /// RUNTIME FIELDS
+    //
+    ///
+
+
+    // LOADED CAPABLE REFERENCE
+    public event Action<Capable, CapableData> OnCapableLoaded;
+    public event Action<Capable, CapableData> OnCapableUnloaded;
+    [RuntimeOnly, NonSerialized] private Capable loaded_assigned_capable;
+    [RuntimeOnly] public Capable Capable { get { return loaded_assigned_capable; } }
+    public virtual void OnLoaded(Capable capable)
+    {
+        loaded_assigned_capable = capable;
+        OnCapableLoaded?.Invoke(capable, this);
+    }
+    public virtual void OnUnloaded(Capable capable)
+    {
+        OnCapableUnloaded?.Invoke(capable, this);
+        loaded_assigned_capable = null;
+    }
+
+
+    // POSITION
+    public event Action<CapableData> OnPositionChanged;
+    [RuntimeOnly] public Vector2 Position
+    {
+        get
+        {
+            if (loaded_assigned_capable is not null && loaded_assigned_capable.Loaded) { return loaded_assigned_capable.transform.position; }
+            return this.position;
+        }
+    }
+
+
+    // ROOM REF
+    public event Action<CapableData> OnRoomChanged;
+    public void OnChangedRoom(RoomData room)
+    {
+        _room = room.id;
+        OnRoomChanged?.Invoke(this);
+    }
+    [RuntimeOnly] private string _room;
+    [RuntimeOnly] public string room
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(_room))
+            {
+                if (string.IsNullOrEmpty(id)) { _room = ""; }
+                else if (Capable != null) { _room = Capable.GetRealRoom(); }
+                else if (!RoomEngine.Instance.TryGetCapableRoom(id, out RoomData rdata)) { _room = ""; }
+                else { _room = rdata.id; }
+            }
+            return _room;
+        }
     }
 
 

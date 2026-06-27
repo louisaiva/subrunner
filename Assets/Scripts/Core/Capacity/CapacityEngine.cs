@@ -63,6 +63,18 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
     [Header("Logs Saving")]
     public bool log_saving = false;
 
+    ///
+    //
+    /// EVENTS
+    //
+    ///
+
+    public Action<CapacityData> OnCapacitySpawned;
+    public Action<CapacityData> OnCapacityDespawned;
+
+
+
+
 
     ///
     //
@@ -87,6 +99,13 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         if (log_world_data_loading) { Debug.Log($"(CapacityEngine) Loaded {world_capacities_data.Count} world capacities data"); }
 
         worlddata_loaded_done = true;
+
+
+        // we can then call specific sub systems that require to gather some capacities
+        CapableEngine.EcoEngine.GatherNests(log);
+        if (log) { Debug.Log($"(CapacityEngine) Made EcoEngine grab the NestData I just loaded :D"); }
+
+
         if (log) { Debug.Log($"(CapacityEngine) CAPACITY ENGINE SUCCESSFULLY LOADED : {world_id}"); }
     }
     public override async Task UnloadWorldData(bool log)
@@ -207,6 +226,8 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         set_owner_and_capacity_ids(template_id, data, cdata);
         if (log_spawning) { Debug.Log($"(CapacityEngine - Spawn) New Capacity '{data.id}' was created from template '{template_id}' and assigned to '{cdata.id}'"); }
 
+        OnCapacitySpawned?.Invoke(data);
+
         // we return the capacity data
         return data;
     }
@@ -222,6 +243,8 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
 
         set_owner_and_capacity_ids(cap_id, data, cdata);
         if (log_spawning) { Debug.Log($"(CapacityEngine - Spawn) New Capacity '{data.id}' was created from existing capacity '{cap_id}' and assigned to '{cdata.id}'"); }
+
+        OnCapacitySpawned?.Invoke(data);
 
         // we return the capacity data
         return data;
@@ -244,12 +267,12 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
     }
 
     // DESPAWN CAPACITY
-    public void DespawnCapacity(Capacity capacity)
+    public void DespawnCapacityClean(Capacity capacity)
     {
         if (capacity == null) { return; }
-        DespawnCapacity(capacity.data.id, capacity.data.owner_id);
+        DespawnCapacityAndCleanOwnerLink(capacity.data.id, capacity.data.owner_id);
     }
-    public void DespawnCapacity(string capacity_id, string capable_id)
+    public void DespawnCapacityAndCleanOwnerLink(string capacity_id, string capable_id)
     {
         // we ensure we have the data and that it is unloaded
         if (!world_capacities_data.ContainsKey(capacity_id)) { return; }
@@ -275,17 +298,48 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         }
 
         // now the capacity is unloaded and unregistered from capable, we can safely remove the data
+        OnCapacityDespawned?.Invoke(world_capacities_data[capacity_id]);
         world_capacities_data.Remove(capacity_id);
         World.Instance.UnregisterUniqueID(capacity_id);
         if (log_spawning) { Debug.Log($"(CapacityEngine - Despawn) Capacity '{capacity_id}' despawned and data removed from world data"); }
     }
+
+    /// <summary>
+    /// This method is the NOT CLEAN
+    /// equivalent of above, which means
+    /// we don't clean everything (owner link)
+    /// because the owner CapableData is going
+    /// to be despawned just after so no need.
+    /// If you want to properly clean everything,
+    /// use above methods
+    /// </summary>
+    /// <param name="capacity_id"></param>
+    public void DespawnCapacity(string capacity_id)
+    {
+        if (!world_capacities_data.ContainsKey(capacity_id)) { return; }
+
+        // unload the capacity if loaded
+        if (loaded_capacities_data.ContainsKey(capacity_id))
+        {
+            Capacity capacity = CapacityBank.Instance.GetLoadedCapacity(capacity_id);
+            string owner_id = world_capacities_data[capacity_id].owner_id;
+            Capable owner = CapableBank.Instance.GetLoadedCapable(owner_id);
+            UnloadCapacities(new List<string>() { capacity_id }, owner);
+        }
+
+        // now the capacity is unloaded, we remove the data
+        OnCapacityDespawned?.Invoke(world_capacities_data[capacity_id]);
+        world_capacities_data.Remove(capacity_id);
+        World.Instance.UnregisterUniqueID(capacity_id);
+        if (log_spawning) { Debug.Log($"(CapacityEngine - Despawn) Capacity '{capacity_id}' WAS DESPAWN VIOLENTLY (not clean)"); }
+    }
+
 
     ///
     //
     /// LOAD / UNLOAD CAPACITIES / SAVE DYNAMIC DATA
     //
     ///
-
 
 
     // LOAD CAPACITIES
@@ -475,10 +529,19 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         }
         return datas;
     }
-
     public CapacityData GetTemplateData(string id)
     {
         if (!templates_capacities_data.TryGetValue(id, out CapacityData data)) { return null; }
         return data;
+    }
+    public List<T> GetCapacitiesDataOfKind<T>() where T : CapacityData
+    {
+        List<T> gathered_capa = new List<T>();
+        foreach (var kvp in world_capacities_data)
+        {
+            if (kvp.Value is not T capaciT) { continue; }
+            gathered_capa.Add(capaciT);
+        }
+        return gathered_capa;
     }
 }

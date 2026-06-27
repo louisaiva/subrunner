@@ -63,12 +63,16 @@ public class Capacity : MonoBehaviour
         // we set the layer & tag
         gameObject.layer = data.layer;
         if (!string.IsNullOrEmpty(data.tag)) { gameObject.tag = data.tag; }
+
+        // fire the capacity data on loaded event, which will assign a ref to the loaded Capacity inside the CapacityData !
+        data.OnLoaded(this);
     }
     public virtual void UnloadData()
     {
         // save dynamic data
         SaveDynamicData();
 
+        data.OnUnloaded(this);
         this.data = null;
         this._capable = null;
 

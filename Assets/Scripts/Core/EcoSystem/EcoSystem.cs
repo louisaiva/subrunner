@@ -1,0 +1,233 @@
+using System.Collections.Generic;
+using UnityEngine;
+using System;
+
+public class EcoEngine : MonoBehaviour
+{
+    public List<Species> species;
+    private Dictionary<Species, List<NestData>> nests = new Dictionary<Species, List<NestData>>();
+
+    [Header("Logs")]
+    public bool log_species_gain_entity = false;
+    public bool log_species_loss_entity = false;
+    public bool log_new_nest = false;
+
+
+    ///
+    //
+    /// MAIN ENTRY POINTS
+    //
+    ///
+
+
+    // load species
+    public void LoadSpecies(bool log)
+    {
+        initialize_alive_population_species();
+
+        // register callbacks
+        CapableEngine.LazyInstance.OnCapableDespawned += handle_capable_despawned;
+        CapacityEngine.LazyInstance.OnCapacitySpawned += handle_capacity_spawned;
+        CapacityEngine.LazyInstance.OnCapacityDespawned += handle_capacity_despawned;
+        if (log) { Debug.Log($"(EcoEngine) Registered to CapableEngine & CapacityEngine callbacks"); }
+
+        if (!log) { return; }
+        string debug = "";
+        foreach (Species spec in species)
+        {
+            debug += spec.GetDetails() + "\n";
+        }
+        Debug.Log($"(EcoEngine) Loaded {species.Count} species :\n{debug}");
+    }
+    private void initialize_alive_population_species()
+    {
+        List<CapableData> entities = new List<CapableData>();
+        foreach (Species spec in species)
+        {
+            entities = CapableEngine.LazyInstance.GetWorldCapableMatchingTemplate(spec.template);
+            spec.alive_population = entities.Count;
+
+            if (!spec.wait_for_corpse_despawn) { continue; }
+
+            // todo here we need to gather also corpse matching the template
+        }
+    }
+
+    // gather NestDatas
+    public void GatherNests(bool log)
+    {
+        nests.Clear();
+        List<NestData> world_nests = CapacityEngine.Instance.GetCapacitiesDataOfKind<NestData>();
+        foreach (NestData nest in world_nests)
+        {
+            if (string.IsNullOrEmpty(nest.species)) { continue; }
+            Species spec = get_species_from_id(nest.species);
+            if (spec == null) { continue; }
+
+            if (!nests.ContainsKey(spec)) { nests[spec] = new List<NestData>(); }
+            nests[spec].Add(nest);
+        }
+
+        if (!log) { return; }
+        string debug = "";
+        int total_nests = 0;
+        foreach (var kvp in nests)
+        {
+            debug += " - " + kvp.Key.name + $" : {kvp.Value.Count} nests\n";
+            foreach (NestData nest in kvp.Value)
+            {
+                debug += "    - " + nest.id + "\n";
+                total_nests++;
+            }
+            debug += "\n";
+        }
+        Debug.Log($"(EcoEngine) Gathered {total_nests} nests for {nests.Keys.Count} species :\n" + debug);
+    }
+
+    // clear cache
+    public void ClearCache(bool log)
+    {
+        // unregister callbacks
+        CapableEngine.LazyInstance.OnCapableDespawned -= handle_capable_despawned;
+        CapacityEngine.LazyInstance.OnCapacitySpawned -= handle_capacity_spawned;
+        CapacityEngine.LazyInstance.OnCapacityDespawned -= handle_capacity_despawned;
+        if (log) { Debug.Log($"(EcoEngine) Unregistered from CapableEngine & CapacityEngine callbacks"); }
+
+        nests.Clear();
+        if (log) { Debug.Log($"(EcoEngine) Cleared nests"); }
+    }
+
+
+    /// CALLBACKS
+    private void handle_capable_despawned(CapableData cdata)
+    {
+        Species spec = null;
+        if (cdata is IAData ia) { spec = get_species_from_id(ia.id); }
+        else if (cdata is CorpseData corpse)
+        {
+            spec = get_species_from_id(corpse.species_template);
+            if (!spec.wait_for_corpse_despawn) { return; } // we don't care for this corpse since we are not corpse based, so the call was already taken when the real capable was despawned
+        }
+        if (spec == null) { return; }
+
+        // now an entity of this species was dead :///
+        spec.alive_population -= 1;
+        if (log_species_loss_entity) { Debug.Log($"(EcoEngine) Species {spec.name} lost a member :/// population is now : " + spec.PopDetails()); }
+    }
+    private void handle_capacity_spawned(CapacityData cdata)
+    {
+        if (cdata is not NestData nest) { return; }
+        if (string.IsNullOrEmpty(nest.species)) { return; }
+        Species spec = get_species_from_id(nest.species);
+        if (spec == null) { return; }
+        if (!nests.ContainsKey(spec)) { nests[spec] = new List<NestData>(); }
+        if (nests[spec].Contains(nest)) { return; }
+        nests[spec].Add(nest);
+        if (log_new_nest) { Debug.Log($"(EcoEngine) Species {spec.name} just earned a new nest '{nest.id}' !!"); }
+    }
+    private void handle_capacity_despawned(CapacityData cdata)
+    {
+        if (cdata is not NestData nest) { return; }
+        if (string.IsNullOrEmpty(nest.species)) { return; }
+        Species spec = get_species_from_id(nest.species);
+        if (spec == null) { return; }
+        if (!nests.ContainsKey(spec)) { return; }
+        if (!nests[spec].Contains(nest)) { return; }
+        nests[spec].Remove(nest);
+        if (log_new_nest) { Debug.Log($"(EcoEngine) Species {spec.name} just lost a nest '{nest.id}' :/"); }
+    }
+
+
+    ///
+    //
+    /// UPDATE
+    //
+    ///
+
+    [Header("Tick duration")]
+    [SerializeField] private float tick_delay = 0.1f;
+    private float counter = 0f;
+    private void Update()
+    {
+        counter -= Time.deltaTime;
+        if (counter > 0f) { return; }
+        counter = tick_delay;
+        Tick();
+    }
+    private void Tick()
+    {
+        // we go through all species to check if we have some entities to give
+        foreach (Species spec in species)
+        {
+            if (spec.dead_population == 0) { continue; } // no entity to give
+            make_a_nest_receive_an_entity(spec);
+        }
+    }
+    
+
+    // low level update methods
+    private List<NestData> tmp_nests = new List<NestData>();
+    private void make_a_nest_receive_an_entity(Species spec)
+    {
+        // we can give one entity to a random nest !!!
+        if (!nests.TryGetValue(spec, out tmp_nests)) { return; }
+        if (tmp_nests.Count == 0) { return; }
+        tmp_nests.RemoveAll(n => !n.CanReceiveEntity());
+        if (tmp_nests.Count == 0) { return; }
+
+        NestData nest = tmp_nests[UnityEngine.Random.Range(0, tmp_nests.Count)];
+        nest.ReceiveEntity(spec.template);
+        spec.alive_population++;
+        if (log_species_gain_entity) { Debug.Log($"(EcoEngine) Species {spec.name} earned a member !!!!!! population is now : " + spec.PopDetails()); }
+    }
+
+
+
+
+    ///
+    //
+    /// GETTERS
+    //
+    ///
+
+
+    private Species get_species_from_id(string id)
+    {
+        string template = id.GetPrefix();
+        for (int i=0; i<species.Count; i++)
+        {
+            if (species[i].template != template) { continue; }
+            return species[i];
+        }
+        Debug.LogError($"(EcoEngine) no species found for capable template : '{template}'");
+        return null;
+    }
+
+}
+
+[Serializable] public class Species
+{
+    public string name;
+    public string template;
+    public int population;
+
+    [RuntimeOnly] public int alive_population;
+    [RuntimeOnly] public float AlivePercentage => alive_population / population;
+    [RuntimeOnly] public int dead_population => population - alive_population;
+
+    public bool wait_for_corpse_despawn = false;
+
+    public string GetDetails()
+    {
+        string log = "";
+        log += " - " + name + " :\n";
+        log += "   - template : " + template + "\n";
+        log += "   - population : " + population + $"   --->  ({alive_population} alive, {dead_population} dead)\n";
+        log += "   - wait_for_corpse_despawn : " + wait_for_corpse_despawn + "\n";
+        return log;
+    }
+    public string PopDetails()
+    {
+        return $"{alive_population} / {population}".AddColor(Color.Lerp(a: Color.cyan, b: Color.magenta, AlivePercentage));
+    }
+}

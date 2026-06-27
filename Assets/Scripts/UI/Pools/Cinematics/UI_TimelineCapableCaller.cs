@@ -98,7 +98,7 @@ public class UI_TimelineCapableCaller : MonoBehaviour
         // we remove the potential move capacity we added
         if (capable.TryGetCapacity(out MoveCapacity move_capacity))
         {
-            CapacityEngine.Instance.DespawnCapacity(move_capacity);
+            CapacityEngine.Instance.DespawnCapacityClean(move_capacity);
         }
 
         Debug.Log("(UI_TimelineCapableCaller) Disconnected capable with id '" + capable.ID);

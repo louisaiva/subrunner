@@ -124,7 +124,7 @@ public class Corpse : Food
 // CORPSE DATA
 [Serializable] public class CorpseData : ItemData
 {
-
+    [RuntimeOnly] public string species_template;
     private static ItemData item_info = new ItemData()
     {
         reference = "corpse:unknown",
@@ -138,6 +138,8 @@ public class Corpse : Food
     public override void InitFromCapable(CapableData capdata, ItemData item_data = null)
     {
         string entity_type = capdata.kind.ToLowerInvariant();
+        species_template = capdata.id.GetPrefix();
+
         // modify the item info with out entity type
         item_info.reference = "corpse:" + entity_type;
         item_info.item_description = item_info.item_description.Replace("unknown", entity_type);
@@ -160,7 +162,7 @@ public class Corpse : Food
 
         return new CorpseData(duplicated)
         {
-            // we don't need to duplicate anything else for now, but if we add corpse specific data in the future we will need to duplicate it here
+            species_template = this.species_template
         };
     }
 }

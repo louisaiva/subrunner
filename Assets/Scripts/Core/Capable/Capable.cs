@@ -171,20 +171,6 @@ public class Capable : MonoBehaviour, Debuggable
         // we register the capable in the debug manager
         try { DebugManager.Instance?.GetDebuggable<EntitiesDebug>()?.AddCapable(this); }
         catch {}
-
-        // we register all the capacities that are on this capable ONLY if we are not part of the BSOD pattern systems
-        if (CapableBank.Instance != null && CapableBank.Instance.HasCapable(this) && CapacityEngine.Instance != null) { return; }
-
-        capacities.Clear();
-        foreach (Transform child in transform)
-        {
-            Capacity capa = child.GetComponent<Capacity>();
-            if (!capa) { continue; }
-            RegisterCapacity(capa);
-
-            // we check if the log is true then we force debug to be true
-            if (activate_all_capacities_logs_on_awake) { capa.log = true; }
-        }
     }
     protected virtual void OnDisable()
     {
@@ -520,9 +506,18 @@ public class Capable : MonoBehaviour, Debuggable
         // the Capable from the CapableData
         data.OnLoaded(this);
 
-        // we load the capacities
+        // we load the capacities (they can't access sibling capacities for now)
         if (CapableEngine.Instance.log_loading_extended) { Debug.Log($"(Capable - LoadData) Calling CapacitySystem loading for capacities : {string.Join(" ", data.capacities_ids)}"); }
-        this.capacities = CapacityEngine.Instance.LoadCapacities(data.capacities_ids, this);
+        this.capacities.Clear();
+        this.capacityByName.Clear();
+        this.capacityByExactType.Clear();
+        this.capacityByAssignableTypeCache.Clear();
+        CapacityEngine.Instance.LoadCapacities(data.capacities_ids, this);
+
+        // todo : here we could potentially do a second pass on all capacities, because now they all are loaded
+        // ? so if a capacity needs to access/modify another one, we could NOT do it in Capacity.LoadData() since
+        // ? we could not access Capable.TryGetCapacity<>() from Capacity.LoadData()
+        // ? potentially we could do it here :D
     }
     public virtual void UnloadData()
     {

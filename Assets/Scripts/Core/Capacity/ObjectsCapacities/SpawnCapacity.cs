@@ -62,6 +62,7 @@ public class SpawnCapacity : Capacity
         }
 
         // we make the main capable play an animation
+        is_spawning = true;
         Capable.AnimPlayer.Play(spawn_anim_name);
         if (spawn_after_animation && entity_layer_connected)
         {
@@ -102,6 +103,9 @@ public class SpawnCapacity : Capacity
 
         if (log) { Debug.Log($"(SpawnCapacity) {data.owner_id} spawning entity {entity.ID} at " + spawn_position + force_debug); }
         entity_count++;
+
+        await System.Threading.Tasks.Task.Yield(); // wait a little frame to be sure
+        is_spawning = false;
     }
 
     // low level spawning
@@ -113,7 +117,8 @@ public class SpawnCapacity : Capacity
         // we set the skin of the entity layer to the new skin
         entity_layer.skin = skin_name;
     }
-
+    private bool is_spawning = false;
+    public bool IsSpawning { get { return is_spawning; } }
 
     // UPDATE
     protected void Update()

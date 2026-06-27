@@ -16,8 +16,20 @@ public class CapableEngine : BSOD_System<CapableEngine>
         get
         {
             if (_trash_engine != null) { return _trash_engine; }
-            _trash_engine = LazyInstance.GetComponentInChildren<TrashEngine>(includeInactive:true);
+            _trash_engine = LazyInstance.GetComponentInChildren<TrashEngine>(includeInactive: true);
             return _trash_engine;
+        }
+    }
+
+
+    private static EcoEngine _eco_engine;
+    public static EcoEngine EcoEngine
+    {
+        get
+        {
+            if (_eco_engine != null) { return _eco_engine; }
+            _eco_engine = FindFirstObjectByType<EcoEngine>(FindObjectsInactive.Include);
+            return _eco_engine;
         }
     }
 
@@ -123,6 +135,9 @@ public class CapableEngine : BSOD_System<CapableEngine>
         TrashEngine.GatherExistingTrashes(ref world_capables_data, log);
         if (log) { Debug.Log($"(CapableEngine) Gathered existing trashes in TrashEngine"); }
 
+        EcoEngine.LoadSpecies(log);
+        if (log) { Debug.Log($"(CapableEngine) Loaded EcoEngine"); }
+
 
         await Task.Yield();
 
@@ -140,6 +155,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
         if (log) { Debug.Log($"(CapableEngine) clearing sub systems cache"); }
         CapableBank.Instance.ClearSubSystemsCache(log); // clears AnimLayerBank, ColliderBank
         TrashEngine.ClearCache(log);
+        EcoEngine.ClearCache(log);
 
         // we unload all loaded capables
         if (log) { Debug.Log($"(CapableEngine) clearing loaded capables data"); }
@@ -606,9 +622,22 @@ public class CapableEngine : BSOD_System<CapableEngine>
     public void DespawnCapable(CapableData cdata)
     {
         // UNLOAD THE CAPABLE
+        unload_capable(cdata.id);
+
+        // fire events
         OnCapableDisappear?.Invoke(cdata);
         OnCapableDespawned?.Invoke(cdata);
-        unload_capable(cdata.id);
+
+        // ? here we also despawn the capacities ?
+        foreach (string capacity_id in cdata.capacities_ids)
+        {
+            CapacityEngine.Instance.DespawnCapacity(capacity_id);
+        }
+
+        // remove it from the world_data dict
+        // todo : world_capables_data.Remove(cdata.id);
+        // World.Instance.UnregisterUniqueID(cdata.id);
+        // ? should we clean as well hashes by id & etc ?
     }
 
     // ITEMS EVENTS
@@ -1123,6 +1152,16 @@ public class CapableEngine : BSOD_System<CapableEngine>
         CapableData data = GetCapableDataFromID(id);
         if (data == null) { return Vector2.zero; }
         return data.position;
+    }
+    public List<CapableData> GetWorldCapableMatchingTemplate(string template)
+    {
+        List<CapableData> entities = new List<CapableData>();
+        foreach (KeyValuePair<string,CapableData> kvp in world_capables_data)
+        {
+            if (kvp.Key.GetPrefix() != template) { continue; }
+            entities.Add(kvp.Value);
+        }
+        return entities;
     }
 
     // doors
