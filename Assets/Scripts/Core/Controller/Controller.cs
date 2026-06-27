@@ -25,7 +25,9 @@ public class Controller : MonoBehaviour
             return _Instance;
         }
     }
+    public const bool KEEP_INVENTORY_ON_DEATH = false;
     public const bool KEEP_SHOES_ON_DEATH = true;
+    public const bool KEEP_WEAPON_ON_DEATH = true;
 
     public static PersoData _perso;
     public static Perso Perso
@@ -572,7 +574,7 @@ public class Controller : MonoBehaviour
 
         // load the data & control the initial capable
         if (log) { Debug.Log($"(Controller) Controller data ready to be loaded : {data.GetDetails()}"); }
-        LoadData(data);
+        LoadData(data, tp:true);
 
         // register to CapableEngine despawn event
         CapableEngine.LazyInstance.OnCapableDespawned += handle_capable_despawned;

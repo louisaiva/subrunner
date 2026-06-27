@@ -34,7 +34,7 @@ namespace subrunner.goap
         where GoalT : IGoal
     {
         // protected virtual System.Type GoalType => typeof(/* IGoal */ WanderGoal); // set wander goal as default
-        private static bool log_created = true;
+        private static bool log_created = false;
 
 
         // The Created method is called when the sensor is created
@@ -138,14 +138,14 @@ namespace subrunner.goap
             // Get a cached reference to the DataBehaviour on the agent
             MotorCapacity mc = references.GetCachedComponent<MotorCapacity>();
             if (mc == null || mc.mdata == null) { current_room = ""; destination = ""; return false; }
-            bool found = mc.mdata.ExtractCurrentAndDestinationRooms(typeof(GoalT), out current_room, out destination);
-            if (found)
+            return mc.mdata.ExtractCurrentAndDestinationRooms(typeof(GoalT), out current_room, out destination);
+            /* if (found)
             {
                 Debug.Log($"(GoToRoomSensor - {typeof(GoalT).GetFriendlyName()}) Sensor '{sensor}' extracted rooms : '{current_room}' -> '{destination}'");
                 return true;
             }
             Debug.LogWarning($"(GoToRoomSensor - {typeof(GoalT).GetFriendlyName()}) Sensor '{sensor}' COULD NOT extract rooms : '{current_room}' -> '{destination}'");
-            return false;
+            return false; */
         }
     }
 }

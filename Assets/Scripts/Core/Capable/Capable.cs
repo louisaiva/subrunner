@@ -392,13 +392,19 @@ public class Capable : MonoBehaviour, Debuggable
     public void DropAllItems(DropParameters parameters = null)
     {
         if (Inventory == null || Inventory.Count == 0) { return; }
+        if (Controller.KEEP_INVENTORY_ON_DEATH && Controller.Capable != null && this == Controller.Capable) { return; } // we don't drop the inventory
 
         // we drop all items on the ground
         List<Item> items = Inventory.Items;
         for (int i = items.Count - 1; i >= 0; i--)
         {
             // check if we are the controlled capable & if this is shoes item
-            if (Controller.KEEP_SHOES_ON_DEATH && Controller.Capable != null && this == Controller.Capable && items[i] is Shoes shoes)
+            if (Controller.KEEP_SHOES_ON_DEATH && Controller.Capable != null && this == Controller.Capable && items[i] is Shoes)
+            {
+                // we don't drop the shoes if we are the controlled capable & if the option is enabled
+                continue;
+            }
+            if (Controller.KEEP_WEAPON_ON_DEATH && Controller.Capable != null && this == Controller.Capable && items[i] is Weapon)
             {
                 // we don't drop the shoes if we are the controlled capable & if the option is enabled
                 continue;

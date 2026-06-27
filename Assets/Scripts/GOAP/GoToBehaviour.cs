@@ -12,6 +12,23 @@ namespace subrunner.goap
     public class GoToBehaviour : MonoBehaviour
     {
 
+        // STATIC USEFUL METHODS
+        public static int GetNavMeshAgentTypeID(string name)
+        {
+            for (int i = 0; i < NavMesh.GetSettingsCount(); i++)
+            {
+                NavMeshBuildSettings settings = NavMesh.GetSettingsByIndex(index: i);
+                if (name == NavMesh.GetSettingsNameFromID(agentTypeID: settings.agentTypeID))
+                {
+                    return settings.agentTypeID;
+                }
+            }
+            return NavMesh.GetSettingsByIndex(0).agentTypeID; // return default agent type id if not found
+        }
+
+
+
+
         [Header("Components")]
         private ITarget target;
         private AgentBehaviour _agent;
@@ -51,7 +68,7 @@ namespace subrunner.goap
             {
                 if (_filter == null)
                 {
-                    _filter = new NavMeshQueryFilter { areaMask = NavMesh.AllAreas, agentTypeID = get_navmesh_agent_type_id("humanoid") };
+                    _filter = new NavMeshQueryFilter { areaMask = NavMesh.AllAreas, agentTypeID = GetNavMeshAgentTypeID("humanoid") };
                 }
                 return _filter.Value;
             }
@@ -206,18 +223,7 @@ namespace subrunner.goap
             walker.walk_percentage_target = 1f;
             if (log_path_calculation) { Debug.Log("(GoToBehaviour) " + ia.name + " found a path to target with " + path.Count + " waypoints."); }
         }
-        private int get_navmesh_agent_type_id(string name)
-        {
-            for (int i = 0; i < NavMesh.GetSettingsCount(); i++)
-            {
-                NavMeshBuildSettings settings = NavMesh.GetSettingsByIndex(index: i);
-                if (name == NavMesh.GetSettingsNameFromID(agentTypeID: settings.agentTypeID))
-                {
-                    return settings.agentTypeID;
-                }
-            }
-            return NavMesh.GetSettingsByIndex(0).agentTypeID; // return default agent type id if not found
-        }
+
         private void stop_following_path()
         {
             path = null;

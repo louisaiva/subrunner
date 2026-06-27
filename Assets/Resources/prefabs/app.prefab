@@ -1660,7 +1660,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsQuitting: 0
   LoadedSceneCount: 0
-  prototype: InteractAction<T> !!! + npc grabs on ground items
+  prototype: KillBeingGoal can track target through doors !
   log: 0
   log_stats: 0
 --- !u!114 &714515157948744320
@@ -1684,10 +1684,12 @@ MonoBehaviour:
   LOG_CLOSEST_FOOD_SENSOR: 0
   LOG_CLOSEST_TRASH_SENSOR: 0
   LOG_CLOSEST_BEING_SENSOR: 0
+  LOG_GTR_SENSOR: 0
   LOG_IA_ACTION: 0
   LOG_ATTACK_ACTION: 0
   LOG_EAT_ACTION: 0
   LOG_INTERACT_ACTION: 0
+  LOG_GTR_ACTION: 0
 --- !u!1 &7353222153576522049
 GameObject:
   m_ObjectHideFlags: 0

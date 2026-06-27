@@ -17,7 +17,7 @@ namespace subrunner.goap
                 .AddCondition<TrashSameRoom>(Comparison.GreaterThanOrEqual, 1)
                 .AddEffect<TrashOnFloor>(EffectType.Decrease)
                 .SetTarget<ClosestTrash>()
-                .SetStoppingDistance(0.3f);
+                .SetStoppingDistance(0.5f);
 
             builder.AddTargetSensor<ClosestTrashSensor>()
                 .SetTarget<ClosestTrash>();
