@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 
 public class EcoEngine : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class EcoEngine : MonoBehaviour
     public bool log_species_gain_entity = false;
     public bool log_species_loss_entity = false;
     public bool log_new_nest = false;
+    public bool log_tick_nests_details = false;
 
 
     ///
@@ -102,7 +104,11 @@ public class EcoEngine : MonoBehaviour
     private void handle_capable_despawned(CapableData cdata)
     {
         Species spec = null;
-        if (cdata is IAData ia) { spec = get_species_from_id(ia.id); }
+        if (cdata is IAData ia)
+        {
+            spec = get_species_from_id(ia.id);
+            if (spec.wait_for_corpse_despawn) { return; } // we don't care about this ia death cause we want to wait the corpse to be despawned for re giving entities :D
+        }
         else if (cdata is CorpseData corpse)
         {
             spec = get_species_from_id(corpse.species_template);
@@ -163,22 +169,34 @@ public class EcoEngine : MonoBehaviour
             make_a_nest_receive_an_entity(spec);
         }
     }
-    
+
 
     // low level update methods
     private List<NestData> tmp_nests = new List<NestData>();
+    private List<NestData> tmp_nests2 = new List<NestData>();
     private void make_a_nest_receive_an_entity(Species spec)
     {
         // we can give one entity to a random nest !!!
-        if (!nests.TryGetValue(spec, out tmp_nests)) { return; }
-        if (tmp_nests.Count == 0) { return; }
-        tmp_nests.RemoveAll(n => !n.CanReceiveEntity());
-        if (tmp_nests.Count == 0) { return; }
+        if (!nests.TryGetValue(spec, out tmp_nests) || tmp_nests.Count == 0)
+        {
+            if (log_tick_nests_details) { Debug.LogWarning($"(EcoEngine) Species {spec.name} has no nest."); }
+            return;
+        }
+        if (log_tick_nests_details) { Debug.LogWarning($"(EcoEngine) Species {spec.name} has {tmp_nests.Count} nest before filtering those who can receive entity."); }
+        tmp_nests2 = tmp_nests.Where(n => n.CanReceiveEntity()).ToList();
+        if (tmp_nests2.Count == 0)
+        {
+            if (log_tick_nests_details) { Debug.LogWarning($"(EcoEngine) Species {spec.name} : All Nests are full !!!"); }
+            return;
+        }
 
-        NestData nest = tmp_nests[UnityEngine.Random.Range(0, tmp_nests.Count)];
-        nest.ReceiveEntity(spec.template);
+        NestData nest = tmp_nests2[UnityEngine.Random.Range(0, tmp_nests2.Count)];
+
+        // here we duplicate the template data
+        CapableData new_entity = CapableEngine.Instance.DuplicateTemplate(spec.template);
+        nest.ReceiveEntity(new_entity.id);
         spec.alive_population++;
-        if (log_species_gain_entity) { Debug.Log($"(EcoEngine) Species {spec.name} earned a member !!!!!! population is now : " + spec.PopDetails()); }
+        if (log_species_gain_entity) { Debug.Log($"(EcoEngine) Species {spec.name} welcomes '{new_entity.id}' !!!!!! population is now : " + spec.PopDetails()); }
     }
 
 

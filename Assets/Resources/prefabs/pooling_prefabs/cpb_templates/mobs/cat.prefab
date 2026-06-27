@@ -542,15 +542,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5744172474813345029, guid: bbad179de34e6134bbf77cc73af372d8, type: 3}
       propertyPath: m_Name
-      value: motor
+      value: cat_motor
       objectReference: {fileID: 0}
     - target: {fileID: 7808330038391937365, guid: bbad179de34e6134bbf77cc73af372d8, type: 3}
       propertyPath: data.ttc_treshold
       value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7946677402921100740, guid: bbad179de34e6134bbf77cc73af372d8, type: 3}
-      propertyPath: data.<id>k__BackingField
-      value: cat_motor
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1147,11 +1143,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6468213256878280315, guid: a94cb59baaeab5e46b579a648c17538d, type: 3}
       propertyPath: max_run_speed
-      value: 4.5
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 6468213256878280315, guid: a94cb59baaeab5e46b579a648c17538d, type: 3}
-      propertyPath: data.<id>k__BackingField
-      value: cat_walk
+      propertyPath: max_walk_speed
+      value: 1.8
       objectReference: {fileID: 0}
     - target: {fileID: 6468213256878280315, guid: a94cb59baaeab5e46b579a648c17538d, type: 3}
       propertyPath: random_speed_modifier_at_start
@@ -1159,7 +1155,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6582822749040364892, guid: a94cb59baaeab5e46b579a648c17538d, type: 3}
       propertyPath: m_Name
-      value: walk
+      value: cat_walk
       objectReference: {fileID: 0}
     - target: {fileID: 8825874904198225900, guid: a94cb59baaeab5e46b579a648c17538d, type: 3}
       propertyPath: InitialModule.startColor.maxColor.b

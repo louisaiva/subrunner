@@ -621,12 +621,12 @@ public class CapableEngine : BSOD_System<CapableEngine>
     }
     public void DespawnCapable(CapableData cdata)
     {
-        // UNLOAD THE CAPABLE
-        unload_capable(cdata.id);
-
-        // fire events
+        // fire events (first of all so capable is well removed from chunk engine :D)
         OnCapableDisappear?.Invoke(cdata);
         OnCapableDespawned?.Invoke(cdata);
+
+        // then we unload the capable
+        unload_capable(cdata.id);
 
         // ? here we also despawn the capacities ?
         foreach (string capacity_id in cdata.capacities_ids)

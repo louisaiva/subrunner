@@ -46,7 +46,7 @@ public class NestCapacity : Capacity
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log($"(NestCapacity) {other.gameObject.name} just entered trigger of nest {ID} !!".AddColor(Color.blueViolet));
+        Debug.Log($"(NestCapacity) {other.gameObject.name} just entered trigger of nest {ID} !!".AddColor(Color.violet));
 
         if (ndata.spawn_mode != NestSpawnMode.Trigger) { return; }
         
@@ -153,7 +153,10 @@ public class NestCapacity : Capacity
         else { details += $"  - trigger : {trigger.GetDetails()}\n"; }
         return base.GetDetails() + details;
     }
-
+    public string StoreDetails(Color a, Color b)
+    {
+        return $"{stored_entities.Count} / {capacity}".AddColor(Color.Lerp(a,b, FullPercentage));
+    }
 
 
 
@@ -167,6 +170,7 @@ public class NestCapacity : Capacity
 
     // public properties helper
     [RuntimeOnly] public int EntityCount => stored_entities.Count;
+    [RuntimeOnly] private float FullPercentage => EntityCount / capacity;
     public bool CanReceiveEntity()
     {
         if (store_mode == NestStoreMode.Endless) { return capacity > EntityCount; }
@@ -220,8 +224,9 @@ public class NestCapacity : Capacity
     {
         if (entities_to_spawn.Count == 0) { return null; }
         string id = entities_to_spawn[0];
-        entities_to_spawn.RemoveAt(0);
         stored_entities.Remove(id);
+        entities_to_spawn.RemoveAt(0);
+        Debug.Log($"(NestData) nest {this.id} just extracted {id} for spawning. Stored entities in nest are now : " + StoreDetails(Color.violet, Color.magenta));
         return id;
     }
 
