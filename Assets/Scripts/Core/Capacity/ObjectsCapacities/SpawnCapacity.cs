@@ -46,38 +46,41 @@ public class SpawnCapacity : Capacity
         // we apply spawn parameters to the entity (spawn force, etc)
         Spawn(base_entity_id);
     }
-    public async void Spawn(string template)
+    public async void Spawn(string id_or_template)
     {
-        if (string.IsNullOrEmpty(template))
+        if (string.IsNullOrEmpty(id_or_template))
         {
-            if (log) { Debug.LogError("(SpawnCapacity - Spawn) template is null or empty, canot spawn entity."); }
+            if (log) { Debug.LogError("(SpawnCapacity - Spawn) id_or_template is null or empty, canot spawn entity."); }
             return;
         }
         
         // we find the entity_layer new skin name based on the capable skin + "_" + entity skin
         if (entity_layer_connected)
         {
-            set_entity_layer_skin(template);
+            set_entity_layer_skin(id_or_template.GetPrefix()); // get prefix will return the template or the template (in both cases the template)
             entity_layer.EnableRenderer();
         }
 
         // we make the main capable play an animation
         Capable.AnimPlayer.Play(spawn_anim_name);
-
-        // if we spawn after the animation we wait for it to finish
         if (spawn_after_animation && entity_layer_connected)
         {
             while (Capable.AnimPlayer.IsPlaying(spawn_anim_name)) { await System.Threading.Tasks.Task.Yield(); }
             entity_layer.DisableRenderer();
         }
 
+
         // we spawn & load the entity
-        Capable entity = CapableEngine.Instance.SpawnCapable(template);
+        // ! IMPORTANT ! We call LoadCapableInstantly instead of SpawnCapable bcz this way
+        // ! we can have a real world id as parameter, which means we can spawn entities that
+        // ! were in the spawner (you need to figure the spawner as a burrow)
+        Capable entity = CapableEngine.Instance.LoadCapableInstantly(id_or_template);
         if (entity == null)
         {
-            if (log) { Debug.LogWarning("(SpawnCapacity) Could not spawn entity with template " + template); }
+            if (log) { Debug.LogWarning("(SpawnCapacity) Could not spawn entity with id or template " + id_or_template); }
             return;
         }
+
 
         // we get a random spawn position
         Vector2 spawn_position = transform.parent.position + ((Vector3)local_spawn_position);
@@ -85,8 +88,6 @@ public class SpawnCapacity : Capacity
         {
             spawn_position += UnityEngine.Random.insideUnitCircle * spawn_radius;
         }
-
-        // we apply the position & parent to entity
         entity.transform.position = spawn_position;
 
         // we create a spawn force
@@ -99,7 +100,7 @@ public class SpawnCapacity : Capacity
             force_debug = " with force " + spawn_force;
         }
 
-        if (log) { Debug.Log($"(SpawnCapacity) {data.owner_id} spawning entity at " + spawn_position + force_debug); }
+        if (log) { Debug.Log($"(SpawnCapacity) {data.owner_id} spawning entity {entity.ID} at " + spawn_position + force_debug); }
         entity_count++;
     }
 

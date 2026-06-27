@@ -575,6 +575,11 @@ public class CapableEngine : BSOD_System<CapableEngine>
     // SPAWNING CAPABLES
     public Capable SpawnCapable(string template)
     {
+        if (!templates_capables_data.ContainsKey(template))
+        {
+            if (log_spawning) { Debug.LogError($"(CapableSystem - SpawnCapable) '{template}' is not a valid template for entity spawning."); }
+            return null;
+        }
         return SpawnCapable(DuplicateTemplate(template));
     }
     public Capable SpawnCapable(CapableData data)
@@ -692,24 +697,34 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
 
     // LOAD CAPABLES
-    public Capable LoadCapableInstantly(string id)
+    
+    /// <summary>
+    /// This method either loads instantly the capable if the
+    /// id corresponds to a valid world CapableData ; either
+    /// instantly spawn an entity corresponding to the
+    /// template. If the parameter is not a template and not valid world id,
+    /// then it will break and return null I mean wtf are you even doing
+    /// at this point please
+    /// check YOUR code it is not MY problem ye dude it works on my machine
+    /// </summary>
+    public Capable LoadCapableInstantly(string id_or_template)
     {
         // if the capable is in the unloading queue, it means it is already loaded,
         // so we remove it from unloading queue and simply return it
-        if (unloading_queue.Contains(id))
+        if (unloading_queue.Contains(id_or_template))
         {
-            unloading_queue.Remove(id);
-            Capable capable = CapableBank.Instance.GetLoadedCapable(id);
+            unloading_queue.Remove(id_or_template);
+            Capable capable = CapableBank.Instance.GetLoadedCapable(id_or_template);
 
-            if (log_loading) { Debug.Log("(CapableEngine) Already loaded " + id); }
+            if (log_loading) { Debug.Log("(CapableEngine) Already loaded " + id_or_template); }
             return capable;
         }
 
         // we remove the capable from loading queue
-        if (loading_queue.Contains(id)) { loading_queue.Remove(id); }
+        if (loading_queue.Contains(id_or_template)) { loading_queue.Remove(id_or_template); }
 
         // and we finally load it
-        return load_capable(id, duplicate_if_template: true);
+        return load_capable(id_or_template, duplicate_if_template: true);
     }
 
     /// <summary>
@@ -750,18 +765,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
     {
         if (!world_capables_data.ContainsKey(id))
         {
-            if (duplicate_if_template)
-            {
-                // we check if it's a template, if yes we duplicate it and load the duplicate
-                if (templates_capables_data.ContainsKey(id))
-                {
-                    CapableData new_data = DuplicateTemplate(id);
-                    if (log_spawning) { Debug.Log($"(CapableEngine - Load) Capable id {id} is a template, we duplicated it to {new_data.id} and loading the duplicate"); }
-                    Capable capable = load_capable(new_data);
-                    OnCapableAppear?.Invoke(capable.data);
-                    return capable;
-                }
-            }
+            if (duplicate_if_template) { return SpawnCapable(id); }
 
             if (!hide_log_no_data_found) { Debug.LogWarning("(CapableSystem - Load) Capable data not found for id: " + id); }
             return null;
