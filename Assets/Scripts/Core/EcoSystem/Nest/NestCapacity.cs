@@ -29,6 +29,8 @@ public class NestCapacity : Capacity
     private void Update()
     {
         if (!Loaded) { return; }
+        if (ndata.spawn_mode == NestSpawnMode.Trigger) { update_potential_triggers(); }
+
         if (ndata.entities_to_spawn.Count == 0) { return; }
         if (!TryGetSiblingCapacity(out SpawnCapacity spawner)) { return; }
         if (spawner.IsSpawning) { return; }
@@ -44,14 +46,45 @@ public class NestCapacity : Capacity
     //
     ///
 
+    private Capable potential_trigger = null;
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (ndata.spawn_mode != NestSpawnMode.Trigger) { return; }
-        
+
+        // check if the trigger has a capable
+        Capable capable = other.GetComponentInParent<Capable>();
+        if (capable == null || !capable.Loaded) { return; }
+        if (capable.data.room != Capable.data.room)
+        {
+            // here we are in different rooms, we don't want to trigger it right away
+            // BUT we register the capable as potential trigger so asas it gets to the same room we
+            // spawn them all :D
+            potential_trigger = capable;
+            return;
+        }
+
         // we spawn them all !
         ndata.SpawnThemAll();
     }
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        // we remove the potential trigger if this is the potential trigger
+        if (ndata.spawn_mode != NestSpawnMode.Trigger) { return; }
+        if (potential_trigger == null) { return; }
+        Capable capable = other.GetComponentInParent<Capable>();
+        if (capable == null || capable != potential_trigger) { return; }
+        potential_trigger = null;
+    }
+    private void update_potential_triggers()
+    {
+        if (potential_trigger == null) { return; }
+        if (!potential_trigger.Loaded) { potential_trigger = null; return; }
+        if (potential_trigger.data.room != Capable.data.room) { return; }
 
+        // here we are finally in the same room !
+        ndata.SpawnThemAll();
+        potential_trigger = null;
+    }
 
 
 
