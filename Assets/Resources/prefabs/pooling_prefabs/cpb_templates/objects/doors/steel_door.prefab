@@ -998,12 +998,11 @@ MonoBehaviour:
   log_static_data: 0
   log_interact_kf: 0
   is_vertical: 1
-  DontTouchSortingLayer: 1
   shadow_caster: {fileID: 0}
   room1_id: 
   room2_id: 
   if_switcher:
-    closed_interact_kf_y: {x: 2.25, y: 0.9}
+    closed_interact_kf_y: {x: 0.9, y: 0.9}
     opened_interact_kf_y: {x: 0.9, y: 0.9}
 --- !u!114 &2173433702433623708
 MonoBehaviour:

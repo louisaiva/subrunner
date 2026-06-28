@@ -55,14 +55,6 @@ public class CloseCapacity : Capacity
         AudioEngine.Instance.Play("close", Capable.Skin, Capable.gameObject);
         Invoke("success_close", closing_duration);
 
-
-        // on fait les vérifications pour les portes
-        if (Capable is Door door && !door.DontTouchSortingLayer)
-        {
-            Capable.AnimPlayer.Renderer.sortingLayerName = "fg";
-            Capable.AnimPlayer.Renderer.sortingOrder = 1;
-        }
-
         if (log) { Debug.Log(Capable.name + " is closing..."); }
     }
     protected virtual void success_close()

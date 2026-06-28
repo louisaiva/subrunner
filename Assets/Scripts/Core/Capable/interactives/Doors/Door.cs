@@ -10,7 +10,6 @@ public class Door : Capable, Interactable, Openable
 
     [Header("Door")]
     public bool is_vertical = false;
-    public bool DontTouchSortingLayer = false;
     private Collider2D _door_collider;
     public Collider2D door_collider
     {
@@ -40,19 +39,6 @@ public class Door : Capable, Interactable, Openable
 
     [Header("Interact Key Feedback Vertical position")]
     [SerializeField] private IFPositionSwitcher if_switcher;
-    /* private Transform _interact_kf;
-    protected Transform interact_kf
-    {
-        get
-        {
-            if (_interact_kf == null)
-            {
-                HoverCapacity hover_capacity = GetCapacity<HoverCapacity>();
-                if (hover_capacity != null) { _interact_kf = hover_capacity.Canvas_kf; }
-            }
-            return _interact_kf;
-        }
-    } */
 
     [Header("Cached components")]
     private OpenCapacity _opener;
@@ -232,7 +218,6 @@ public class Door : Capable, Interactable, Openable
         
         // on met les paramètres de la porte
         this.is_vertical = door_data.is_vertical;
-        this.DontTouchSortingLayer = door_data.dont_touch_sorting_layer;
         this.room1_id = door_data.room1_id;
         this.room2_id = door_data.room2_id;
 
@@ -264,7 +249,6 @@ public class Door : Capable, Interactable, Openable
         DoorData static_data = new DoorData((CapableData)base.GetStaticData())
         {
             is_vertical = this.is_vertical,
-            dont_touch_sorting_layer = this.DontTouchSortingLayer,
             room1_id = this.room1_id,
             room2_id = this.room2_id,
             if_switcher = this.if_switcher.Duplicate(),
@@ -290,7 +274,6 @@ public class Door : Capable, Interactable, Openable
 
     // INSTANCE DATA
     public bool is_vertical;
-    public bool dont_touch_sorting_layer;
     public string room1_id;
     public string room2_id;
     public bool is_open;
