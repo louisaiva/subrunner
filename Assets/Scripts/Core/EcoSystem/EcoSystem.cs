@@ -14,6 +14,7 @@ public class EcoEngine : MonoBehaviour
     public bool log_species_loss_entity = false;
     public bool log_new_nest = false;
     public bool log_tick_nests_details = false;
+    public bool hide_log_no_species_found = false;
 
 
     ///
@@ -121,11 +122,13 @@ public class EcoEngine : MonoBehaviour
         if (cdata is IAData ia)
         {
             spec = get_species_from_id(ia.id);
+            if (spec == null) { return; }
             if (spec.wait_for_corpse_despawn) { return; } // we don't care about this ia death cause we want to wait the corpse to be despawned for re giving entities :D
         }
         else if (cdata is CorpseData corpse)
         {
             spec = get_species_from_id(corpse.species_template);
+            if (spec == null) { return; }
             if (!spec.wait_for_corpse_despawn) { return; } // we don't care for this corpse since we are not corpse based, so the call was already taken when the real capable was despawned
         }
         if (spec == null) { return; }
@@ -179,12 +182,13 @@ public class EcoEngine : MonoBehaviour
         // we go through all species to check if we have some entities to give
         foreach (Species spec in species)
         {
-            if (spec.dead_population == 0) { continue; } // no entity to give
             if (manual_tickers.TryGetValue(spec, out ManualSpeciesTicker ticker) && nests.TryGetValue(spec, out List<NestData> spec_nests))
             {
                 ticker.Tick(spec, spec_nests);
                 if (!ticker.handle_entity_receiving_each_frame) { continue; } // we don't want to handle entity receiving, we just skip it
             }
+            
+            if (spec.dead_population == 0) { continue; } // no entity to give
             make_a_nest_receive_an_entity(spec);
         }
     }
@@ -236,7 +240,7 @@ public class EcoEngine : MonoBehaviour
             if (species[i].template != template) { continue; }
             return species[i];
         }
-        Debug.LogError($"(EcoEngine) no species found for capable template : '{template}'");
+        if (!hide_log_no_species_found) { Debug.LogWarning($"(EcoEngine) no species found for capable template : '{template}'"); }
         return null;
     }
 

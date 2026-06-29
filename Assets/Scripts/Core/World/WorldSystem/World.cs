@@ -241,8 +241,9 @@ public class World : BSOD_System<World>
         if (Controller.LazyInstance.data != null && !string.IsNullOrEmpty(Controller.LazyInstance.data.player_level))
         {
             string player_level_id = Controller.LazyInstance.data.player_level;
+            string room_id = Controller.LazyInstance.data.player_room;
             if (log) { Debug.Log($"(World) STARTING WORLD: {world_id}  -- Player level from controller data: {player_level_id}"); }
-            if (!string.IsNullOrEmpty(player_level_id)) { await LevelEngine.LazyInstance.LoadLevel(player_level_id); }
+            if (!string.IsNullOrEmpty(player_level_id)) { await LevelEngine.LazyInstance.LoadLevel(player_level_id, room_id); }
         }
         else if (data != null && data.levels_ids != null && data.levels_ids.Count > 0)
         {

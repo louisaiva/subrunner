@@ -434,7 +434,9 @@ public class DoorEngine : MonoBehaviour
     {
         public List<RoomNode> rooms;
         public List<RoomLink> links;
+        private bool log_shortest_path_calculation = true;
         private bool hide_log_room_not_found = false;
+        private bool log_recursive_path_calcul = false;
 
         private Dictionary<(RoomNode,RoomNode), List<RoomLink>> cached_paths;
 
@@ -565,11 +567,7 @@ public class DoorEngine : MonoBehaviour
             }
 
             // else we have no path, we calculate it
-            // todo : here can be improved by merging potential pre existing paths
-            
-            List<RoomNode> visited = new List<RoomNode>();
-            List<RoomLink> path = new List<RoomLink>();
-            bool path_found = calculate_path_between_nodes_recursive(start, new List<RoomNode>() { dest }, ref visited, ref path);
+            bool path_found = calculate_shortest_path(start, dest, out List<RoomLink> path, log:log);
             if (path_found)
             {
                 cached_paths.Add((start, dest), path);
@@ -577,11 +575,40 @@ public class DoorEngine : MonoBehaviour
                 return path;
             }
 
-            Debug.LogError($"(DoorGraph) [GetPathBetweenNodes] - No path was found between rooms '{a}' & '{b}' :"
-                + "\n  - path is " + (path == null ? "null" : string.Join(" -> ", path))
-                + "\n  - visited is " + (visited == null ? "null" : string.Join(" / ", visited))
-            );
             return null;
+        }
+
+        private bool calculate_shortest_path(RoomNode start, RoomNode dest, out List<RoomLink> path, bool log)
+        {
+            // todo : here can be improved by merging potential pre existing paths
+
+            path = null;
+            List<List<RoomLink>> found_pathes = new List<List<RoomLink>>();
+            int found = calculate_all_paths_between_nodes_recursive(start, new List<RoomNode>() { dest }, ref found_pathes);
+            if (found == 0)
+            {
+                Debug.LogError($"(DoorGraph) [GetPathBetweenNodes] - No path was found between rooms '{start}' & '{dest}' :"
+                    + "\n  - found_pathes are " + (found_pathes == null ? "null" : string.Join(" -> ", found_pathes))
+                );
+                return false;
+            }
+
+            // else we have at least 1 valid path found !
+            // we can log here
+            string debug = "";
+
+            // and return the shortest one
+            int smallest_count = int.MaxValue;
+            foreach (List<RoomLink> path2 in found_pathes)
+            {
+                if (log_shortest_path_calculation) { debug += GetPathDetails(path2, start, dest) + "\n\n"; }
+
+                if (path2.Count > smallest_count) { continue; }
+                smallest_count = path2.Count;
+                path = path2;
+            }
+            if (log_shortest_path_calculation) { Debug.Log($"(DoorEngine.DoorGraph) Shortest path calculation btwn {start} & {dest} found " + $"{found}".AddColor(Color.limeGreen) + " pathes.\n" + debug); }
+            return true;
         }
         private string GetPathDetails(List<RoomLink> path, RoomNode start, RoomNode dest)
         {
@@ -602,66 +629,74 @@ public class DoorEngine : MonoBehaviour
         }
 
         /// <summary>
-        /// this recursive method calculate the
-        /// link path to go from a start to a destination.
-        /// Returned Path is reversed, so it is more convenient to call it like this :
-        /// calculate_path_between_nodes_recursive(start, new List<RoomNode>() { destination }, ref visited, ref wanted_path)
+        /// this recursive method calculate all the
+        /// link pathes to go from a start to a destination.
+        /// Returned Path are reversed, so it is more convenient to call it like this :
+        /// calculate_path_between_nodes_recursive(start, new List<RoomNode>() { destination }, ref pathes)
+        /// (so it instantly get reversed)
         /// </summary>
         /// <param name="destination"></param>
         /// <param name="branch"></param>
-        /// <param name="visited"></param>
-        /// <param name="reversed_path"></param>
-        /// <returns>true if a path was found, false otherwise</returns>
-        private bool calculate_path_between_nodes_recursive(RoomNode destination,
-                    List<RoomNode> branch, ref List<RoomNode> visited, ref List<RoomLink> reversed_path)
+        /// <param name="rev_paths">this will store all the pathes found overall</param>
+        /// <returns>the number of pathes found down the node</returns>
+        private int calculate_all_paths_between_nodes_recursive(RoomNode destination,
+                    List<RoomNode> branch, ref List<List<RoomLink>> rev_paths)
         {
             // we extract last queued node
             RoomNode current = branch.LastOrDefault();
-            visited.Add(current);
-
 
             // else we add all not-visited neighbours to the queue
             List<RoomNode> neighbours = GetNeighbourNodes(current.ID);
+            int found_pathes = 0;
             foreach (RoomNode neighbour in neighbours)
             {
-                if (visited.Contains(neighbour)) { continue; }
                 if (branch.Contains(neighbour)) { continue; }
 
                 if (neighbour == destination)
                 {
                     // we found the path !!!
-                    RoomLink link = GetLinkBetweenRooms(current, neighbour);
-                    if (link == null)
+                    RoomLink link2 = GetLinkBetweenRooms(current, neighbour);
+                    if (link2 == null)
                     {
                         Debug.LogError($"(DoorGraph)[calculate_path_recursive] Weird error where no link was found between neighbours '{current.ID}' && '{neighbour.ID}'");
-                        return false;
+                        return 0;
                     }
-                    reversed_path.Clear();
-                    reversed_path.Add(link); // first link is the last one, we will reverse it later
-                    return true;
+                    rev_paths.Add(new List<RoomLink>());
+                    rev_paths.LastOrDefault().Add(link2); // first link is the last one, we will reverse it later
+                    return found_pathes + 1;
                 }
 
                 // else we go down the whole tree branch from this particular neighbour
                 List<RoomNode> neighbour_branch = new List<RoomNode>(branch) { neighbour };
-                if (calculate_path_between_nodes_recursive(destination, neighbour_branch, ref visited, ref reversed_path))
+                int found_in_branch = calculate_all_paths_between_nodes_recursive(destination, neighbour_branch, ref rev_paths);
+                if (found_in_branch <= 0) { continue; } // this neighbour branch ended up nowhere, we continue to the next neighbour
+
+
+                // else we found at least 1 path down this branch !! we find the link to the neighbours
+                // this neighbour branch found the destination somewhere !
+                RoomLink link = GetLinkBetweenRooms(current, neighbour);
+                if (link == null)
                 {
-                    // this neighbour branch found the destination somewhere !
-                    RoomLink link = GetLinkBetweenRooms(current, neighbour);
-                    if (link == null)
-                    {
-                        Debug.LogError($"(DoorGraph)[calculate_path_recursive] Weird error where no link was found between neighbours '{current.ID}' && '{neighbour.ID}'");
-                        return false;
-                    }
-                    reversed_path.Add(link);
-                    return true;
+                    Debug.LogError($"(DoorGraph)[calculate_path_recursive] Weird error where no link was found between neighbours '{current.ID}' && '{neighbour.ID}'");
+                    return 0;
                 }
 
-                // else, this neighbour branch ended up nowhere, we continue to the next neighbour
-                // hopefully we will be more lucky :D
+                // and we need to add this link to the last X added branches where X == found_in_branch
+                for (int i=0;i<found_in_branch;i++)
+                {
+                    int index_in_pathes = rev_paths.Count - 1 - i;
+                    rev_paths[index_in_pathes].Add(link);
+                    found_pathes++;
+                }
+
+                // ! important !!! we don't stop here. this way we will retrieve ALL the pathes
+                // ! and then we can set the shortest one (to avoid loops)
+
+                if (log_recursive_path_calcul) { Debug.Log("(DoorEngine.DoorGraph) found " + found_in_branch + " valid paths down the [" + string.Join(" <- ", branch) + "] branch ! Found path for the current node is : " + found_pathes); }
             }
 
-            // if we end up here, it means that the destination is not reachable from the current node
-            return false;
+            // if we end up here, it means that we went through all the neighbours down this branch. we return the found paths number
+            return found_pathes;
         }
 
         // get details

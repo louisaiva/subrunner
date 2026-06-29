@@ -6,13 +6,16 @@ using UnityEngine;
 public class NestCapacity : Capacity
 {
 
+    [Tooltip("These fields are NOT real fields. These are only visible debug fields but the working ones exist only in the data NestData. Conclusion : DON T TRUST THESE FIELDS THEY ARE FULL OF LIES BERK")]
     [Header("Static Data")]
     [SerializeField] private string species;
     [SerializeField] private int max_entity_stored = 1;
     [SerializeField] private NestStoreMode store_mode;
     [SerializeField] private NestSpawnMode spawn_mode;
+    
+    [Header("Runtime Only")]
+    [SerializeField] private Collider2D trigger;
     public NestData ndata => (NestData)data;
-    private Collider2D trigger;
 
 
 
@@ -103,7 +106,16 @@ public class NestCapacity : Capacity
         base.LoadData(data, capable_data);
 
         if (data is not NestData ndata) { return; }
+
+        // load debug static data
+        this.species = ndata.species;
+        this.max_entity_stored = ndata.capacity;
+        this.store_mode = ndata.store_mode;
+        this.spawn_mode = ndata.spawn_mode;
+
+        // load the trigger
         if (ndata.trigger == null) { return; }
+        if (ndata.trigger.radius == 0f) { return; }
         this.trigger = ColliderBank.Instance.LoadCollider(ndata.trigger, this.transform);
     }
     public override void UnloadData()
@@ -130,7 +142,11 @@ public class NestCapacity : Capacity
         };
         
         Collider2D collider = GetComponentInChildren<Collider2D>(includeInactive: true);
-        if (collider != null) { static_data.trigger = (CircleData) ColliderBank.GetColliderData(collider); }
+        if (collider != null)
+        {
+            static_data.trigger = (CircleData) ColliderBank.GetColliderData(collider);
+            if (static_data.trigger.radius == 0f) { static_data.trigger = null;}
+        }
         else { static_data.trigger = null; }
 
         return static_data;

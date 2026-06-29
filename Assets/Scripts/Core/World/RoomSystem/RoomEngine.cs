@@ -107,31 +107,33 @@ public class RoomEngine : BSOD_System<RoomEngine>
     ///
 
     // LOAD UNLOAD ROOMS
+    public void LoadRoom(string room_id)
+    {
+        // no need for loading the room LMAO
+        // i mean we only load the chunks inside
+        RoomData room_data = GetRoomDataFromID(room_id);
+        if (room_data == null) { log_loading?.Warning($"(RoomEngine) RoomData for room '{room_id}' not found when trying to load it"); return; }
+
+        ChunkEngine.Instance?.LoadChunks(room_data.chunks_ids.ToArray());
+        log_loading?.Log($"(RoomEngine) Room '{room_id}' loaded.");
+    }
+    public void UnloadRoom(string room_id)
+    {
+        // no need for unloading the room LMAO
+        // i mean we only unload the chunks inside
+        RoomData room_data = GetRoomDataFromID(room_id);
+        if (room_data == null) { log_loading?.Warning($"(RoomEngine) RoomData for room '{room_id}' not found when trying to unload it"); return; }
+
+        ChunkEngine.Instance?.UnloadChunks(room_data.chunks_ids.ToArray());
+        log_loading?.Log($"(RoomEngine) Room '{room_id}' unloaded.");
+    }
     public void LoadRooms(string[] room_ids)
     {
-        foreach (string room_id in room_ids)
-        {
-            // no need for loading the room LMAO
-            // i mean we only load the chunks inside
-            RoomData room_data = GetRoomDataFromID(room_id);
-            if (room_data == null) { log_loading?.Warning($"(RoomEngine) RoomData for room '{room_id}' not found when trying to load it"); continue; }
-            
-            ChunkEngine.Instance?.LoadChunks(room_data.chunks_ids.ToArray());
-            log_loading?.Log($"(RoomEngine) Room '{room_id}' loaded.");
-        }
+        foreach (string room_id in room_ids) { LoadRoom(room_id); }
     }
     public void UnloadRooms(string[] room_ids)
     {
-        foreach (string room_id in room_ids)
-        {
-            // no need for unloading the room LMAO
-            // i mean we only unload the chunks inside
-            RoomData room_data = GetRoomDataFromID(room_id);
-            if (room_data == null) { log_loading?.Warning($"(RoomEngine) RoomData for room '{room_id}' not found when trying to unload it"); continue; }
-
-            ChunkEngine.Instance?.UnloadChunks(room_data.chunks_ids.ToArray());
-            log_loading?.Log($"(RoomEngine) Room '{room_id}' unloaded.");
-        }
+        foreach (string room_id in room_ids) { UnloadRoom(room_id); }
     }
     public bool IsRoomLoaded(RoomData room_data)
     {

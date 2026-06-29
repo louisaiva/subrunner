@@ -122,7 +122,7 @@ public class LevelEngine : BSOD_System<LevelEngine>
 
     // LOAD LEVEL
     public Action<Level> OnLevelLoaded = delegate { };
-    public async Task LoadLevel(string level_id)
+    public async Task LoadLevel(string level_id, string room_id = "")
     {
         if (!world_levels.ContainsKey(level_id)) { if (!hide_no_level_warning) { Debug.LogWarning("(LevelEngine - Load) Level data not found for id: " + level_id); } return; }
         Level new_level = world_levels[level_id];
@@ -140,7 +140,19 @@ public class LevelEngine : BSOD_System<LevelEngine>
 
         // we load the new level
         load_status = LevelLoadStatus.Loading;
-        new_level.Load();
+
+        // either we load the full rooms
+        if (string.IsNullOrEmpty(room_id))
+        {
+            if (log_loading) { Debug.Log($"(LevelEngine) Loading all the rooms of '{level_id}'"); }
+            new_level.Load();
+        }
+        else
+        {
+            if (log_loading) { Debug.Log($"(LevelEngine) Loading room {room_id} of '{level_id}'"); }
+            RoomEngine.Instance?.LoadRoom(room_id);
+        }
+
         if (log_loading) { Debug.Log($"(LevelEngine) Level '{level_id}' loaded"); }
         current_level = new_level;
         OnLevelLoaded?.Invoke(current_level);
