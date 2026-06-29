@@ -218025,10 +218025,16 @@ MonoBehaviour:
     population: 30
     alive_population: 0
     wait_for_corpse_despawn: 1
+  - name: qwin
+    template: qwin
+    population: 1
+    alive_population: 0
+    wait_for_corpse_despawn: 1
   log_species_gain_entity: 0
   log_species_loss_entity: 0
   log_new_nest: 0
   log_tick_nests_details: 0
+  hide_log_no_species_found: 0
   tick_delay: 0.1
 --- !u!114 &1492137543
 MonoBehaviour:

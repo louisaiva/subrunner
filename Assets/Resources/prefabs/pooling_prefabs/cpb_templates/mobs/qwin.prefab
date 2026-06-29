@@ -273,7 +273,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
   capacity_template_id: mob_exp
-  capacity_template_ids: []
+  capacity_template_ids:
+  - interact_with_door
 --- !u!1 &8838388296438177925
 GameObject:
   m_ObjectHideFlags: 0
@@ -476,10 +477,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5744172474813345029, guid: bbad179de34e6134bbf77cc73af372d8, type: 3}
       propertyPath: m_Name
-      value: motor
-      objectReference: {fileID: 0}
-    - target: {fileID: 7946677402921100740, guid: bbad179de34e6134bbf77cc73af372d8, type: 3}
-      propertyPath: data.<id>k__BackingField
       value: qwin_motor
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -572,15 +569,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2179822775373733288, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
       propertyPath: health
-      value: 600
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 2179822775373733288, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
       propertyPath: max_health
-      value: 600
-      objectReference: {fileID: 0}
-    - target: {fileID: 2179822775373733288, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
-      propertyPath: data.<id>k__BackingField
-      value: qwin_health
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 2179822775373733288, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
       propertyPath: _health_colliders.Array.size
@@ -632,7 +625,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8074617250788619187, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
       propertyPath: m_Name
-      value: health
+      value: qwin_health
       objectReference: {fileID: 0}
     - target: {fileID: 8074617250788619187, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
       propertyPath: m_TagString
@@ -707,19 +700,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6468213256878280315, guid: a94cb59baaeab5e46b579a648c17538d, type: 3}
       propertyPath: max_run_speed
-      value: 2.8
+      value: 3.2
       objectReference: {fileID: 0}
     - target: {fileID: 6468213256878280315, guid: a94cb59baaeab5e46b579a648c17538d, type: 3}
       propertyPath: max_walk_speed
       value: 1.3
       objectReference: {fileID: 0}
-    - target: {fileID: 6468213256878280315, guid: a94cb59baaeab5e46b579a648c17538d, type: 3}
-      propertyPath: data.<id>k__BackingField
-      value: qwin_walk
-      objectReference: {fileID: 0}
     - target: {fileID: 6582822749040364892, guid: a94cb59baaeab5e46b579a648c17538d, type: 3}
       propertyPath: m_Name
-      value: walk
+      value: qwin_walk
       objectReference: {fileID: 0}
     - target: {fileID: 8825874904198225900, guid: a94cb59baaeab5e46b579a648c17538d, type: 3}
       propertyPath: InitialModule.startColor.maxColor.b
@@ -757,7 +746,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3831210645434146991, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: m_Name
-      value: attack
+      value: qwin_attack
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: damage
@@ -773,15 +762,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: unstoppable_rate
-      value: 0
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: distance_to_attack
       value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
-      propertyPath: data.<id>k__BackingField
-      value: qwin_attack
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: not_attackable_tags.Array.size
