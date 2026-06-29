@@ -38,7 +38,7 @@ public class Sofa : Container, Interactable, Sittable
         // we sit on the sofa
         sit_capacity.Sit(this);
     }
-    protected override void load_capable_accordingly(Capable capable)
+    public override void LoadCapablesAccordingly(Capable capable)
     {
         // we sit on the sofa
         capable.GetCapacity<SitCapacity>()?.Sit(this, instant: true);

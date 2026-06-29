@@ -1011,6 +1011,13 @@ MonoBehaviour:
     base_spritesheets:
     - objects/deco/tv/new_tv_tv
     keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: orderer_cmd
+    variant_spritesheets:
+    - objects/interactives/crafters/3Dprinter/orderer_cmd
+    base_skin: orderer
+    base_spritesheets:
+    - objects/interactives/crafters/3Dprinter/orderer_base
+    keep_base_anim_if_spritesheet_not_found: 0
   log: 0
   log_LAFAC: 0
   log_variant_awake: 0
@@ -1685,6 +1692,7 @@ MonoBehaviour:
   LOG_CLOSEST_TRASH_SENSOR: 0
   LOG_CLOSEST_BEING_SENSOR: 0
   LOG_GTR_SENSOR: 0
+  LOG_GTR_SENSOR_EXTENDED: 0
   LOG_IA_ACTION: 0
   LOG_ATTACK_ACTION: 0
   LOG_EAT_ACTION: 0

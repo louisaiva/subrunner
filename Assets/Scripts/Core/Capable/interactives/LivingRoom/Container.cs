@@ -27,7 +27,7 @@ public class Container : Capable
     }
 
 
-    protected virtual void load_capable_accordingly(Capable capable)
+    public virtual void LoadCapablesAccordingly(Capable capable)
     {
         // here the lower container classes can decide to do something when we load a capable that
         // is contained. for exaple, we want to call the capable Sit capacity if we are a sofa
@@ -54,7 +54,7 @@ public class Container : Capable
             if (is_showing) { capable.AnimPlayer.Show(); }
             else { capable.AnimPlayer.Hide(); } */
 
-            load_capable_accordingly(capable);
+            LoadCapablesAccordingly(capable);
         }
     }
     public override void UnloadData()

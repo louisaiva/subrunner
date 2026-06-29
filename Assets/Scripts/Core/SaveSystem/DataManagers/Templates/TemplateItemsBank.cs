@@ -7,39 +7,28 @@ using System;
 
 public class TemplateItemsBank : MonoBehaviour
 {
-    [Header("Items templates bank")]
 
-    [Header("Basics")]
-    public List<Capable> items_templates = new List<Capable>();
-
-    [Header("Food")]
-    public List<Capable> food_templates = new List<Capable>();
-
-    [Header("Modules")]
-    public List<Capable> modules_templates = new List<Capable>();
-
-    [Header("Files")]
-    public List<Capable> files_templates = new List<Capable>();
-
-    [Header("Exploits")]
-    public List<Capable> exploits_templates = new List<Capable>();
-
-    [Header("Keys")]
-    public List<Capable> keys_templates = new List<Capable>();
-
-    [Header("Others")]
-    public List<Capable> others_templates = new List<Capable>();
-
+    [Header("Items templates folders")]
+    public List<string> template_paths = new List<string>();
     public List<Capable> GetAllCapablesTemplates()
     {
         List<Capable> all_templates = new List<Capable>();
-        all_templates.AddRange(files_templates);
-        all_templates.AddRange(items_templates);
-        all_templates.AddRange(exploits_templates);
-        all_templates.AddRange(keys_templates);
-        all_templates.AddRange(others_templates);
-        all_templates.AddRange(food_templates);
-        all_templates.AddRange(modules_templates);
+        all_templates.AddRange(get_all_aditional_templates_from_paths());
         return all_templates;
+    }
+    private List<Capable> get_all_aditional_templates_from_paths()
+    {
+        List<Capable> templates = new List<Capable>();
+        foreach (string path in template_paths)
+        {
+            templates.AddRange(get_templates_from_path(path));
+        }
+        return templates;
+    }
+    private List<Capable> get_templates_from_path(string path)
+    {
+        Capable[] templates = Resources.LoadAll<Capable>(path);
+        // Debug.Log($"[TemplateObjectsBank] Found {templates.Length} templates in path : {path}");
+        return new List<Capable>(templates);
     }
 }

@@ -1,6 +1,6 @@
 ﻿{
     "<id>k__BackingField": "plate",
-    "kind": "Food",
+    "kind": "Item",
     "position": {
         "x": 0.0,
         "y": 0.0
@@ -96,16 +96,14 @@
     },
     "effects": [],
     "effects_ttl": [],
-    "reference": "food:plate",
+    "reference": "ingredient:place",
     "color": {
-        "r": 0.8549020290374756,
-        "g": 0.8549020290374756,
-        "b": 0.8549020290374756,
+        "r": 0.9056603908538818,
+        "g": 0.9056603908538818,
+        "b": 0.9056603908538818,
         "a": 1.0
     },
-    "max_qty": 1,
+    "max_qty": 16,
     "item_description": "simple ceramic plate.\\n\\nthank god it survives all these long years just so I can <b>throw it on the wall to break it violently</b>\\n\\n/l(just kidding)",
-    "is_grabbed": true,
-    "life_regen": 100.0,
-    "portions": 1
+    "is_grabbed": true
 }

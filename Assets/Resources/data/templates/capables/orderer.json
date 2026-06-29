@@ -1,6 +1,6 @@
 ﻿{
     "<id>k__BackingField": "orderer",
-    "kind": "FalseInteractable",
+    "kind": "Crafter",
     "position": {
         "x": 0.0,
         "y": 0.0
@@ -13,6 +13,9 @@
     "tag": "Untagged",
     "capacities_ids": [
         "orderer_iic",
+        "device_open",
+        "device_close",
+        "craft",
         "hover"
     ],
     "anim_data": {
@@ -21,7 +24,7 @@
         "anim_capacity_priorities": [
             {
                 "priority": 0,
-                "capacity_playing": "",
+                "capacity_playing": "idle",
                 "capacities": [
                     "idle"
                 ],
@@ -36,6 +39,34 @@
                 ],
                 "lock_orientation": false,
                 "one_shot": false
+            },
+            {
+                "priority": 2,
+                "capacity_playing": "",
+                "capacities": [
+                    "turn_on",
+                    "turn_off"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            },
+            {
+                "priority": 3,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle_on"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 4,
+                "capacity_playing": "",
+                "capacities": [
+                    "craft"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
             }
         ],
         "current_capacity": "",
@@ -43,7 +74,25 @@
         "sorting_layer_id": -667374433,
         "order_in_layer": 0,
         "never_flip": false,
-        "layers": [],
+        "layers": [
+            {
+                "skin": "orderer_cmd",
+                "local_position": {
+                    "x": 0.0,
+                    "y": -0.0010000000474974514
+                },
+                "local_rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "material_name": "objects",
+                "sorting_layer_id": -667374433,
+                "order_in_layer": 0,
+                "never_flip": false,
+                "follow_duration": true
+            }
+        ],
         "local_position": {
             "x": 0.0,
             "y": 0.0

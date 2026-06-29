@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 3410312139136107148}
   - component: {fileID: 2703867859723212945}
   m_Layer: 24
-  m_Name: spawn_egg
+  m_Name: egg_random
   m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -109,16 +109,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d0b43fa0567e1540bacfa253e7fd613, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skin: shoes
+  skin: egg
   <orientation>k__BackingField: D
-  current_anim:
-    name: 
-    sprites_paths: []
-    sprites: []
-    sprites_durations: []
-    loop: 1
-    speed: 1
-    flipX: 0
+  current_capacity: 
   update_each_frame: 1
   anim_capacity_priorities:
   - priority: 0
@@ -187,6 +180,7 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
+    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -204,7 +198,6 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
-    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 0}
@@ -223,9 +216,9 @@ MonoBehaviour:
   forces: []
   input_speed: 0
   Velocity: {x: 0, y: 0}
-  _reference: other:spawn_egg
+  _reference: egg:random
   Color: {r: 0.8113208, g: 0.7341283, b: 0.62379855, a: 1}
-  MaxQty: 1
+  MaxQty: 10
   ItemDescription: this egg turns into something when dropped on the ground omg i
     hope it is not jordan bardella
   _grabbed: 1
@@ -245,6 +238,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
   capacity_template_id: hover
+  capacity_template_ids: []
 --- !u!114 &2703867859723212945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -258,6 +252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
   capacity_template_id: item_iic
+  capacity_template_ids: []
 --- !u!1 &4492977600399552964
 GameObject:
   m_ObjectHideFlags: 0

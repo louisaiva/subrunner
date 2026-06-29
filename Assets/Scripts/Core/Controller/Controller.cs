@@ -520,6 +520,8 @@ public class Controller : MonoBehaviour
             }
         }
 
+        if (log) { Debug.Log($"(Controller) Duplicated existing data for '{capable.id}' & Ready to load data :\n{capable.GetDetails()}"); }
+
         // then we load the controller data again, which will load the capable data we just modified
         LoadData(new_data, tp: false);
     }
@@ -573,7 +575,6 @@ public class Controller : MonoBehaviour
         if (data == null) { return; }
 
         // load the data & control the initial capable
-        if (log) { Debug.Log($"(Controller) Controller data ready to be loaded : {data.GetDetails()}"); }
         LoadData(data, tp:true);
 
         // register to CapableEngine despawn event
@@ -599,28 +600,13 @@ public class Controller : MonoBehaviour
     [SerializeField] private bool respawn_template = false;
     public void LoadData(ControllerData data, bool tp = true)
     {
+        if (log) { Debug.Log($"(Controller) Controller data ready to be loaded : {data.GetDetails()}"); }
         this.data = data;
         stack.Clear();
 
         #if !UNITY_EDITOR
         if (respawn_template) { Debug.LogError("(Controller) Respawning template on world loading is enabled! You will always lose your inventory & position! If you don't want this, please download another subrunner version :D"); }
         #endif
-
-
-        // if we have a container id we need to load it instantly because otherwise we won't be able to load
-        // the controller capable which is inside the container
-        if (!string.IsNullOrEmpty(data.container_id))
-        {
-            if (!CapableBank.LazyInstance.TryGetLoadedCapable(data.container_id, out Capable container_capable))
-            {
-                container_capable = CapableEngine.LazyInstance.LoadCapableInstantly(data.container_id);
-                if (container_capable == null)
-                {
-                    Debug.LogError($"(Controller) Could not load instantly container capable '{data.container_id}' so we probably won't be able to load controller");
-                }
-            }
-        }
-
 
         string capable_id = data.controlled_capable_id;
         if (string.IsNullOrEmpty(capable_id)) { capable_id = data.capable_template; }
@@ -630,6 +616,47 @@ public class Controller : MonoBehaviour
             return;
         }
         if (respawn_template) { capable_id = data.capable_template; } // we always assign the new perso as template
+
+        // if we have a container id we need to load it instantly because otherwise we won't be able to load
+        // the controller capable which is inside the container
+        if (!string.IsNullOrEmpty(data.container_id))
+        {
+            ContainerData container = CapableEngine.LazyInstance.GetCapableDataFromID(data.container_id) as ContainerData;
+            if (container == null)
+            {
+                container = CapableEngine.LazyInstance.DuplicateTemplate(data.container_id) as ContainerData;
+                if (container == null) { Debug.LogError($"(Controller) Could not get container data '{data.container_id}' (must be real id or template) so we probably won't be able to load controller"); }
+            }
+
+            // here we need to make sure that the data contains the capable_id
+            if (!container.contained_capable_ids.Contains(capable_id))
+            {
+                container.contained_capable_ids.Add(capable_id);
+            }
+
+
+            // if the container is not loaded, we load it and that's it (it will then load the contained capable accordingly)
+            if (CapableBank.LazyInstance.TryGetLoadedCapable(container.id, out Capable container_capable))
+            {
+                // if the container IS loaded, it means we need to first, load the capable, then make it sit on the container
+                Capable capable = CapableEngine.LazyInstance.LoadCapableInstantly(capable_id);
+                capable_id = capable.ID;
+
+                if (log) { Debug.Log($"(Controller) Making the capable {capable_id} sit on the container : {container_capable.ID}"); }
+
+
+                Sofa sofa = (Sofa) container_capable;
+
+                // then we make it sit on the container
+                if (!capable.TryGetCapacity(out SitCapacity sc))
+                {
+                    Debug.LogError($"(Controller) Just loaded next controlled capable '{capable_id}' has no sit capacity");
+                }
+                else { capable.GetCapacity<SitCapacity>().Sit(sofa, instant: true); }
+            }
+        }
+
+
 
         // load the controlled capable
         if (!Control(capable_id))

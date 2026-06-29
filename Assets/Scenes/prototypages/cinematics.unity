@@ -57825,12 +57825,12 @@ MonoBehaviour:
   log_world_data_loading: 1
   log_awake_data_extended: 0
   log_start_capacity_ownership: 0
-  log_duplicating: 0
-  log_spawning: 0
+  log_duplicating: 1
+  log_spawning: 1
   log_item_switching: 0
   hide_log_ownership_validation: 1
   log_loading: 0
-  log_loading_extended: 0
+  log_loading_extended: 1
   log_visibility: 0
   hide_log_no_data_found: 1
   log_saving: 0
@@ -71370,9 +71370,9 @@ MonoBehaviour:
   auto_repair_owner_links_on_load: 0
   log_templates_data_loading: 1
   log_world_data_loading: 1
-  log_spawning: 0
+  log_spawning: 1
   log_loading: 0
-  log_loading_extended: 0
+  log_loading_extended: 1
   hide_log_no_data_found: 1
   log_saving: 0
   item_static_capacities_kinds:
@@ -163826,46 +163826,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f12cd99e0b0965a4cb95ad5d9b2bb06d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateItemsBank
-  items_templates:
-  - {fileID: -9189030586993926403, guid: ae4e8b81d912bdf46934e5b6a33f20fe, type: 3}
-  - {fileID: 6192736764969982114, guid: 55e01ebe5ae95804c8ea23c577af912b, type: 3}
-  - {fileID: 78135847452039840, guid: 4ef1b97214bcb9248a9f93c1049f1b1d, type: 3}
-  food_templates:
-  - {fileID: 8665536444718687376, guid: 6149f663a4f9d8f42a675e0072eb4f51, type: 3}
-  - {fileID: 8665536444718687376, guid: 8577e83ddc6970a448247bba8b51edf4, type: 3}
-  - {fileID: 8665536444718687376, guid: 80d967c3e9a1fdd429cb4b018fa7b8d5, type: 3}
-  - {fileID: 542729204817951620, guid: d37cd7385b0279f4ba5a04ad3c2f2b50, type: 3}
-  - {fileID: 8665536444718687376, guid: 58b074b7d91bd7f4da9519a94c9ca3e6, type: 3}
-  - {fileID: 8665536444718687376, guid: f5de671cea71d7b41bc03785d0ecf423, type: 3}
-  - {fileID: 8617235489932818152, guid: 126ed8af7e0767e438af0ae3372b6c13, type: 3}
-  - {fileID: 7772219136801390095, guid: 2372ec4c67d844e41900c657e3a4c653, type: 3}
-  - {fileID: 7647431178272322623, guid: f860c2458f4bec443b7dfa9935683397, type: 3}
-  modules_templates: []
-  files_templates: []
-  exploits_templates:
-  - {fileID: 2973867287721869536, guid: 862a00cc11afb814e9e2944b899b26f3, type: 3}
-  - {fileID: 4348656382771500145, guid: 7121d62acd1fd2e4f86d690ff0ccb3e5, type: 3}
-  - {fileID: 639206678987520602, guid: b37333aa55d816446914a11c8a5f55ba, type: 3}
-  - {fileID: 7896760569733679823, guid: 16b1b631237003f4cb87365324e74631, type: 3}
-  - {fileID: 7205864463698617736, guid: a1569675e498c9e49b91fb8a255b5455, type: 3}
-  - {fileID: 5230996309510096075, guid: ee52b18ea4a8ef947b26b97e9769842e, type: 3}
-  - {fileID: 7586584517996596387, guid: 0ae73c6665d035e4e8b04e6ce95871ec, type: 3}
-  - {fileID: 7104580741015948316, guid: 1d04315849ce7da45be9408d763154ff, type: 3}
-  - {fileID: 497894148301156937, guid: 8bb6bf9981cfd4d49a763c8d2c8fe61c, type: 3}
-  keys_templates:
-  - {fileID: 2715805361241058861, guid: 3711af7862b54c846a91483f1bef4f61, type: 3}
-  - {fileID: 1490887431339550315, guid: 54daad0f807ade84e89fdc1498c80fac, type: 3}
-  - {fileID: 6745512879023677719, guid: d8ed1dc8bba20d44290544cf1860b2cf, type: 3}
-  - {fileID: 4188120413787442153, guid: b597627be1d8e224e8fbaca932d01477, type: 3}
-  - {fileID: 6070394440648107577, guid: d0078476c18f7784eaf865231b526eac, type: 3}
-  - {fileID: 5482660277455037575, guid: f8e9bcdbf5b5407428e95b8af511283d, type: 3}
-  - {fileID: 6339040191800263390, guid: 8c566d5f7732d674a81f57642353dc1b, type: 3}
-  - {fileID: 6104356147785905331, guid: 5763d245100c5c54e9c3e5a3eb79cb63, type: 3}
-  others_templates:
-  - {fileID: 898889135811878911, guid: 72ff98b9feb11da4488b823b3e35fbd3, type: 3}
-  - {fileID: 7629487890036740618, guid: 8d21b222d67565744a308e24fc090556, type: 3}
-  - {fileID: 1995776913879646623, guid: afa1573aa69f9114c92ccd6cdd3fbd33, type: 3}
-  - {fileID: 7629487890036740618, guid: cc4680eb5e4a46c4ca1a2ffe3ce18a9d, type: 3}
+  template_paths:
+  - prefabs/pooling_prefabs/cpb_templates/items
 --- !u!1 &1111530484
 GameObject:
   m_ObjectHideFlags: 0
