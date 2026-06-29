@@ -553,7 +553,7 @@ public class Controller : MonoBehaviour
     }
     private void OnDestroy()
     {
-        Debug.LogWarning($"(Controller) OnDestroy called holy shit that's terrible, fear the Controller.LazyInstance error log muahahah");
+        Debug.LogWarning($"(Controller) OnDestroy called holy shit that's terrible, " +"fear the Controller.LazyInstance error log muahahah".AddColor(Color.paleTurquoise));
     }
 
     ///

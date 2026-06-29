@@ -23,22 +23,20 @@ public class InputFeedback : MonoBehaviour
     public bool log = false;
 
     // START
-    protected void Start()
+    protected void Awake()
     {
         // we get the input manager & input
-        input_manager = InputManager.Instance;
+        input_manager = InputManager.LazyInstance;
         if (input == null) { return; }
-        InitializeWithAction(input_manager.GetAction(input));
+        this.action = input_manager.GetAction(input);
+        defineCallbacks();
     }
     public virtual void InitializeWithAction(InputAction action)
     {
         this.action = action;
         defineCallbacks();
-        OnEnable();
-    }
-    protected void OnDestroy()
-    {
-        
+        register_callbacks(action);
+        OnReset();
     }
 
     // DEFINE CALLBACKS
@@ -52,10 +50,11 @@ public class InputFeedback : MonoBehaviour
         press_and_release_callback = ctx => HandlePressAndReleaseInput(ctx);
     }
 
-    // ONENABLE/DISABLE
-    protected virtual void OnEnable()
+    // REGISTER / UNREGISTER CALLBACKS
+    protected bool callbacks_registered = false;
+    protected virtual void register_callbacks(InputAction action)
     {
-        if (action == null) { return; }
+        if (callbacks_registered) { return; }
 
         // we add the listeners
         if (use_press_and_release)
@@ -67,13 +66,11 @@ public class InputFeedback : MonoBehaviour
             action.performed += input_callback;
             action.canceled += reset_callback;
         }
-
-        // we reset the IF
-        OnReset();
+        callbacks_registered = true;
     }
-    protected virtual void OnDisable()
+    protected virtual void unregister_callbacks(InputAction action)
     {
-        if (action == null) { return; }
+        if (!callbacks_registered) { return; }
 
         // we remove the listeners
         if (use_press_and_release)
@@ -85,6 +82,20 @@ public class InputFeedback : MonoBehaviour
             action.performed -= input_callback;
             action.canceled -= reset_callback;
         }
+        callbacks_registered = false;
+    }
+    
+    // ON ENABLE / DISABLE
+    protected virtual void OnEnable()
+    {
+        if (action == null) { return; }
+        register_callbacks(action);
+        OnReset();
+    }
+    protected virtual void OnDisable()
+    {
+        if (action == null) { return; }
+        unregister_callbacks(this.action);
     }
 
 

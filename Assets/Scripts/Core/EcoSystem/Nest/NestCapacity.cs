@@ -249,6 +249,7 @@ public class NestCapacity : Capacity
     }
     public void SpawnThemAll()
     {
+        if (EntityCount == 0) { return; }
         entities_to_spawn = new List<string>(stored_entities);
     }
     public string ExtractSpawnableEntity()

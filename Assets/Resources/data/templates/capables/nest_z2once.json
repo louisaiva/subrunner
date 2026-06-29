@@ -1,0 +1,90 @@
+﻿{
+    "<id>k__BackingField": "nest_z2once",
+    "kind": "Nester",
+    "position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": -1.0
+    },
+    "layer": 29,
+    "tag": "Untagged",
+    "capacities_ids": [
+        "zombo_nest_2_once",
+        "zombo_spawn"
+    ],
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "robot_sp",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "hover"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 2,
+                "capacity_playing": "",
+                "capacities": [
+                    "spawn"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            }
+        ],
+        "current_capacity": "",
+        "material_name": "objects",
+        "sorting_layer_id": -31225397,
+        "order_in_layer": 4,
+        "never_flip": false,
+        "layers": [],
+        "local_position": {
+            "x": 0.0,
+            "y": 0.0
+        }
+    },
+    "inventory": {
+        "item_pools_data": [],
+        "item_type": 0
+    },
+    "feet_data": {
+        "box_colliders": [],
+        "circle_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 29,
+                "pathfinding_area": -1,
+                "shadow_caster_data": {
+                    "cast_and_self": false,
+                    "used_layers": []
+                },
+                "is_trigger": true,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.39351022243499758
+                },
+                "radius": 0.1719125509262085
+            }
+        ]
+    },
+    "effects": [],
+    "effects_ttl": []
+}

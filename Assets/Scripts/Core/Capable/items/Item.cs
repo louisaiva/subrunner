@@ -471,7 +471,8 @@ public class Item : Movable, EndlessInteractable
     public bool ValidateRule(string rule)
     {
         // todo : fix
-        // ! kind is the kind of the data, not the item !!! 
+        // ! kind is the kind of the data, not the item !!!
+        // -> will work for reference check but not specific kind checks like "Usable", "Device" etc
         return Item.ValidateRule(rule, reference, kind);
     }
 

@@ -7,6 +7,7 @@ public class EcoEngine : MonoBehaviour
 {
     public List<Species> species;
     private Dictionary<Species, List<NestData>> nests = new Dictionary<Species, List<NestData>>();
+    private Dictionary<Species, ManualSpeciesTicker> manual_tickers = new Dictionary<Species, ManualSpeciesTicker>();
 
     [Header("Logs")]
     public bool log_species_gain_entity = false;
@@ -33,8 +34,21 @@ public class EcoEngine : MonoBehaviour
         CapacityEngine.LazyInstance.OnCapacityDespawned += handle_capacity_despawned;
         if (log) { Debug.Log($"(EcoEngine) Registered to CapableEngine & CapacityEngine callbacks"); }
 
-        if (!log) { return; }
+        // now gather the manual tickers for species that require precise spawning handling
+        ManualSpeciesTicker[] tickers = GetComponents<ManualSpeciesTicker>();
         string debug = "";
+        foreach (ManualSpeciesTicker ticker in tickers)
+        {
+            Species spec = get_species_from_id(ticker.species);
+            if (spec == null) { continue; }
+            manual_tickers[spec] = ticker;
+            if (log) { debug += " - " + spec.name + " --> " + ticker.GetType().Name + "\n"; }
+        }
+        if (log) { Debug.Log($"(EcoEngine) Gathered {manual_tickers.Keys.Count} manual tickers : \n" + debug); }
+
+
+        if (!log) { return; }
+        debug = "";
         foreach (Species spec in species)
         {
             debug += spec.GetDetails() + "\n";
@@ -166,6 +180,11 @@ public class EcoEngine : MonoBehaviour
         foreach (Species spec in species)
         {
             if (spec.dead_population == 0) { continue; } // no entity to give
+            if (manual_tickers.TryGetValue(spec, out ManualSpeciesTicker ticker) && nests.TryGetValue(spec, out List<NestData> spec_nests))
+            {
+                ticker.Tick(spec, spec_nests);
+                if (!ticker.handle_entity_receiving_each_frame) { continue; } // we don't want to handle entity receiving, we just skip it
+            }
             make_a_nest_receive_an_entity(spec);
         }
     }

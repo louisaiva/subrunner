@@ -4,6 +4,8 @@ using UnityEngine;
 public class TrashEngine : MonoBehaviour
 {
 
+    [SerializeField] private string trash_rule = "corpse,leftover";
+
     [Header("Logs")]
     [SerializeField] private bool log_trash = false;
 
@@ -17,6 +19,7 @@ public class TrashEngine : MonoBehaviour
         {
             if (kvp.Value is not ItemData item) { continue; }
             if (item.is_grabbed) { continue; }
+            if (!is_item_a_trash(item)) { return; }
 
             // try to extract the level of it
             if (!LevelEngine.LazyInstance.TryGetCapableLevel(item.id, out LevelData level)) { continue; }
@@ -33,27 +36,25 @@ public class TrashEngine : MonoBehaviour
     // ON ENABLE / DISABLE
     private void OnEnable()
     {
-        ChunkEngine.LazyInstance.OnCapableAddedToChunk += capable_appeared;
-        ChunkEngine.LazyInstance.OnCapableRemovedFromChunk += capable_disappeared;
+        ChunkEngine.LazyInstance.OnCapableAddedToChunk += on_capable_appeared;
+        ChunkEngine.LazyInstance.OnCapableRemovedFromChunk += on_capable_disappeared;
     }
     private void OnDisable()
     {
-        ChunkEngine.LazyInstance.OnCapableAddedToChunk -= capable_appeared;
-        ChunkEngine.LazyInstance.OnCapableRemovedFromChunk -= capable_disappeared;
+        ChunkEngine.LazyInstance.OnCapableAddedToChunk -= on_capable_appeared;
+        ChunkEngine.LazyInstance.OnCapableRemovedFromChunk -= on_capable_disappeared;
     }
 
 
     // CALLBACKS
-    private void capable_appeared(string id, ChunkData chunk)
+    private void on_capable_appeared(string id, ChunkData chunk)
     {
         // if (log_trash) { Debug.Log($"(TrashEngine) Detected appearing capable '{id}' in chunk {chunk.id}"); }
         CapableData cdata = CapableEngine.LazyInstance.GetCapableDataFromID(id);
         if (cdata == null) { return; }
         if (cdata is not ItemData item) { return; }
-
-        // todo : filter trash item here, for now, npc gather everything omg
-        if (item.reference.StartsWith("shoes")) { return; }
-        if (item.reference.StartsWith("weapon")) { return; }
+        
+        if (!is_item_a_trash(item)) { return; }
 
         // we get the level of the cdata
         if (!LevelEngine.Instance.TryGetRoomLevel(chunk.room_id, out LevelData level)) { return; }
@@ -71,7 +72,7 @@ public class TrashEngine : MonoBehaviour
         on_floor_trashes[level_id].Add(item);
         if (log_trash) { Debug.Log($"(TrashEngine) Trash '{item.id} just appeared on '{level_id}' level"); }
     }
-    private void capable_disappeared(string id, ChunkData chunk)
+    private void on_capable_disappeared(string id, ChunkData chunk)
     {
         // if (log_trash) { Debug.Log($"(TrashEngine) Detected disappearing capable '{cdata.id}' : {cdata.GetDetails()}"); }
         CapableData cdata = CapableEngine.LazyInstance.GetCapableDataFromID(id);
@@ -92,6 +93,10 @@ public class TrashEngine : MonoBehaviour
 
 
     // GETTERS
+    private bool is_item_a_trash(ItemData item)
+    {
+        return item.ValidateRule(trash_rule);
+    }
     public int GetQuantityOfTrash(string level_id)
     {
         if (!on_floor_trashes.TryGetValue(level_id, out List<ItemData> trashes)) { return 0; }

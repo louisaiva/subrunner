@@ -14,11 +14,12 @@ public class DoorEngine : MonoBehaviour
 
 
     [Header("Logs")]
-    public bool log_graph = false;
+    public bool log_graph_creation = false;
     public bool log_accessible_rooms = false;
     public bool log_visibility_update = false;
     public bool log_callbacks = false;
     public bool log_visibility = false;
+    public bool log_get_room_path = false;
 
     // LOAD / UNLOAD WORLD DATA
     public async Task LoadWorldData(string world_id, bool log)
@@ -61,7 +62,7 @@ public class DoorEngine : MonoBehaviour
     // GRAPH CREATION
     private void createDoorGraph(List<DoorData> doors)
     {
-        if (log_graph) { Debug.Log($"(DoorEngine) Creating door graph with {doors.Count} doors"); }
+        if (log_graph_creation) { Debug.Log($"(DoorEngine) Creating door graph with {doors.Count} doors"); }
         door_graph = new DoorGraph();
         List<string> added_rooms = new List<string>();
 
@@ -70,7 +71,7 @@ public class DoorEngine : MonoBehaviour
     }
     private void create_door_link(DoorData door_data, ref List<string> added_rooms)
     {
-        if (log_graph) { Debug.Log($"(DoorEngine) Creating link for door id: {door_data.id} between chunk {door_data.room1_id} and chunk {door_data.room2_id} (is open: {door_data.is_open})"); }
+        if (log_graph_creation) { Debug.Log($"(DoorEngine) Creating link for door id: {door_data.id} between chunk {door_data.room1_id} and chunk {door_data.room2_id} (is open: {door_data.is_open})"); }
 
         // convert to their room data
         RoomData room_1 = RoomEngine.Instance.GetRoomDataFromID(door_data.room1_id);
@@ -98,7 +99,7 @@ public class DoorEngine : MonoBehaviour
     {
         RoomNode node = new RoomNode() { data = room_data };
         door_graph.rooms.Add(node);
-        if (log_graph) { Debug.Log($"(DoorEngine) Created node for room : {room_data.id}"); }
+        if (log_graph_creation) { Debug.Log($"(DoorEngine) Created node for room : {room_data.id}"); }
     }
 
 
@@ -410,7 +411,7 @@ public class DoorEngine : MonoBehaviour
     /// <returns>True if anyone can walk freely from a to b, False otherwise</returns>
     public bool IsNextRoomAccessibleAlongPath(string roomA, string roomB)
     {
-        List<RoomLink> path = door_graph.GetPathBetweenNodes(roomA,roomB);
+        List<RoomLink> path = door_graph.GetPathBetweenNodes(roomA,roomB, log:log_get_room_path);
         if (path == null) { return false; }
         if (path.Count == 0) { return true; } // we already in the room !
         // todo : add a AccessibilityFilter parameter to precise the LinkStates to consider rooms are accessible
@@ -538,23 +539,28 @@ public class DoorEngine : MonoBehaviour
         }
     
         // get path
-        public List<RoomLink> GetPathBetweenNodes(string a, string b)
+        public List<RoomLink> GetPathBetweenNodes(string a, string b, bool log = false)
         {
             RoomNode start = GetRoomNode(a);
             RoomNode dest = GetRoomNode(b);
             if (start == null || dest == null)
             {
-                if (!hide_log_room_not_found) { Debug.LogWarning($"(DoorGraph) Could not find room node for one of these room id: '{a}'   ///   '{b}'"); }
+                if (!hide_log_room_not_found || log) { Debug.LogWarning($"(DoorGraph) Could not find room node for one of these room id: '{a}'   ///   '{b}'".AddColor(Color.yellow)); }
                 return null;
             }
 
             // check if we have the path already
-            if (cached_paths.TryGetValue((start, dest), out List<RoomLink> existing_path)) { return existing_path; }
+            if (cached_paths.TryGetValue((start, dest), out List<RoomLink> existing_path))
+            {
+                if (log) { Debug.Log($"(DoorGraph) Already had a in cache for path : {GetPathDetails(existing_path, start, dest)}"); }
+                return existing_path;
+            }
             if (cached_paths.TryGetValue((dest, start), out List<RoomLink> existing_rev_path))
             {
                 List<RoomLink> reversed_list = new List<RoomLink>(existing_rev_path);
                 reversed_list.Reverse();
                 cached_paths.Add((start, dest), reversed_list);
+                if (log) { Debug.Log($"(DoorGraph) Already had a {"reversed".AddColor(Color.hotPink)} in cache for path : {GetPathDetails(reversed_list, start, dest)}"); }
                 return reversed_list;
             }
 
@@ -567,6 +573,7 @@ public class DoorEngine : MonoBehaviour
             if (path_found)
             {
                 cached_paths.Add((start, dest), path);
+                if (log) { Debug.Log($"(DoorGraph) Successfully calculated a new path (and added it to cache) : {GetPathDetails(path, start, dest)}"); }
                 return path;
             }
 
@@ -575,6 +582,23 @@ public class DoorEngine : MonoBehaviour
                 + "\n  - visited is " + (visited == null ? "null" : string.Join(" / ", visited))
             );
             return null;
+        }
+        private string GetPathDetails(List<RoomLink> path, RoomNode start, RoomNode dest)
+        {
+            List<RoomNode> visited = new List<RoomNode>() { start };
+            string details = "";
+            foreach (RoomLink link in path)
+            {
+                RoomNode last = visited.LastOrDefault();
+                RoomNode next = null;
+                if (link.room1 == last) { next = link.room2; }
+                else if (link.room2 == last) { next = link.room1; }
+                if (next == null) { details += " - no next room found, " + "breach detected".AddColor(Color.red) + $" in link between {link.room1} & {link.room2} with door {link.door_id}\n"; continue; }
+
+                details += " - " + next + $" (through door : {link.door_id})\n";
+                visited.Add(next);
+            }
+            return $"path : {start} --> {dest} ({path.Count} steps)\n{details}";
         }
 
         /// <summary>
@@ -664,6 +688,7 @@ public class DoorEngine : MonoBehaviour
     {
         public RoomData data;
         public string ID => data.id;
+        public override string ToString() { return ID; }
     }
     public class RoomLink
     {

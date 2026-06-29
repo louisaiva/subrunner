@@ -15,17 +15,6 @@ public class InputIndicationEngine : MonoBehaviour
 
     public Loggable<InputIndicationEngine> log;
     
-    // SETTING & CALLBACK
-    /* private void Start()
-    {
-        SettingsManager.Instance.RegisterCallback("show_interaction_feedbacks", ToggleEngine);
-    }
-    private void OnDestroy()
-    {
-        SettingsManager.Instance.UnregisterCallback("show_interaction_feedbacks", ToggleEngine);
-    }
-    private void ToggleEngine(Setting setting) { gameObject.SetActive(setting.Value > 0.5f); } */
-    
     private void Update()
     {
         if (input_indication == null) { return; }
@@ -51,12 +40,6 @@ public class InputIndicationEngine : MonoBehaviour
         input_indication.position = current_iic.transform.position;
         switcher.SwitchAction(current_iic.InputName);
         switcher.SetColor(current_iic.Color);
-        /* foreach (UI_EventButton IF in IFs)
-        {
-            IF.SetColor(current_iic.Color);
-        } */
-
-        // // todo : we set the feedback action
 
         // we show the IF
         input_indication.gameObject.SetActive(true);

@@ -59,10 +59,19 @@ public class InputManager : MonoBehaviour
 
     // AWAKE & SINGLETON LOGIC
     public static InputManager Instance { get; private set; }
+    public static InputManager LazyInstance
+    {
+        get
+        {
+            if (Instance != null) { return Instance; }
+            Instance = FindFirstObjectByType<InputManager>(FindObjectsInactive.Include);
+            return Instance;
+        }
+    }
     private void Awake()
     {
         if (Instance == null) { Instance = this; }
-        else { Destroy(gameObject); return; }
+        else if (Instance != this) { Destroy(gameObject); return; }
 
         // on récupère le module d'input system ui
         ui_input_module = GetComponent<InputSystemUIInputModule>();

@@ -24,6 +24,8 @@ public class JoystickEndlessFeedback : JoystickFeedback
     // ONENABLE/DISABLE
     protected override void OnEnable()
     {
+        base.OnEnable();
+        
         // we get the endless input
         if (endless_input_name == "") { return; }
         if (endless_input == null)
@@ -48,6 +50,8 @@ public class JoystickEndlessFeedback : JoystickFeedback
     }
     protected override void OnDisable()
     {
+        base.OnDisable();
+        
         // we remove listeners
         endless_input.OnStarted -= input_callback;
         endless_input.OnHold -= endless_callback;

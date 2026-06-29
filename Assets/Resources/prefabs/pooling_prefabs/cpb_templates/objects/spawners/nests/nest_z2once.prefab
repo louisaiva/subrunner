@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2925743616726490159}
   - component: {fileID: 4293968091005312474}
   m_Layer: 20
-  m_Name: zombo_nest
+  m_Name: zombo_nest_2_once
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -90,8 +90,8 @@ MonoBehaviour:
     tag: 
   log: 0
   species: zombo
-  max_entity_stored: 4
-  store_mode: 0
+  max_entity_stored: 2
+  store_mode: 1
   spawn_mode: 1
 --- !u!1 &4321973039963678398
 GameObject:
@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 1640566260181553916}
   - component: {fileID: 3380576607074327416}
   m_Layer: 29
-  m_Name: zombo_nester
+  m_Name: nest_z2once
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

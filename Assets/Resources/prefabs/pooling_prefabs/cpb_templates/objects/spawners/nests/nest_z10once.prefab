@@ -1,5 +1,98 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &407699245312976554
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 948133887552759783}
+  - component: {fileID: 2925743616726490159}
+  - component: {fileID: 4293968091005312474}
+  m_Layer: 20
+  m_Name: zombo_nest_10_once
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &948133887552759783
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 407699245312976554}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.4, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6660194394889939723}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &2925743616726490159
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 407699245312976554}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 5
+--- !u!114 &4293968091005312474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 407699245312976554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18c66ac7beac9d14fb800e1f84b8ad13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TriggerNestCapacity
+  data:
+    <id>k__BackingField: 
+    <owner_id>k__BackingField: 
+    kind: 
+    local_position: {x: 0, y: 0}
+    layer: 0
+    tag: 
+  log: 0
+  species: zombo
+  max_entity_stored: 10
+  store_mode: 1
+  spawn_mode: 1
 --- !u!1 &4321973039963678398
 GameObject:
   m_ObjectHideFlags: 0
@@ -13,9 +106,9 @@ GameObject:
   - component: {fileID: 8963098019933995165}
   - component: {fileID: 8992160811214245169}
   - component: {fileID: 1640566260181553916}
-  - component: {fileID: 5970429846299633541}
+  - component: {fileID: 3380576607074327416}
   m_Layer: 29
-  m_Name: npc_nester
+  m_Name: nest_z10once
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -173,8 +266,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.39040515}
-  m_Radius: 0.15105149
+  m_Offset: {x: 0, y: 0.39351022}
+  m_Radius: 0.17191255
 --- !u!114 &1640566260181553916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -187,9 +280,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b38a876e5f6fba4ab1dde6d23fd0f96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
-  capacity_template_id: npc_spawn
+  capacity_template_id: zombo_spawn
   capacity_template_ids: []
---- !u!114 &5970429846299633541
+--- !u!114 &3380576607074327416
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -236,69 +329,3 @@ MonoBehaviour:
   log: 0
   activate_all_capacities_logs_on_awake: 0
   log_static_data: 0
---- !u!1001 &7245392627618959712
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 6660194394889939723}
-    m_Modifications:
-    - target: {fileID: 1525934425326752727, guid: 5602454329b76e74abeff16f5fe1fd28, type: 3}
-      propertyPath: species
-      value: npc
-      objectReference: {fileID: 0}
-    - target: {fileID: 6999929146522826698, guid: 5602454329b76e74abeff16f5fe1fd28, type: 3}
-      propertyPath: m_Name
-      value: npc_nest
-      objectReference: {fileID: 0}
-    - target: {fileID: 7612416572335978119, guid: 5602454329b76e74abeff16f5fe1fd28, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7612416572335978119, guid: 5602454329b76e74abeff16f5fe1fd28, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 7612416572335978119, guid: 5602454329b76e74abeff16f5fe1fd28, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7612416572335978119, guid: 5602454329b76e74abeff16f5fe1fd28, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7612416572335978119, guid: 5602454329b76e74abeff16f5fe1fd28, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7612416572335978119, guid: 5602454329b76e74abeff16f5fe1fd28, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7612416572335978119, guid: 5602454329b76e74abeff16f5fe1fd28, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7612416572335978119, guid: 5602454329b76e74abeff16f5fe1fd28, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7612416572335978119, guid: 5602454329b76e74abeff16f5fe1fd28, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7612416572335978119, guid: 5602454329b76e74abeff16f5fe1fd28, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 5602454329b76e74abeff16f5fe1fd28, type: 3}
---- !u!4 &948133887552759783 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7612416572335978119, guid: 5602454329b76e74abeff16f5fe1fd28, type: 3}
-  m_PrefabInstance: {fileID: 7245392627618959712}
-  m_PrefabAsset: {fileID: 0}

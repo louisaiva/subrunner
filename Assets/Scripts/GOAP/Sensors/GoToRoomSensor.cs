@@ -101,7 +101,7 @@ namespace subrunner.goap
 
                 if (Logger.LazyInstance.LOG_GTR_SENSOR)
                 {
-                    Debug.Log($"(GoToRoomSensor) Get Next Room Sensor successfully found the position of the next room to go ! moving along {current_room} --> {other_room_id}");
+                    Debug.Log($"(GoToRoomSensor) Successfully found the next room to go ({typeof(RoomT).Name}) ! starting action : {current_room} --> {other_room_id}");
                 }
 
                 // we successfully found the position of the door that is slightly in the next room !
@@ -138,14 +138,17 @@ namespace subrunner.goap
             // Get a cached reference to the DataBehaviour on the agent
             MotorCapacity mc = references.GetCachedComponent<MotorCapacity>();
             if (mc == null || mc.mdata == null) { current_room = ""; destination = ""; return false; }
-            return mc.mdata.ExtractCurrentAndDestinationRooms(typeof(GoalT), out current_room, out destination);
-            /* if (found)
+            if (!Logger.LazyInstance.LOG_GTR_SENSOR_EXTENDED) { return mc.mdata.ExtractCurrentAndDestinationRooms(typeof(GoalT), out current_room, out destination); }
+            
+            // else we want to log extended :D
+            bool found = mc.mdata.ExtractCurrentAndDestinationRooms(typeof(GoalT), out current_room, out destination);
+            if (found)
             {
                 Debug.Log($"(GoToRoomSensor - {typeof(GoalT).GetFriendlyName()}) Sensor '{sensor}' extracted rooms : '{current_room}' -> '{destination}'");
                 return true;
             }
             Debug.LogWarning($"(GoToRoomSensor - {typeof(GoalT).GetFriendlyName()}) Sensor '{sensor}' COULD NOT extract rooms : '{current_room}' -> '{destination}'");
-            return false; */
+            return false;
         }
     }
 }

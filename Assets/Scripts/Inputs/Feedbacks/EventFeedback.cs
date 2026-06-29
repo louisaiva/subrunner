@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -24,11 +25,20 @@ public class EventFeedback : InputFeedback
     public override void OnInput()
     {
         base.OnInput();
-        ui_button.OnPointerEnter(null);
+        try { ui_button.OnPointerEnter(null); }
+        catch (Exception e)
+        {
+            Debug.LogError($"(EventFeedback) OnInput was called but the gameObject is destroyed :/ type : {GetType().Name}, callbacks registered ? {callbacks_registered}, action is {action}, error : {e}");
+        }
+        
     }
     public override void OnReset()
     {
         base.OnReset();
-        ui_button.OnPointerExit(null);
+        try { ui_button.OnPointerExit(null); }
+        catch (Exception e)
+        {
+            Debug.LogError($"(EventFeedback) OnReset was called but the gameObject is destroyed :/ type : {GetType().Name}, callbacks registered ? {callbacks_registered}, action is {action}, error : {e}");
+        }
     }
 }

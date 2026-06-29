@@ -8665,7 +8665,6 @@ MonoBehaviour:
   log_static_data: 0
   log_interact_kf: 0
   is_vertical: 0
-  DontTouchSortingLayer: 1
   shadow_caster: {fileID: 411900334}
   room1_id: 
   room2_id: 
@@ -15725,7 +15724,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::World
   load_status: 0
-  world_to_load: e0
+  world_to_load: e3
   save:
     world:
       game_version: 1.5.1c
@@ -46882,7 +46881,6 @@ MonoBehaviour:
   log_static_data: 0
   log_interact_kf: 0
   is_vertical: 0
-  DontTouchSortingLayer: 1
   shadow_caster: {fileID: 2014855553}
   room1_id: 
   room2_id: 
@@ -66040,7 +66038,6 @@ MonoBehaviour:
   log_static_data: 0
   log_interact_kf: 0
   is_vertical: 0
-  DontTouchSortingLayer: 1
   shadow_caster: {fileID: 239060242}
   room1_id: 
   room2_id: 
@@ -73693,7 +73690,6 @@ MonoBehaviour:
   log_static_data: 0
   log_interact_kf: 0
   is_vertical: 0
-  DontTouchSortingLayer: 1
   shadow_caster: {fileID: 1444570746}
   room1_id: 
   room2_id: 
@@ -86340,6 +86336,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8e925b5b69db0b43a0fd2fafd3f4473, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrashEngine
+  trash_rule: corpse,leftover
   log_trash: 1
 --- !u!1 &539687956
 GameObject:
@@ -101232,7 +101229,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c71ccf54fa70064e9dde4cc1ac0b1fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldTrashDetector
-  log: 1
+  log: 0
   draw_gizmos: 0
 --- !u!1 &657279783
 GameObject:
@@ -217962,6 +217959,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1492137541}
   - component: {fileID: 1492137542}
+  - component: {fileID: 1492137543}
   m_Layer: 0
   m_Name: core
   m_TagString: Untagged
@@ -218017,11 +218015,34 @@ MonoBehaviour:
     population: 15
     alive_population: 0
     wait_for_corpse_despawn: 0
+  - name: rat
+    template: rat
+    population: 30
+    alive_population: 0
+    wait_for_corpse_despawn: 0
+  - name: spider
+    template: spider
+    population: 30
+    alive_population: 0
+    wait_for_corpse_despawn: 1
   log_species_gain_entity: 0
   log_species_loss_entity: 0
   log_new_nest: 0
   log_tick_nests_details: 0
   tick_delay: 0.1
+--- !u!114 &1492137543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1492137540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98bc251150b222b4bba7bbb7524fa86f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPC_Ticker
+  trash_treshold: 20
 --- !u!1 &1492781062
 GameObject:
   m_ObjectHideFlags: 0
@@ -234505,11 +234526,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f8ca7b0ca44dca4aa986673beeb4aad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DoorEngine
-  log_graph: 1
+  log_graph_creation: 0
   log_accessible_rooms: 0
   log_visibility_update: 0
   log_callbacks: 0
   log_visibility: 0
+  log_get_room_path: 0
 --- !u!1 &1632101952
 GameObject:
   m_ObjectHideFlags: 0
@@ -310902,7 +310924,6 @@ MonoBehaviour:
   log_static_data: 0
   log_interact_kf: 0
   is_vertical: 0
-  DontTouchSortingLayer: 1
   shadow_caster: {fileID: 533523322}
   room1_id: 
   room2_id: 
