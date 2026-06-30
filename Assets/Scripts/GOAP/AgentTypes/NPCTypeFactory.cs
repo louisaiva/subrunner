@@ -10,6 +10,7 @@ namespace subrunner.goap
             var factory = CreateBuilder("npc");
 
             factory.AddCapability<CleanTrashCapabilityFactory>();
+            factory.AddCapability<BurnTrashCapabilityFactory>();
             factory.AddCapability<WanderCapabilityFactory>();
             // factory.AddCapability<EatCapabilityFactory>();
             // factory.AddCapability<KillBeingCapabilityFactory>();

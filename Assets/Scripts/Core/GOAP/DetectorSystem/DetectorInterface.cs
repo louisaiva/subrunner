@@ -2,13 +2,14 @@
 using System;
 using UnityEngine;
 
-public interface Detector
-{
-    public T FindClosestCapableOfType<T>(CapableData looker_data) where T : Capable;
-}
+public interface Detector { }
 public interface FoodDetector : Detector
 {
     public Food FindClosestFood(CapableData looker_data, EatData edata);
+}
+public interface CapableDetector : Detector
+{
+    public CapableData FindClosest<T>(CapableData looker_data, bool force_loaded = false) where T : Capable;
 }
 public interface TrashDetector : Detector
 {

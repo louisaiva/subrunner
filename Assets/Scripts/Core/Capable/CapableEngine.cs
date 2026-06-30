@@ -42,7 +42,8 @@ public class CapableEngine : BSOD_System<CapableEngine>
     [Header("World Capables data")]
     // private string world_data_path = "data/capables/";
     public Dictionary<string, CapableData> world_capables_data = new Dictionary<string, CapableData>();
-    
+    private Dictionary<Type, List<CapableData>> cached_data_by_kind = new Dictionary<Type, List<CapableData>>();
+
 
     [Header("Outsiders data")] // won't exist later 
     private Dictionary<CapableData, Capable> outsiders_data = new Dictionary<CapableData, Capable>(); // dictionary of capables that are in the world but not handled (loaded/unloaded) by our system. in the future there will be zero, but for now we still have some of these when we start the game
@@ -162,6 +163,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
         // we clear the world capables data, runtime ids, etc
         if (log) { Debug.Log($"(CapableEngine) clearing data"); }
         world_capables_data.Clear();
+        cached_data_by_kind.Clear();
         capables_hashs_by_ids.Clear();
         capables_ids_by_hash.Clear();
         next_capable_hash = 1;
@@ -210,6 +212,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
         // we empty the capables_data & runtime ids etc
         world_capables_data = new Dictionary<string, CapableData>();
+        cached_data_by_kind = new Dictionary<Type, List<CapableData>>();
         capables_hashs_by_ids = new Dictionary<string, int>();
         capables_ids_by_hash = new Dictionary<int, string>();
         next_capable_hash = 1;
@@ -221,6 +224,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
         {
             if (log_awake_data_extended) { Debug.Log($"(CapableEngine) Loading capable data for '{data.id}' of type {data.GetType().Name}: \n{data.GetDetails()}"); }
             world_capables_data.Add(data.id, data);
+            add_to_cached_kind_dict(data);
             generate_runtime_id(data.id);
             log_capables_details += data.GetDetails() + "\n";
 
@@ -249,6 +253,28 @@ public class CapableEngine : BSOD_System<CapableEngine>
         capables_hashs_by_ids[id] = new_hash;
         return new_hash;
         
+    }
+    private void add_to_cached_kind_dict(CapableData data)
+    {
+        // first we convert type
+        Type type = Type.GetType(data.kind);
+        if (type == null) { return; }
+
+        // then we add a new list if not already
+        if (!cached_data_by_kind.ContainsKey(type)) { cached_data_by_kind[type] = new List<CapableData>(); }
+
+        // then we add it
+        cached_data_by_kind[type].Add(data);
+    }
+    private void remove_from_cached_kind_dict(CapableData data)
+    {
+        Type type = Type.GetType(data.kind);
+        if (type == null) { return; }
+        if (!cached_data_by_kind.ContainsKey(type)) { return; }
+        if (!cached_data_by_kind[type].Contains(data)) { return; }
+        cached_data_by_kind[type].Remove(data);
+
+        if (cached_data_by_kind[type].Count == 0) { cached_data_by_kind.Remove(type); }
     }
 
     // outside of system capable detection
@@ -360,6 +386,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
         // we add the new_data to the world data list
         world_capables_data.Add(new_data.id, new_data);
+        add_to_cached_kind_dict(new_data);
 
 
         // 2. we spawn capacities from this new data
@@ -395,6 +422,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
         // we add the new_data to the world data list
         world_capables_data.Add(new_data.id, new_data);
+        add_to_cached_kind_dict(new_data);
 
         // 2. we spawn capacities from this new data
         for (int i = 0; i < new_data.capacities_ids.Count; i++)
@@ -659,6 +687,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
         // remove it from the world_data dict
         // todo : world_capables_data.Remove(cdata.id);
+        // todo : remove_from_cached_kind_dict(cdata);
         // World.Instance.UnregisterUniqueID(cdata.id);
         // ? should we clean as well hashes by id & etc ?
     }
@@ -1200,6 +1229,12 @@ public class CapableEngine : BSOD_System<CapableEngine>
             if (kvp.Key.GetPrefix() != template) { continue; }
             entities.Add(kvp.Value);
         }
+        return entities;
+    }
+    public List<CapableData> GetWorldCapableByKind(Type type)
+    {
+        if (!cached_data_by_kind.ContainsKey(type)) { return null; }
+        List<CapableData> entities = new List<CapableData>(cached_data_by_kind[type]);
         return entities;
     }
 

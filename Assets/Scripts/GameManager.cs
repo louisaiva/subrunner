@@ -115,6 +115,7 @@ public class GameManager : MonoBehaviour
         return calculate_type_distance_one_way(secondType, firstType);
     }
 
+
     // ON DESTROY
     private void OnDestroy()
     {

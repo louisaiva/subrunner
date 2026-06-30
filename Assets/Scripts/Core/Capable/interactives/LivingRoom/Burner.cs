@@ -17,9 +17,8 @@ public class Burner : Capable, EndlessInteractable
     public void OnEndlessInteract(Capable interactor) { OnInteract(interactor); }
     public void OnInteract(Capable interactor)
     {
-        if (interactor.Inventory == null) { return; }
-        List<Item> trashes = interactor.Inventory.GetItemsByRule(trash_rule);
-        if (trashes.Count == 0) { return; }
+        if (!CanReceiveFrom(interactor, out List<Item> trashes)) { return; }
+        if (AnimPlayer.IsPlaying("burn")) { return; } // we wait for the give corpse animation to be completed
 
         // we grab one item of the interactor and we burn it
         Item item = trashes[0];
@@ -28,6 +27,14 @@ public class Burner : Capable, EndlessInteractable
 
         Debug.Log($"(Burner) {ID} received a new item to burn : '{item.ID}'");
     }
+    public bool CanReceiveFrom(Capable interactor, out List<Item> trashes)
+    {
+        if (interactor.Inventory == null) { trashes = null; return false; }
+        trashes = interactor.Inventory.GetItemsByRule(trash_rule);
+        if (trashes.Count == 0) { return false; }
+        return true;
+    }
+    public bool CanReceiveFrom(Capable interactor) { return CanReceiveFrom(interactor, out List<Item> trashes); }
 
     // UPDATE
     private float smoke_counter = 0f;
@@ -54,27 +61,19 @@ public class Burner : Capable, EndlessInteractable
     }
 
     // smoke layer update
-    private AnimLayer _smoke_layer = null;
-    private AnimLayer smoke_layer
-    {
-        get
-        {
-            if (_smoke_layer != null) { return _smoke_layer; }
-            _smoke_layer = AnimPlayer.GetLayerWithSkin("burner_smoke");
-            return _smoke_layer;
-        }
-    }
+    private AnimLayer smoke_layer => AnimPlayer.GetLayerWithSkin("burner_smoke");
+    private Color SmokeColor(float opacity=0f) => new Color(1f,.4f,.4f,opacity);
     private void update_smoke_layer()
     {
         if (smoke_layer == null) { return; }
         if (smoke_counter <= 0f)
         {
             smoke_counter = 0f;
-            smoke_layer.Renderer.color = new Color(1f, 1f, 1f, 0f);
+            smoke_layer.Renderer.color = SmokeColor();
             return;
         }
         float opacity = smoke_counter/smoke_duration_on_burn;
-        smoke_layer.Renderer.color = new Color(1f,1f,1f, opacity);
+        smoke_layer.Renderer.color = SmokeColor(opacity);
     }
 
 

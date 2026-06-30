@@ -32,6 +32,7 @@ public class Logger : MonoBehaviour
     public bool LOG_CLOSEST_FOOD_SENSOR = false;
     public bool LOG_CLOSEST_TRASH_SENSOR = false;
     public bool LOG_CLOSEST_BEING_SENSOR = false;
+    public bool LOG_CLOSEST_SENSOR = false;
     public bool LOG_GTR_SENSOR = false;
     public bool LOG_GTR_SENSOR_EXTENDED = false;
 
