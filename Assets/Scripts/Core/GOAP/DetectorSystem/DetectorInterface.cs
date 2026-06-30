@@ -1,5 +1,6 @@
 
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public interface Detector { }
@@ -9,7 +10,9 @@ public interface FoodDetector : Detector
 }
 public interface CapableDetector : Detector
 {
-    public CapableData FindClosest<T>(CapableData looker_data, bool force_loaded = false) where T : Capable;
+    public CapableData FindClosest<T>(CapableData cdata, bool force_loaded = false) where T : Capable;
+    public List<CapableData> FindAll<T>(CapableData cdata, bool force_loaded = false) where T : Capable;
+    public CapableData ComputeClosest(CapableData cdata, List<CapableData> capables, bool force_loaded = false);
 }
 public interface TrashDetector : Detector
 {

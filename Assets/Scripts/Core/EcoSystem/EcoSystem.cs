@@ -243,6 +243,12 @@ public class EcoEngine : MonoBehaviour
         if (!hide_log_no_species_found) { Debug.LogWarning($"(EcoEngine) no species found for capable template : '{template}'"); }
         return null;
     }
+    public string GetTemplateOf(string species)
+    {
+        Species spec = get_species_from_id(species);
+        if (spec == null) { return null; }
+        return spec.template;
+    }
 
 }
 

@@ -18,11 +18,9 @@ public class WorldCapableDetector : MonoBehaviour, CapableDetector
             return _filter.Value;
         }
     }
-    public CapableData FindClosest<T>(CapableData cdata, bool force_loaded = false) where T : Capable
-    {
-        List<CapableData> capables = CapableEngine.Instance.GetWorldCapableByKind(typeof(T));
-        if (capables == null) { return null; }
 
+    public CapableData ComputeClosest(CapableData cdata, List<CapableData> capables, bool force_loaded = false)
+    {
         CapableData closest = null;
         float closest_distance = float.MaxValue;
         foreach (CapableData potential_target in capables)
@@ -41,5 +39,15 @@ public class WorldCapableDetector : MonoBehaviour, CapableDetector
             closest_distance = distance;
         }
         return closest;
+    }
+    public List<CapableData> FindAll<T>(CapableData cdata, bool force_loaded = false) where T : Capable
+    {
+        return CapableEngine.Instance.GetWorldCapableByKind(typeof(T));
+    }
+    public CapableData FindClosest<T>(CapableData cdata, bool force_loaded = false) where T : Capable
+    {
+        List<CapableData> capables = CapableEngine.Instance.GetWorldCapableByKind(typeof(T));
+        if (capables == null) { return null; }
+        return ComputeClosest(cdata, capables, force_loaded);
     }
 }

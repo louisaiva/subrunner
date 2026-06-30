@@ -17,7 +17,7 @@ namespace subrunner.goap
                 .AddCondition<BurnerIsInSameRoom>(Comparison.GreaterThanOrEqual, 1)
                 .AddEffect<HasTrash>(EffectType.Decrease)
                 .SetTarget<ClosestBurner>()
-                .SetStoppingDistance(0.5f);
+                .SetStoppingDistance(0.75f);
 
             builder.AddTargetSensor<ClosestSensor<Burner, BurnTrashGoal>>()
                 .SetTarget<ClosestBurner>();

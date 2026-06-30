@@ -536,6 +536,7 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
     }
     public List<T> GetCapacitiesDataOfKind<T>() where T : CapacityData
     {
+        // todo : cache this maybe ?
         List<T> gathered_capa = new List<T>();
         foreach (var kvp in world_capacities_data)
         {
@@ -543,5 +544,20 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
             gathered_capa.Add(capaciT);
         }
         return gathered_capa;
+    }
+    public T GetCapacityOfTypeOfCapable<T>(CapableData owner) where T : CapacityData
+    {
+        if (owner == null) { return null; }
+        if (owner.capacities_ids == null) { return null; }
+        if (owner.capacities_ids.Count == 0) { return null; }
+
+        foreach (string cid in owner.capacities_ids)
+        {
+            CapacityData data = GetCapacityData(cid);
+            if (data == null) { continue; }
+            if (data is not T dataT) { continue; }
+            return dataT;
+        }
+        return null;
     }
 }

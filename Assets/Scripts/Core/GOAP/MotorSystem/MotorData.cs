@@ -55,6 +55,12 @@ using UnityEngine;
     public bool SetDestination(Type goal, string destination)
     {
         if (string.IsNullOrEmpty(destination)) { return false; }
+        if (OwnerData.room == destination)
+        {
+            // no need to assign room destination since we are in the same room !
+            ClearDestination(goal);
+            return true;
+        }
         if (goal == null) { return false; }
 
         if (room_destinations.ContainsKey(goal))

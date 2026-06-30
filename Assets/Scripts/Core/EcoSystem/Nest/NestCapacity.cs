@@ -223,9 +223,20 @@ public class NestCapacity : Capacity
         if (store_mode == NestStoreMode.Endless) { return capacity > EntityCount; }
         if (store_mode == NestStoreMode.Once)
         {
+            if (capacity <= EntityCount) { return false; }
             return capacity > received_entities_since_last_reset;
         }
         return false; // unknown store mode
+    }
+    public bool CanHostEntity(string id)
+    {
+        if (capacity <= EntityCount) { return false; } // no space left anymore
+
+        // check species type
+        string spec_template = CapableEngine.EcoEngine.GetTemplateOf(species);
+        if (string.IsNullOrEmpty(spec_template)) { return false; }
+        if (id.GetPrefix() != spec_template) { return false; }
+        return true;
     }
 
     // RECEIVE ENTITY
