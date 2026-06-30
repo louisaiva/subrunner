@@ -15,6 +15,9 @@ public class SortingCapacity : Capacity
         if (Capable is Container container) { container.ContainCapable(movable.ID); }
         Debug.Log("(SortingCapacity) Received movable " + movable.ID + " at " + world_position);
 
+        // we also show the capable if we are shown :D
+        if (AnimPlayer.IsVisible()) { movable.AnimPlayer.Show(); }
+
         // we wait one frame or 2 and we reset the position (to avoid potential colliders issues)
         await System.Threading.Tasks.Task.Yield();
         await System.Threading.Tasks.Task.Yield();

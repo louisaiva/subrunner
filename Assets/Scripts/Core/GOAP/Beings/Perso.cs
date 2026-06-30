@@ -179,45 +179,6 @@ public class Perso : Movable, Hacker
         SettingsManager.Instance.SetSettingWithoutNotifying("ghost", 0f);
     }
 
-    // HEAL & DAMAGE CALLBACKS
-    /* public void OnLifeAdded(float life)
-    {
-        // if (Controller.Perso == null || Controller.Perso != this) { return; } // if we are not the controlled perso, we do nothing
-
-        // si on est sur le hud, on met à jour le chroma du PostProcessManager
-        if (!UI_Manager.Instance.IsOnHUD()) { return; }
-        PostProcessManager.Instance.UpdateChroma();
-    }
-    public void OnDamageTaken(float damage, Force knockback = null)
-    {
-        Debug.Log("(Perso) On Damage Taken !");
-
-        // if (Controller.Perso == null || Controller.Perso != this) { return; } // if we are not the controlled perso, we do nothing
-
-        // we make a little screenshake if perso
-        float shake_magnitude = damage / GetCapacity<HealthCapacity>().Health;
-        CameraShaker.Instance.Shake(shake_magnitude);
-
-        // we shake the colors of the life bar
-        if (!UI_Manager.Instance.IsOnHUD()) { return; }
-        UI_Manager.Instance.GetPool<UI_HUD>().PersoTookDamage();
-    }
-    public void OnDie(CapableData capable_data)
-    {
-        Debug.Log("(Perso) On Die called !");
-
-        // if (Controller.Perso == null || Controller.Perso != this) { return; } // if we are not the controlled perso, we do nothing
-
-        Deaths += 1; // on incrémente le nombre de morts du perso
-        Debug.Log("YOU DIED");
-
-        // on affiche un floating text
-        FloatingDmgProvider.Instance.TextManager.addFloatingText("YOU DIED", transform.position + new Vector3(0, 0.5f, 0), "red");
-
-        // on switch au game_over panel
-        UI_Manager.Instance.SwitchTo("game_over",force:true,override_transition:true);
-    } */
-
     public override ICapableData GetStaticData()
     {
         return new PersoData((CapableData)base.GetStaticData());

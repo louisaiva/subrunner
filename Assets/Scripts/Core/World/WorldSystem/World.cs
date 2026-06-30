@@ -185,10 +185,14 @@ public class World : BSOD_System<World>
         await CapableEngine.LazyInstance.LoadWorldData(world_id, log_loading_extended);
         await CapacityEngine.LazyInstance.LoadWorldData(world_id, log_loading_extended);
 
+        // now we can do a short sanity ownership link check to have an idea of corrupted things in save
+        CapableEngine.LazyInstance.ValidateAllOwnershipLinks(repair: false); // log-only, no fixes
+
 
         ///
         //  3. WE WAIT A FRAME SO THE LOADED DATA CAN SLEEP vite fait
-        /* */ load_status = WorldLoadStatus.WaitingFrame;
+        /* */
+        load_status = WorldLoadStatus.WaitingFrame;
         ///
         if (log_loading_extended) { Debug.Log($"(World) ----------------------------------- WE WAIT A FRAME : (previous phase duration: {Time.realtimeSinceStartup - phase_time}s)"); }
         phase_time = Time.realtimeSinceStartup;

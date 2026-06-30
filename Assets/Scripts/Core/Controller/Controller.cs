@@ -247,7 +247,7 @@ public class Controller : MonoBehaviour
         // we control the new capable
         controlled_capable = capable;
         data.controlled_capable_id = capable.ID;
-        Debug.Log("(Controller) ++++++++++++++++++++++++++++ NOW CONTROLING " + controlled_capable.ID);
+        Debug.Log("(Controller) ++++++++++++++++++++++++++++" +" NOW CONTROLING ".AddColor(Color.paleTurquoise) + controlled_capable.ID);
         controlled_capable.OnControlled();
         OnCapableControlled?.Invoke(controlled_capable);
 
@@ -285,7 +285,7 @@ public class Controller : MonoBehaviour
         // uncontrol the capable
         OnCapableUncontrolled?.Invoke(controlled_capable);
         controlled_capable.OnUncontrolled();
-        Debug.Log("(Controller) ---------------------------- DONE CONTROLING " + controlled_capable.ID);
+        Debug.Log("(Controller) ----------------------------" + " DONE CONTROLING ".AddColor(Color.purple) + controlled_capable.ID);
         controlled_capable = null;
     }
 
@@ -406,6 +406,7 @@ public class Controller : MonoBehaviour
         // else we have no entity to control, we need to call Perso.Die
         Perso.Deaths += 1; // on incrémente le nombre de morts du perso
         Debug.Log("YOU DIED");
+        GameManager.State = GameState.Respawning;
 
         // on affiche un floating text
         FloatingDmgProvider.Instance.TextManager.addFloatingText("YOU DIED", transform.position + new Vector3(0, 0.5f, 0), "red");
@@ -460,9 +461,23 @@ public class Controller : MonoBehaviour
     ///
 
     // HANDLE DESPAWN
+    private string duplicated_perso_for_respawn = null;
     public void handle_capable_despawned(CapableData data)
     {
-        // if (log) { Debug.Log($"(Controller) capable with id {data.id} despawned, uncontrolling it if it was controlled"); }
+        if (!IsCapableControlledSomewhere(data.id)) { return; }
+        if (Perso.ID == data.id)
+        {
+            // we get the controlled capable data so we can modify few things (heal max, apply respawn point, etc)
+            // ! important : we duplicate EXISTING DATA so the capable will receive new id otherwise we will have 2 capables
+            // ! sharing the same id (and a controlled id which is even worse)
+            CapableData capable = CapableEngine.LazyInstance.DuplicateExistingData(data);
+            if (capable == null)
+            {
+                Debug.LogError($"(Controller) There were some errors while duplicating the perso data from the CapableEngine !!");
+                return;
+            }
+            duplicated_perso_for_respawn = capable.id;
+        }
         Uncontrol(data.id);
     }
 
@@ -488,16 +503,11 @@ public class Controller : MonoBehaviour
         // we unload the data (this.data will == null)
         UnloadData();
 
-        // we get the controlled capable data so we can modify few things (heal max, apply respawn point, etc)
-        // ! important : we duplicate EXISTING DATA so the capable will receive new id otherwise we will have 2 capables
-        // ! sharing the same id (and a controlled id which is even worse)
-        CapableData capable = CapableEngine.LazyInstance.DuplicateExistingData(new_data.controlled_capable_id);
-        if (capable == null)
-        {
-            Debug.LogError($"(Controller) Cannot respawn perso because the saved controller data has a controlled capable id that doesn't exist !!");
-            return;
-        }
+        // get the capable data
+        if (string.IsNullOrEmpty(duplicated_perso_for_respawn)) { Debug.LogError("(Controller) Error while respawning perso : duplicated perso for respawn is null :\n" + new_data.GetDetails()); }
+        CapableData capable = CapableEngine.LazyInstance.GetCapableDataFromID(duplicated_perso_for_respawn);
         new_data.controlled_capable_id = capable.id;
+        duplicated_perso_for_respawn = null;
 
         // apply the last sofa id
         SofaData last_sofa = (SofaData) CapableEngine.LazyInstance.GetCapableDataFromID(new_data.last_sofa_id);
@@ -524,6 +534,7 @@ public class Controller : MonoBehaviour
 
         // then we load the controller data again, which will load the capable data we just modified
         LoadData(new_data, tp: false);
+        GameManager.State = GameState.Gaming;
     }
 
 
@@ -544,7 +555,16 @@ public class Controller : MonoBehaviour
     public ExploitNavigator ExploitNavigator { get { return exploit_navigator; } }
     public SeeThroughHandler SeeThrough { get { return see_through; } }
     public PersoInputsController PIC { get { return pic; } }
-
+    public bool IsCapableControlledSomewhere(string id)
+    {
+        if (Capable == null) { return false; } // we don't control anything, so we don't care
+        if (Capable.ID == id) { return true; }
+        foreach (string controlled in stack)
+        {
+            if (controlled == id) { return true; }
+        }
+        return false;
+    }
 
 
     // CLEAR STACK
@@ -615,7 +635,7 @@ public class Controller : MonoBehaviour
             Debug.LogError($"(Controller) No capable id defined in controller data !!");
             return;
         }
-        if (respawn_template) { capable_id = data.capable_template; } // we always assign the new perso as template
+        if (respawn_template) { capable_id = data.capable_template; } // we always assign the new perso as template // ! mainly debug, never put this to true in build
 
         // if we have a container id we need to load it instantly because otherwise we won't be able to load
         // the controller capable which is inside the container
@@ -627,13 +647,6 @@ public class Controller : MonoBehaviour
                 container = CapableEngine.LazyInstance.DuplicateTemplate(data.container_id) as ContainerData;
                 if (container == null) { Debug.LogError($"(Controller) Could not get container data '{data.container_id}' (must be real id or template) so we probably won't be able to load controller"); }
             }
-
-            // here we need to make sure that the data contains the capable_id
-            if (!container.contained_capable_ids.Contains(capable_id))
-            {
-                container.contained_capable_ids.Add(capable_id);
-            }
-
 
             // if the container is not loaded, we load it and that's it (it will then load the contained capable accordingly)
             if (CapableBank.LazyInstance.TryGetLoadedCapable(container.id, out Capable container_capable))
@@ -653,6 +666,23 @@ public class Controller : MonoBehaviour
                     Debug.LogError($"(Controller) Just loaded next controlled capable '{capable_id}' has no sit capacity");
                 }
                 else { capable.GetCapacity<SitCapacity>().Sit(sofa, instant: true); }
+            }
+            else
+            {
+                // we make sure the container contains the reference to capable id so it will load it accordingly
+                if (!container.contained_capable_ids.Contains(capable_id))
+                {
+                    container.contained_capable_ids.Add(capable_id);
+                }
+
+                // then we load the container (since it is not loaded)
+                if (log) { Debug.Log($"(Controller) Loading {capable_id}'s container which is '{container.id}' because it is not loaded. should load instantly the controlled capable as well"); }
+                Capable sofa = CapableEngine.LazyInstance.LoadCapableInstantly(container.id);
+                if (sofa == null)
+                {
+                    Debug.LogError($"(Controller) Failed to load instantly the container capable : '{container.id}' :\n{container.GetDetails()}");
+                    return;
+                }
             }
         }
 

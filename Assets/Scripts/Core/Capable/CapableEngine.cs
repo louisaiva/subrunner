@@ -63,7 +63,6 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
     [Header("State")]
     private bool world_data_loaded = false;
-    private bool ownership_check_done = false;
 
     [Header("Logs Awake")]
     public bool log_templates_data_loading = false;
@@ -138,13 +137,8 @@ public class CapableEngine : BSOD_System<CapableEngine>
         EcoEngine.LoadSpecies(log);
         if (log) { Debug.Log($"(CapableEngine) Loaded EcoEngine"); }
 
-
         await Task.Yield();
 
-        // sanity check after loading all world data
-        ValidateAllOwnershipLinks(repair: false); // log-only, no fixes
-        ownership_check_done = true;
-        if (log) { Debug.Log($"(CapableEngine) Ownership links validation check done for loaded world data. Total links={capables_hashs_by_ids.Count}, outsiders={outsiders_data.Count}"); }
         if (log) { Debug.Log($"(CapableEngine) CAPABLE SYSTEM SUCCESSFULLY LOADED : {world_id}"); }
     }
     public override async Task UnloadWorldData(bool log)
@@ -177,7 +171,6 @@ public class CapableEngine : BSOD_System<CapableEngine>
         outsiders_ids.Clear();
 
         world_data_loaded = false;
-        ownership_check_done = false;
 
         if (log) { Debug.Log($"(CapableEngine) CAPABLE SYSTEM SUCCESSFULLY UNLOADED"); }
     }
@@ -389,9 +382,11 @@ public class CapableEngine : BSOD_System<CapableEngine>
             if (!hide_log_no_data_found || log_duplicating) { Debug.LogWarning("(CapableSystem - DuplicateExistingData) Existing capable data not found for id: " + existing_id); }
             return null;
         }
-
+        return DuplicateExistingData(world_capables_data[existing_id]);
+    }
+    public CapableData DuplicateExistingData(CapableData base_data)
+    {
         // 1. we duplicate the data into new data
-        ICapableData base_data = world_capables_data[existing_id];
         CapableData new_data = base_data.Duplicate() as CapableData;
         new_data.id = World.Instance.GenerateUniqueID(base_data.id);
 
@@ -408,7 +403,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
             CapacityEngine.Instance.SpawnCapacityFromExistingOne(capa_template, new_data); // this replace the capacity id in the entity data
         }
 
-        if (log_duplicating) { Debug.Log($"(CapableEngine) Duplicated existing data for id {existing_id} to {new_data.id} \n {new_data.GetDetails()}"); }
+        if (log_duplicating) { Debug.Log($"(CapableEngine) Duplicated existing data for id {base_data.id} to {new_data.id} \n {new_data.GetDetails()}"); }
 
 
         return new_data;
@@ -583,9 +578,37 @@ public class CapableEngine : BSOD_System<CapableEngine>
         int broken_percentage = (total_links > 0) ? (broken_links * 100 / total_links) : 0;
         int final_broken_links = broken_links - fixed_links; // we count the fixed links as valid for the summary
         
-        if (ownership_check_done || log_start_capacity_ownership) { Debug.Log($"(CapableEngine)      LINKS BROKEN : {broken_links}/{total_links} ({broken_percentage}%)   |   FIXED : {fixed_links}/{broken_links}   |   ORPHAN : {orphan_capacities}  \n{log_summary}"); }
+        if (log_start_capacity_ownership) { Debug.Log($"(CapableEngine){get_links_details(broken_links,total_links,broken_percentage,fixed_links,orphan_capacities)}\n{log_summary}"); }
+        if (log_start_capacity_ownership) { Debug.Log($"(CapableEngine) Ownership links validation check done for loaded world data. Total links={capables_hashs_by_ids.Count}, outsiders={outsiders_data.Count}"); }
 
         return final_broken_links == 0;
+    }
+    private string get_links_details(int broken_links, int total_links, int broken_percentage, int fixed_links, int orphan_capacities)
+    {
+        Color broken =  broken_percentage == 0 ? Color.green :
+                        broken_percentage < 25 ? Color.lightGreen :
+                        broken_percentage < 50 ? Color.yellow :
+                        broken_percentage < 75 ? Color.orange :
+                        broken_percentage < 85 ? Color.orangeRed :
+                        Color.red;
+
+        int fixed_perc = (broken_links > 0) ? (fixed_links * 100 / broken_links) : 0;
+        Color fixed_ =  fixed_perc < 10 ? Color.red :
+                        fixed_perc < 25 ? Color.orangeRed :
+                        fixed_perc < 50 ? Color.orange :
+                        fixed_perc < 75 ? Color.yellow :
+                        fixed_perc < 99 ? Color.lightGreen :
+                        Color.green;
+
+        Color orphans = orphan_capacities == 0 ? Color.green :
+                        orphan_capacities < 10 ? Color.lightGreen :
+                        Color.yellow;
+
+        string debug = "";
+        debug += "      LINKS BROKEN : " + $"{broken_links}/{total_links} ({broken_percentage}%)".AddColor(broken) + "      |";
+        if (fixed_links > 0) { debug += "      FIXED : " + $"{fixed_links}/{broken_links}".AddColor(fixed_) + "      |"; }
+        debug += "      ORPHAN CAPACITIES : " + $"{orphan_capacities}      ".AddColor(orphans);
+        return debug;
     }
 
     // SPAWNING CAPABLES
@@ -839,7 +862,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
         if (GameManager.State == GameState.Building)
         {
             capable.AnimPlayer.Show();
-            if (log_loading_extended) { Debug.Log($"(CapableSystem - Load) Game state is Building --> SHOWING CAPABLE {data.id}"); }
+            if (log_loading_extended) { Debug.Log($"(CapableSystem - Load) Game state is {"Building".AddColor(Color.greenYellow)} --> " + " SHOWING CAPABLE ".AddColor(Color.cyan) + data.id); }
             return;
         }
 
@@ -851,20 +874,20 @@ public class CapableEngine : BSOD_System<CapableEngine>
             if (RoomEngine.DoorEngine.IsRoomVisible(ddata.room1_id))
             {
                 capable.AnimPlayer.Show();
-                if (log_loading_extended) { Debug.Log($"(CapableSystem - Load) Door {data.id} ({ddata.room1_id} - {ddata.room2_id}) has room1 visible --> SHOWING DOOR"); }
+                if (log_loading_extended) { Debug.Log($"(CapableSystem - Load) Door {data.id} ({ddata.room1_id} - {ddata.room2_id}) has {"room1 visible".AddColor(Color.greenYellow)} --> " + "SHOWING DOOR".AddColor(Color.cyan)); }
                 return;
             }
             // chunk = ChunkEngine.Instance.GetChunkDataFromID(ddata.room2_id);
             if (RoomEngine.DoorEngine.IsRoomVisible(ddata.room2_id))
             {
                 capable.AnimPlayer.Show();
-                if (log_loading_extended) { Debug.Log($"(CapableSystem - Load) Door {data.id} ({ddata.room1_id} - {ddata.room2_id}) has room2 visible --> SHOWING DOOR"); }
+                if (log_loading_extended) { Debug.Log($"(CapableSystem - Load) Door {data.id} ({ddata.room1_id} - {ddata.room2_id}) has {"room2 visible".AddColor(Color.greenYellow)} --> " + "SHOWING DOOR".AddColor(Color.cyan)); }
                 return;
             }
 
             // else both rooms are not visible, we hide the door
             capable.AnimPlayer.Hide();
-            if (log_loading_extended) { Debug.Log($"(CapableSystem - Load) Door {data.id} ({ddata.room1_id} - {ddata.room2_id}) has both rooms not visible --> HIDING DOOR"); }
+            if (log_loading_extended) { Debug.Log($"(CapableSystem - Load) Door {data.id} ({ddata.room1_id} - {ddata.room2_id}) has {"BOTH rooms NOT visible".AddColor(Color.yellow)} --> " + "HIDING DOOR".AddColor(Color.magenta)); }
             return;
         }
 
@@ -872,7 +895,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
         // else the capable is not a door.
 
         // check if capable needs to be hidden bcz it is in a not visible room
-        ChunkData chunk;
+        /* ChunkData chunk;
         ChunkEngine.Instance.TryGetCapableChunk(data.id, out chunk);
         if (chunk == null)
         {
@@ -892,14 +915,30 @@ public class CapableEngine : BSOD_System<CapableEngine>
                 if (log_visibility) { Debug.LogWarning($"(CapableSystem - Load) Capable {data.id} is sitting on sofa {sit_capa.CurrentSofa.ID} but we cant find the chunk of this sofa ?! --> CANT SHOW / HIDE"); }
                 return;
             }
+        } */
+
+        // RoomData room = ;
+        string room_on_load = data.room;
+        if (string.IsNullOrEmpty(room_on_load) )
+        {
+            if (log_visibility) { Debug.LogWarning($"(CapableSystem - Load) Capable {data.id} has a {"null room on load".AddColor(Color.red)} --> " + "HIDING CAPABLE".AddColor(Color.magenta)); }
+            return;
+        }
+        if (room_on_load == "item_was_just_dropped")
+        {
+            if (log_visibility) { Debug.LogWarning($"(CapableSystem - Load) Item {data.id} {"was just dropped".AddColor(Color.yellow)} --> " + "HIDING CAPABLE".AddColor(Color.magenta) + " (for now, will be shown as soon as it gets a chunk)"); }
+            return;
         }
 
-        if (!RoomEngine.DoorEngine.IsRoomVisible(chunk.room_id))
+        if (!RoomEngine.DoorEngine.IsRoomVisible(room_on_load))
         {
             capable.AnimPlayer.Hide();
-            if (log_visibility) { Debug.Log($"(CapableSystem - Load) Capable {data.id} is in room {chunk.id} which is not visible --> HIDING CAPABLE"); }
+            if (log_visibility) { Debug.Log($"(CapableSystem - Load) Capable {data.id} is in room {room_on_load} which {"IS NOT".AddColor(Color.yellow)} visible --> " + "HIDING CAPABLE".AddColor(Color.magenta)); }
+            return;
         }
-        else { capable.AnimPlayer.Show(); }
+
+        capable.AnimPlayer.Show();
+        if (log_visibility) { Debug.Log($"(CapableSystem - Load) Capable {data.id} is in room {room_on_load} which {"IS".AddColor(Color.greenYellow)} visible --> " + "SHOWING CAPABLE".AddColor(Color.cyan)); }
     }
 
 

@@ -45,9 +45,11 @@ public class GameManager : MonoBehaviour
         {
             if (LazyInstance == null) { return; }
             LazyInstance._state = value;
+            OnGameStateChanged?.Invoke(value);
         }
     }
     public static bool IsClosingGame => State == GameState.NoGame;
+    public static Action<GameState> OnGameStateChanged;
 
     [Header("Game Music Theme")]
     [SerializeField] private string game_theme_to_play = "i'm so hungry";
@@ -130,4 +132,5 @@ public enum GameState
     Paused,
     Building, // inside the world builder
     Cinematic,
+    Respawning, // when player is dead and before player is re-fully loaded
 }

@@ -39,7 +39,9 @@ public class SitCapacity : Capacity
         }
         
         // we show the sofa UI if we are on hud
-        if (GameManager.State == GameState.Gaming || GameManager.State == GameState.Loading)
+        if (GameManager.State == GameState.Gaming
+        || GameManager.State == GameState.Loading
+        || GameManager.State == GameState.Respawning)
         {
             UI_Manager.Instance.GetPool<UI_SofaPool>()?.ShowSofaUI(this);
         }

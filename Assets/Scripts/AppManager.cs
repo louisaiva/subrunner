@@ -233,23 +233,23 @@ public class AppManager : MonoBehaviour
         }
         return jsons.ToArray();
     }
-    public static string LoadJsonFromWorldFolder(string world_id, string path)
+    public static string LoadJsonFromWorldFolder(string world_id, string path, bool log_file_not_found=true)
     {
         // load json from the current world data path (which is in the persistent data path) instead of the assets
         // path should NOT contain the world name, since it is specified on its own like this :
         // - world_id = "test"
         // - path = "levels/level_id.json"
         string json_path = Path.Combine(world_id, path);
-        return LoadJsonFromWorldsFolder(json_path);
+        return LoadJsonFromWorldsFolder(json_path, log_file_not_found);
     }
-    public static string LoadJsonFromWorldsFolder(string path)
+    public static string LoadJsonFromWorldsFolder(string path, bool log_file_not_found=true)
     {
         // load json from the current world data path (which is in the persistent data path) instead of the assets
         // path should contain the world name if you are looking for a file into a world folder like this : "world_id/levels/level_id.json"
         string json_path = Path.Combine(WorldManager.WorldsDataPath, path);
         if (!System.IO.File.Exists(json_path))
         {
-            Debug.LogWarning($"(AppManager) Failed to load json from persistent data path: {json_path} because the file was not found.");
+            if (log_file_not_found) { Debug.LogWarning($"(AppManager) Failed to load json from persistent data path: {json_path} because the file was not found."); }
             return null;
         }
         return System.IO.File.ReadAllText(json_path);

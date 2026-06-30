@@ -491,7 +491,7 @@ public class SaveEngine : MonoBehaviour
         // Debug.Log($"(SaveEngine) Loading world save data for world '{world_id}' from folder or file..., save is null: {save == null}");
 
         AppManager.EnsureFolderExists(WorldManager.WorldsDataPath);
-        if (load_world_save_from_folder(world_id, ref _loaded_save)) { return _loaded_save; }
+        if (load_world_save_from_folder(world_id, ref _loaded_save, log:false)) { return _loaded_save; }
 
         // here we have no folder for the world, we try to load it from the single file save
         if (load_world_save_from_file(world_id, ref _loaded_save)) { return _loaded_save; }
@@ -506,7 +506,7 @@ public class SaveEngine : MonoBehaviour
         // string world_file_path = Path.Combine(WorldManager.WorldsDataPath, id + ".json");
 
         // get the json
-        string json = AppManager.LoadJsonFromWorldFolder(id, "save");
+        string json = AppManager.LoadJsonFromWorldFolder(id, "save", log_file_not_found:false);
         if (string.IsNullOrEmpty(json))
         {
             if (log) { Debug.LogWarning($"(SaveEngine - Load World Save) World Save Data file not found: {id}.json"); }
@@ -531,7 +531,7 @@ public class SaveEngine : MonoBehaviour
         string json = "";
         
         // first, world data
-        json = AppManager.LoadJsonFromWorldFolder(id, "world_data.json");
+        json = AppManager.LoadJsonFromWorldFolder(id, "world_data.json", log_file_not_found: false); // we don't log bc if it is a file save world there is no world_data but we may find it later so np
         if (!string.IsNullOrEmpty(json)) { save.world = JsonUtility.FromJson<WorldData>(json); }
         else
         {
@@ -540,7 +540,7 @@ public class SaveEngine : MonoBehaviour
         }
 
         // controller data
-        json = AppManager.LoadJsonFromWorldFolder(id, "controller.json");
+        json = AppManager.LoadJsonFromWorldFolder(id, "controller.json");  // but here we DO log bc it is a folder save world so we want to be warned about problems
         if (!string.IsNullOrEmpty(json)) { save.controller = JsonUtility.FromJson<ControllerData>(json); }
         else
         {
@@ -678,10 +678,10 @@ public class SaveEngine : MonoBehaviour
 
         // then we have no cached world data, we try to load it from the world folder or file        
         AppManager.EnsureFolderExists(WorldManager.WorldsDataPath);
-        if (load_world_data_helper_from_folder(world_id, ref w_data)) { return w_data; }
+        if (load_world_data_helper_from_folder(world_id, ref w_data, log:false)) { return w_data; }
 
         // here we have no folder for the world, we try to load it from the single file save
-        if (load_world_data_helper_from_file(world_id, ref w_data)) { return w_data; }
+        if (load_world_data_helper_from_file(world_id, ref w_data, log:false)) { return w_data; }
 
         // if we reach this point, we failed to load the world save data
         Debug.LogWarning($"(SaveEngine) Failed to load world save data for world '{world_id}' from both folder and file.");
@@ -690,7 +690,7 @@ public class SaveEngine : MonoBehaviour
     private static bool load_world_data_helper_from_file(string id, ref WorldDataHelper helper, bool log = true)
     {
         // get the json
-        string json = AppManager.LoadJsonFromWorldFolder(id, "save");
+        string json = AppManager.LoadJsonFromWorldFolder(id, "save", log_file_not_found: false);
         if (string.IsNullOrEmpty(json))
         {
             if (log) { Debug.LogWarning($"(SaveEngine - Load World Data Helper) World Data Helper file not found: {id}.json"); }
@@ -703,7 +703,7 @@ public class SaveEngine : MonoBehaviour
     private static bool load_world_data_helper_from_folder(string id, ref WorldDataHelper helper, bool log = true)
     {
         // load the world data
-        string json = AppManager.LoadJsonFromWorldFolder(id, "world_data.json");
+        string json = AppManager.LoadJsonFromWorldFolder(id, "world_data.json", log_file_not_found:false);
         if (string.IsNullOrEmpty(json)) { return false; }
         WorldData data = JsonUtility.FromJson<WorldData>(json);
 

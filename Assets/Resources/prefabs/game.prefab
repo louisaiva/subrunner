@@ -232,7 +232,6 @@ MonoBehaviour:
   - {fileID: 4743392949167436401}
   - {fileID: 533064837233644574}
   - {fileID: 5704533046771458960}
-  - {fileID: 2380373136977387751}
   - {fileID: 6891086296172980495}
   - {fileID: 5188519605673357783}
   - {fileID: 7743078840864688459}
@@ -272,7 +271,6 @@ GameObject:
   - component: {fileID: 4743392949167436401}
   - component: {fileID: 533064837233644574}
   - component: {fileID: 5704533046771458960}
-  - component: {fileID: 2380373136977387751}
   - component: {fileID: 5188519605673357783}
   - component: {fileID: 7743078840864688459}
   m_Layer: 23
@@ -333,18 +331,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26dbab5bebb3a834cbc6992b4b5e80c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::subrunner.goap.NoneTypeFactory
---- !u!114 &2380373136977387751
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 780003408685879306}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30ca286468bc8264d9558c71bc5c324a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::subrunner.goap.GofriTypeFactory
 --- !u!114 &5188519605673357783
 MonoBehaviour:
   m_ObjectHideFlags: 0
