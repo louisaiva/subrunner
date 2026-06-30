@@ -1,6 +1,6 @@
 ﻿{
     "<id>k__BackingField": "distributor",
-    "kind": "Crafter",
+    "kind": "Distributor",
     "position": {
         "x": 0.0,
         "y": 0.0
@@ -116,8 +116,27 @@
         }
     },
     "inventory": {
-        "item_pools_data": [],
-        "item_type": 0
+        "item_pools_data": [
+            {
+                "item_type": 2,
+                "stacks_data": [],
+                "pool_id": "tickets",
+                "max_stacks": 1,
+                "min_stacks": 1,
+                "scalable": false,
+                "item_rule": "other:ticket"
+            },
+            {
+                "item_type": 2,
+                "stacks_data": [],
+                "pool_id": "pastas",
+                "max_stacks": 1,
+                "min_stacks": 1,
+                "scalable": true,
+                "item_rule": "food:dry_pastas"
+            }
+        ],
+        "item_type": 2
     },
     "feet_data": {
         "box_colliders": [

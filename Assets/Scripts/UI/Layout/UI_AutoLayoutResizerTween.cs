@@ -37,6 +37,9 @@ public class UI_AutoLayoutResizerTween : MonoBehaviour
     [Header("Size Factor")]
     [SerializeField] private float size_factor = 1f;
 
+    [Header("Min Size")]
+    [SerializeField] private Vector2 min_size = new Vector2(0, 0);
+
     // UPDATE
     public void Update()
     {
@@ -70,9 +73,12 @@ public class UI_AutoLayoutResizerTween : MonoBehaviour
 
         Vector2 target_size = new Vector2
         (
-            isHorizontal ? width * size_factor : rect_transform.sizeDelta.x,
-            isVertical ? height * size_factor : rect_transform.sizeDelta.y
+            handleHorizontal ? width * size_factor : rect_transform.sizeDelta.x,
+            handleVertical ? height * size_factor : rect_transform.sizeDelta.y
         );
+
+        target_size.x = Mathf.Max(min_size.x, target_size.x);
+        target_size.y = Mathf.Max(min_size.y, target_size.y);
 
         // check size distance to avoid tweening if the size is already correct
         if (Vector2.Distance(rect_transform.sizeDelta, target_size) < 0.1f)

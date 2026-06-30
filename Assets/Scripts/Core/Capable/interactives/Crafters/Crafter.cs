@@ -3,6 +3,24 @@ using UnityEngine;
 
 public class Crafter : Capable, Interactable, Openable
 {
+
+    ///
+    //
+    /// CRAFTER
+    //
+    ///
+    public virtual string EmptyInventoryDesc => "no items";
+    public virtual string ItemRule => "";
+    public virtual string UI_PoolName => "";
+
+
+
+    ///
+    //
+    /// INTERACTABLE + OPENABLE
+    //
+    ///
+
     [SerializeField] private List<Capable> interactors = new List<Capable>(); // store all interactors, not just the one controlled
     public InteractCapacity Interactor
     {
@@ -25,27 +43,28 @@ public class Crafter : Capable, Interactable, Openable
         if (interactors.Contains(interactor))
         {
             // we play the craft animation
-            if (TryGetCapacity(out CraftCapacity craft_capacity)) { craft_capacity.Craft(); }
+            if (string.IsNullOrEmpty(UI_PoolName) && TryGetCapacity(out CraftCapacity craft_capacity)) { craft_capacity.Craft(); }
             return;
         }
         interactors.Add(interactor);
-        if (log) { Debug.Log("(Crafter) " + name + " was interacted by " + interactor.name); }
+        if (log) { Debug.Log("(Crafter) " + ID + " was interacted by " + interactor.ID); }
 
         // we open if it's the first interactor we have !!
         if (interactors.Count == 1 && TryGetCapacity(out OpenCapacity open_capacity)) { open_capacity.Open(); }
 
         // we get the craft pool
-        /* if (!UI_Manager.Instance.TryGetPool(out UI_ChestPool chest_pool))
+        UI_CraftPool pool = UI_Manager.Instance.GetPool(UI_PoolName) as UI_CraftPool;
+        if (pool == null)
         {
-            Debug.LogError($"(Crafter) {name} cannot find UI_ChestPool to show chest inventory");
+            Debug.LogError($"(Crafter) {ID} cannot find UI_CraftPool '{UI_PoolName}' to show craft inventory");
             return;
-        } */
+        }
 
         // we only show ui if the interactor is controlled & ui not shown yet
-        // if (interactor != Controller.Capable || chest_pool.IsShown(this)) { return; }
+        if (interactor != Controller.Capable || pool.IsShown(this)) { return; }
 
         // we show the inventory UI
-        // chest_pool.ShowChest(this);
+        pool.ShowCraftPool(this);
     }
     public void OnHoverLost(Capable interactor)
     {
@@ -55,25 +74,21 @@ public class Crafter : Capable, Interactable, Openable
         // if there is no more interactor we close the crafter
         if (interactors.Count == 0 && TryGetCapacity(out CloseCapacity close_capa)) { close_capa.Close(); }
 
-        // we get the chest pool & verify if it's shown
-        /* if (!UI_Manager.Instance.TryGetPool(out UI_ChestPool chest_pool))
-        {
-            Debug.LogError($"(Crafter) {name} cannot find UI_ChestPool to show chest inventory");
-            return;
-        }
-        if (!chest_pool.IsShown(this)) { return; }
 
-
-        // if there is no more controlled interactors we hide the ui inventory
+        // we hide the craft pool
         for (int i = 0; i < interactors.Count; i++)
         {
             if (interactors[i] == Controller.Capable) { return; } // we still have the controlled interactor so we dont hide the ui
         }
-
-        // we hide the inventory UI
-        chest_pool.HideChest(); */
-
-        // if (debug) { Debug.Log("(Chest) " + name + " removed hover succesfully for " + interactor.name); }
+        if (string.IsNullOrEmpty(UI_PoolName)) { return; }
+        UI_CraftPool pool = UI_Manager.Instance.GetPool(UI_PoolName) as UI_CraftPool;
+        if (pool == null)
+        {
+            Debug.LogError($"(Crafter) {ID} cannot find UI_CraftPool '{UI_PoolName}' to hide craft inventory");
+            return;
+        }
+        if (!pool.IsShown(this)) { return; }
+        pool.HideCraftPool();
     }
     public async void ExitHover()
     {

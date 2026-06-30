@@ -179,14 +179,35 @@ public class TemplatesManager : MonoBehaviour
         }
 
         // we check if the capable has some TemplateInventoryReference components, and we save the id of the ref
-        TemplateInventoryReference inv_temp = capable.GetComponent<TemplateInventoryReference>();
-        if (inv_temp != null)
-        {
-            data.inventory = inv_temp.GetInventoryData();
-        }
+        InventoryData inv_data = construct_inventory_data_from_pools(capable.GetComponents<TemplateItemPoolReference>());
+        if (inv_data != null) { data.inventory = inv_data; }
 
         // we also make sure all the items have is_grabbed to true by default
         if (data is ItemData item_data) { item_data.is_grabbed = true; }
+    }
+    private InventoryData construct_inventory_data_from_pools(TemplateItemPoolReference[] pools)
+    {
+        if (pools.Length == 0) { return null; }
+
+        List<ItemPoolData> pools_data = new List<ItemPoolData>();
+        HashSet<ItemType> found_item_types = new HashSet<ItemType>();
+        foreach (var tipr in pools)
+        {
+            ItemPoolData ipd = tipr.GetItemPoolData();
+            pools_data.Add(ipd);
+            found_item_types.Add(ipd.item_type);
+        }
+        ItemType final_item_type =
+                    found_item_types.Count == 0 ? ItemType.None :
+                    found_item_types.Count == 1 ? found_item_types.FirstOrDefault() :
+                    ItemType.All;
+
+        InventoryData data = new InventoryData
+        {
+            item_pools_data = new List<ItemPoolData>(pools_data),
+            item_type = final_item_type
+        };
+        return data;
     }
 
 

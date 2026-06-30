@@ -44,7 +44,7 @@ public class UI_ChestPool : UI_SlottablePool
         if (title_text != null) { title_text.text = chestable.ChestType; }
 
         // then we show the ui_chest
-        UI_Manager.Instance.SwitchTo("chest");
+        UI_Manager.Instance.SwitchTo(Reference);
     }
     public void HideChest(/* Chestable chestable */)
     {
@@ -53,7 +53,7 @@ public class UI_ChestPool : UI_SlottablePool
         DetachPerso();
 
         // then we hide the ui_chest
-        UI_Manager.Instance.UnstackPool("chest");
+        UI_Manager.Instance.UnstackPool(Reference);
     }
     public bool IsShown(Chestable chestable)
     {

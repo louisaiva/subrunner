@@ -10,7 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3672814393807432138}
   - component: {fileID: 5725784018132297263}
-  - component: {fileID: 5578694802621337445}
+  - component: {fileID: 411261258117709010}
+  - component: {fileID: 5075907840469080989}
+  - component: {fileID: 7014791597871828953}
   m_Layer: 29
   m_Name: distributor
   m_TagString: Untagged
@@ -53,7 +55,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
   capacity_template_id: hover
   capacity_template_ids: []
---- !u!114 &5578694802621337445
+--- !u!114 &411261258117709010
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -62,9 +64,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1492906358488399447}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 85650efd26c84714e95384168dcafd04, type: 3}
+  m_Script: {fileID: 11500000, guid: 9420e1f251dd25748b2879f466994292, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Crafter
+  m_EditorClassIdentifier: Assembly-CSharp::Distributor
   data:
     <id>k__BackingField: 
     kind: 
@@ -103,6 +105,42 @@ MonoBehaviour:
   interactors: []
   <is_moving>k__BackingField: 0
   <is_open>k__BackingField: 0
+--- !u!114 &5075907840469080989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1492906358488399447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d15c72b8b8161354a9e97f60d046d2d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TemplateInventoryReference
+  pool_id: tickets
+  item_type: 2
+  capacity: 1
+  scalable: 0
+  item_rule: other:ticket
+  items: []
+--- !u!114 &7014791597871828953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1492906358488399447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d15c72b8b8161354a9e97f60d046d2d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TemplateItemPoolReference
+  pool_id: pastas
+  item_type: 2
+  capacity: 1
+  scalable: 1
+  item_rule: food:dry_pastas
+  items: []
 --- !u!1 &1918891946537095014
 GameObject:
   m_ObjectHideFlags: 0
