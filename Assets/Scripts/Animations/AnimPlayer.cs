@@ -614,6 +614,16 @@ public class AnimPlayer : MonoBehaviour
     {
         return transform.GetComponentsInChildren<AnimLayer>(includeInactive: true).ToList();
     }
+    public AnimLayer GetLayerWithSkin(string skin)
+    {
+        foreach (AnimLayer layer in anim_layers)
+        {
+            if (layer == null) { continue; }
+            if (layer.skin != skin) { continue; }
+            return layer;
+        }
+        return null;
+    }
 
 
     ///

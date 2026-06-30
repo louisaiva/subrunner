@@ -135,6 +135,9 @@ public class SceneLoader : MonoBehaviour
         // we show the very first text
         GameObject text = Instantiate(text_prefab, text_parents.transform);
         text.GetComponent<TextMeshProUGUI>().text = "loading subrunner_alpha_" + Application.version;
+        yield return new WaitForSecondsRealtime(.05f);
+        text = Instantiate(text_prefab, text_parents.transform);
+        text.GetComponent<TextMeshProUGUI>().text = "loading world : " + WorldManager.StaticSelectedWorld;
 
         // show the transitionner on the linux texts
         text_parents.GetComponent<Transitioner>().Show();

@@ -1,6 +1,6 @@
 ﻿{
-    "<id>k__BackingField": "printer",
-    "kind": "Capable",
+    "<id>k__BackingField": "burner",
+    "kind": "Burner",
     "position": {
         "x": 0.0,
         "y": 0.0
@@ -14,11 +14,11 @@
     "capacities_ids": [],
     "anim_data": {
         "skin_kind": "",
-        "skin": "printer",
+        "skin": "burner",
         "anim_capacity_priorities": [
             {
                 "priority": 0,
-                "capacity_playing": "",
+                "capacity_playing": "idle",
                 "capacities": [
                     "idle"
                 ],
@@ -29,9 +29,7 @@
                 "priority": 1,
                 "capacity_playing": "",
                 "capacities": [
-                    "open",
-                    "craft",
-                    "close"
+                    "burn"
                 ],
                 "lock_orientation": true,
                 "one_shot": true
@@ -44,43 +42,26 @@
         "never_flip": false,
         "layers": [
             {
-                "skin": "printer_ceil",
+                "skin": "burner_smoke",
                 "local_position": {
                     "x": 0.0,
-                    "y": 0.0
+                    "y": -0.0010000000474974514
                 },
                 "local_rotation": {
                     "x": 0.0,
                     "y": 0.0,
                     "z": 0.0
                 },
-                "material_name": "objects",
-                "sorting_layer_id": -438027575,
-                "order_in_layer": 1,
-                "never_flip": true,
-                "follow_duration": false
-            },
-            {
-                "skin": "printer_item",
-                "local_position": {
-                    "x": 0.0,
-                    "y": 0.00009999999747378752
-                },
-                "local_rotation": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "material_name": "objects",
+                "material_name": "doors2",
                 "sorting_layer_id": -667374433,
                 "order_in_layer": 0,
-                "never_flip": true,
-                "follow_duration": false
+                "never_flip": false,
+                "follow_duration": true
             }
         ],
         "local_position": {
             "x": 0.0,
-            "y": -0.00019999999494757503
+            "y": 0.0
         }
     },
     "inventory": {
@@ -103,11 +84,11 @@
                 "is_trigger": false,
                 "offset": {
                     "x": 0.0,
-                    "y": 0.2083333283662796
+                    "y": 0.2916666567325592
                 },
                 "size": {
-                    "x": 0.75,
-                    "y": 0.4166666567325592
+                    "x": 1.7999999523162842,
+                    "y": 0.6000000238418579
                 }
             }
         ],

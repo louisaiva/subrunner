@@ -310,14 +310,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: printer
   <orientation>k__BackingField: D
-  current_anim:
-    name: 
-    sprites_paths: []
-    sprites: []
-    sprites_durations: []
-    loop: 1
-    speed: 1
-    flipX: 0
+  current_capacity: 
   update_each_frame: 1
   anim_capacity_priorities:
   - priority: 0
@@ -472,7 +465,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7331081001264397754}
-  m_Layer: 25
+  m_Layer: 29
   m_Name: feet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -549,7 +542,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5650395422685672705, guid: c51a6567aa86110449568d35f764ab64, type: 3}
       propertyPath: m_Layer
-      value: 25
+      value: 29
       objectReference: {fileID: 0}
     - target: {fileID: 7512674595643650916, guid: c51a6567aa86110449568d35f764ab64, type: 3}
       propertyPath: m_Radius

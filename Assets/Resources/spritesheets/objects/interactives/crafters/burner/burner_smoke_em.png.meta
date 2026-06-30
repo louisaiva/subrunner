@@ -69,7 +69,7 @@ TextureImporter:
   serializedVersion: 13
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 0
+    enableMipMap: 1
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
@@ -97,7 +97,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -106,7 +106,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -115,9 +115,9 @@ TextureImporter:
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
-  alphaIsTransparency: 1
+  alphaIsTransparency: 0
   spriteTessellationDetail: -1
-  textureType: 8
+  textureType: 0
   textureShape: 1
   singleChannelComponent: 0
   flipbookRows: 1
@@ -135,7 +135,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -157,7 +157,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
-    buildTarget: WebGL
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -169,476 +169,27 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: burner_smoke_em_0
-      rect:
-        serializedVersion: 2
-        x: 9
-        y: 18
-        width: 9
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: f417b8e22d45bf0f0800000000000000
-      internalID: -1082178023751716529
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: burner_smoke_em_1
-      rect:
-        serializedVersion: 2
-        x: 20
-        y: 19
-        width: 9
-        height: 17
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: f62caf3d012df8810800000000000000
-      internalID: 1769864148297630319
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: burner_smoke_em_2
-      rect:
-        serializedVersion: 2
-        x: 32
-        y: 20
-        width: 7
-        height: 9
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 8d88ebe57d82f1450800000000000000
-      internalID: 6061608528936601816
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: burner_smoke_em_3
-      rect:
-        serializedVersion: 2
-        x: 56
-        y: 20
-        width: 11
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 833bfa9d189b3fed0800000000000000
-      internalID: -2381355810594770120
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: burner_smoke_em_4
-      rect:
-        serializedVersion: 2
-        x: 68
-        y: 18
-        width: 9
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: eb8a80c2155586040800000000000000
-      internalID: 4641053223124773054
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: burner_smoke_em_5
-      rect:
-        serializedVersion: 2
-        x: 75
-        y: 18
-        width: 12
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 4a6b7b8fe0e34eb10800000000000000
-      internalID: 2009799567737337508
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: burner_smoke_em_6
-      rect:
-        serializedVersion: 2
-        x: 102
-        y: 19
-        width: 13
-        height: 17
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 9f55502e9080ebdb0800000000000000
-      internalID: -4774369716426418695
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: burner_smoke_em_7
-      rect:
-        serializedVersion: 2
-        x: 117
-        y: 18
-        width: 22
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: c6a4b73bfeb845f60800000000000000
-      internalID: 8022190697878342252
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: burner_smoke_em_8
-      rect:
-        serializedVersion: 2
-        x: 152
-        y: 19
-        width: 11
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 35f567ea12e2d7840800000000000000
-      internalID: 5223381865015435091
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: burner_smoke_em_9
-      rect:
-        serializedVersion: 2
-        x: 161
-        y: 20
-        width: 12
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a37486502b6b607e0800000000000000
-      internalID: -1799550125376780486
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: burner_smoke_em_10
-      rect:
-        serializedVersion: 2
-        x: 176
-        y: 20
-        width: 8
-        height: 14
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 83e3a9c755213a290800000000000000
-      internalID: -7880434764596232648
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: burner_smoke_em_11
-      rect:
-        serializedVersion: 2
-        x: 203
-        y: 20
-        width: 27
-        height: 15
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 10129cc4d8173d9a0800000000000000
-      internalID: -6209494609521204991
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: burner_smoke_em_12
-      rect:
-        serializedVersion: 2
-        x: 251
-        y: 19
-        width: 7
-        height: 13
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 0dfab3d7bca9eca80800000000000000
-      internalID: -8444642052502999088
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: burner_smoke_em_13
-      rect:
-        serializedVersion: 2
-        x: 261
-        y: 20
-        width: 7
-        height: 15
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: e0bbefd3ae94f5c20800000000000000
-      internalID: 3197355530867620622
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: burner_smoke_em_14
-      rect:
-        serializedVersion: 2
-        x: 272
-        y: 19
-        width: 7
-        height: 9
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 49addbac3ed246f50800000000000000
-      internalID: 6873669387656485524
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: burner_smoke_em_15
-      rect:
-        serializedVersion: 2
-        x: 298
-        y: 18
-        width: 18
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 936f67f3cf9019a50800000000000000
-      internalID: 6526008314037728825
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: burner_smoke_em_16
-      rect:
-        serializedVersion: 2
-        x: 298
-        y: 20
-        width: 7
-        height: 7
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: fa4c9eb2f7acd9a40800000000000000
-      internalID: 5376676177696638127
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: burner_smoke_em_17
-      rect:
-        serializedVersion: 2
-        x: 321
-        y: 19
-        width: 149
-        height: 17
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 301d9455638a07640800000000000000
-      internalID: 5075741731359150339
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: burner_smoke_em_18
-      rect:
-        serializedVersion: 2
-        x: 535
-        y: 18
-        width: 12
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 22534b6efec88be80800000000000000
-      internalID: -8162619362613381854
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: burner_smoke_em_19
-      rect:
-        serializedVersion: 2
-        x: 547
-        y: 18
-        width: 10
-        height: 17
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 8e7adbcbddaa74af0800000000000000
-      internalID: -412172971550070808
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: burner_smoke_em_20
-      rect:
-        serializedVersion: 2
-        x: 558
-        y: 18
-        width: 11
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 84cccb08d50182db0800000000000000
-      internalID: -4816581807694885816
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -647,28 +198,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      burner_smoke_em_0: -1082178023751716529
-      burner_smoke_em_1: 1769864148297630319
-      burner_smoke_em_10: -7880434764596232648
-      burner_smoke_em_11: -6209494609521204991
-      burner_smoke_em_12: -8444642052502999088
-      burner_smoke_em_13: 3197355530867620622
-      burner_smoke_em_14: 6873669387656485524
-      burner_smoke_em_15: 6526008314037728825
-      burner_smoke_em_16: 5376676177696638127
-      burner_smoke_em_17: 5075741731359150339
-      burner_smoke_em_18: -8162619362613381854
-      burner_smoke_em_19: -412172971550070808
-      burner_smoke_em_2: 6061608528936601816
-      burner_smoke_em_20: -4816581807694885816
-      burner_smoke_em_3: -2381355810594770120
-      burner_smoke_em_4: 4641053223124773054
-      burner_smoke_em_5: 2009799567737337508
-      burner_smoke_em_6: -4774369716426418695
-      burner_smoke_em_7: 8022190697878342252
-      burner_smoke_em_8: 5223381865015435091
-      burner_smoke_em_9: -1799550125376780486
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

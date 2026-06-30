@@ -1018,6 +1018,13 @@ MonoBehaviour:
     base_spritesheets:
     - objects/interactives/crafters/3Dprinter/orderer_base
     keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: burner_smoke
+    variant_spritesheets:
+    - objects/interactives/crafters/burner/burner_smoke
+    base_skin: burner
+    base_spritesheets:
+    - objects/interactives/crafters/burner/burner_cube
+    keep_base_anim_if_spritesheet_not_found: 0
   log: 0
   log_LAFAC: 0
   log_variant_awake: 0
