@@ -20,7 +20,7 @@ public class CraftCapacity : Capacity
     private IEnumerator CraftCoroutine()
     {
         Capable.AnimPlayer.Play(craft_anim);
-        yield return new WaitForSeconds(craft_duration);
+        yield return new WaitForSeconds(craft_duration == 0f ? AnimPlayer.GetCurrentAnimationDuration() : craft_duration);
         craft_is_done();
     }
     private void craft_is_done()

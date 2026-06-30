@@ -235,6 +235,7 @@ public class EcoEngine : MonoBehaviour
     private Species get_species_from_id(string id)
     {
         string template = id.GetPrefix();
+        if (string.IsNullOrEmpty(template)) { return null; }
         for (int i=0; i<species.Count; i++)
         {
             if (species[i].template != template) { continue; }

@@ -49,11 +49,11 @@ public class CloseCapacity : Capacity
 
         // on joue l'animation
         Capable.AnimPlayer.StopPlaying(idle_open_anim); // ? really useful here ? since we do it again in success_close, check the door's animplayer acp list to check if useful
-        Capable.AnimPlayer.Play(close_anim, duration_override: closing_duration);
+        Capable.AnimPlayer.Play(close_anim, duration_override: closing_duration == 0f ? default : closing_duration);
 
         // on joue le son
         AudioEngine.Instance.Play("close", Capable.Skin, Capable.gameObject);
-        Invoke("success_close", closing_duration);
+        Invoke("success_close", closing_duration == 0f ? AnimPlayer.GetCurrentAnimationDuration() : closing_duration);
 
         if (log) { Debug.Log(Capable.name + " is closing..."); }
     }

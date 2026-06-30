@@ -477,6 +477,15 @@ public class AnimPlayer : MonoBehaviour
     }
 
     /// <summary>
+    /// returns the current animation duration
+    /// </summary>
+    public float GetCurrentAnimationDuration()
+    {
+        if (current_anim == null || current_frame == -1) { return 0f; }
+        return current_anim.GetDuration();
+    }
+
+    /// <summary>
     /// returns the current anim
     /// </summary>
     public Anim GetCurrentAnim() { return current_anim; }

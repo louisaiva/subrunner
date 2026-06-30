@@ -1241,6 +1241,13 @@ public class CapableEngine : BSOD_System<CapableEngine>
         List<CapableData> entities = new List<CapableData>(cached_data_by_kind[type]);
         return entities;
     }
+    public Type GetCapableType(string id)
+    {
+        CapableData data = GetCapableDataFromID(id);
+        if (data == null) { return null; }
+        Type type = Type.GetType(data.kind);
+        return type;
+    }
 
     // doors
     public List<DoorData> GetWorldDoorsData()

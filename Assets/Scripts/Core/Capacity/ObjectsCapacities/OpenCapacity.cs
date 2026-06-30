@@ -49,11 +49,11 @@ public class OpenCapacity : Capacity
         (Capable as Openable).is_moving = true;
 
         // on joue l'animation & le son
-        Capable.AnimPlayer.Play(open_anim, duration_override: opening_duration);
+        Capable.AnimPlayer.Play(open_anim, duration_override: opening_duration == 0f ? default : opening_duration);
         AudioEngine.Instance.Play("open", Capable.Skin, Capable.gameObject);
         
         // on attend
-        Invoke("success_open", opening_duration);
+        Invoke("success_open", opening_duration == 0f ? AnimPlayer.GetCurrentAnimationDuration() : opening_duration);
         if (log) { Debug.Log(Capable.name + " is opening..."); }
     }
     protected virtual void success_open()

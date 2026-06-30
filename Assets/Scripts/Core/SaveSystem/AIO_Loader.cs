@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -224,6 +225,19 @@ public class AIO_Loader : MonoBehaviour
                 log_loading.Warning($"Capable with id '{id}' is the currently controlled capable, skipping it to avoid conflicts");
                 continue;
             }
+
+            // check if we are building (level builder) and this is a door, we don't load it, so the LevelTranslator will
+            // recreate a door
+            if (GameManager.State == GameState.Building)
+            {
+                Type type = CapableEngine.Instance.GetCapableType(id);
+                if (type != null && GameManager.IsKind(type, typeof(Door)))
+                {
+                    log_loading.LogExtended($"Capable with id '{id}' is a door and we are in LevelBuilder, skipping it");
+                    continue;
+                }
+            }
+
             Capable capable = CapableEngine.Instance.LoadCapableInstantly(id);
             if (capable == null)
             {

@@ -99,6 +99,7 @@ public class TrashEngine : MonoBehaviour
     }
     public int GetQuantityOfTrash(string level_id)
     {
+        if (string.IsNullOrEmpty(level_id)) { return 0; }
         if (!on_floor_trashes.TryGetValue(level_id, out List<ItemData> trashes)) { return 0; }
         return trashes.Count;
     }

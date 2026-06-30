@@ -6,6 +6,7 @@ public static class StringExtensions
     public static string ColorHexFromUnityColor(this Color unityColor) => $"#{ColorUtility.ToHtmlStringRGBA(unityColor)}";
     public static string GetPrefix(this string id)
     {
+        if (id == null) { return null; }
         string[] parts = id.Split('-');
         return parts[0];
     }

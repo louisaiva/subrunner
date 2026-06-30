@@ -1025,6 +1025,20 @@ MonoBehaviour:
     base_spritesheets:
     - objects/interactives/crafters/burner/burner_cube
     keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: distributor_pasta
+    variant_spritesheets:
+    - objects/interactives/crafters/distributor/distributor_item
+    base_skin: distributor
+    base_spritesheets:
+    - objects/interactives/crafters/distributor/distributor_fg
+    keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: distributor_bg
+    variant_spritesheets:
+    - objects/interactives/crafters/distributor/distributor_bg
+    base_skin: distributor
+    base_spritesheets:
+    - objects/interactives/crafters/distributor/distributor_fg
+    keep_base_anim_if_spritesheet_not_found: 0
   log: 0
   log_LAFAC: 0
   log_variant_awake: 0
@@ -1698,6 +1712,7 @@ MonoBehaviour:
   LOG_CLOSEST_FOOD_SENSOR: 0
   LOG_CLOSEST_TRASH_SENSOR: 0
   LOG_CLOSEST_BEING_SENSOR: 0
+  LOG_CLOSEST_SENSOR: 0
   LOG_GTR_SENSOR: 0
   LOG_GTR_SENSOR_EXTENDED: 0
   LOG_IA_ACTION: 0

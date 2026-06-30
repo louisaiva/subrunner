@@ -1,0 +1,150 @@
+﻿{
+    "<id>k__BackingField": "distributor",
+    "kind": "Crafter",
+    "position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": -1.0
+    },
+    "layer": 29,
+    "tag": "Untagged",
+    "capacities_ids": [
+        "distrib_iic",
+        "distrib_open",
+        "distrib_close",
+        "distrib_craft",
+        "hover"
+    ],
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "distributor",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "idle",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "hover"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 2,
+                "capacity_playing": "",
+                "capacities": [
+                    "turn_on",
+                    "turn_off"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            },
+            {
+                "priority": 3,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle_on"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 4,
+                "capacity_playing": "",
+                "capacities": [
+                    "craft"
+                ],
+                "lock_orientation": false,
+                "one_shot": true
+            }
+        ],
+        "current_capacity": "",
+        "material_name": "objects",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "never_flip": false,
+        "layers": [
+            {
+                "skin": "distributor_pasta",
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.00009999999747378752
+                },
+                "local_rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "material_name": "objects",
+                "sorting_layer_id": -667374433,
+                "order_in_layer": 0,
+                "never_flip": false,
+                "follow_duration": false
+            },
+            {
+                "skin": "distributor_bg",
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.00019999999494757503
+                },
+                "local_rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "material_name": "objects",
+                "sorting_layer_id": -667374433,
+                "order_in_layer": 0,
+                "never_flip": false,
+                "follow_duration": false
+            }
+        ],
+        "local_position": {
+            "x": 0.0,
+            "y": 0.0
+        }
+    },
+    "inventory": {
+        "item_pools_data": [],
+        "item_type": 0
+    },
+    "feet_data": {
+        "box_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 29,
+                "pathfinding_area": 1,
+                "shadow_caster_data": {
+                    "cast_and_self": false,
+                    "used_layers": []
+                },
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.1666666716337204
+                },
+                "size": {
+                    "x": 1.4166663885116578,
+                    "y": 0.3333333432674408
+                }
+            }
+        ],
+        "circle_colliders": []
+    },
+    "effects": [],
+    "effects_ttl": []
+}

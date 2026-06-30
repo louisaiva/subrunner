@@ -234,6 +234,7 @@ public class AnimLayer : MonoBehaviour
         else { sr.material = mat; }
         sr.sortingLayerID = layer_data.sorting_layer_id;
         sr.sortingOrder = layer_data.order_in_layer;
+        sr.color = Color.white;
 
         // load never flip & follow duration
         never_flip = layer_data.never_flip;
