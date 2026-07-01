@@ -41,7 +41,7 @@ public class Inventory : MonoBehaviour, ItemStorer
 
 
     // EVENTS
-    public event Action<Item> OnItemGrabbedFromLowerLevel = delegate { };
+    // public event Action<Item> OnItemGrabbedFromLowerLevel = delegate { };
     public event Action<Item> OnItemGrabbed = delegate { };
     public event Action<Item> OnItemDropped = delegate { };
 
@@ -66,7 +66,7 @@ public class Inventory : MonoBehaviour, ItemStorer
     [SerializeField] protected bool log_get_items = false;
 
     // AWAKE
-    protected virtual void Awake()
+    /* protected virtual void Awake()
     {
         if (clear_and_assign_pools_in_awake)
         {
@@ -90,8 +90,9 @@ public class Inventory : MonoBehaviour, ItemStorer
             // & assign callbacks
             pools[i].OnStackCreated += (stack) => { OnStackCreated?.Invoke(stack); };
             pools[i].OnStackRemoved += (stack) => { OnStackRemoved?.Invoke(stack); };
+            pools[i].OnItemGrabbed += (item) => { OnItemGrabbed?.Invoke(item); };
         }
-    }
+    } */
 
 
     // GRAB / DROP
@@ -112,7 +113,7 @@ public class Inventory : MonoBehaviour, ItemStorer
         {
             if (shoes_stack.Grab(item))
             {
-                OnItemGrabbed.Invoke(item);
+                // OnItemGrabbed.Invoke(item);
                 if (log_grab) { Debug.Log("(Inventory) " + Capable.name + " grabbed : " + item.name + " in shoes_stack"); }
                 return true;
             }
@@ -121,7 +122,7 @@ public class Inventory : MonoBehaviour, ItemStorer
         {
             if (weapon_stack.Grab(item))
             {
-                OnItemGrabbed.Invoke(item);
+                // OnItemGrabbed.Invoke(item);
                 if (log_grab) { Debug.Log("(Inventory) " + Capable.name + " grabbed : " + item.name + " in weapon_stack"); }
                 return true;
             }
@@ -137,10 +138,8 @@ public class Inventory : MonoBehaviour, ItemStorer
 
 
         // we trigger the events
-        OnItemGrabbed.Invoke(item);
-
+        // OnItemGrabbed.Invoke(item);
         if (log_grab) { Debug.Log("(Inventory) " + Capable.name + " grabbed : " + item.name + $" in pool '{grabbed_pool?.name ?? "null"}'"); }
-
         return true;
     }
     public virtual bool Drop(Item item, bool on_ground = true)
@@ -208,7 +207,7 @@ public class Inventory : MonoBehaviour, ItemStorer
     /// the grab already happened in a lower level (ItemPool grabbed an Item during Start() probably)
     /// Then we need to fire the event so that's the only purpose of this method after all
     /// </summary>
-    public void GrabFromLowerLevel(Item item)
+    /* public void GrabFromLowerLevel(Item item)
     {
         if (item == null) { return; }
 
@@ -216,7 +215,7 @@ public class Inventory : MonoBehaviour, ItemStorer
         OnItemGrabbedFromLowerLevel?.Invoke(item);
 
         if (log) { Debug.Log("(Inventory) " + Capable.name + " grabbed from lower level : " + item.name); }
-    }
+    } */
     public void DropFromLowerLevel(Item item)
     {
         if (item == null) { return; }
@@ -332,16 +331,21 @@ public class Inventory : MonoBehaviour, ItemStorer
             s += "we have an interactable : " + interactable.name + "\n";
 
             // checks if this is a chest
-            if (interactable is not Chest chest) { if (log) { Debug.LogWarning(s + "but it's not a Chest\n"); } return null; }
-            else if (interactable.Inventory == null) { if (log) { Debug.LogWarning(s + "but it doesn't have an inventory\n"); } return null; }
+            if (interactable is not Chestable chest) { if (log) { Debug.LogWarning(s + "but it's not a Chestable\n"); } return null; }
+            else if (chest.Inventory == null) { if (log) { Debug.LogWarning(s + "but it doesn't have an inventory\n"); } return null; }
 
-            s += "and it's a Chest\n";
+            s += $"and it's a Chestable : {chest.ChestType} \n";
 
-            // checks if the chest is not closed or closing
-            if (!chest.is_open && !chest.is_moving) { if (log) { Debug.LogWarning(s + "but it's closed & not opening\n"); } return null; }
-            else if (chest.is_open && chest.is_moving) { if (log) { Debug.LogWarning(s + "but it's closing\n"); } return null; }
+            if (chest is Openable openable)
+            {
+                s += $"and it's a Openable, we check if it is open\n";
 
-            s += "and it's open !!\n";
+                // checks if the chest is not closed or closing
+                if (!openable.is_open && !openable.is_moving) { if (log) { Debug.LogWarning(s + "but it's closed & not opening\n"); } return null; }
+                else if (openable.is_open && openable.is_moving) { if (log) { Debug.LogWarning(s + "but it's closing\n"); } return null; }
+
+                s += "and it's open !!\n";
+            }
 
             // we return the interactable's inventory
             if (log) { Debug.Log(s + "and its inventory is " + interactable.Inventory.name + "\n\n"); }
@@ -447,7 +451,6 @@ public class Inventory : MonoBehaviour, ItemStorer
         // we set basic inventory data
         this.ItemType = data.item_type;
 
-
         // we suppose we already have the right amount of ItemPools (should be built in CapableBank)
 
         // we gather the real ItemPool
@@ -467,6 +470,9 @@ public class Inventory : MonoBehaviour, ItemStorer
         for (int i = 0; i < data.item_pools_data.Count; i++)
         {
             if (i >= pools_to_fill.Count) { break; }
+
+            // assign callbacks before loading pool data, so the LoadPoolData method fires the callbacks
+            set_callbacks(pools_to_fill[i]);
             pools_to_fill[i].LoadPoolData(data.item_pools_data[i]);
             if (pools_to_fill[i].gameObject != this.gameObject)
             {
@@ -478,11 +484,16 @@ public class Inventory : MonoBehaviour, ItemStorer
 
             // we attach the pool
             pools_to_fill[i].AttachToInventory(this);
-
-            // & assign callbacks
-            pools_to_fill[i].OnStackCreated += (stack) => { OnStackCreated?.Invoke(stack); };
-            pools_to_fill[i].OnStackRemoved += (stack) => { OnStackRemoved?.Invoke(stack); };
         }
+    }
+    private void set_callbacks(ItemPool pool)
+    {
+        pool.OnStackCreated += (stack) => { OnStackCreated?.Invoke(stack); }; ;
+        pool.OnStackRemoved += (stack) => { OnStackRemoved?.Invoke(stack); };
+        pool.OnItemGrabbed += (item) => { OnItemGrabbed?.Invoke(item); };
+
+        // no need to remember the callbacks and destroy them in unload because
+        // the callbacks are cleared inside ItemPool.UnloadPoolData()
     }
     public void UnloadInventoryData()
     {

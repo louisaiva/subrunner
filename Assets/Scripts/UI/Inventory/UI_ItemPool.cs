@@ -41,10 +41,12 @@ public class UI_ItemPool : UI_ItemSlottable
         if (itemType == ItemType.All || itemType == ItemType.None) { return; }
 
         // if virtual we set file
-        if (itemType == ItemType.Virtual) { this.item_slot_type = "file"; return; }
-
-        // otherwise we set it to item
-        this.item_slot_type = "item";
+        if (itemType == ItemType.Virtual)
+        {
+            this.item_slot_type = this.item_slot_type.Replace("item","file");
+            return;
+        }
+        this.item_slot_type = this.item_slot_type.Replace("file", "item");
     }
 
     public void DetachFromPool()

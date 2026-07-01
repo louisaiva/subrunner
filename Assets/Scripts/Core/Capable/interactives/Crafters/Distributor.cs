@@ -15,7 +15,7 @@ public class Distributor : Crafter
     public override string UI_PoolName => "distributor";
 
     private Coroutine pasta_coroutine = null;
-    private int pasta_to_drop = 0;
+    private List<Item> pending_tickets = new List<Item>();
     private void handle_item_grabbed(Item item)
     {
         Debug.Log("(Distributor) Handle item grabbed : " + item.ID);
@@ -23,16 +23,19 @@ public class Distributor : Crafter
         if (item.Reference != "other:ticket") { return; }
 
         // we launch the pasta craft coroutine !!!
-        pasta_to_drop++;
+        pending_tickets.Add(item);
         if (pasta_coroutine != null) { return; } // we already have a pasta coroutine, so it is good !
         pasta_coroutine = StartCoroutine(distribute_pasta());
+
+        // we quit the ui
+        hide_ui_pool();
     }
 
-    private DropParameters drop_param = new DropParameters()
+    [SerializeField] private DropParameters drop_param = new DropParameters()
     {
         random_direction = false,
-        drop_magnitude = 150f,
-        offset_drop = new Vector2(0f,0.1f),
+        drop_magnitude = 70f,
+        offset_drop = new Vector2(-.2f,0f),
         lock_magnitude = true,
     };
 
@@ -45,9 +48,12 @@ public class Distributor : Crafter
 
         // now we drop some pastas !
         DropEngine.Instance.Drop(this, pastas, drop_param);
-        pasta_to_drop--;
         
-        if (pasta_to_drop >= 0) { yield return distribute_pasta(); }
+        // we destroy the ticket
+        Inventory.Drop(pending_tickets[0], on_ground:false);
+        CapableEngine.Instance.DespawnCapable(pending_tickets[0].data);
+        pending_tickets.RemoveAt(0);
+        if (pending_tickets.Count > 0) { yield return distribute_pasta(); }
         pasta_coroutine = null;
     }
 

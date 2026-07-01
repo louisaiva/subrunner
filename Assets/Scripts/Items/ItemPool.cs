@@ -166,6 +166,10 @@ public class ItemPool : MonoBehaviour, ItemStorer
         {
             OnStackRemoved -= (Action<ItemStack>)d;
         }
+        foreach (Delegate d in OnItemGrabbed.GetInvocationList())
+        {
+            OnItemGrabbed -= (Action<Item>)d;
+        }
     }
     string ItemStorer.GetDetails()
     {

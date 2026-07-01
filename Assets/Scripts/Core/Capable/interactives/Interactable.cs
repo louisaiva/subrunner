@@ -46,7 +46,9 @@ public interface Chestable : Interactable
     public Inventory Inventory { get; }
 
     // for capable that acts pretty much like a chest, which means
-    // they show the UI_ChestPool
+    // they can receive ingame near item drop, and also they show an
+    // UI_Pool when interacted. basically it is Chest + Crafter for now.
+    // this is mainly used to get the interacting inventory in Inventory.GetInteractingInventory()
     public void ExitHover();
     public string ChestType { get; }
 }

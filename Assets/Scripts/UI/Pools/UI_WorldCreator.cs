@@ -8,7 +8,7 @@ public class UI_WorldCreator : UI_SlottablePool, Scrollable
     [SerializeField] private UI_WorldTemplateSlot prefab;
     [SerializeField] private Transform templates_container;
     private List<UI_WorldTemplateSlot> template_slots = new List<UI_WorldTemplateSlot>();
-    private UI_WorldTemplateSlot selected_prefab = null;
+    // todo private UI_WorldTemplateSlot selected_prefab = null;
 
     [Header("Scrollable")]
     [SerializeField] private UI_Scroller scroller;

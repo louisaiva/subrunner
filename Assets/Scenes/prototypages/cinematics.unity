@@ -214944,8 +214944,6 @@ MonoBehaviour:
   ItemDescription: best pastas in town.
   _grabbed: 1
   _placed: 0
-  life_regen: 10
-  portions: 1
 --- !u!1 &1472679188
 GameObject:
   m_ObjectHideFlags: 0
@@ -277581,7 +277579,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a6a700707edb09448e38852ec90f48f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DropEngine
-  log: 0
+  log: 1
 --- !u!1 &1917636515
 GameObject:
   m_ObjectHideFlags: 0
@@ -319381,6 +319379,7 @@ MonoBehaviour:
   slottables:
   - {fileID: 6253820979710983933}
   - {fileID: 4495649807105611120}
+  - {fileID: 7053047415844915583}
   master_slottable: {fileID: 0}
 --- !u!1 &1216586846674180397
 GameObject:
@@ -349346,7 +349345,7 @@ MonoBehaviour:
   log_starting_slot: 0
   slots_parents:
   - {fileID: 5881027026895119911}
-  - {fileID: 7710252392946218746}
+  - {fileID: 6162021864291798712}
   deep_search: 0
 --- !u!114 &6253820979710983934
 MonoBehaviour:
@@ -349489,7 +349488,6 @@ MonoBehaviour:
   log_extended: 0
   log_elements_showing: 0
   level_text: {fileID: 7002242653021348151}
-  delay_before_activating_buttons: 0.4
   skills_parent: {fileID: 2719238387103148016}
   slottable: {fileID: 1061877919129754598}
 --- !u!224 &6265134960341856794
@@ -355385,7 +355383,7 @@ MonoBehaviour:
   starting_slot: {fileID: 0}
   log: 0
   log_starting_slot: 0
-  item_slot_type: item
+  item_slot_type: big_item
   AlwaysShow: 1
   ui_stacks: []
   bank: {fileID: 0}
@@ -361965,8 +361963,6 @@ MonoBehaviour:
   ItemDescription: best pastas in town.
   _grabbed: 0
   _placed: 0
-  life_regen: 10
-  portions: 1
 --- !u!224 &8107450069164911966
 RectTransform:
   m_ObjectHideFlags: 0

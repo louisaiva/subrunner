@@ -230,28 +230,17 @@ public class UI_ItemStack : UI_ImageSlot, Descriptable, Droppable, ItemReceivabl
         // we drop the item in the other inventory
         if (inventory_to_drop != null)
         {
-            inventory_to_drop.Grab(item);
-            return;
+            if (inventory_to_drop.Grab(item))
+            {
+                if (log_drop) { Debug.Log($"(UI_ItemStack) And we successfully dropped the item inside the interacting inventory !"); }
+                return;
+            }
+            if (log_drop) { Debug.LogWarning($"(UI_ItemStack) But we could not drop the item inside the interacting inventory :/ maybe it has weird item rule"); }
         }
 
         // we don't have an inventory to drop so we drop on the ground
-        if (log_drop) { Debug.Log($"(UI_ItemStack) no inventory so we dropping item {item.ID} on the ground with DropEngine. dropper is {inventory.Capable.ID}"); }
+        if (log_drop) { Debug.Log($"(UI_ItemStack) we dropping item {item.ID} on the ground with DropEngine. dropper is {inventory.Capable.ID}"); }
         DropEngine.Instance.Drop(inventory.Capable, item);
-
-        /* DropCapacity dropper = inventory.Capable.GetCapacity<DropCapacity>();
-        if (dropper != null)
-        {
-            dropper.Select(item);
-            dropper.random_direction = true;
-            dropper.Use(inventory.Capable);
-            dropper.random_direction = false;
-        }
-        else
-        {
-            if (log_drop) { Debug.Log($"(UI_ItemStack) no inventory and no dropper capacity, so we simply drop item {item.name} from inventory of {inventory.Capable.name} (it may be lost if the inventory is a chest for example)"); }
-            // the inventory simply drops the item (dropper may be a chest)
-            inventory.Drop(item);
-        } */
     }
 
 

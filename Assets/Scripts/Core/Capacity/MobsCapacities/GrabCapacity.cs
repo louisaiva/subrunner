@@ -5,7 +5,7 @@ using System;
 /// <summary>
 /// GrabCapacity is a Capacity that allows the Capable to grab items.
 /// </summary>
-
+[Obsolete("GrabCapacity is obsolete, use Inventory/ItemPool.Grab(Item) instead")]
 public class GrabCapacity : Capacity
 {
     public override bool Able

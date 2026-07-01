@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
 
+[Obsolete("RoomDataSaver, as other data saver from editor, is deprecated, use in-game SaveEngine instead")]
 public class RoomDataSaver : MonoBehaviour
 {
 
@@ -55,7 +57,7 @@ public class RoomDataSaver : MonoBehaviour
 
                 // load all rooms from system
                 room_system = ChunkEngine.Instance;
-                room_system.LoadChunks(saver.rooms_to_load.ToArray());
+                _ = room_system.LoadChunks(saver.rooms_to_load.ToArray());
             }
             if (GUILayout.Button("Unload Rooms"))
             {

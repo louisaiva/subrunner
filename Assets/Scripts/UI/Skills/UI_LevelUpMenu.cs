@@ -14,7 +14,7 @@ public class UI_LevelUpMenu : UI_Pool
 {
     [Header("Level Up Menu Components")]
     [SerializeField] private TMPro.TextMeshProUGUI level_text;
-    [SerializeField] private float delay_before_activating_buttons = 1f;
+    // [SerializeField] private float delay_before_activating_buttons = 1f;
 
     [Header("Slottable")]
     [SerializeField] private Transform skills_parent;

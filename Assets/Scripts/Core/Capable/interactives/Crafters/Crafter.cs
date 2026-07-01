@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Crafter : Capable, Interactable, Openable
+public class Crafter : Capable, Openable, Chestable
 {
 
     ///
@@ -35,24 +35,36 @@ public class Crafter : Capable, Interactable, Openable
     [Header("Openable")]
     [field:SerializeField] public virtual bool is_moving { get; set; }
     [field:SerializeField] public virtual bool is_open { get; set; }
+    public string ChestType => UI_PoolName;
 
     // ON INTERACT / HOVER LOST
     public virtual void OnInteract(Capable interactor)
     {
-        // only first interaction per interactor is authorized !!!
-        if (interactors.Contains(interactor))
-        {
-            // we play the craft animation
-            if (string.IsNullOrEmpty(UI_PoolName) && TryGetCapacity(out CraftCapacity craft_capacity)) { craft_capacity.Craft(); }
-            return;
-        }
-        interactors.Add(interactor);
+        if (!interactors.Contains(interactor)) { interactors.Add(interactor); }
         if (log) { Debug.Log("(Crafter) " + ID + " was interacted by " + interactor.ID); }
+        if (TryGetCapacity(out OpenCapacity oc) && !oc.IsOpenOrOpening) { oc.Open(); }
+        if (interactor == Controller.Capable) { show_ui_pool(); }
+    }
+    public void OnHoverLost(Capable interactor)
+    {
+        if (interactor == Controller.Capable) { hide_ui_pool(); }
 
-        // we open if it's the first interactor we have !!
-        if (interactors.Count == 1 && TryGetCapacity(out OpenCapacity open_capacity)) { open_capacity.Open(); }
+        if (!interactors.Contains(interactor)) { return; }
+        interactors.Remove(interactor);
 
-        // we get the craft pool
+        // if there is no more interactor we close the crafter
+        if (interactors.Count == 0 && TryGetCapacity(out CloseCapacity close_capa)) { close_capa.Close(); }
+    }
+    public async void ExitHover()
+    {
+        await System.Threading.Tasks.Task.Yield(); // wait a bit to avoid issues with OnHoverLost called just after
+        OnHoverLost(Controller.Capable);
+    }
+
+    // show / hide pool
+    protected virtual void show_ui_pool()
+    {
+        if (string.IsNullOrEmpty(UI_PoolName)) { return; }
         UI_CraftPool pool = UI_Manager.Instance.GetPool(UI_PoolName) as UI_CraftPool;
         if (pool == null)
         {
@@ -60,26 +72,11 @@ public class Crafter : Capable, Interactable, Openable
             return;
         }
 
-        // we only show ui if the interactor is controlled & ui not shown yet
-        if (interactor != Controller.Capable || pool.IsShown(this)) { return; }
-
-        // we show the inventory UI
+        if (pool.IsShown(this)) { return; } // we only show ui if not shown yet
         pool.ShowCraftPool(this);
     }
-    public void OnHoverLost(Capable interactor)
+    protected virtual void hide_ui_pool()
     {
-        if (!interactors.Contains(interactor)) { return; }
-        interactors.Remove(interactor);
-
-        // if there is no more interactor we close the crafter
-        if (interactors.Count == 0 && TryGetCapacity(out CloseCapacity close_capa)) { close_capa.Close(); }
-
-
-        // we hide the craft pool
-        for (int i = 0; i < interactors.Count; i++)
-        {
-            if (interactors[i] == Controller.Capable) { return; } // we still have the controlled interactor so we dont hide the ui
-        }
         if (string.IsNullOrEmpty(UI_PoolName)) { return; }
         UI_CraftPool pool = UI_Manager.Instance.GetPool(UI_PoolName) as UI_CraftPool;
         if (pool == null)
@@ -90,12 +87,6 @@ public class Crafter : Capable, Interactable, Openable
         if (!pool.IsShown(this)) { return; }
         pool.HideCraftPool();
     }
-    public async void ExitHover()
-    {
-        await System.Threading.Tasks.Task.Yield(); // wait a bit to avoid issues with OnHoverLost called just after
-        OnHoverLost(Controller.Capable);
-    }
-
 
 
 

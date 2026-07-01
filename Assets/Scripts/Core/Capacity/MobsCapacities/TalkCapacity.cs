@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 public class TalkCapacity : Capacity
 {
-    [SerializeField] private bool log_lerp = false;
+    // [SerializeField] private bool log_lerp = false;
 
     [Header("Talk mode")]
     [SerializeField] private TalkMode talk_mode;

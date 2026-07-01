@@ -87,6 +87,17 @@ public class OpenCapacity : Capacity
         // on ouvre direct
         success_open();
     }
+    public bool IsOpenOrOpening
+    {
+        get
+        {
+            Openable openable = Capable as Openable;
+            if (openable == null) { return false; }
+            if (openable.is_open && !openable.is_moving) { return true; }
+            if (!openable.is_open && openable.is_moving) { return true; }
+            return false;
+        }
+    }
 
     // CancelInvoke
     public void CancelOpenInvoke()

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class DropEngine : MonoBehaviour
@@ -41,10 +42,10 @@ public class DropEngine : MonoBehaviour
 
         // we successfully dropped the item !!
         // we calculate the offset we drop it
-        Vector3 offset_position = param.random_direction ? param.offset_drop : dropper.Orientation * 0.2f;
+        // Vector3 offset_position = (param.offset_drop == Vector2.zero) ? dropper.Orientation * 0.2f : param.offset_drop;
 
         // we move the item back to the world
-        item.transform.position = dropper.transform.position + offset_position;
+        item.transform.position = dropper.transform.position + (Vector3)param.offset_drop;
         item.transform.SetParent(World.Instance.ItemsParent);
         item.transform.localScale = Vector3.one;
 
@@ -55,7 +56,7 @@ public class DropEngine : MonoBehaviour
         float force_magnitude = -888f;
         if (item is not Shuriken)
         {
-            Force force = new Force("drop", param.random_direction ? Random.insideUnitCircle : dropper.Orientation, param.drop_magnitude);
+            Force force = new Force("drop", param.random_direction ? UnityEngine.Random.insideUnitCircle : dropper.Orientation, param.drop_magnitude);
             if (dropper is Movable movable && !param.lock_magnitude)
             {
                 // we add the current moving velocity to the force (for dropping items while moving)
@@ -70,6 +71,7 @@ public class DropEngine : MonoBehaviour
             Debug.Log("(DropEngine) " + dropper.ID + " dropped : " + item.ID +
                 (force_magnitude != -888f ? " with force of magnitude : " + force_magnitude :
                 " and item is a SHURIKEN so no force applied")
+                + " and offset : " + param.offset_drop + " which makes the global world pos of the item : " + item.transform.position
                 );
         }
     }
@@ -77,7 +79,7 @@ public class DropEngine : MonoBehaviour
 
 }
 
-public class DropParameters
+[Serializable] public class DropParameters
 {
     public bool random_direction = true;
     public float drop_magnitude = 200f;

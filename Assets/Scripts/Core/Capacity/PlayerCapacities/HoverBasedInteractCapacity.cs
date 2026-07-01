@@ -140,7 +140,7 @@ public class HoverBasedInteractCapacity : InteractCapacity
     {
         // we check if the other has a HoverCapacity
         HoverCapacity hover = other.transform.parent.GetComponent<HoverCapacity>();
-        if (hover == null) { if (log_triggers) { Debug.Log("(HBInteractCapacity) " + name + " hovered " + other.name + " but it has no HoverCapacity"); } return; }
+        if (hover == null) { if (log_triggers) { Debug.Log("(HBInteractCapacity) " + ID + " hovered " + other.name + " but it has no HoverCapacity"); } return; }
 
         // we get the capable of the hover capacity
         Capable interacted_capable = hover.Capable;
@@ -148,8 +148,8 @@ public class HoverBasedInteractCapacity : InteractCapacity
 
         // we check if we can interact with it
         if (!CanInteractWithCapable(interacted_capable)) { return; }
-        if (hover == closest_hover) { if (log_triggers) { Debug.Log("(HBInteractCapacity) " + name + " hovered " + interacted_capable.ID + " but it is already hovered"); } return; }
-        if (waiting_hovers.Contains(hover)) { if (log_triggers) { Debug.Log("(HBInteractCapacity) " + name + " hovered " + interacted_capable.ID + " but it is already in the waiting hovers"); } return; }
+        if (hover == closest_hover) { if (log_triggers) { Debug.Log("(HBInteractCapacity) " + ID + " hovered " + interacted_capable.ID + " but it is already hovered"); } return; }
+        if (waiting_hovers.Contains(hover)) { if (log_triggers) { Debug.Log("(HBInteractCapacity) " + ID + " hovered " + interacted_capable.ID + " but it is already in the waiting hovers"); } return; }
 
         // we add the capable to the waiting hovers
         waiting_hovers.Add(hover);
@@ -209,14 +209,17 @@ public class HoverBasedInteractCapacity : InteractCapacity
         // check that room of Capable & room of Interactable are the same
         // this is here and not upper because it can be a heavy call. AND NOT ON DOOR BC WE WANT TO BE ABLE TO ALWAYS INTERACT WITH THEM
         if (interactive is Door) { return true; }
+
         // also, if at least one the rooms can't be find, it means the thing was just unfreed,
         // so we consider we can interact with anything (maybe we just dropped an item or quit a sofa)
-        string room_of_capable = Capable.GetRealRoom();
         string room_of_interactable = interacted_capable.GetRealRoom();
-        if (!string.IsNullOrEmpty(room_of_capable)
-            && !string.IsNullOrEmpty(room_of_interactable)
-            && room_of_capable != room_of_interactable) { if (log_triggers) { Debug.Log($"(HBInteractCapacity) '{Capable.ID}' (room : '{room_of_capable}') tried to interact with '{interacted_capable.ID}' (room : '{room_of_interactable}') but they are in different rooms"); } return false; }
+        if (string.IsNullOrEmpty(room_of_interactable) || room_of_interactable == "item_was_just_dropped") { return true; }
+        string room_of_capable = Capable.GetRealRoom();
+        if (string.IsNullOrEmpty(room_of_capable)) { return true; }
 
-        return true;
+        // finally, if we have 2 valid rooms, we only allow interaction if we are in same rooms !
+        if (room_of_capable == room_of_interactable) { return true; }
+        if (log_triggers) { Debug.Log($"(HBInteractCapacity) '{Capable.ID}' (room : '{room_of_capable}') tried to interact with '{interacted_capable.ID}' (room : '{room_of_interactable}') but they are in different rooms"); }
+        return false;
     }
 }
