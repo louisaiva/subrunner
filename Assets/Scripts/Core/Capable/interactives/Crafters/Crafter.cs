@@ -30,7 +30,7 @@ public class Crafter : Capable, Openable, Chestable
             else { return null; }
         }
     }
-    public InteractType InteractionType => InteractType.Crafter;
+    public virtual InteractType InteractionType => InteractType.Crafter;
 
     [Header("Openable")]
     [field:SerializeField] public virtual bool is_moving { get; set; }

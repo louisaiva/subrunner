@@ -29,6 +29,7 @@ public class Item : Movable, EndlessInteractable
             return Reference.Split(':')[0];
         }
     }
+    public string SuffixReference => Reference.Replace(PrefixReference,"").Replace(":","");
     public Action<Item> OnReferenceChanged = delegate { };
     public Color Color = Color.yellow;
     public int MaxQty = 1;
@@ -197,7 +198,7 @@ public class Item : Movable, EndlessInteractable
     // INTERACTABLE
     public InteractCapacity Interactor => null;
     public InteractType InteractionType => InteractType.Item;
-    public void OnInteract(Capable interactor)
+    public virtual void OnInteract(Capable interactor)
     {
         if (interactor.Inventory == null) { return; }
         interactor.Inventory.Grab(this);
@@ -362,7 +363,7 @@ public class Item : Movable, EndlessInteractable
 
 
     // LOAD / GET DATA
-    private List<string> dynamic_capacity_ids = new List<string>(); // this list is used to store the capacities that are loaded dynamically on grab, so we can unload them on drop
+    protected List<string> dynamic_capacity_ids = new List<string>(); // this list is used to store the capacities that are loaded dynamically on grab, so we can unload them on drop
     public override void LoadData(CapableData data)
     {
         if (data is not ItemData idata)

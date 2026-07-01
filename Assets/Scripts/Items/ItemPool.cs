@@ -603,7 +603,19 @@ public class ItemPool : MonoBehaviour, ItemStorer
         }
         return null;
     }
+    public List<Item> GetAllItems()
+    {
+        List<Item> items = new List<Item>();
+        for (int i = 0; i < stacks.Count; i++)
+        {
+            ItemStack stack = stacks[i];
+            if (stack.IsEmpty) { continue; }
 
+            // we add all items of this stack
+            items.AddRange(stack.Items);
+        }
+        return items;
+    }
 
 }
 

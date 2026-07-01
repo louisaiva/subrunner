@@ -106,6 +106,8 @@ public class Sofa : Container, Interactable, Sittable
         local_standing_position = sofa_data.local_standing_position;
 
         base.LoadData(data);
+
+        sibling_tv = null; // reset the sibling tv so next time we need it it will be the good one !
     }
     public override ICapableData GetStaticData()
     {

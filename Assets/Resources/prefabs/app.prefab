@@ -941,6 +941,13 @@ MonoBehaviour:
     base_spritesheets:
     - objects/interactives/crafters/3Dprinter/3Dprinter_mid
     keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: printer_bloc
+    variant_spritesheets:
+    - objects/interactives/crafters/3Dprinter/3Dprinter_bloc
+    base_skin: printer
+    base_spritesheets:
+    - objects/interactives/crafters/3Dprinter/3Dprinter_mid
+    keep_base_anim_if_spritesheet_not_found: 0
   - variant_name: vent_big_ceil
     variant_spritesheets:
     - objects/deco/vent_big/vent_big_ceil

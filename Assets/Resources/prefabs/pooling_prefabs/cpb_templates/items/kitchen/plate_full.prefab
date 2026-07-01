@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4947518456057425643}
   - component: {fileID: 7020607722277148866}
   - component: {fileID: 7242041909808936916}
-  - component: {fileID: -193013336240037834}
+  - component: {fileID: 3609332299703677625}
   m_Layer: 24
   m_Name: plate_full
   m_TagString: Item
@@ -78,7 +78,7 @@ MonoBehaviour:
   capacity_template_id: hover
   capacity_template_ids:
   - item_iic
---- !u!114 &-193013336240037834
+--- !u!114 &3609332299703677625
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -87,9 +87,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3927794695775646843}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21b1e91dfac8ace4aabb5aed796039e2, type: 3}
+  m_Script: {fileID: 11500000, guid: aee9784bef86132d6b331aa8f1904c5d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Item
+  m_EditorClassIdentifier: Assembly-CSharp::Pasta
   data:
     <id>k__BackingField: 
     kind: 
@@ -133,9 +133,9 @@ MonoBehaviour:
   forces: []
   input_speed: 0
   Velocity: {x: 0, y: 0}
-  _reference: ingredient:plate_full
-  Color: {r: 0.9056604, g: 0.9056604, b: 0.9056604, a: 1}
-  MaxQty: 16
+  _reference: food:pastas
+  Color: {r: 0.90588236, g: 0.90588236, b: 0.90588236, a: 1}
+  MaxQty: 1
   ItemDescription: OMG OMG OMG there are something in this plate !!!\n\nare these
     some spaghetti ??? \n\nomgggg
   _grabbed: 0

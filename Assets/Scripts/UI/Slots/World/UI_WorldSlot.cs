@@ -45,23 +45,23 @@ public class UI_WorldSlot : UI_EventButton, Descriptable
         description += $"<b>subrunner {wdata.game_version}</b>\n".AddColor(get_color_version(wdata.game_version));
 
         description += "\n\n";
-        description += $"modified : ".AddColor(Color.grey) + $"<b>{wdata.last_update_date}</b>\n";
-        description += $"created : ".AddColor(Color.grey) + $"<b>{wdata.creation_date}</b>\n";
+        description += $"modified : ".Grey() + $"<b>{wdata.last_update_date}</b>\n";
+        description += $"created : ".Grey() + $"<b>{wdata.creation_date}</b>\n";
 
         description += "\n\n";
-        description += $"controller : ".AddColor(Color.grey) + $"<b>{whelper.controller.controlled_capable_id}</b>\n";
+        description += $"controller : ".Grey() + $"<b>{whelper.controller.controlled_capable_id}</b>\n";
         description += "\n\n";
-        description += $"intro done : ".AddColor(Color.grey) + (wdata.story_data?.intro_done == true
-                    ? "<b>YES</b>".AddColor(Color.green)
-                    : "<b>NOPE</b>".AddColor(Color.red))
+        description += $"intro done : ".Grey() + (wdata.story_data?.intro_done == true
+                    ? "<b>YES</b>".Green()
+                    : "<b>NOPE</b>".Red())
                     + "\n";
-        description += $"met qwin : ".AddColor(Color.grey) + (wdata.story_data?.met_qwin == true
-                    ? "<b>YES</b>".AddColor(Color.green)
-                    : "<b>NOPE</b>".AddColor(Color.red))
+        description += $"met qwin : ".Grey() + (wdata.story_data?.met_qwin == true
+                    ? "<b>YES</b>".Green()
+                    : "<b>NOPE</b>".Red())
                     + "\n";
-        description += $"ate pasta : ".AddColor(Color.grey) + (wdata.story_data?.ate_pasta == true
-                    ? "<b>YES</b>".AddColor(Color.green)
-                    : "<b>NOPE</b>".AddColor(Color.red))
+        description += $"ate pasta : ".Grey() + (wdata.story_data?.ate_pasta == true
+                    ? "<b>YES</b>".Green()
+                    : "<b>NOPE</b>".Red())
                     + "\n";
 
         return description;

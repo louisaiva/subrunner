@@ -2,9 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UI_OrdererPool : UI_CraftPool
+public class UI_OrdererPool : UI_CraftPool, Descriptable
 {
     public List<UI_ItemPool> meal_pools;
+
+    public string Name => "Pasta cooking machine";
+    public string Description => (crafter == null || crafter is not Orderer orderer ? "crafter is null or not orderer".AddColor(Color.red) : orderer.GetCurrentMealDescription()) + "\n\nPut your ingredients in the machine to create your pasta meal !";
+
 
     // crafter ATTACH / DETACH
     public override void AttachCrafter(Crafter crafter)
@@ -30,6 +34,8 @@ public class UI_OrdererPool : UI_CraftPool
     public void CookMeal()
     {
         if (crafter == null) { return; }
-        Debug.Log($"(UI_OrdererPool) Cooking {crafter.ID} meal !");
+        if (log) { Debug.Log($"(UI_OrdererPool) Cooking {crafter.ID} meal !"); }
+        if (crafter is not Orderer orderer) { return; }
+        orderer.Order();
     }
 }

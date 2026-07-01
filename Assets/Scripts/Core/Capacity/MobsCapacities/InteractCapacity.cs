@@ -93,7 +93,8 @@ public enum InteractType
     Spawner,
     Corpse,
     Item,
-    Crafter
+    Crafter,
+    InteractableByMobsOnly
 }
 
 [Serializable] public class InteractData : CapacityData

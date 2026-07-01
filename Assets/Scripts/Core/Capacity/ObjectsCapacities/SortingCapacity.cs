@@ -1,9 +1,12 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 [RequireComponent(typeof(SortingGroup))]
 public class SortingCapacity : Capacity
 {
+    // private List<Item> sorted_items = new List<Item>();
+
     public async void ReceiveMovable(Movable movable, Vector3 world_position)
     {
         ChunkEngine.Instance.FreeCapable(movable.data);
@@ -35,4 +38,14 @@ public class SortingCapacity : Capacity
         if (Capable is Container container) { container.FreeCapable(movable.ID); }
         Debug.Log("(SortingCapacity) Removed movable " + movable.ID + " at " + world_position);
     }
+
+    // todo : yes we need this only to remove the items from the container, otherwise when unloading then reloading the container,
+    // todo : it will re call LoadCapablesAccordingly which is bad...
+    /* private void handle_on_item_grabbed(Item item, Capable capable)
+    {
+
+        // if (!sorted_items.Contains(item)) { return; }
+        item.OnGrabbed -= handle_on_item_grabbed;
+        if (Capable is Container container) { container.FreeCapable(item.ID); }
+    } */
 }

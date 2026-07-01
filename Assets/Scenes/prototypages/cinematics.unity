@@ -312870,7 +312870,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5332659190726542302}
   - component: {fileID: 7886832290446235743}
-  - component: {fileID: 8905297037771488855}
+  - component: {fileID: 7886832290446235744}
   m_Layer: 5
   m_Name: descriptor
   m_TagString: Untagged
@@ -361531,6 +361531,24 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &7886832290446235744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9255833988561588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d17944320821564bb47262d8d388b22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_UpdateDescriptor
+  name_desc: {fileID: 9021996189971835673}
+  data_desc: {fileID: 6868718881677463766}
+  empty_name: empty
+  empty_data: 
+  log: 0
+  current_slot: {fileID: 0}
 --- !u!1 &7902619540793663717
 GameObject:
   m_ObjectHideFlags: 0
@@ -367514,30 +367532,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8905297037771488855
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9255833988561588}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb91d5656e92bcf4395e14cf76abab8b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  name_desc: {fileID: 9021996189971835673}
-  data_desc: {fileID: 6868718881677463766}
-  empty_name: empty slot
-  empty_data: 
-  log: 0
-  upgrade_descs: []
-  upgrade_prefab: {fileID: 7352443385526347750, guid: 0756902dc5b2d3a4b8cf4a25fbed01b7, type: 3}
-  tier_1_color: {r: 0.5, g: 1, b: 0.5, a: 1}
-  tier_2_color: {r: 0.31372544, g: 0.8666667, b: 0.8784314, a: 1}
-  tier_3_color: {r: 0.5019608, g: 0.5019608, b: 1, a: 1}
-  tier_4_color: {r: 0.9056604, g: 0.89089453, b: 0.4229263, a: 1}
-  tier_X_color: {r: 1, g: 0, b: 0.06387138, a: 1}
 --- !u!1 &8906205880989124540
 GameObject:
   m_ObjectHideFlags: 0

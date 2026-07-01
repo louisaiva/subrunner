@@ -1,6 +1,6 @@
 ﻿{
     "<id>k__BackingField": "printer",
-    "kind": "Capable",
+    "kind": "Printer3D",
     "position": {
         "x": 0.0,
         "y": 0.0
@@ -11,7 +11,10 @@
     },
     "layer": 29,
     "tag": "Untagged",
-    "capacities_ids": [],
+    "capacities_ids": [
+        "print_sorter",
+        "hover"
+    ],
     "anim_data": {
         "skin_kind": "",
         "skin": "printer",
@@ -76,6 +79,23 @@
                 "order_in_layer": 0,
                 "never_flip": true,
                 "follow_duration": false
+            },
+            {
+                "skin": "printer_bloc",
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0003000000142492354
+                },
+                "local_rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "material_name": "objects",
+                "sorting_layer_id": -667374433,
+                "order_in_layer": 0,
+                "never_flip": true,
+                "follow_duration": false
             }
         ],
         "local_position": {
@@ -84,8 +104,18 @@
         }
     },
     "inventory": {
-        "item_pools_data": [],
-        "item_type": 0
+        "item_pools_data": [
+            {
+                "item_type": 2,
+                "stacks_data": [],
+                "pool_id": "stuff",
+                "max_stacks": 12,
+                "min_stacks": 12,
+                "scalable": true,
+                "item_rule": ""
+            }
+        ],
+        "item_type": 2
     },
     "feet_data": {
         "box_colliders": [
@@ -106,7 +136,7 @@
                     "y": 0.2083333283662796
                 },
                 "size": {
-                    "x": 0.75,
+                    "x": 0.9976510405540466,
                     "y": 0.4166666567325592
                 }
             }
@@ -114,5 +144,6 @@
         "circle_colliders": []
     },
     "effects": [],
-    "effects_ttl": []
+    "effects_ttl": [],
+    "contained_capable_ids": []
 }

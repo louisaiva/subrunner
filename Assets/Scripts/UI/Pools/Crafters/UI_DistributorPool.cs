@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class UI_DistributorPool : UI_CraftPool
 {
-
     public UI_ItemPool TicketUI_ItemPool;
 
     // crafter ATTACH / DETACH
@@ -28,14 +27,14 @@ public class UI_DistributorPool : UI_CraftPool
         List<Item> tickets = Controller.Capable.Inventory.GetItemsByRule("other:ticket");
         if (tickets.Count == 0)
         {
-            Debug.LogWarning("(UI_DistributorPool) Could not insert ticket since perso has no ticket !!!".AddColor(Color.magenta));
+            if (log) { Debug.LogWarning("(UI_DistributorPool) Could not insert ticket since perso has no ticket !!!"); }
             return;
         }
         if (!crafter.Inventory.Grab(tickets[0]))
         {
-            Debug.LogWarning("(UI_DistributorPool) Could not insert ticket bcz crafter did not want to :///".AddColor(Color.magenta));
+            Debug.LogError("(UI_DistributorPool) Could not insert ticket bcz crafter did not want to :///".AddColor(Color.magenta));
             return;
         }
-        Debug.Log("(UI_DistributorPool) YAAAAAY we inserted a ticket into the distributor !".AddColor(Color.cyan));
+        if (log) { Debug.Log("(UI_DistributorPool) YAAAAAY we inserted a ticket into the distributor !"); }
     }
 }

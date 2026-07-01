@@ -138,23 +138,24 @@ public class HoverBasedInteractCapacity : InteractCapacity
     // TRIGGER ENTER
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (log_triggers) { Debug.Log($"(HBInteractCapacity) {other.name} JUST ENTER"); }
+
         // we check if the other has a HoverCapacity
         HoverCapacity hover = other.transform.parent.GetComponent<HoverCapacity>();
         if (hover == null) { if (log_triggers) { Debug.Log("(HBInteractCapacity) " + ID + " hovered " + other.name + " but it has no HoverCapacity"); } return; }
 
         // we get the capable of the hover capacity
         Capable interacted_capable = hover.Capable;
-        if (interacted_capable == null) { return; }
-
+        if (interacted_capable == null) { if (log_triggers) { Debug.Log("(HBInteractCapacity) " + ID + " hovered " + other.name + " but it has no capable"); } return; }
+        
         // we check if we can interact with it
-        if (!CanInteractWithCapable(interacted_capable)) { return; }
+        if (!CanInteractWithCapable(interacted_capable)) { if (log_triggers) { Debug.Log("(HBInteractCapacity) " + ID + " hovered " + other.name + " but it can't be interacted by us"); } return; }
         if (hover == closest_hover) { if (log_triggers) { Debug.Log("(HBInteractCapacity) " + ID + " hovered " + interacted_capable.ID + " but it is already hovered"); } return; }
         if (waiting_hovers.Contains(hover)) { if (log_triggers) { Debug.Log("(HBInteractCapacity) " + ID + " hovered " + interacted_capable.ID + " but it is already in the waiting hovers"); } return; }
 
         // we add the capable to the waiting hovers
         waiting_hovers.Add(hover);
-
-        if (log) { Debug.Log("(HBInteractCapacity) " + interacted_capable.ID + " added to waiting hovers"); }
+        if (log || log_triggers) { Debug.Log("(HBInteractCapacity) " + interacted_capable.ID + " added to waiting hovers"); }
     }
     private void OnTriggerExit2D(Collider2D other)
     {

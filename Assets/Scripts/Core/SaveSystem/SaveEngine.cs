@@ -650,6 +650,9 @@ public class SaveEngine : MonoBehaviour
         // DoorData
         else if (GameManager.IsKind(capable_type, typeof(Door))) { data_type = typeof(DoorData); }
 
+        // ContainerData
+        else if (GameManager.IsKind(capable_type, typeof(Container))) { data_type = typeof(ContainerData); }
+
         // no intermediary type -> we give a CapableData, basic
         else { data_type = typeof(CapableData); }
 

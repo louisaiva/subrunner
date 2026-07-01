@@ -401,6 +401,15 @@ public class Inventory : MonoBehaviour, ItemStorer
         return null;
     }
     public List<ItemPool> GetItemPools() { return pools; }
+    public List<Item> GetAllItems()
+    {
+        List<Item> items = new List<Item>();
+        for (int i = 0; i < pools.Count; i++)
+        {
+            items.AddRange(pools[i].GetAllItems());
+        }
+        return items;
+    }
 
 
     // ITEM RULE

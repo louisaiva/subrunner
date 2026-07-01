@@ -18,7 +18,7 @@ public class Distributor : Crafter
     private List<Item> pending_tickets = new List<Item>();
     private void handle_item_grabbed(Item item)
     {
-        Debug.Log("(Distributor) Handle item grabbed : " + item.ID);
+        // Debug.Log("(Distributor) Handle item grabbed : " + item.ID);
 
         if (item.Reference != "other:ticket") { return; }
 
