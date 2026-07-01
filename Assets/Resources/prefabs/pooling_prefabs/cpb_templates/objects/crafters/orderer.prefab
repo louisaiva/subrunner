@@ -10,7 +10,14 @@ GameObject:
   m_Component:
   - component: {fileID: 3672814393807432138}
   - component: {fileID: 5725784018132297263}
-  - component: {fileID: 5578694802621337445}
+  - component: {fileID: 1164563451164692375}
+  - component: {fileID: 2208438912562684295}
+  - component: {fileID: 2699982233853610716}
+  - component: {fileID: 3240163557867738267}
+  - component: {fileID: 6871415521469656607}
+  - component: {fileID: 4273951024477765554}
+  - component: {fileID: 5182482780546974549}
+  - component: {fileID: 4503910097816385106}
   m_Layer: 29
   m_Name: orderer
   m_TagString: Untagged
@@ -26,7 +33,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1492906358488399447}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -53,7 +60,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
   capacity_template_id: hover
   capacity_template_ids: []
---- !u!114 &5578694802621337445
+--- !u!114 &1164563451164692375
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -62,9 +69,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1492906358488399447}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 85650efd26c84714e95384168dcafd04, type: 3}
+  m_Script: {fileID: 11500000, guid: b1ba5d868cabac24498a977af2ac27b5, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Crafter
+  m_EditorClassIdentifier: Assembly-CSharp::Orderer
   data:
     <id>k__BackingField: 
     kind: 
@@ -103,6 +110,132 @@ MonoBehaviour:
   interactors: []
   <is_moving>k__BackingField: 0
   <is_open>k__BackingField: 0
+--- !u!114 &2208438912562684295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1492906358488399447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d15c72b8b8161354a9e97f60d046d2d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TemplateItemPoolReference
+  pool_id: sauce
+  item_type: 2
+  capacity: 1
+  scalable: 0
+  item_rule: food:tomato_sauce
+  items: []
+--- !u!114 &2699982233853610716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1492906358488399447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d15c72b8b8161354a9e97f60d046d2d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TemplateItemPoolReference
+  pool_id: plate
+  item_type: 2
+  capacity: 1
+  scalable: 0
+  item_rule: ingredient:plate_empty
+  items: []
+--- !u!114 &3240163557867738267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1492906358488399447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d15c72b8b8161354a9e97f60d046d2d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TemplateItemPoolReference
+  pool_id: lentils
+  item_type: 2
+  capacity: 1
+  scalable: 0
+  item_rule: food:lentils
+  items: []
+--- !u!114 &6871415521469656607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1492906358488399447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d15c72b8b8161354a9e97f60d046d2d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TemplateItemPoolReference
+  pool_id: fork
+  item_type: 2
+  capacity: 1
+  scalable: 0
+  item_rule: ingredient:fork
+  items: []
+--- !u!114 &4273951024477765554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1492906358488399447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d15c72b8b8161354a9e97f60d046d2d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TemplateItemPoolReference
+  pool_id: beans
+  item_type: 2
+  capacity: 1
+  scalable: 0
+  item_rule: food:beans
+  items: []
+--- !u!114 &5182482780546974549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1492906358488399447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d15c72b8b8161354a9e97f60d046d2d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TemplateItemPoolReference
+  pool_id: pasta
+  item_type: 2
+  capacity: 1
+  scalable: 0
+  item_rule: food:dry_pastas
+  items: []
+--- !u!114 &4503910097816385106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1492906358488399447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d15c72b8b8161354a9e97f60d046d2d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TemplateItemPoolReference
+  pool_id: onion
+  item_type: 2
+  capacity: 1
+  scalable: 0
+  item_rule: food:onion
+  items: []
 --- !u!1 &2941372261379440021
 GameObject:
   m_ObjectHideFlags: 0

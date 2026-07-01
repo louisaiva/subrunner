@@ -1,6 +1,6 @@
 ﻿{
     "<id>k__BackingField": "orderer",
-    "kind": "Crafter",
+    "kind": "Orderer",
     "position": {
         "x": 0.0,
         "y": 0.0
@@ -99,8 +99,72 @@
         }
     },
     "inventory": {
-        "item_pools_data": [],
-        "item_type": 0
+        "item_pools_data": [
+            {
+                "item_type": 2,
+                "stacks_data": [],
+                "pool_id": "sauce",
+                "max_stacks": 1,
+                "min_stacks": 1,
+                "scalable": false,
+                "item_rule": "food:tomato_sauce"
+            },
+            {
+                "item_type": 2,
+                "stacks_data": [],
+                "pool_id": "plate",
+                "max_stacks": 1,
+                "min_stacks": 1,
+                "scalable": false,
+                "item_rule": "ingredient:plate_empty"
+            },
+            {
+                "item_type": 2,
+                "stacks_data": [],
+                "pool_id": "lentils",
+                "max_stacks": 1,
+                "min_stacks": 1,
+                "scalable": false,
+                "item_rule": "food:lentils"
+            },
+            {
+                "item_type": 2,
+                "stacks_data": [],
+                "pool_id": "fork",
+                "max_stacks": 1,
+                "min_stacks": 1,
+                "scalable": false,
+                "item_rule": "ingredient:fork"
+            },
+            {
+                "item_type": 2,
+                "stacks_data": [],
+                "pool_id": "beans",
+                "max_stacks": 1,
+                "min_stacks": 1,
+                "scalable": false,
+                "item_rule": "food:beans"
+            },
+            {
+                "item_type": 2,
+                "stacks_data": [],
+                "pool_id": "pasta",
+                "max_stacks": 1,
+                "min_stacks": 1,
+                "scalable": false,
+                "item_rule": "food:dry_pastas"
+            },
+            {
+                "item_type": 2,
+                "stacks_data": [],
+                "pool_id": "onion",
+                "max_stacks": 1,
+                "min_stacks": 1,
+                "scalable": false,
+                "item_rule": "food:onion"
+            }
+        ],
+        "item_type": 2
     },
     "feet_data": {
         "box_colliders": [
