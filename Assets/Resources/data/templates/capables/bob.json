@@ -109,10 +109,21 @@
                 "priority": 8,
                 "capacity_playing": "",
                 "capacities": [
-                    "die"
+                    "eat_sit_1",
+                    "eat_sit_2",
+                    "eat_sit_3"
                 ],
                 "lock_orientation": true,
                 "one_shot": true
+            },
+            {
+                "priority": 9,
+                "capacity_playing": "",
+                "capacities": [
+                    "die"
+                ],
+                "lock_orientation": true,
+                "one_shot": false
             }
         ],
         "current_capacity": "",

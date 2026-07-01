@@ -240,6 +240,24 @@ public class UI_TimelineCapableCaller : MonoBehaviour
     }
 
 
+    // PASTA
+    public async void EatPastas()
+    {
+        if (capable == null) { Debug.LogError("(UI_TimelineCapableCaller) No capable connected"); return; }
+        capable.AnimPlayer.Play("eat_sit_1");
+        while (capable.AnimPlayer.IsPlaying("eat_sit_1")) { await System.Threading.Tasks.Task.Yield(); }
+        capable.AnimPlayer.Play("eat_sit_1");
+        while (capable.AnimPlayer.IsPlaying("eat_sit_1")) { await System.Threading.Tasks.Task.Yield(); }
+        capable.AnimPlayer.Play("eat_sit_1");
+        while (capable.AnimPlayer.IsPlaying("eat_sit_1")) { await System.Threading.Tasks.Task.Yield(); }
+        capable.AnimPlayer.Play("eat_sit_2");
+        while (capable.AnimPlayer.IsPlaying("eat_sit_2")) { await System.Threading.Tasks.Task.Yield(); }
+        capable.AnimPlayer.Play("eat_sit_2");
+        while (capable.AnimPlayer.IsPlaying("eat_sit_2")) { await System.Threading.Tasks.Task.Yield(); }
+        capable.AnimPlayer.Play("eat_sit_3");
+        while (capable.AnimPlayer.IsPlaying("eat_sit_3")) { await System.Threading.Tasks.Task.Yield(); }
+    }
+
 
     // SIT
     public void SitOnSofa(GameObject sofa_caller_go)

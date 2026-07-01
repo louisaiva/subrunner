@@ -475,9 +475,17 @@ MonoBehaviour:
   - priority: 5
     capacity_playing: 
     capacities:
-    - die
+    - eat_sit_1
+    - eat_sit_2
+    - eat_sit_3
     lock_orientation: 1
     one_shot: 1
+  - priority: 5
+    capacity_playing: 
+    capacities:
+    - die
+    lock_orientation: 1
+    one_shot: 0
   never_flip: 0
   log: 0
   log_orientation: 0

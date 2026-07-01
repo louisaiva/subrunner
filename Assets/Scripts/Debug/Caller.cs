@@ -15,6 +15,7 @@ public class Caller : MonoBehaviour
     public void SwitchToHUD() => UI_Manager.Instance?.SwitchToHUD();
     public void SwitchForceToHUD() => UI_Manager.Instance?.SwitchToHUD(force: true);
     public void SwitchTo(string ui_pool) => UI_Manager.Instance?.SwitchTo(ui_pool);
+    public void SwitchForceTo(string ui_pool) => UI_Manager.Instance?.SwitchTo(ui_pool, force:true);
     public void StackPool(string ui_pool) => UI_Manager.Instance?.StackPool(ui_pool);
     public void UnstackCurrentPool() => UI_Manager.Instance?.UnstackCurrentPool();
     public void CancelPool() => UI_Manager.Instance?.CancelCurrentPool();

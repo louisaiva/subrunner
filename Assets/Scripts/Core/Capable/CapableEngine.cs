@@ -222,6 +222,11 @@ public class CapableEngine : BSOD_System<CapableEngine>
         List<CapableData> world_capables = world_save.capables;
         foreach (CapableData data in world_capables)
         {
+            if (world_capables_data.ContainsKey(data.id))
+            {
+                Debug.LogWarning($"(CapableEngine) '{data.id}' of type {data.GetType().Name} was already added ! we skip it : \n{data.GetDetails()}");
+                continue;
+            }
             if (log_awake_data_extended) { Debug.Log($"(CapableEngine) Loading capable data for '{data.id}' of type {data.GetType().Name}: \n{data.GetDetails()}"); }
             world_capables_data.Add(data.id, data);
             add_to_cached_kind_dict(data);

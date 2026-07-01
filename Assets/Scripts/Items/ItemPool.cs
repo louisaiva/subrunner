@@ -265,7 +265,12 @@ public class ItemPool : MonoBehaviour, ItemStorer
         for (int i = 0; i < stacks.Count; i++)
         {
             ItemStack stack = stacks[i];
-            ItemStackData stack_data = new ItemStackData() { items_ids = stack.Items.Select(item => item.data.id).ToList() };
+            ItemStackData stack_data = new ItemStackData() { items_ids = new List<string>() };
+            foreach (Item item in stack.Items)
+            {
+                if (item == null) { continue; }
+                stack_data.items_ids.Add(item.ID);
+            }
             data.stacks_data.Add(stack_data);
         }
 

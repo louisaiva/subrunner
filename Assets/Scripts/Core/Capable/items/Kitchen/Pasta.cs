@@ -9,8 +9,8 @@ public class Pasta : Item
         if (Reference != "food:pastas") { base.OnInteract(interactor); return; }
         if (interactor != Controller.Capable) { base.OnInteract(interactor); return; }
         
-        // todo : here we can launch the final cutscene !
         Debug.Log($"(Pasta) {ID} was interact by {interactor.ID} :D");
+        outro_cutscene();
     }
 
     public void LoadHover()
@@ -23,6 +23,16 @@ public class Pasta : Item
         hc.HoverCollider.name = "pasta_collider";
 
         this._grabbed = false;
+    }
+
+    private void outro_cutscene()
+    {
+        UI_Manager.Instance.GetPool<UI_CinematicPool>()?.PlayCinematic("outro");
+        World.LazyInstance.data.story_data.ate_pasta = true;
+        Debug.Log("(World - Cinematics) Playing intro cinematics");
+
+        // despawn this capable
+        CapableEngine.LazyInstance.DespawnCapable(this.data);
     }
 
 }
