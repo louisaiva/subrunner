@@ -259,6 +259,15 @@ public class CapableEngine : BSOD_System<CapableEngine>
         return new_hash;
         
     }
+    private void remove_runtime_id(string id)
+    {
+        if (string.IsNullOrEmpty(id)) { return; }
+
+        // If already assigned, return existing value
+        if (!capables_hashs_by_ids.TryGetValue(id, out int hash)) { return; }
+        capables_ids_by_hash.Remove(hash);
+        capables_hashs_by_ids.Remove(id);
+    }
     private void add_to_cached_kind_dict(CapableData data)
     {
         // first we convert type
@@ -695,10 +704,10 @@ public class CapableEngine : BSOD_System<CapableEngine>
         }
 
         // remove it from the world_data dict
-        // todo : world_capables_data.Remove(cdata.id);
-        // todo : remove_from_cached_kind_dict(cdata);
-        // World.Instance.UnregisterUniqueID(cdata.id);
-        // ? should we clean as well hashes by id & etc ?
+        world_capables_data.Remove(cdata.id);
+        remove_from_cached_kind_dict(cdata);
+        remove_runtime_id(cdata.id);
+        World.Instance.UnregisterUniqueID(cdata.id);
     }
 
     // ITEMS EVENTS
