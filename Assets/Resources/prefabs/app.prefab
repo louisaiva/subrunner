@@ -352,7 +352,7 @@ MonoBehaviour:
     prefab: {fileID: 6380900198815103699, guid: 2baa7802f4276084ca0d0e717d371fad, type: 3}
   - binding: back
     prefab: {fileID: 6380900198815103699, guid: bd5a57588e15d8249a6b4683beb1dca8, type: 3}
-  - binding: esc
+  - binding: escape
     prefab: {fileID: 6380900198815103699, guid: 167d8c9cd91520d4992c267305cc35da, type: 3}
   - binding: enter
     prefab: {fileID: 6380900198815103699, guid: aa0fe22ae6436384da4a2a475a23b227, type: 3}
@@ -385,6 +385,8 @@ MonoBehaviour:
     prefab: {fileID: 7812301186420496611, guid: 44ecfd6c9430d814cb017d42913f3113, type: 3}
   - binding: rightStick
     prefab: {fileID: 7812301186420496611, guid: b45e0e02d5a5f8d4ca1493f18e855a64, type: 3}
+  - binding: rightStick/y
+    prefab: {fileID: 7812301186420496611, guid: b45e0e02d5a5f8d4ca1493f18e855a64, type: 3}
   - binding: dpad/left
     prefab: {fileID: 6380900198815103699, guid: 2713403951078274c83101b13bd7db6a, type: 3}
   - binding: dpad/right
@@ -405,6 +407,7 @@ MonoBehaviour:
     prefab: {fileID: 6380900198815103699, guid: 9f706e51ebf7e004d8cfea42624ba102, type: 3}
   - binding: start
     prefab: {fileID: 6380900198815103699, guid: 460a9c12e8b59594aade722a1ce9abc7, type: 3}
+  then_prefab: {fileID: 8830998502573575478, guid: e2fb1023943a6d04b85de73a37ed029e, type: 3}
   icons:
   - binding: a
     icon: {fileID: -1121951427, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
@@ -479,7 +482,8 @@ MonoBehaviour:
   - binding: 9
     icon: {fileID: 649449379, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
   key_prefab: {fileID: 6380900198815103699, guid: 609aea6603e0fd54996bd2806f7d0226, type: 3}
-  log_dynamic_bindings: 1
+  log_dynamic_bindings: 0
+  log_kb: 0
 --- !u!1 &3811816626350204236
 GameObject:
   m_ObjectHideFlags: 0
@@ -1695,9 +1699,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5f1b07901738c24fb332d6561c9756c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsQuitting: 0
   LoadedSceneCount: 0
-  prototype: EcoSystem & NestCapacity
+  prototype: distributor, orderer & printer
   log: 0
   log_stats: 0
 --- !u!114 &714515157948744320

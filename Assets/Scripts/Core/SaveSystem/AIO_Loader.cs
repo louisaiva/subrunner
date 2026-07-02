@@ -152,6 +152,10 @@ public class AIO_Loader : MonoBehaviour
         new_room.gameObject.name = data.id;
         log_loading.LogVerySpecific($"Room '{data.id}' basic data loaded");
 
+        // load the lights
+        log_loading.LogVerySpecific($"Loading lights");
+        ChunkEngine.Instance.LightsEngine.LoadLights_AIO(data.lights_data, data.id, new_room.LightsParent);
+
         // build the tilemaps
         log_loading.LogVerySpecific($"Loading its tilemaps");
         RoomEngine.Instance.TilemapEngine.BuildTilemapsForAIO_Room(new_room);
@@ -185,31 +189,26 @@ public class AIO_Loader : MonoBehaviour
     private Chunk load_chunk(ChunkData data, Transform parent)
     {
         // we instanciate a new room and assign the data to it
-        Chunk new_room = Instantiate(chunk_prefab, parent);
+        Chunk new_chunk = Instantiate(chunk_prefab, parent);
 
         // load the data
-        new_room.data = data;
-        new_room.gameObject.name = data.id;
-        new_room.transform.position = data.position;
+        new_chunk.data = data;
+        new_chunk.gameObject.name = data.id;
+        new_chunk.transform.position = data.position;
 
         // load the colliders in the composite collider
-        new_room.ChunkCollider.SetPath(0, data.collider_points.ToArray());
-        new_room.ChunkCollider.enabled = true;
+        new_chunk.ChunkCollider.SetPath(0, data.collider_points.ToArray());
+        new_chunk.ChunkCollider.enabled = true;
 
-        log_loading.LogVerySpecific($"Room '{data.id}' basic data loaded + colliders");
-
-
-        // load the lights
-        log_loading.LogVerySpecific($"Loading its lights");
-        ChunkEngine.Instance.LightsEngine.LoadLights_AIO(data.lights_data, data.id, new_room.LightsParent);
+        log_loading.LogVerySpecific($"Chunk '{data.id}' basic data loaded + colliders");
 
         // if add_roomgraph_neighbour_node is true, we add a node for each neighbour of the room in the roomgraph
         log_loading.LogVerySpecific(add_roomgraph_neighbour_node, $"Adding neighbour node");
-        if (add_roomgraph_neighbour_node) { Instantiate(neighbour_node_prefab, new_room.transform); }
+        if (add_roomgraph_neighbour_node) { Instantiate(neighbour_node_prefab, new_chunk.transform); }
 
-        log_loading.LogVerySpecific($"Room '{data.id}' loaded successfully with its tilemaps and lights !");
+        log_loading.LogVerySpecific($"Chunk '{data.id}' loaded successfully with its tilemaps and lights !");
         loaded_rooms.Add(data.id);
-        return new_room;
+        return new_chunk;
     }
 
 

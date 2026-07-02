@@ -7,6 +7,9 @@ using UnityEngine;
     [field: SerializeField] public string id { get; set; }
     public List<string> chunks_ids;
 
+    // lights management
+    public List<LightData> lights_data;
+    
     // tilemaps data
     public string[] tilebases_names;
     public BoundsIntData ceiling_bounds;

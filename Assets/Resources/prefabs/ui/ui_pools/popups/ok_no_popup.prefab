@@ -1046,6 +1046,7 @@ MonoBehaviour:
   log_starting_slot: 0
   slots_parents:
   - {fileID: 4412303083459548123}
+  deep_search: 0
 --- !u!114 &5586907238638256655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2043,8 +2044,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 28
-  m_fontSizeBase: 28
+  m_fontSize: 24
+  m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2053,7 +2054,7 @@ MonoBehaviour:
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
-  m_characterSpacing: 0
+  m_characterSpacing: 12
   m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0

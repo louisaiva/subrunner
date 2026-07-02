@@ -24,7 +24,7 @@ using UnityEditor;
 public class AppManager : MonoBehaviour
 {
     public static AppManager Instance { get; private set; }
-    public bool IsQuitting = false;
+    public static bool IsQuitting = false;
     public int LoadedSceneCount = 0;
 
 

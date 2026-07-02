@@ -103,11 +103,32 @@ public class UI_PanelManager : MonoBehaviour
         if (currentPanel == null) { Debug.LogError($"(UI_PanelManager) Current panel not found: {CurrentPanel}"); return; }
 
         // get next panel
-        UI_Panel targetPanel = null;
         int next_index = panels.IndexOf(currentPanel) - direction;
         next_index = Mathf.Clamp(next_index, 0, panels.Count - 1);
-        targetPanel = panels[next_index];
+        UI_Panel targetPanel = panels[next_index];
         if (targetPanel == currentPanel) { return; } // we are already on/moving to the target panel
+
+        // check if target panel is active in hierarchy
+        if (!targetPanel.gameObject.activeInHierarchy)
+        {
+            // here we need to go back from the target panel in the opposite direction of direction, and target the first active panel we
+            // find. if we go back until currentPanel, we do nothing
+            for (int i=0; i<direction; i++)
+            {
+                next_index += Mathf.Sign(direction) > 0f ? 1 : -1;
+                next_index = Mathf.Clamp(next_index, 0, panels.Count - 1);
+                UI_Panel next_panel = panels[next_index];
+                if (next_panel == targetPanel)
+                {
+                    Debug.LogError("(UI_PanelManager) scrolling in the wrong direction !");
+                    return;
+                }
+                if (next_panel == currentPanel) { return; }
+                if (!next_panel.gameObject.activeInHierarchy) { continue; }
+                targetPanel = next_panel;
+                break;
+            }
+        }
 
         if (log) { Debug.Log($"(UI_PanelManager) Rolling : {currentPanel.name} --> {targetPanel.name}"); }
 

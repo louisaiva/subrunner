@@ -48,7 +48,15 @@ public class InputSwitcher : MonoBehaviour
     }
     public void AddIF(GameObject IF, bool gamepad = true)
     {
-        if (gamepad) { gmpds.Add(IF); }
-        else { kbs.Add(IF); }
+        if (gamepad)
+        {
+            gmpds.Add(IF);
+            IF.SetActive(InputManager.Instance.UsingGamepad);
+        }
+        else
+        {
+            kbs.Add(IF);
+            IF.SetActive(!InputManager.Instance.UsingGamepad);
+        }
     }
 }

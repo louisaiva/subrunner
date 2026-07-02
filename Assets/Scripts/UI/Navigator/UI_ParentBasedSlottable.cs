@@ -51,6 +51,8 @@ public class UI_ParentBasedSlottable : UI_Slottable
             // Debug.Log("Checking slot : " + slots[i].name);
             if (slots[i] == null) { continue; }
             if (slots[i].gameObject.activeSelf == false) { continue; }
+            if (!slots[i].gameObject.activeInHierarchy) { continue; }
+            if (slots[i].gameObject.layer != LayerMask.NameToLayer("UI_Slot")) { continue; }
             if (slots[i].Disabled) { continue; }
             active_slots.Add(slots[i]);
         }

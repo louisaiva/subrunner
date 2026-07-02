@@ -36,7 +36,7 @@ using UnityEngine;
     
 
     // lights management
-    public List<LightData> lights_data;
+    // public List<LightData> lights_data;
 
     // Events
     [RuntimeOnly] public Action<ChunkData> OnChunkLoaded;
@@ -53,7 +53,7 @@ using UnityEngine;
         details += $"  - capables : {(capables_ids != null ? capables_ids.Count : 0)} capables\n";
         details += $"  - movables : {(movables_ids != null ? movables_ids.Count : 0)} movables\n";
         details += $"  - colliders : {(collider_points != null ? collider_points.Count : 0)} points\n";
-        details += $"  - lights : {(lights_data != null ? lights_data.Count : 0)} lights\n";
+        // details += $"  - lights : {(lights_data != null ? lights_data.Count : 0)} lights\n";
         return details;
     }
 
@@ -69,12 +69,12 @@ using UnityEngine;
             neighbours_ids = new List<string>(this.neighbours_ids),
             capables_ids = new List<string>(this.capables_ids),
             movables_ids = new List<string>(this.movables_ids),
-            lights_data = new List<LightData>()
+            // lights_data = new List<LightData>()
         };
-        foreach (LightData light in this.lights_data)
-        {
-            duplicate.lights_data.Add(light.Duplicate());
-        }
+        // foreach (LightData light in this.lights_data)
+        // {
+            // duplicate.lights_data.Add(light.Duplicate());
+        // }
         return duplicate;
     }
 

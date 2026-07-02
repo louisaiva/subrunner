@@ -235,7 +235,7 @@ public class DoorEngine : MonoBehaviour
         RoomEngine.Instance.ShowTilemaps(room_data);
 
         // show the lights
-        ChunkEngine.Instance.LightsEngine.ShowLights(room_data.chunks_ids);
+        ChunkEngine.Instance.LightsEngine.ShowLights(room_data);
 
         // if none of the chunks of the room are loaded, we can't show the capable anyway so we return early
         // ! maybe we still need to show the doors even if the chunk is not loaded ???
@@ -292,7 +292,7 @@ public class DoorEngine : MonoBehaviour
         RoomEngine.Instance.HideTilemaps(room_data); // hide the tilemaps
 
         // hide the lights
-        ChunkEngine.Instance.LightsEngine.HideLights(room_data.chunks_ids);
+        ChunkEngine.Instance.LightsEngine.HideLights(room_data);
 
         // if none of the chunks of the room are loaded, no need to hide the capables since they are not loaded either
         if (!RoomEngine.Instance.IsRoomLoaded(room_data)) { return; } 

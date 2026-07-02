@@ -18,21 +18,15 @@ MonoBehaviour:
     inputed_color: {r: 0.90588236, g: 0.45882353, b: 0.89411765, a: 1}
     prefabs:
     - {fileID: 7002321450701441238, guid: 42664570f8cbd354ebfaa9267cb4860f, type: 3}
-  kb_R_plan:
-  - label_text: exit sofa
-    base_color: {r: 1, g: 1, b: 1, a: 1}
-    inputed_color: {r: 1, g: 0, b: 0.06387138, a: 1}
-    prefabs:
-    - {fileID: 5073313702871382076, guid: 609aea6603e0fd54996bd2806f7d0226, type: 3}
+    actions:
+    - UI/mouse_delta
+  kb_R_plan: []
   gmpd_L_plan:
   - label_text: navigate
     base_color: {r: 1, g: 1, b: 1, a: 1}
     inputed_color: {r: 0.90588236, g: 0.45882353, b: 0.89411765, a: 1}
     prefabs:
     - {fileID: 5896076262160305960, guid: 44ecfd6c9430d814cb017d42913f3113, type: 3}
-  gmpd_R_plan:
-  - label_text: exit sofa
-    base_color: {r: 1, g: 1, b: 1, a: 1}
-    inputed_color: {r: 1, g: 0, b: 0.06387138, a: 1}
-    prefabs:
-    - {fileID: 5073313702871382076, guid: 6d3ab8603848ff843a5ab7dcdb01a47d, type: 3}
+    actions:
+    - UI/navigate
+  gmpd_R_plan: []

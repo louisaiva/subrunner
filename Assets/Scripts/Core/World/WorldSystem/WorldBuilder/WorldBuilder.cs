@@ -101,6 +101,16 @@ public class WorldBuilder : MonoBehaviour
     {
         slog?.Log($"SaveLevel called for level '{level_id}'");
 
+
+        // we can then make rooms grab their capables
+        /* slog?.LogExtended($"Making rooms grab capables");
+        ChunkEngine.MakeChunksGrabCapables(chunks.ToArray(), only_capables: false, log_chunk_grabbing);
+
+
+        // and finally we make the level regrab all its rooms
+        slog?.LogExtended($"Making level grab static rooms");
+        level.GrabStaticRooms(built_level.RoomChunks.Keys.ToList()); */
+
         // check if we have the built level in cache,
         if (!LazyInstance.built_levels_cache.TryGetValue(level_id, out Level cached_level))
         {

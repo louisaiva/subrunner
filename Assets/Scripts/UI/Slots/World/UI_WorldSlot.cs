@@ -12,7 +12,7 @@ public class UI_WorldSlot : UI_EventButton, Descriptable
     [SerializeField] private TextMeshProUGUI name_text;
 
     // INITIALIZATION & DESTRUCTION
-    public void Initialize(WorldDataHelper world_data)
+    public void Initialize(WorldDataHelper world_data, string id = null)
     {
         this.whelper = world_data;
 
@@ -23,7 +23,7 @@ public class UI_WorldSlot : UI_EventButton, Descriptable
         if (icon_sprite != null) { btn_icon.sprite = icon_sprite; }
         btn_icon.color = wdata.color;
         this.baseColor = wdata.color;
-        name_text.text = wdata.id;
+        name_text.text = !string.IsNullOrEmpty(id) ? id : wdata.id;
     }
 
     // CLICK HANDLER

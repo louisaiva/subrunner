@@ -393,7 +393,7 @@ public class UI_Navigator : Singleton<UI_Navigator>
         await System.Threading.Tasks.Task.Yield();
 
         // verify that we still are enabled
-        if (AppManager.Instance.IsQuitting) { return; }
+        if (AppManager.IsQuitting) { return; }
 
         // on navigue vers le slot le plus proche
         // Navigator.NavigateToClosest(position, favorised_type: navigating_to_closest_slot_type, unwanted_types: unwanted_types);
@@ -429,10 +429,17 @@ public class UI_Navigator : Singleton<UI_Navigator>
         await System.Threading.Tasks.Task.Yield();
 
         // on navigue vers le slot le plus proche (seulement si c pas null ni disabled parce que sinon handle_slot_disabled_while_hovering a été appelé)
-        if (slot != null && !slot.Disabled)
+        /* if (slot != null && !slot.Disabled)
         {
             if (log_inputs) { Debug.Log("(UI_Navigator - OnDrop) Navigating to closest after drop"); }
             Navigator.NavigateToClosest(position, favorised_type: navigating_to_closest_slot_type, unwanted_types: unwanted_types);
+        } */
+
+        // on enable le current slot si c'est toujours le même
+        if (slot != null && !slot.Disabled)
+        {
+            if (log_inputs) { Debug.Log("(UI_Navigator - OnDrop) Re-hovering slot after drop"); }
+            slot.OnPointerEnter(null);
         }
 
         // on refresh les item pools de l'inventory menu

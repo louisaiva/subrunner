@@ -25,25 +25,6 @@ public class Chunk : MonoBehaviour
         }
     }
 
-    private Transform _lights_parent;
-    public Transform LightsParent
-    {
-        get
-        {
-            if (_lights_parent == null)
-            {
-                _lights_parent = transform.Find("Lights");
-                if (_lights_parent == null)
-                {
-                    GameObject lights_go = new GameObject("Lights");
-                    lights_go.transform.SetParent(transform);
-                    _lights_parent = lights_go.transform;
-                }
-            }
-            return _lights_parent;
-        }
-    }
-
     // LOAD / UNLOAD
     public void LoadData(ChunkData data)
     {
@@ -54,12 +35,6 @@ public class Chunk : MonoBehaviour
         // load the colliders in the composite collider
         ChunkCollider.SetPath(0, data.collider_points.ToArray());
         ChunkCollider.enabled = true;
-
-        // load the lights
-        ChunkEngine.Instance.LightsEngine.LoadLights(data.lights_data, data.id);
-
-        // show the tilemaps
-        // RoomEngine.DoorEngine.ShowRoom(data.room_id);
 
         // here we need to load all the capables that we hold in data.capables_ids
         if ((data.capables_ids != null && data.capables_ids.Count > 0) || (data.movables_ids != null && data.movables_ids.Count > 0))
@@ -123,8 +98,6 @@ public class Chunk : MonoBehaviour
             capables_ids = data.capables_ids ?? new List<string>(),
             movables_ids = data.movables_ids ?? new List<string>(),
 
-            // set lights data
-            lights_data = get_static_light_data(),
         };
 
         return new_data;
@@ -142,31 +115,6 @@ public class Chunk : MonoBehaviour
         if (data == null) { return name; }
         if (string.IsNullOrEmpty(data.id)) { return name; }
         return data.id;
-    }
-    protected List<LightData> get_static_light_data()
-    {
-        List<LightData> lights_data = new List<LightData>();
-        if (LightsParent == null) { return lights_data; }
-
-        // we go through our LightsTransform
-        foreach (Transform light_transform in LightsParent)
-        {
-            // we get the Light2D component on it
-            Light2D light = light_transform.GetComponent<Light2D>();
-            if (light == null) { continue; }
-
-            // we create a new LightData with the data of the visu and we add it to the list
-            LightData light_data = new LightData()
-            {
-                position = light.transform.position,
-                color = light.color,
-                intensity = light.intensity,
-                radius = new Vector2(light.pointLightInnerRadius, light.pointLightOuterRadius),
-                falloff = light.falloffIntensity,
-            };
-            lights_data.Add(light_data);
-        }
-        return lights_data;
     }
     protected List<Vector2> get_static_collider_points()
     {
@@ -229,7 +177,7 @@ public class Chunk : MonoBehaviour
     protected virtual void OnTriggerExit2D(Collider2D collider)
     {
         if (data == null) { return; }
-        if (AppManager.Instance.IsQuitting) { return; }
+        if (AppManager.IsQuitting) { return; }
         // if (GameManager.IsClosingGame) { return; }
         if (ChunkEngine.Instance == null) { return; }
         if (_unloading) { return; } // if we are unloading the room we don't want any trigger event

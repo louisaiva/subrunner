@@ -55,36 +55,35 @@ public class FeedbackPoolBuilder : MonoBehaviour
         if (log) { Debug.Log("(FeedbackPoolBuilder) Building Feedback Pool from schematic : " + pool_schematic.name); }
 
         // keyboard left column
-        buildColumn(pool_schematic.kb_L_plan, kb_col_L, is_left: true);
+        buildColumn(pool_schematic.kb_L_plan, kb_col_L, is_left: true, is_kb: true);
         if (log) { Debug.Log($"(FeedbackPoolBuilder) [{pool_schematic.name}] Built keyboard left column : {pool_schematic.kb_L_plan.Count} rows"); }
 
         // keyboard right column
-        buildColumn(pool_schematic.kb_R_plan, kb_col_R, is_left: false);
+        buildColumn(pool_schematic.kb_R_plan, kb_col_R, is_left: false, is_kb: true);
         if (log) { Debug.Log($"(FeedbackPoolBuilder) [{pool_schematic.name}] Built keyboard right column : {pool_schematic.kb_R_plan.Count} rows"); }
         // gamepad left column
-        buildColumn(pool_schematic.gmpd_L_plan, gmpd_col_L, is_left: true);
+        buildColumn(pool_schematic.gmpd_L_plan, gmpd_col_L, is_left: true, is_kb: false);
         if (log) { Debug.Log($"(FeedbackPoolBuilder) [{pool_schematic.name}] Built gamepad left column : {pool_schematic.gmpd_L_plan.Count} rows"); }
 
         // gamepad right column
-        buildColumn(pool_schematic.gmpd_R_plan, gmpd_col_R, is_left: false);
+        buildColumn(pool_schematic.gmpd_R_plan, gmpd_col_R, is_left: false, is_kb: false);
         if (log) { Debug.Log($"(FeedbackPoolBuilder) [{pool_schematic.name}] Built gamepad right column : {pool_schematic.gmpd_R_plan.Count} rows"); }
     }
 
     // BUILD COLUMN & ROWS
-    protected void buildColumn(List<FeedbackRowSchematic> column_plan, Transform column_transform, bool is_left)
+    protected void buildColumn(List<FeedbackRowSchematic> column_plan, Transform column_transform, bool is_left, bool is_kb)
     {
         // we build the column row per row
         for (int r = 0; r < column_plan.Count; r++)
         {
             FeedbackRowSchematic row_schem = column_plan[r];
-            GameObject row_go = create_row_go(row_schem, column_transform, is_left);
+            GameObject row_go = create_row_go(row_schem, column_transform, is_left, is_kb);
             row_go.name = $"row_{row_schem.label_text}";
         }
     }
-    protected GameObject create_row_go(FeedbackRowSchematic row_schem, Transform parent_transform, bool is_left)
+    protected GameObject create_row_go(FeedbackRowSchematic row_schem, Transform parent_transform, bool is_left, bool is_kb)
     {
-        // we get the game object list
-        List<GameObject> IFs = row_schem.prefabs;
+        List<string> actions = row_schem.actions;
 
         // we create the row GameObject
         GameObject row_go = Instantiate(is_left ? left_row_prefab : right_row_prefab, parent_transform);
@@ -97,15 +96,45 @@ public class FeedbackPoolBuilder : MonoBehaviour
         label.text = row_schem.label_text;
         UI_Colorer label_colorer = label.GetComponent<UI_Colorer>();
 
+        string action_name;
+        string kb_ref = "";
+        string gm_ref = "";
+
         // we instantiate the IFs
-        for (int i = 0; i < IFs.Count; i++)
+        for (int i = 0; i < actions.Count; i++)
         {
-            GameObject IF_go = Instantiate(IFs[i], row_go.transform);
-            IF_go.transform.localScale = Vector3.one;
+            action_name = actions[i];
+            if (action_name == "then")
+            {
+                GameObject then = InputManager.Instance.IF_Bank.InstanciateThen(row_go.transform);
+                then.transform.localScale = Vector3.one;
+                then.GetComponent<RectTransform>().sizeDelta = new Vector2(50f, 50f);
+                continue;
+            }
+            if (string.IsNullOrEmpty(action_name))
+            {
+                Debug.LogError("(IFB) empty action_name on " + pool_schematic.name + " in row with label " + row_schem.label_text + $" (gamepad ? {!is_kb})");
+                continue;
+            }
+
+            // we get the binding names of the action
+            InputManager.Instance.GetActionBindingForAction(action_name, ref kb_ref, ref gm_ref);
+
+            string if_ref = is_kb ? kb_ref : gm_ref;
+            if (string.IsNullOrEmpty(if_ref))
+            {
+                Debug.LogError("(IFB) empty binding on action " + action_name + " on pool " + pool_schematic.name + " in row with label " + row_schem.label_text + $" (gamepad ? {!is_kb})");
+                continue;
+            }
+
+            // GameObject IF_go = Instantiate(IFs[i], row_go.transform);
+            InputFeedback IF = InputManager.Instance.IF_Bank.Instantiate(if_ref, row_go.transform, gamepad: !is_kb);
+            IF.transform.localScale = Vector3.one;
+            IF.GetComponent<RectTransform>().sizeDelta = new Vector2(50f,50f);
 
             // apply the label colorer to the IF_go too
-            Colorant colorant = IF_go.GetComponent<Colorant>();
-            if (colorant != null)
+            // Colorant colorant = IF.GetComponent<Colorant>();
+            if (IF.GetComponent<Colorant>() is Colorant colorant)
             {
                 colorant.Colorers.Add(label_colorer);
                 colorant.SetColors(row_schem.base_color, row_schem.inputed_color);

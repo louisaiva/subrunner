@@ -77,6 +77,7 @@ public class Crafter : Capable, Openable, Chestable
     }
     protected virtual void hide_ui_pool()
     {
+        if (AppManager.IsQuitting) { return; }
         if (string.IsNullOrEmpty(UI_PoolName)) { return; }
         UI_CraftPool pool = UI_Manager.Instance.GetPool(UI_PoolName) as UI_CraftPool;
         if (pool == null)

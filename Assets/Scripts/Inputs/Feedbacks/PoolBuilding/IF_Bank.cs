@@ -9,6 +9,9 @@ public class IF_Bank : MonoBehaviour
     public List<IF_Prefab> kb_prefabs;
     public List<IF_Prefab> gm_prefabs;
 
+    [Header("Specific prefabs")]
+    public GameObject then_prefab;
+
     [Header("Keyboard dynamically generated IFs icons")]
     public List<IF_Icon> icons;
     public InputFeedback key_prefab;
@@ -16,6 +19,7 @@ public class IF_Bank : MonoBehaviour
 
     [Header("Logs")]
     [SerializeField] private bool log_dynamic_bindings = false;
+    [SerializeField] private bool log_kb = false;
 
 
     private List<string> dynamic_kb_bindings = new List<string>
@@ -63,7 +67,7 @@ public class IF_Bank : MonoBehaviour
         if (gamepad == false)
         {
             prefab = GetKeyboardIF(binding);
-            if (prefab != null) { return instantiate_and_anchor(prefab, parent); }
+            if (prefab != null) { return instantiate_and_anchor(prefab.gameObject, parent).GetComponent<InputFeedback>(); }
 
             // here we may want a dynamic input feedback
             if (!dynamic_actions.TryGetValue(binding, out InputAction action))
@@ -71,19 +75,19 @@ public class IF_Bank : MonoBehaviour
                 Debug.LogError($"(IF_Bank) Tried to instantiate a keyboard IF for binding '{binding}' but could not found existing KB or dynamically generated one...");
                 return null;
             }
-            ef = instantiate_and_anchor(key_prefab, parent);
+            ef = instantiate_and_anchor(key_prefab.gameObject, parent).GetComponent<InputFeedback>();
             ef.InitializeWithAction(action);
             ef.transform.Find("icon").GetComponent<Image>().sprite = get_icon(bind:binding);
             return ef;
         }
 
         prefab = GetGamepadIF(binding);
-        ef = instantiate_and_anchor(prefab,parent);
+        ef = instantiate_and_anchor(prefab.gameObject,parent)?.GetComponent<InputFeedback>();
         return ef;
     }
-    private InputFeedback instantiate_and_anchor(InputFeedback prefab, Transform parent)
+    private GameObject instantiate_and_anchor(GameObject prefab, Transform parent)
     {
-        InputFeedback ef = Instantiate(prefab, parent);
+        GameObject ef = Instantiate(prefab, parent);
         // ef.transform.localScale = .25f * Vector3.one;
         RectTransform rect = ef.GetComponent<RectTransform>();
         rect.anchorMin = new Vector2(0f, 0f);
@@ -94,15 +98,21 @@ public class IF_Bank : MonoBehaviour
         return ef;
     }
 
+    public GameObject InstanciateThen(Transform parent)
+    {
+        return instantiate_and_anchor(then_prefab.gameObject, parent);
+    }
+
     // GETTERS
     private InputFeedback GetKeyboardIF(string binding)
     {
         foreach (IF_Prefab ifp in kb_prefabs)
         {
             if (ifp.binding != binding) { continue; }
+            if (log_kb) { Debug.Log("(IF_Bank) we found manual kb prefab for binding : " + binding + " !!"); }
             return ifp.prefab;
         }
-        // Debug.LogWarning("(IF_Bank) No InputFeedback found on manual keyboards IFs for binding : " + binding);
+        if (log_kb) { Debug.LogWarning("(IF_Bank) No InputFeedback found on manual keyboards IFs for binding : " + binding); }
         return null;
     }
     private InputFeedback GetGamepadIF(string binding)

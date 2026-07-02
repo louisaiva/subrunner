@@ -32,30 +32,43 @@ public class ActionSwitcher : MonoBehaviour
     [SerializeField] private bool log = false;
 
 
-    public void SwitchAction(string action_name)
+    public async void SwitchAction(string action_name, Color? color=null)
     {
         // we get the binding names of the action
         InputManager.Instance.GetActionBindingForAction(action_name, ref kb_ref, ref gm_ref);
 
         if (log) { Debug.Log($"(ActionSwitcher) Got 2 bindings for action '{action_name}' :         keyboard : '{kb_ref}'         ///            gamepad : '{gm_ref}'"); }
 
-        // kb = 
-        InputFeedback new_gm = InputManager.Instance.IF_Bank.Instantiate(gm_ref, gmpd.transform.parent, gamepad: true);
-        InputFeedback new_kb = InputManager.Instance.IF_Bank.Instantiate(kb_ref, kb.transform.parent, gamepad: false);
+        if (switcher != null) { switcher.ClearIFs(); }
+        Transform gmpd_parent = gmpd.transform.parent;
+        Transform kb_parent = kb.transform.parent;
         Destroy(gmpd);
         Destroy(kb);
-        gmpd = new_gm.gameObject;
-        kb = new_kb.gameObject;
 
+        await System.Threading.Tasks.Task.Yield();
+
+        // kb = 
+        gmpd = InputManager.Instance.IF_Bank.Instantiate(gm_ref, gmpd_parent, gamepad: true).gameObject;
+        kb = InputManager.Instance.IF_Bank.Instantiate(kb_ref, kb_parent, gamepad: false).gameObject;
+
+        if (log)
+        {
+
+            if (gmpd == null) { Debug.LogError($"(ActionSwitcher) New gamepad IF for '{action_name}' and binding '{gm_ref}' could not be instantiated by IF_Bank !"); }
+            if (kb == null) { Debug.LogError($"(ActionSwitcher) New keyboard IF for '{action_name}' and binding '{kb_ref}' could not be instantiated by IF_Bank !"); }
+        }
         if (switcher != null)
         {
             switcher.ClearIFs();
             switcher.AddIF(gmpd, gamepad:true);
             switcher.AddIF(kb, gamepad:false);
         }
+
+        if (color == null) { return; }
+        set_color(color.Value);
     }
 
-    public void SetColor(Color color)
+    private void set_color(Color color)
     {
         UI_EventButton[] IFs = GetComponentsInChildren<UI_EventButton>(includeInactive: true);
         foreach (UI_EventButton IF in IFs)

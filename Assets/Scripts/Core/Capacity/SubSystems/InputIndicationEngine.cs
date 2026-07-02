@@ -38,8 +38,7 @@ public class InputIndicationEngine : MonoBehaviour
 
         // we set the IF position and color
         input_indication.position = current_iic.transform.position;
-        switcher.SwitchAction(current_iic.InputName);
-        switcher.SetColor(current_iic.Color);
+        switcher.SwitchAction(current_iic.InputName, current_iic.Color);
 
         // we show the IF
         input_indication.gameObject.SetActive(true);

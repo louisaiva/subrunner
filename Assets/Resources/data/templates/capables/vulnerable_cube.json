@@ -2,8 +2,8 @@
     "<id>k__BackingField": "vulnerable_cube",
     "kind": "FalseInteractable",
     "position": {
-        "x": -0.41298341751098635,
-        "y": 9.760965347290039
+        "x": 0.0,
+        "y": 0.0
     },
     "orientation": {
         "x": 0.0,
@@ -12,8 +12,8 @@
     "layer": 29,
     "tag": "Untagged",
     "capacities_ids": [
-        "hover",
-        "connect"
+        "connect",
+        "hover"
     ],
     "anim_data": {
         "skin_kind": "",
@@ -66,11 +66,11 @@
         "box_colliders": [
             {
                 "local_position": {
-                    "x": -0.41298341751098635,
-                    "y": 9.760965347290039
+                    "x": 0.0,
+                    "y": 0.0
                 },
-                "layerID": 29,
-                "pathfinding_area": 1,
+                "layerID": 26,
+                "pathfinding_area": -1,
                 "shadow_caster_data": {
                     "cast_and_self": false,
                     "used_layers": []

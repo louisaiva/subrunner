@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -208,8 +209,8 @@ public class LevelTranslator : MonoBehaviour
         level.GrabStaticRooms(built_level.RoomChunks.Keys.ToList());
 
         // now we can build the navmesh
-        if (log_translate_extended) { Debug.Log($"(LevelTranslator) Building navmesh for level"); }
-        LevelEngine.LazyInstance.NavBaker.BuildLevelNavMesh(level, force_rebuild: true);
+        // if (log_translate_extended) { Debug.Log($"(LevelTranslator) Building navmesh for level"); }
+        // LevelEngine.LazyInstance.NavBaker.BuildLevelNavMesh(level, force_rebuild: true);
 
 
         //
@@ -231,14 +232,14 @@ public class LevelTranslator : MonoBehaviour
 
     private List<Chunk> translate_chunks(BuiltLevelData built_level, List<Chunk> old_chunks, Level level, Transform capables_parent, ref List<Door> existing_doors, ref List<Capable> new_capables)
     {
-        if (log) { Debug.Log($"(LevelTranslator) Creating chunks, doors and lights"); }
+        if (log) { Debug.Log($"(LevelTranslator) Creating chunks and doors"); }
         List<Chunk> chunks = new List<Chunk>();
         foreach (WorldChunkVisualizer chunk_visu in built_level.Chunks)
         {
             if (!find_chunk(chunk_visu.name, old_chunks, out Chunk chunk))
             {
                 chunk = create_chunk(chunk_visu.name, level);
-                if (log_translate_extended) { Debug.Log($"(LevelTranslator) created room {chunk_visu.name}"); }
+                if (log_translate_extended) { Debug.Log($"(LevelTranslator) created chunk {chunk_visu.name}"); }
             }
 
             // we assign collider to the chunk
@@ -250,7 +251,6 @@ public class LevelTranslator : MonoBehaviour
             {
                 find_or_create_door(capables_parent, door_visu, ref existing_doors, ref new_capables);
             }
-            find_or_create_light(chunk, chunk_visu.Lights);
 
             // if add_chunkgraph_neighbour_node is true, we add a node for each neighbour of the chunk in the chunkgraph
             // if (add_chunkgraph_neighbour_node) { Instantiate(chunkgraph_node_prefab, chunk.transform); }
@@ -288,12 +288,26 @@ public class LevelTranslator : MonoBehaviour
             if (!built_level.Tilemaps.TryGetValue(room_name, out Dictionary<string, Tilemap> tilemaps)) { Debug.LogWarning($"(LevelTranslator) no tilemaps found for room {room_name}"); continue; }
             apply_tilemaps(room, tilemaps);
 
+            List<WorldLightVisualizer> lights_of_room = gather_worldlightsvisu(built_level, chunk_names);
+            find_or_create_lights(room, lights_of_room);
+
             rooms.Add(room);
             if (log_translate_extended) { Debug.Log($"(LevelTranslator) room added: {room_name}"); }
         }
 
         return rooms;
     }
+    private List<WorldLightVisualizer> gather_worldlightsvisu(BuiltLevelData built_level, List<string> chunks)
+    {
+        List<WorldLightVisualizer> lights = new List<WorldLightVisualizer>();
+        foreach (WorldChunkVisualizer chunk in built_level.Chunks)
+        {
+            if (!chunks.Contains(chunk.name)) { continue; }
+            lights.AddRange(chunk.Lights);
+        }
+        return lights;
+    }
+
     private void clean_obsolete_chunks_and_doors(List<Door> existing_doors, List<Chunk> old_chunks, List<Chunk> chunks)
     {
         if (log_translate_extended) { Debug.Log($"(LevelTranslator) Cleaning old things (doors, rooms)"); }
@@ -449,7 +463,7 @@ public class LevelTranslator : MonoBehaviour
         new_capables.Add(door);
         return need_to_be_created;
     }
-    private void find_or_create_light(Chunk room, List<WorldLightVisualizer> lights)
+    private void find_or_create_lights(Room room, List<WorldLightVisualizer> lights)
     {
         // find the parent
         Transform light_parent = room.LightsParent;

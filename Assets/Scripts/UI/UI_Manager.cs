@@ -131,20 +131,35 @@ public class UI_Manager : Singleton<UI_Manager>
     }
 
     // UI POOL SWITCH
-    public void TogglePool(string pool_name, bool stacking = false)
+    public void TogglePool(string pool_name, bool allow_mult_stacking = true)
     {
-        // if we don't want stacking we simmply switch to the pool
-        if (!stacking)
+        if (CurrentPool == pool_name)
         {
-            // we check if the pool is already shown
-            if (current_pool != null && pool_name == current_pool.Reference) { SwitchToHUD(); }
-            else { SwitchTo(pool_name, false); }
+            if (pool_stack.Count > 1)
+            {
+                // means we are stacked on another pool !
+                UnstackPool(pool_name);
+                return;
+            }
+
+            // we are the only one pool, we switch to hud
+            SwitchToHUD();
             return;
         }
 
-        // otherwise we stack/unstack it
-        if (IsStacked(pool_name)) { UnstackPool(pool_name); }
-        else { StackPool(pool_name); }
+        // here we are not on the pool yet, we want to go to it !
+        if (IsStacked(pool_name))
+        {
+            // ! problem, we don't want to go fast to it if it is already in the hierarchy because maybe the above stacked pool need to save data etc or something, so nope
+            if (!allow_mult_stacking) { return; }
+            if (log) { Debug.LogWarning($"(UI_Manager) TogglePool called for {pool_name}, but current stack ({PoolStack}) already contains targeted pool. We re stacked it sooo maybe it will do weird stuff !"); }
+            StackPool(pool_name);
+            return;
+        }
+
+        // the pool is not stacked :D
+        if (IsOnHUD()) { SwitchTo(pool_name); return; }
+        StackPool(pool_name);
     }
 
     /// <summary>

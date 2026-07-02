@@ -1,9 +1,12 @@
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class UI_ExitButton : UI_EventButton, Descriptable
 {
-    public string Name => "close";
-    public string Description => "";
+    public string Name => "";
+    public string desc = "close";
+    public Color color = Color.red;
+    public string Description => desc.AddColor(color);
 
     // POINTER HANDLER
 

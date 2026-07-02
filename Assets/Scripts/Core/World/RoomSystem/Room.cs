@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.Tilemaps;
 
 public class Room : MonoBehaviour
@@ -9,6 +10,25 @@ public class Room : MonoBehaviour
     public RoomData data;
     public bool Loaded { get { return data != null; } }
     public string ID { get { return GetStaticID(); } }
+
+    private Transform _lights_parent;
+    public Transform LightsParent
+    {
+        get
+        {
+            if (_lights_parent == null)
+            {
+                _lights_parent = transform.Find("Lights");
+                if (_lights_parent == null)
+                {
+                    GameObject lights_go = new GameObject("Lights");
+                    lights_go.transform.SetParent(transform);
+                    _lights_parent = lights_go.transform;
+                }
+            }
+            return _lights_parent;
+        }
+    }
 
 
     // STATIC DATA
@@ -24,13 +44,38 @@ public class Room : MonoBehaviour
         {
             // set base data things
             id = GetStaticID(),
+            // set lights data
+            lights_data = get_static_light_data(),
             chunks_ids = get_static_chunks_ids()
         };
 
         // set tilemaps data
         get_static_tilemaps(ref new_data);
 
+
         return new_data;
+    }
+    protected List<LightData> get_static_light_data()
+    {
+        List<LightData> lights_data = new List<LightData>();
+        if (LightsParent == null) { return lights_data; }
+
+        // we go through our LightsTransform
+        Light2D[] lights = LightsParent.GetComponentsInChildren<Light2D>(includeInactive:false);
+        foreach (Light2D light in lights)
+        {
+            // we create a new LightData with the data of the visu and we add it to the list
+            LightData light_data = new LightData()
+            {
+                position = light.transform.position,
+                color = light.color,
+                intensity = light.intensity,
+                radius = new Vector2(light.pointLightInnerRadius, light.pointLightOuterRadius),
+                falloff = light.falloffIntensity,
+            };
+            lights_data.Add(light_data);
+        }
+        return lights_data;
     }
     private List<string> get_static_chunks_ids()
     {
