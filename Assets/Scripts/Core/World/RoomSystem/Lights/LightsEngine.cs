@@ -23,7 +23,7 @@ public class LightsEngine : MonoBehaviour
     ///
 
 
-    public void LoadLights(List<LightData> lights_data, string room_id)
+    public void CreateLights(List<LightData> lights_data, string room_id)
     {
         if (lights_data == null) { return; }
         foreach (var light_data in lights_data) { LoadLight(light_data, room_id); }

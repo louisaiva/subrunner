@@ -51,6 +51,7 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
     [Header("Logs - Awake")]
     public bool log_templates_data_loading = false;
     public bool log_world_data_loading = false;
+    public bool log_awake_data_extended = false;
 
     [Header("Logs - Spawning")]
     public bool log_spawning = false;
@@ -135,6 +136,7 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         foreach (string json in files)
         {
             CapacityData data = SaveEngine.LoadCapacityDataWithGoodKind(json);
+            if (log_awake_data_extended) { Debug.Log($"(CapacityEngine) Loading capacity data template for '{data.id}' of type {data.GetType().Name}: \n{data.GetDetails()}"); }
             templates_capacities_data.Add(data.id, data);
             log_capacities_details += data.GetDetails() + "\n";
         }
@@ -159,6 +161,7 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         List<CapacityData> world_capacities = world_save.capacities;
         foreach (CapacityData data in world_capacities)
         {
+            if (log_awake_data_extended) { Debug.Log($"(CapacityEngine) Loading world capacity data for '{data.id}' of type {data.GetType().Name}: \n{data.GetDetails()}"); }
             world_capacities_data.Add(data.id, data);
             log_capacities_details += data.GetDetails() + "\n";
 

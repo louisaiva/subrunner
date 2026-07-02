@@ -45,7 +45,7 @@ public class Room : MonoBehaviour
             // set base data things
             id = GetStaticID(),
             // set lights data
-            lights_data = get_static_light_data(),
+            lights_data = GetStaticLightsData(),
             chunks_ids = get_static_chunks_ids()
         };
 
@@ -55,7 +55,7 @@ public class Room : MonoBehaviour
 
         return new_data;
     }
-    protected List<LightData> get_static_light_data()
+    public List<LightData> GetStaticLightsData()
     {
         List<LightData> lights_data = new List<LightData>();
         if (LightsParent == null) { return lights_data; }

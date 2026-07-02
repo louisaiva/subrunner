@@ -141,6 +141,9 @@ public class LevelEngine : BSOD_System<LevelEngine>
         // we load the new level
         load_status = LevelLoadStatus.Loading;
 
+        // we create all lights
+        RoomEngine.Instance.CreateLights(new_level.data.rooms_ids);
+
         // either we load the full rooms
         if (string.IsNullOrEmpty(room_id))
         {

@@ -666,8 +666,18 @@ public class SaveEngine : MonoBehaviour
         // gather the kind of the capacity from the json
         string kind = JsonUtility.FromJson<CapacityData>(json).kind;
         Type type = Type.GetType(kind + "Data");
-        if (type == null) { type = Type.GetType(kind.Replace("Capacity", "Data")); }
-        if (type == null) { type = typeof(CapacityData); }
+        if (type == null) { type = Type.GetType(kind.Replace("Capacity", "Data").Replace("HoverBased","")); }
+        if (type == null)
+        {
+            type = typeof(CapacityData);
+
+            // we calculate the type distance between Capacity & kind
+            int distance = GameManager.CalculateTypeDistance(Type.GetType(kind), typeof(Capacity));
+            if (distance > 1) // if the intermediate class has a equivalent data class with fields, these will be lost
+            {
+                Debug.LogError($"(SaveEngine) No precise data found for '{kind}', using default CapacityData but distance is {distance}. " + "THIS CAN CAUSE DATA LOSS EVEN ON RESPAWN TEMPLATE !!".Red());
+            }
+        }
         return JsonUtility.FromJson(json, type) as CapacityData;
     }
 

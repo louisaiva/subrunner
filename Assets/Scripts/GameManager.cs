@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviour
     public static bool IsKind(string kind, string ref_kind, out int inheritance_distance)
     {
         if (!IsKind(kind, ref_kind)) { inheritance_distance = -1; return false; }
-        inheritance_distance = calculate_type_distance(Type.GetType(kind), Type.GetType(ref_kind));
+        inheritance_distance = CalculateTypeDistance(Type.GetType(kind), Type.GetType(ref_kind));
         return true;
     }
     private static int calculate_type_distance_one_way(Type firstType, Type secondType)
@@ -104,7 +104,7 @@ public class GameManager : MonoBehaviour
 
         return chain.IndexOf(secondType);
     }
-    public static int calculate_type_distance(Type firstType, Type secondType)
+    public static int CalculateTypeDistance(Type firstType, Type secondType)
     {
         int result = calculate_type_distance_one_way(firstType, secondType);
         if (result >= 0)
