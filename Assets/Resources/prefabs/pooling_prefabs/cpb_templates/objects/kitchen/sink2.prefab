@@ -12,10 +12,10 @@ GameObject:
   - component: {fileID: 5905337838455134789}
   - component: {fileID: 7109342589020922987}
   - component: {fileID: 4311057031692049930}
+  - component: {fileID: 6010137316977990754}
   - component: {fileID: 809755848618885547}
-  - component: {fileID: 8965844036257413118}
   m_Layer: 29
-  m_Name: sink
+  m_Name: sink2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -113,7 +113,7 @@ MonoBehaviour:
   m_Area: 1
   m_IgnoreFromBuild: 0
   m_AffectedAgents: ffffffff
---- !u!114 &809755848618885547
+--- !u!114 &6010137316977990754
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -122,24 +122,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1434616608324364190}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b38a876e5f6fba4ab1dde6d23fd0f96, type: 3}
+  m_Script: {fileID: 11500000, guid: 9e74abe9ec14419949ecc62d965c7694, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
-  capacity_template_id: hover
-  capacity_template_ids:
-  - chest_iic
---- !u!114 &8965844036257413118
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1434616608324364190}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e4c2ce09cfe3ad409b3133bd0224ffb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Note
+  m_EditorClassIdentifier: Assembly-CSharp::Sink
   data:
     <id>k__BackingField: 
     kind: 
@@ -175,7 +160,22 @@ MonoBehaviour:
   log: 0
   activate_all_capacities_logs_on_awake: 0
   log_static_data: 0
-  ui_pool_to_open: wip
+  interactors: []
+--- !u!114 &809755848618885547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1434616608324364190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b38a876e5f6fba4ab1dde6d23fd0f96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
+  capacity_template_id: hover
+  capacity_template_ids:
+  - chest_iic
 --- !u!1 &2561952397799866009
 GameObject:
   m_ObjectHideFlags: 0
@@ -362,7 +362,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AnimPlayer
   skin: sink_front
   <orientation>k__BackingField: D
-  current_capacity: 
+  current_anim:
+    name: 
+    sprites_paths: []
+    sprites: []
+    sprites_durations: []
+    loop: 1
+    speed: 1
+    flipX: 0
   update_each_frame: 1
   anim_capacity_priorities:
   - priority: 0

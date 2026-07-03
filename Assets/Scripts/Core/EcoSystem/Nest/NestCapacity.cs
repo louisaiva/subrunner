@@ -157,10 +157,12 @@ public class NestCapacity : Capacity
     public string species;
     public int capacity; // capacity of the burrow in count of max entity it can store at the same time
     public NestStoreMode store_mode;
-    public int received_entities_since_last_reset;
+    // public int received_entities_since_last_reset;
+    public bool spawned_once;
     public NestSpawnMode spawn_mode;
     public CircleData trigger;
-    public List<string> stored_entities = new List<string>();
+    // public List<string> stored_entities = new List<string>();
+    public int stored_entities;
 
     // CONSTRUCTOR
     public NestData(CapacityData parent) : base(parent) { }
@@ -173,11 +175,13 @@ public class NestCapacity : Capacity
             species = this.species,
             capacity = this.capacity,
             store_mode = this.store_mode,
-            received_entities_since_last_reset = this.received_entities_since_last_reset,
+            spawned_once = false,
             spawn_mode = this.spawn_mode,
-            stored_entities = new List<string>(this.stored_entities)
+            stored_entities = stored_entities
         };
         new_data.trigger = (trigger == null) ? null : (CircleData) this.trigger.Duplicate();
+        if (store_mode == NestStoreMode.Once) { stored_entities = spawned_once ? 0 : capacity; }
+
         return new_data;
     }
 
@@ -189,20 +193,16 @@ public class NestCapacity : Capacity
         details += $"  - species : {species}\n";
         details += $"  - capacity : {capacity}\n";
         details += $"  - store_mode : {store_mode}\n";
-        details += $"  - received_entities_since_last_reset : {received_entities_since_last_reset}\n";
+        details += $"  - spawned_once : {spawned_once}\n";
         details += $"  - spawn_mode : {spawn_mode}\n";
-        details += $"  - stored_entities : {stored_entities.Count}\n";
-        foreach (string id in stored_entities)
-        {
-            details += $"    - {id}\n";
-        }
+        details += $"  - stored_entities : {stored_entities}\n";
         if (trigger == null) { details += $"  - trigger : null\n"; }
         else { details += $"  - trigger : {trigger.GetDetails()}\n"; }
         return base.GetDetails() + details;
     }
     public string StoreDetails(Color a, Color b)
     {
-        return $"{stored_entities.Count} / {capacity}".AddColor(Color.Lerp(a,b, FullPercentage));
+        return $"{stored_entities} / {capacity}".AddColor(Color.Lerp(a,b, FullPercentage));
     }
 
 
@@ -216,7 +216,7 @@ public class NestCapacity : Capacity
     ///
 
     // public properties helper
-    [RuntimeOnly] public int EntityCount => stored_entities.Count;
+    [RuntimeOnly] public int EntityCount => stored_entities;
     [RuntimeOnly] private float FullPercentage => EntityCount / capacity;
     public bool CanReceiveEntity()
     {
@@ -224,7 +224,7 @@ public class NestCapacity : Capacity
         if (store_mode == NestStoreMode.Once)
         {
             if (capacity <= EntityCount) { return false; }
-            return capacity > received_entities_since_last_reset;
+            return !spawned_once;
         }
         return false; // unknown store mode
     }
@@ -240,53 +240,39 @@ public class NestCapacity : Capacity
     }
 
     // RECEIVE ENTITY
-    public void ReceiveEntity(string id, bool manually = false)
+    public void ReceiveEntity(bool manually = false)
     {
         if (!CanReceiveEntity())
         {
-            Debug.LogError($"(NestData - {this.id}) Received entity '{id}' but the burrow is already full !!");
+            Debug.LogError($"(NestData - {this.id}) Received an entity but the nest is already full !!");
             return;
         }
-        stored_entities.Add(id);
-        
-        // this happens when an entity come back by itself to hide inside the nest ! in this case we want to return early
-        // because : 1. we don't want to spawn entity directly, and 2 we don't want to increase received_entities since it was
-        // a manual entity receiving :)
+        stored_entities++;
+
         if (manually) { return; }
 
-        received_entities_since_last_reset++;
-
         // here we check the spawn mode to see if we need to register to the spawning thing
-        if (spawn_mode == NestSpawnMode.Direct) { entities_to_spawn.Add(id); }
+        if (spawn_mode == NestSpawnMode.Direct) { entities_to_spawn.Add(Template); }
     }
 
     // SPAWN ENTITIES
     [RuntimeOnly] public List<string> entities_to_spawn = new List<string>();
-    public void SpawnRandomEntity()
-    {
-        if (EntityCount == 0) { return; }
-
-        // add the entity to pending spawning entities
-        string random_id = stored_entities[UnityEngine.Random.Range(0, stored_entities.Count)];
-        entities_to_spawn.Add(random_id);
-
-        // the entity is now registered to spawning list, which will (FOR NOW) be spawned
-        // from the NestCapacity. in [mid-term] we will want this to happen in a NestData.Update() method
-        // so we can handle both unloaded & loaded Nests, but for now we stay easy
-    }
     public void SpawnThemAll()
     {
         if (EntityCount == 0) { return; }
-        entities_to_spawn = new List<string>(stored_entities);
+        entities_to_spawn = new List<string>();
+        for (int i=0; i<stored_entities; i++) { entities_to_spawn.Add(Template); }
+        spawned_once = true;
     }
     public string ExtractSpawnableEntity()
     {
         if (entities_to_spawn.Count == 0) { return null; }
         string id = entities_to_spawn[0];
-        stored_entities.Remove(id);
+        stored_entities--;
         entities_to_spawn.RemoveAt(0);
         return id;
     }
+    public string Template => CapableEngine.EcoEngine.GetTemplateOf(species);
 
 
 

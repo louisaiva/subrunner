@@ -684,11 +684,24 @@ public class CapableEngine : BSOD_System<CapableEngine>
         // 3. we return the spawned capable
         return spawned_capable;
     }
+    public void DespawnCapable(string id, bool destroy_data = true)
+    {
+        CapableData cdata = GetCapableDataFromID(id);
+        DespawnCapable(cdata, destroy_data);
+    }
     public void DespawnCapable(CapableData cdata, bool destroy_data = true)
     {
         // fire events (first of all so capable is well removed from chunk engine :D)
         OnCapableDisappear?.Invoke(cdata);
         OnCapableDespawned?.Invoke(cdata);
+
+        if (cdata is ItemData idata && idata.is_grabbed)
+        {
+            Item item = idata.Capable as Item;
+            Capable holder = item?.Holder;
+            if (holder != null && item != null) { holder.Inventory.Drop(item, on_ground:false); }
+            else { Debug.LogError($"(CapableEngine) will {(destroy_data ? "destroy" : "despawn")} item {idata.id} which is grabbed but we could not make it be dropped because either its capable was not loaded either we could not acces ItemHolder."); }
+        }
 
         // then we unload the capable
         unload_capable(cdata.id);

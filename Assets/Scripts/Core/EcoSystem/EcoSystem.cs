@@ -30,6 +30,7 @@ public class EcoEngine : MonoBehaviour
         initialize_alive_population_species();
 
         // register callbacks
+        CapableEngine.LazyInstance.OnCapableSpawned += handle_capable_spawned;
         CapableEngine.LazyInstance.OnCapableDespawned += handle_capable_despawned;
         CapacityEngine.LazyInstance.OnCapacitySpawned += handle_capacity_spawned;
         CapacityEngine.LazyInstance.OnCapacityDespawned += handle_capacity_despawned;
@@ -83,7 +84,14 @@ public class EcoEngine : MonoBehaviour
 
             if (!nests.ContainsKey(spec)) { nests[spec] = new List<NestData>(); }
             nests[spec].Add(nest);
+            spec.waiting_population += nest.EntityCount;
         }
+
+
+
+        finalize_species_loading();
+
+
 
         if (!log) { return; }
         string debug = "";
@@ -100,11 +108,23 @@ public class EcoEngine : MonoBehaviour
         }
         Debug.Log($"(EcoEngine) Gathered {total_nests} nests for {nests.Keys.Count} species :\n" + debug);
     }
+    private void finalize_species_loading()
+    {
+        // here we have gathered :
+        // - all existing entity data of template
+        // - all number of entities living in nests
+        // we have enough data to count current global population of the species
+        foreach (Species spec in species)
+        {
+            spec.population = spec.alive_population + spec.waiting_population;
+        }
+    }
 
     // clear cache
     public void ClearCache(bool log)
     {
         // unregister callbacks
+        CapableEngine.LazyInstance.OnCapableSpawned -= handle_capable_spawned;
         CapableEngine.LazyInstance.OnCapableDespawned -= handle_capable_despawned;
         CapacityEngine.LazyInstance.OnCapacitySpawned -= handle_capacity_spawned;
         CapacityEngine.LazyInstance.OnCapacityDespawned -= handle_capacity_despawned;
@@ -116,6 +136,21 @@ public class EcoEngine : MonoBehaviour
 
 
     /// CALLBACKS
+    private void handle_capable_spawned(CapableData cdata)
+    {
+        if (cdata is not IAData ia) { return; }
+        Species spec = get_species_from_id(ia.id);
+        if (spec == null) { return; }
+
+        // we register the new entity !
+        spec.alive_population+=1;
+        // we update the current waiting pop
+        if (!nests.ContainsKey(spec)) { spec.waiting_population = 0; }
+        else { spec.UpdateWaitingPopulation(nests[spec]); }
+
+
+        if (log_species_gain_entity) { Debug.Log($"(EcoEngine) Species {spec.name} welcomes '{cdata.id}' !!!!!! population is now : " + spec.PopDetails()); }
+    }
     private void handle_capable_despawned(CapableData cdata)
     {
         Species spec = null;
@@ -146,6 +181,8 @@ public class EcoEngine : MonoBehaviour
         if (!nests.ContainsKey(spec)) { nests[spec] = new List<NestData>(); }
         if (nests[spec].Contains(nest)) { return; }
         nests[spec].Add(nest);
+        spec.population += nest.EntityCount;
+        spec.waiting_population += nest.EntityCount;
         if (log_new_nest) { Debug.Log($"(EcoEngine) Species {spec.name} just earned a new nest '{nest.id}' !!"); }
     }
     private void handle_capacity_despawned(CapacityData cdata)
@@ -157,6 +194,8 @@ public class EcoEngine : MonoBehaviour
         if (!nests.ContainsKey(spec)) { return; }
         if (!nests[spec].Contains(nest)) { return; }
         nests[spec].Remove(nest);
+        spec.population -= nest.EntityCount;
+        spec.waiting_population -= nest.EntityCount;
         if (log_new_nest) { Debug.Log($"(EcoEngine) Species {spec.name} just lost a nest '{nest.id}' :/"); }
     }
 
@@ -209,17 +248,13 @@ public class EcoEngine : MonoBehaviour
         tmp_nests2 = tmp_nests.Where(n => n.CanReceiveEntity()).ToList();
         if (tmp_nests2.Count == 0)
         {
-            if (log_tick_nests_details) { Debug.LogWarning($"(EcoEngine) Species {spec.name} : All Nests are full !!!"); }
+            if (log_tick_nests_details) { Debug.LogWarning($"(EcoEngine) Species {spec.name} : No nest can receive entity !!!"); }
             return;
         }
 
         NestData nest = tmp_nests2[UnityEngine.Random.Range(0, tmp_nests2.Count)];
-
-        // here we duplicate the template data
-        CapableData new_entity = CapableEngine.Instance.DuplicateTemplate(spec.template);
-        nest.ReceiveEntity(new_entity.id);
-        spec.alive_population++;
-        if (log_species_gain_entity) { Debug.Log($"(EcoEngine) Species {spec.name} welcomes '{new_entity.id}' !!!!!! population is now : " + spec.PopDetails()); }
+        nest.ReceiveEntity();
+        spec.waiting_population++;
     }
 
 
@@ -260,8 +295,9 @@ public class EcoEngine : MonoBehaviour
     public int population;
 
     [RuntimeOnly] public int alive_population;
-    [RuntimeOnly] public float AlivePercentage => alive_population / population;
-    [RuntimeOnly] public int dead_population => population - alive_population;
+    [RuntimeOnly] public int waiting_population;
+    [RuntimeOnly] public float WaitingOrAlivePercentage => (alive_population + waiting_population) / population;
+    [RuntimeOnly] public int dead_population => population - alive_population - waiting_population;
 
     public bool wait_for_corpse_despawn = false;
 
@@ -270,12 +306,25 @@ public class EcoEngine : MonoBehaviour
         string log = "";
         log += " - " + name + " :\n";
         log += "   - template : " + template + "\n";
-        log += "   - population : " + population + $"   --->  ({alive_population} alive, {dead_population} dead)\n";
+        log += "   - population : " + population + $"   --->  ({alive_population} alive, {waiting_population} waiting, {dead_population} dead)\n";
         log += "   - wait_for_corpse_despawn : " + wait_for_corpse_despawn + "\n";
         return log;
     }
     public string PopDetails()
     {
-        return $"{alive_population} / {population}".AddColor(Color.Lerp(a: Color.cyan, b: Color.magenta, AlivePercentage));
+        return $"{alive_population} or {waiting_population} / {population}".AddColor(Color.Lerp(a: Color.cyan, b: Color.magenta, WaitingOrAlivePercentage));
+    }
+
+    public void UpdateWaitingPopulation(List<NestData> nestDatas)
+    {
+        int waiting = 0;
+        foreach (NestData nest in nestDatas) { waiting += nest.EntityCount; }
+        this.waiting_population = waiting;
+
+        // if waiting + alive is bigger than population we update it as well
+        if (waiting_population + alive_population > population)
+        {
+            population = waiting_population + alive_population;
+        }
     }
 }

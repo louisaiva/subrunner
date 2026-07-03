@@ -336,4 +336,11 @@ public class UI_TimelineCapableCaller : MonoBehaviour
         capable.RemoveEffect(Effect.Ghost);
     }
 
+
+    // DESPAWN
+    public void Despawn()
+    {
+        if (capable == null) { Debug.LogError("(UI_TimelineCapableCaller) No capable connected"); return; }
+        CapableEngine.Instance.DespawnCapable(Capable.data);
+    }
 }

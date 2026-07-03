@@ -85,14 +85,22 @@
                 "priority": 6,
                 "capacity_playing": "",
                 "capacities": [
-                    "idle_sit",
-                    "talk_sit"
+                    "idle_sit"
                 ],
                 "lock_orientation": false,
                 "one_shot": false
             },
             {
                 "priority": 7,
+                "capacity_playing": "",
+                "capacities": [
+                    "talk_sit"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 8,
                 "capacity_playing": "",
                 "capacities": [
                     "zap_tv",
@@ -106,7 +114,7 @@
                 "one_shot": true
             },
             {
-                "priority": 8,
+                "priority": 9,
                 "capacity_playing": "",
                 "capacities": [
                     "eat_sit_1",
@@ -117,7 +125,7 @@
                 "one_shot": true
             },
             {
-                "priority": 9,
+                "priority": 10,
                 "capacity_playing": "",
                 "capacities": [
                     "die"

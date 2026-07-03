@@ -116,12 +116,13 @@ GameObject:
   - component: {fileID: 5867391868910205687}
   - component: {fileID: 1441022323868562826}
   - component: {fileID: 1660827744442260956}
+  - component: {fileID: 6041990902429442786}
   - component: {fileID: 3970579163400690036}
   - component: {fileID: 6045091180622247690}
+  - component: {fileID: 6583724931448709276}
   - component: {fileID: 8403909264345424627}
-  - component: {fileID: 5590576661036822284}
   m_Layer: 29
-  m_Name: oven
+  m_Name: oven2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -248,6 +249,19 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 0.33333334}
   m_EdgeRadius: 0
+--- !u!210 &6041990902429442786
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7737766629879812599}
+  m_Enabled: 1
+  m_SortingLayerID: -667374433
+  m_SortingLayer: 3
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
 --- !u!114 &3970579163400690036
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -278,7 +292,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AnimPlayer
   skin: oven
   <orientation>k__BackingField: D
-  current_capacity: 
+  current_anim:
+    name: 
+    sprites_paths: []
+    sprites: []
+    sprites_durations: []
+    loop: 1
+    speed: 1
+    flipX: 0
   update_each_frame: 1
   anim_capacity_priorities:
   - priority: 0
@@ -314,7 +335,7 @@ MonoBehaviour:
   log_pile: 0
   log_material: 0
   visible_on: 1
---- !u!114 &8403909264345424627
+--- !u!114 &6583724931448709276
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -323,24 +344,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7737766629879812599}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b38a876e5f6fba4ab1dde6d23fd0f96, type: 3}
+  m_Script: {fileID: 11500000, guid: 645d980a757b6f9bbb0ce7706744c328, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
-  capacity_template_id: hover
-  capacity_template_ids:
-  - chest_iic
---- !u!114 &5590576661036822284
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7737766629879812599}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e4c2ce09cfe3ad409b3133bd0224ffb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Note
+  m_EditorClassIdentifier: Assembly-CSharp::Oven
   data:
     <id>k__BackingField: 
     kind: 
@@ -348,7 +354,6 @@ MonoBehaviour:
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
-    capacities_ids: []
     anim_data:
       skin_kind: 
       skin: 
@@ -366,6 +371,7 @@ MonoBehaviour:
     feet_data:
       box_colliders: []
       circle_colliders: []
+    capacities_ids: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 0}
@@ -376,4 +382,22 @@ MonoBehaviour:
   log: 0
   activate_all_capacities_logs_on_awake: 0
   log_static_data: 0
-  ui_pool_to_open: wip
+  interactors: []
+  heat_percentage: 0
+  total_heat_time: 10
+  max_heat_temperature: 100
+--- !u!114 &8403909264345424627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7737766629879812599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b38a876e5f6fba4ab1dde6d23fd0f96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
+  capacity_template_id: hover
+  capacity_template_ids:
+  - chest_iic

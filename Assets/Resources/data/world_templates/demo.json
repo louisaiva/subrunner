@@ -92235,7 +92235,7 @@
         "anim_capacity_priorities": [
           {
             "priority": 0,
-            "capacity_playing": "idle",
+            "capacity_playing": "",
             "capacities": [
               "idle"
             ],
@@ -92294,15 +92294,23 @@
             "priority": 6,
             "capacity_playing": "",
             "capacities": [
-              "idle_sit",
-              "talk_sit"
+              "idle_sit"
             ],
             "lock_orientation": false,
             "one_shot": false
           },
           {
             "priority": 7,
-            "capacity_playing": "sit",
+            "capacity_playing": "",
+            "capacities": [
+              "talk_sit"
+            ],
+            "lock_orientation": false,
+            "one_shot": false
+          },
+          {
+            "priority": 8,
+            "capacity_playing": "",
             "capacities": [
               "zap_tv",
               "sit",
@@ -92315,7 +92323,7 @@
             "one_shot": true
           },
           {
-            "priority": 8,
+            "priority": 9,
             "capacity_playing": "",
             "capacities": [
               "eat_sit_1",
@@ -92326,7 +92334,7 @@
             "one_shot": true
           },
           {
-            "priority": 9,
+            "priority": 10,
             "capacity_playing": "",
             "capacities": [
               "die"
@@ -92800,6 +92808,7 @@
       "tag": "Item",
       "capacities_ids": [
         "dodge-0",
+        "item_iic",
         "hover-718"
       ],
       "anim_data": {
@@ -120550,11 +120559,11 @@
       "$type": "InputIndicationData, Assembly-CSharp",
       "color": {
         "r": 1.0,
-        "g": 0.872162461,
+        "g": 0.0,
         "b": 0.0,
         "a": 1.0
       },
-      "input_name": "perso/interact",
+      "input_name": "perso/attack",
       "kind": "InputIndicationCapacity",
       "local_position": {
         "x": 0.0,

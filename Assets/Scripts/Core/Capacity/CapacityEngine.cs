@@ -459,7 +459,8 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
     // when the item is dropped / grabbed
     [SerializeField] private List<string> item_static_capacities_kinds = new List<string>() { "DodgeCapacity" };
     private Dictionary<string, string> item_dynamic_required_capacities_templates_per_kinds = new Dictionary<string, string>() {
-        { "HoverCapacity", "hover" }
+        { "HoverCapacity", "hover" },
+        { "InputIndicationCapacity", "item_iic" }
     };
     public List<string> GetDynamicItemCapacitiesIDs(ItemData idata, out List<string> static_ids)
     {

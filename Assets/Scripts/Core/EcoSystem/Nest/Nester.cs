@@ -16,10 +16,10 @@ public class Nester : Capable
     public void Host(Capable capable)
     {
         if (!TryGetCapacity(out NestCapacity nc)) { return; }
-        nc.ndata.ReceiveEntity(capable.ID, manually:true);
+        nc.ndata.ReceiveEntity(manually:true);
 
-        // then we despawn the entity WITHOUT DESTROYING DATA ???
-        CapableEngine.Instance.DespawnCapable(capable.data, destroy_data:false);
+        // then we despawn the entity which will destroy it !
+        CapableEngine.Instance.DespawnCapable(capable.data);
     }
 
 }
