@@ -21679,7 +21679,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::World
   load_status: 0
-  world_to_load: f1
+  world_to_load: e4
   save:
     world:
       game_version: 1.5.1c
@@ -273857,33 +273857,39 @@ MonoBehaviour:
   species:
   - name: zombo
     template: zombo
-    population: 100
+    population: 0
     alive_population: 0
+    waiting_population: 0
     wait_for_corpse_despawn: 1
   - name: npc
     template: npc
-    population: 4
+    population: 0
     alive_population: 0
+    waiting_population: 0
     wait_for_corpse_despawn: 0
   - name: cat
     template: cat
-    population: 15
+    population: 0
     alive_population: 0
+    waiting_population: 0
     wait_for_corpse_despawn: 0
   - name: rat
     template: rat
-    population: 30
+    population: 0
     alive_population: 0
+    waiting_population: 0
     wait_for_corpse_despawn: 0
   - name: spider
     template: spider
-    population: 30
+    population: 0
     alive_population: 0
+    waiting_population: 0
     wait_for_corpse_despawn: 1
   - name: qwin
     template: qwin
-    population: 1
+    population: 0
     alive_population: 0
+    waiting_population: 0
     wait_for_corpse_despawn: 1
   log_species_gain_entity: 1
   log_species_loss_entity: 1

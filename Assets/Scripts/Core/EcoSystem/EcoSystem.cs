@@ -10,6 +10,7 @@ public class EcoEngine : MonoBehaviour
     private Dictionary<Species, ManualSpeciesTicker> manual_tickers = new Dictionary<Species, ManualSpeciesTicker>();
 
     [Header("Logs")]
+    public bool log_awake_details = false;
     public bool log_species_gain_entity = false;
     public bool log_species_loss_entity = false;
     public bool log_new_nest = false;
@@ -118,6 +119,14 @@ public class EcoEngine : MonoBehaviour
         {
             spec.population = spec.alive_population + spec.waiting_population;
         }
+
+        if (!log_awake_details) { return; }
+        string debug = "";
+        foreach (Species spec in species)
+        {
+            debug += spec.GetDetails() + "\n";
+        }
+        Debug.Log($"(EcoEngine) Finally loaded {species.Count} species :\n{debug}");
     }
 
     // clear cache
@@ -147,7 +156,7 @@ public class EcoEngine : MonoBehaviour
         // we update the current waiting pop
         if (!nests.ContainsKey(spec)) { spec.waiting_population = 0; }
         else { spec.UpdateWaitingPopulation(nests[spec]); }
-
+        spec.UpdatePopulation();
 
         if (log_species_gain_entity) { Debug.Log($"(EcoEngine) Species {spec.name} welcomes '{cdata.id}' !!!!!! population is now : " + spec.PopDetails()); }
     }
@@ -320,7 +329,9 @@ public class EcoEngine : MonoBehaviour
         int waiting = 0;
         foreach (NestData nest in nestDatas) { waiting += nest.EntityCount; }
         this.waiting_population = waiting;
-
+    }
+    public void UpdatePopulation()
+    {
         // if waiting + alive is bigger than population we update it as well
         if (waiting_population + alive_population > population)
         {
