@@ -209,14 +209,13 @@ public class World : BSOD_System<World>
         phase_time = Time.realtimeSinceStartup;
 
         // now we can launch the "intro" cinematics (only if this is the first spawn)
+        bool play_intro = false;
         if (data.story_data == null || !data.story_data.intro_done)
         {
             data.story_data = new StoryData();
-            UI_Manager.Instance.GetPool<UI_CinematicPool>()?.PlayCinematic("intro");
-            data.story_data.intro_done = true;
-            if (log_loading_extended) { Debug.Log("(World - Cinematics) Playing intro cinematics"); }
+            GameManager.State = GameState.Cinematic;
+            play_intro = true;
         }
-        else { UI_Manager.Instance.SwitchToHUD(); }
 
 
 
@@ -282,7 +281,15 @@ public class World : BSOD_System<World>
         if (log) { Debug.Log($"(World) Player capable loaded after waiting {frames_waited} frames. Capable ID: {Controller.Capable.ID}"); }
         ChunkEngine.LazyInstance.RefreshPlayerChunk(Controller.Capable);
 
-        if (GameManager.State == GameState.Loading) { GameManager.State = GameState.Gaming; } // if we are loading, we switch to gaming state ! if not, we may be in cinematics, and so cinematics handle the state change, that's why we check if Loading only
+
+        // now we can finally play cinematic if needed
+        if (play_intro)
+        {
+            UI_Manager.Instance.GetPool<UI_CinematicPool>()?.PlayCinematic("intro");
+            if (log_loading_extended) { Debug.Log("(World - Cinematics) Playing intro cinematics"); }
+            data.story_data.intro_done = true;
+        }
+        else if (GameManager.State == GameState.Loading) { GameManager.State = GameState.Gaming; }
     }
     public async Task UnloadWorld()
     {

@@ -21652,7 +21652,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::World
   load_status: 0
-  world_to_load: e3
+  world_to_load: f1
   save:
     world:
       game_version: 1.5.1c
@@ -346908,7 +346908,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1798396095}
   - component: {fileID: 1798396096}
-  m_Layer: 21
+  m_Layer: 0
   m_Name: collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -425778,6 +425778,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3977869088317107238}
     m_Modifications:
+    - target: {fileID: 1454710634083836436, guid: 7bb18ff84bcc9184ea313fb6d368a589, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1553423458277408030, guid: 7bb18ff84bcc9184ea313fb6d368a589, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2545061945075928745, guid: 7bb18ff84bcc9184ea313fb6d368a589, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2717974485973136772, guid: 7bb18ff84bcc9184ea313fb6d368a589, type: 3}
       propertyPath: m_SceneBindings.Array.data[9].value
       value: 
@@ -425786,6 +425798,10 @@ PrefabInstance:
       propertyPath: m_SceneBindings.Array.data[10].value
       value: 
       objectReference: {fileID: 1368778259}
+    - target: {fileID: 2872996840636001359, guid: 7bb18ff84bcc9184ea313fb6d368a589, type: 3}
+      propertyPath: m_PlayableAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 7e96598edf6a2d24598dec94e6ee2fcc, type: 2}
     - target: {fileID: 2872996840636001359, guid: 7bb18ff84bcc9184ea313fb6d368a589, type: 3}
       propertyPath: m_SceneBindings.Array.data[8].value
       value: 

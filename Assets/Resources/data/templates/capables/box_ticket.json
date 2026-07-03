@@ -1,23 +1,23 @@
 ﻿{
-    "<id>k__BackingField": "vulnerable_cube",
-    "kind": "FalseInteractable",
+    "<id>k__BackingField": "box_ticket",
+    "kind": "Package",
     "position": {
         "x": 0.0,
         "y": 0.0
     },
     "orientation": {
         "x": 0.0,
-        "y": -1.0
+        "y": 1.0
     },
-    "layer": 29,
-    "tag": "Untagged",
+    "layer": 24,
+    "tag": "Item",
     "capacities_ids": [
-        "connect",
+        "box_iic",
         "hover"
     ],
     "anim_data": {
         "skin_kind": "",
-        "skin": "lil_cube",
+        "skin": "pckg_front",
         "anim_capacity_priorities": [
             {
                 "priority": 0,
@@ -41,6 +41,15 @@
                 "priority": 2,
                 "capacity_playing": "",
                 "capacities": [
+                    "idle_open"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 3,
+                "capacity_playing": "",
+                "capacities": [
                     "interact"
                 ],
                 "lock_orientation": true,
@@ -52,24 +61,60 @@
         "sorting_layer_id": -667374433,
         "order_in_layer": 0,
         "never_flip": false,
-        "layers": [],
+        "layers": [
+            {
+                "skin": "pckg_back",
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.4166666567325592
+                },
+                "local_rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "material_name": "objects",
+                "sorting_layer_id": -667374433,
+                "order_in_layer": 0,
+                "never_flip": false,
+                "follow_duration": false
+            }
+        ],
         "local_position": {
             "x": 0.0,
             "y": 0.0
         }
     },
     "inventory": {
-        "item_pools_data": [],
-        "item_type": 0
+        "item_pools_data": [
+            {
+                "item_type": 2,
+                "stacks_data": [
+                    {
+                        "item_ref": "ticket",
+                        "items_ids": [
+                            "ticket"
+                        ]
+                    }
+                ],
+                "pool_id": "stuff",
+                "max_stacks": 1,
+                "min_stacks": 1,
+                "scalable": false,
+                "item_rule": ""
+            }
+        ],
+        "item_type": 2
     },
     "feet_data": {
-        "box_colliders": [
+        "box_colliders": [],
+        "circle_colliders": [
             {
                 "local_position": {
                     "x": 0.0,
                     "y": 0.0
                 },
-                "layerID": 26,
+                "layerID": 25,
                 "pathfinding_area": -1,
                 "shadow_caster_data": {
                     "cast_and_self": false,
@@ -78,15 +123,11 @@
                 "is_trigger": false,
                 "offset": {
                     "x": 0.0,
-                    "y": 0.125
+                    "y": 0.23999999463558198
                 },
-                "size": {
-                    "x": 0.25,
-                    "y": 0.25
-                }
+                "radius": 0.23744136095046998
             }
-        ],
-        "circle_colliders": []
+        ]
     },
     "effects": [],
     "effects_ttl": []
