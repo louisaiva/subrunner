@@ -834,6 +834,7 @@ MonoBehaviour:
     m_Signals:
     - {fileID: 11400000, guid: 1be420a46a41e304f90b2113f7c52fe9, type: 2}
     - {fileID: 11400000, guid: 7b6268e40b72fdd44b510db0ace9dbb9, type: 2}
+    - {fileID: 11400000, guid: d5d152a5d57d508448b134175a772a34, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -854,6 +855,20 @@ MonoBehaviour:
         - m_Target: {fileID: 8982421028864261285}
           m_TargetAssemblyTypeName: Caller, Assembly-CSharp
           m_MethodName: SwitchForceToHUD
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 8982421028864261285}
+          m_TargetAssemblyTypeName: Caller, Assembly-CSharp
+          m_MethodName: StartTimer
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -943,6 +958,10 @@ PlayableDirector:
     value: {fileID: 0}
   - key: {fileID: 0}
     value: {fileID: 6950097047396557384}
+  - key: {fileID: -4670892692953332756, guid: b561f27595aacf747841deddcad5fb15, type: 2}
+    value: {fileID: 6195318498536703272}
+  - key: {fileID: -6376690241796270093, guid: b561f27595aacf747841deddcad5fb15, type: 2}
+    value: {fileID: 6950097047396557384}
   m_ExposedReferences:
     m_References: []
 --- !u!1 &1553423458277408030
@@ -1001,26 +1020,26 @@ PlayableDirector:
   m_DirectorUpdateMode: 1
   m_InitialTime: 0
   m_SceneBindings:
-  - key: {fileID: -2074165782061807318, guid: b561f27595aacf747841deddcad5fb15, type: 2}
-    value: {fileID: 5655104680682388577}
-  - key: {fileID: 813747335870904293, guid: b561f27595aacf747841deddcad5fb15, type: 2}
-    value: {fileID: 4002856641345040250}
-  - key: {fileID: -320375971608211555, guid: b561f27595aacf747841deddcad5fb15, type: 2}
-    value: {fileID: 6515006210586247241}
-  - key: {fileID: -2062401026654038004, guid: b561f27595aacf747841deddcad5fb15, type: 2}
-    value: {fileID: 8949920282530915787}
-  - key: {fileID: 9056097957674591835, guid: b561f27595aacf747841deddcad5fb15, type: 2}
-    value: {fileID: 2895216456587116690}
-  - key: {fileID: 2611415743025375139, guid: b561f27595aacf747841deddcad5fb15, type: 2}
-    value: {fileID: 520547058668642540}
-  - key: {fileID: 3776277400091640016, guid: b561f27595aacf747841deddcad5fb15, type: 2}
-    value: {fileID: 6528108330848578683}
-  - key: {fileID: 9041940286564708348, guid: b561f27595aacf747841deddcad5fb15, type: 2}
+  - key: {fileID: 0}
+    value: {fileID: 0}
+  - key: {fileID: 0}
+    value: {fileID: 0}
+  - key: {fileID: 9041940286564708348, guid: 7e96598edf6a2d24598dec94e6ee2fcc, type: 2}
     value: {fileID: 1615691306414648081}
-  - key: {fileID: 0}
-    value: {fileID: 0}
-  - key: {fileID: 0}
-    value: {fileID: 0}
+  - key: {fileID: -2074165782061807318, guid: 7e96598edf6a2d24598dec94e6ee2fcc, type: 2}
+    value: {fileID: 5655104680682388577}
+  - key: {fileID: 2611415743025375139, guid: 7e96598edf6a2d24598dec94e6ee2fcc, type: 2}
+    value: {fileID: 520547058668642540}
+  - key: {fileID: 9056097957674591835, guid: 7e96598edf6a2d24598dec94e6ee2fcc, type: 2}
+    value: {fileID: 2895216456587116690}
+  - key: {fileID: -2062401026654038004, guid: 7e96598edf6a2d24598dec94e6ee2fcc, type: 2}
+    value: {fileID: 8949920282530915787}
+  - key: {fileID: -320375971608211555, guid: 7e96598edf6a2d24598dec94e6ee2fcc, type: 2}
+    value: {fileID: 6515006210586247241}
+  - key: {fileID: 813747335870904293, guid: 7e96598edf6a2d24598dec94e6ee2fcc, type: 2}
+    value: {fileID: 4002856641345040250}
+  - key: {fileID: 3776277400091640016, guid: 7e96598edf6a2d24598dec94e6ee2fcc, type: 2}
+    value: {fileID: 6528108330848578683}
   m_ExposedReferences:
     m_References: []
 --- !u!1 &1608758401763337967
@@ -2209,6 +2228,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 1be420a46a41e304f90b2113f7c52fe9, type: 2}
     - {fileID: 11400000, guid: 7b6268e40b72fdd44b510db0ace9dbb9, type: 2}
     - {fileID: 11400000, guid: 228ff79ac55d9c04aa6ba850f34a50f8, type: 2}
+    - {fileID: 11400000, guid: 9ddaef19610651d4abdf2d72efe01ba5, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -2243,6 +2263,20 @@ MonoBehaviour:
         - m_Target: {fileID: 5298620138530664947}
           m_TargetAssemblyTypeName: Caller, Assembly-CSharp
           m_MethodName: SaveWorld
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 5298620138530664947}
+          m_TargetAssemblyTypeName: Caller, Assembly-CSharp
+          m_MethodName: StopTimer
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -3497,6 +3531,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 7b6268e40b72fdd44b510db0ace9dbb9, type: 2}
     - {fileID: 11400000, guid: fc8e6de579e5f4a41a19b614ef727cdd, type: 2}
     - {fileID: 11400000, guid: 1be420a46a41e304f90b2113f7c52fe9, type: 2}
+    - {fileID: 11400000, guid: e6db6dace4becf24e9c3eba4d22a11ed, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -3629,6 +3664,20 @@ MonoBehaviour:
         - m_Target: {fileID: 8454529277312202534}
           m_TargetAssemblyTypeName: UI_TimelineCapableCaller, Assembly-CSharp
           m_MethodName: ConnectCapable
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 8454529277312202534}
+          m_TargetAssemblyTypeName: UI_TimelineCapableCaller, Assembly-CSharp
+          m_MethodName: Despawn
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}

@@ -232,7 +232,7 @@ public class EcoEngine : MonoBehaviour
         {
             if (manual_tickers.TryGetValue(spec, out ManualSpeciesTicker ticker) && nests.TryGetValue(spec, out List<NestData> spec_nests))
             {
-                ticker.Tick(spec, spec_nests);
+                ticker.Tick(spec, spec_nests, tick_delay);
                 if (!ticker.handle_entity_receiving_each_frame) { continue; } // we don't want to handle entity receiving, we just skip it
             }
             

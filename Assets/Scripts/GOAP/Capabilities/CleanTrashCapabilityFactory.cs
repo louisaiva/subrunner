@@ -11,7 +11,6 @@ namespace subrunner.goap
 
             builder.AddGoal<CleanTrashGoal>()
                 .AddCondition<TrashOnFloor>(Comparison.SmallerThanOrEqual, 0)
-                .AddCondition<HasTrash>(Comparison.GreaterThanOrEqual, 20)
                 .SetBaseCost(10);
 
             builder.AddAction<InteractAction<Item, CleanTrashGoal>>()

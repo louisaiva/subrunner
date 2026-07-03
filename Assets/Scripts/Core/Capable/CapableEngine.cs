@@ -697,10 +697,23 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
         if (cdata is ItemData idata && idata.is_grabbed)
         {
-            Item item = idata.Capable as Item;
+            Item item = idata.Capable as Item; 
             Capable holder = item?.Holder;
             if (holder != null && item != null) { holder.Inventory.Drop(item, on_ground:false); }
             else { Debug.LogError($"(CapableEngine) will {(destroy_data ? "destroy" : "despawn")} item {idata.id} which is grabbed but we could not make it be dropped because either its capable was not loaded either we could not acces ItemHolder."); }
+        }
+
+        if (cdata.kind != "Perso")
+        {
+            // we also need to despawn all their inventory
+            List<string> items_ids = new List<string>();
+            if (cdata.Capable != null && cdata.Capable.Inventory != null && cdata.Capable.Inventory.Count > 0)
+            {
+                items_ids.AddRange(cdata.Capable.Inventory.GetAllItems().ConvertAll(i => i.data.id));
+            }
+            else if (cdata.inventory != null) { items_ids.AddRange(cdata.inventory.GetAllItemsIds()); }
+            for (int i=0; i<items_ids.Count; i++) { DespawnCapable(items_ids[i], destroy_data); }
+            if (log_spawning) { Debug.Log($"(CapableEngine) Despawned {cdata.id} and its inventory of {items_ids.Count} items : {string.Join(", ", items_ids)}"); }
         }
 
         // then we unload the capable
@@ -923,6 +936,11 @@ public class CapableEngine : BSOD_System<CapableEngine>
         {
             capable.AnimPlayer.Show();
             if (log_loading_extended) { Debug.Log($"(CapableSystem - Load) Game state is {"Building".AddColor(Color.greenYellow)} --> " + " SHOWING CAPABLE ".AddColor(Color.cyan) + data.id); }
+            return;
+        }
+        if (capable.AnimPlayer == null)
+        {
+            if (log_loading_extended) { Debug.LogWarning($"(CapableSystem - Load) Capable {data.id} has no AnimPlayer --> " + " CANT SHOW / HIDE ".AddColor(Color.red)); }
             return;
         }
 

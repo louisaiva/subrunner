@@ -86,6 +86,7 @@ public interface ICapacityData : IData
     public event Action<Capacity, CapacityData> OnCapacityUnloaded;
     [RuntimeOnly, NonSerialized] private Capacity _loaded_capacity;
     [RuntimeOnly] public Capacity Capacity { get { return _loaded_capacity; } }
+    [RuntimeOnly] public bool Loaded { get { return _loaded_capacity != null; } }
     public virtual void OnLoaded(Capacity capa)
     {
         _loaded_capacity = capa;

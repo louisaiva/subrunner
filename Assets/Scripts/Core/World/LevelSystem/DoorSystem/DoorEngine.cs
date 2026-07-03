@@ -578,6 +578,8 @@ public class DoorEngine : MonoBehaviour
             return null;
         }
 
+        // specific cost calculation
+        Dictionary<string, int> manual_room_costs = new Dictionary<string, int>() { { "big", 10 }, { "shortcut", 3 } };
         private bool calculate_shortest_path(RoomNode start, RoomNode dest, out List<RoomLink> path, bool log)
         {
             // todo : here can be improved by merging potential pre existing paths
@@ -597,14 +599,22 @@ public class DoorEngine : MonoBehaviour
             // we can log here
             string debug = "";
 
+
             // and return the shortest one
             int smallest_count = int.MaxValue;
             foreach (List<RoomLink> path2 in found_pathes)
             {
                 if (log_shortest_path_calculation) { debug += GetPathDetails(path2, start, dest) + "\n\n"; }
 
-                if (path2.Count > smallest_count) { continue; }
-                smallest_count = path2.Count;
+                int manual_cost = 0;
+                foreach (var kvp in manual_room_costs)
+                {
+                    string key = kvp.Key;
+                    int cost = kvp.Value;
+                    if (path2.Any(link => link.room1.ID.Contains(key) || link.room2.ID.Contains(key))) { manual_cost += cost; }
+                }
+                if (path2.Count + manual_cost > smallest_count) { continue; }
+                smallest_count = path2.Count + manual_cost;
                 path = path2;
             }
             if (log_shortest_path_calculation) { Debug.Log($"(DoorEngine.DoorGraph) Shortest path calculation btwn {start} & {dest} found " + $"{found}".AddColor(Color.limeGreen) + " pathes.\n" + debug); }

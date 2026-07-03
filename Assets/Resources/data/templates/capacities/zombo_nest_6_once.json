@@ -11,7 +11,7 @@
     "species": "zombo",
     "capacity": 6,
     "store_mode": 1,
-    "received_entities_since_last_reset": 0,
+    "spawned_once": false,
     "spawn_mode": 1,
     "trigger": {
         "local_position": {
@@ -31,6 +31,6 @@
         },
         "radius": 5.0
     },
-    "stored_entities": [],
+    "stored_entities": 6,
     "entities_to_spawn": []
 }

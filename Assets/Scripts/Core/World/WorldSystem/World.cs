@@ -133,6 +133,21 @@ public class World : BSOD_System<World>
     }
 
 
+    [Header("Speedrun Timer")]
+    private SpeedrunTimer _timer;
+    public SpeedrunTimer Timer
+    {
+        get
+        {
+            if (_timer == null)
+            {
+                _timer = GetComponent<SpeedrunTimer>();
+                if (_timer == null) { _timer = gameObject.AddComponent<SpeedrunTimer>(); }
+            }
+            return _timer;
+        }
+    }
+
     [Header("Logs")]
     public bool log = false;
     public bool log_loading_extended = false;
@@ -288,11 +303,18 @@ public class World : BSOD_System<World>
             UI_Manager.Instance.GetPool<UI_CinematicPool>()?.PlayCinematic("intro");
             if (log_loading_extended) { Debug.Log("(World - Cinematics) Playing intro cinematics"); }
             data.story_data.intro_done = true;
+            data.speedrun_clock = 0f;
         }
-        else if (GameManager.State == GameState.Loading) { GameManager.State = GameState.Gaming; }
+        else 
+        {
+            UI_Manager.Instance.SwitchToHUD();
+            GameManager.State = GameState.Gaming;
+            Timer.StartTimer();
+        }
     }
     public async Task UnloadWorld()
     {
+        Timer.StopTimer();
         if (log) { Debug.Log($"(World) ----------------------------------- UNLOADING WORLD : {world_id}"); }
         float start_time = Time.realtimeSinceStartup;
         /* */ load_status = WorldLoadStatus.Unloading;
@@ -483,6 +505,7 @@ public class World : BSOD_System<World>
     public string icon_path;
     public string icon_name;
     public Color color;
+    public float speedrun_clock;
 
 
     // story data

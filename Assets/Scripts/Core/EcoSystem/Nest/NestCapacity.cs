@@ -138,7 +138,9 @@ public class NestCapacity : Capacity
             species = this.species,
             capacity = this.max_entity_stored,
             store_mode = this.store_mode,
-            spawn_mode = this.spawn_mode
+            spawn_mode = this.spawn_mode,
+            spawned_once = false,
+            stored_entities = this.max_entity_stored // we full up the nest
         };
         
         Collider2D collider = GetComponentInChildren<Collider2D>(includeInactive: true);
@@ -262,6 +264,12 @@ public class NestCapacity : Capacity
         if (EntityCount == 0) { return; }
         entities_to_spawn = new List<string>();
         for (int i=0; i<stored_entities; i++) { entities_to_spawn.Add(Template); }
+        spawned_once = true;
+    }
+    public void SpawnOne()
+    {
+        if (EntityCount == 0) { return; }
+        entities_to_spawn.Add(Template);
         spawned_once = true;
     }
     public string ExtractSpawnableEntity()

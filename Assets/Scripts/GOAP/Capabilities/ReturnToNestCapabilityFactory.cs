@@ -10,6 +10,7 @@ namespace subrunner.goap
             var builder = new CapabilityBuilder("ReturnToNestCapability");
 
             builder.AddGoal<ReturnToNestGoal>()
+                .AddCondition<HasTrash>(Comparison.SmallerThanOrEqual, 0)
                 .AddCondition<IsInNest>(Comparison.GreaterThanOrEqual, 1)
                 .SetBaseCost(20);
 

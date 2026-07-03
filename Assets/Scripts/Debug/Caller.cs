@@ -34,6 +34,8 @@ public class Caller : MonoBehaviour
     public void BackToTitleScreen() => SceneLoader.Instance?.GoBackToMainMenu();
     public void LoadGame() => SceneLoader.Instance?.LoadGame();
     public void SaveWorld() => SaveEngine.SaveDynamicWorld();
+    public void StartTimer() => World.Instance?.Timer.StartTimer();
+    public void StopTimer() => World.Instance?.Timer.StopTimer();
 
     // PLAY BUTTON
     public void Play()

@@ -43,7 +43,26 @@
     },
     "feet_data": {
         "box_colliders": [],
-        "circle_colliders": []
+        "circle_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 26,
+                "pathfinding_area": -1,
+                "shadow_caster_data": {
+                    "cast_and_self": false,
+                    "used_layers": []
+                },
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.3700000047683716
+                },
+                "radius": 0.1756429374217987
+            }
+        ]
     },
     "effects": [],
     "effects_ttl": []

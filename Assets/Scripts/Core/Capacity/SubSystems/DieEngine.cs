@@ -34,7 +34,6 @@ public class DieEngine : MonoBehaviour
             }
         }
 
-
         // on donne un floating dmg
         if (show_smiley)
         {
@@ -48,6 +47,11 @@ public class DieEngine : MonoBehaviour
                     break;
                 }
             }
+        }
+
+        if (Controller.Capable != null && dying_capable == Controller.Capable && killer is Qwin)
+        {
+            World.LazyInstance.data.story_data.met_qwin = true;
         }
     }
 }
