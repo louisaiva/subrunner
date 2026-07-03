@@ -66,7 +66,7 @@ public class SpawnCapacity : Capacity
         Capable.AnimPlayer.Play(spawn_anim_name);
         if (spawn_after_animation && entity_layer_connected)
         {
-            while (Capable.AnimPlayer.IsPlaying(spawn_anim_name)) { await System.Threading.Tasks.Task.Yield(); }
+            while (Capable.Loaded && Capable.AnimPlayer.IsPlaying(spawn_anim_name)) { await System.Threading.Tasks.Task.Yield(); }
             entity_layer.DisableRenderer();
         }
 

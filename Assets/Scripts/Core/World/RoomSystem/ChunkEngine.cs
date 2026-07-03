@@ -425,9 +425,14 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
         capables_attach_times[id] = Time.time;
     }
     // CAPABLE FREEING
-    public void FreeCapable(CapableData capable_data) => FreeCapable(capable_data.id);
+    public void FreeCapable(CapableData capable_data) => FreeCapable(capable_data?.id);
     public void FreeCapable(string id)
     {
+        if (string.IsNullOrEmpty(id))
+        {
+            if (log_enter_exit) { Debug.LogWarning($"(ChunkEngine) FreeCapable received an empty or null id"); }
+            return;
+        }
         if (log_enter_exit) { Debug.Log($"(ChunkEngine) FreeCapable : {id} is going to be freed"); }
 
         // we free the capable from any room, it may be destroyed or else
