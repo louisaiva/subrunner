@@ -28,7 +28,8 @@ public class EventFeedback : InputFeedback
         try { ui_button.OnPointerEnter(null); }
         catch (Exception e)
         {
-            Debug.LogError($"(EventFeedback) OnInput was called but the gameObject is destroyed :/ type : {GetType().Name}, callbacks registered ? {callbacks_registered}, action is {action}, error : {e}");
+            if (log_callbacks) { Debug.LogError($"(EventFeedback) OnInput was called but the gameObject is destroyed :/ type : {GetType().Name}, callbacks registered ? {callbacks_registered}, action is {action}, error : {e}"); }
+            else { Debug.LogWarning($"(EventFeedback) callback error on input for {GetType().Name}. callbacks are ? {(callbacks_registered ? "registered" : "NOT registered")}. Enable 'log_callbacks' to see full error log"); }
         }
         
     }
@@ -38,7 +39,8 @@ public class EventFeedback : InputFeedback
         try { ui_button.OnPointerExit(null); }
         catch (Exception e)
         {
-            Debug.LogError($"(EventFeedback) OnReset was called but the gameObject is destroyed :/ type : {GetType().Name}, callbacks registered ? {callbacks_registered}, action is {action}, error : {e}");
+            if (log_callbacks) { Debug.LogError($"(EventFeedback) OnReset was called but the gameObject is destroyed :/ type : {GetType().Name}, callbacks registered ? {callbacks_registered}, action is {action}, error : {e}"); }
+            else { Debug.LogWarning($"(EventFeedback) callback error on input for {GetType().Name}. callbacks are ? {(callbacks_registered ? "registered" : "NOT registered")}. Enable 'log_callbacks' to see full error log"); }
         }
     }
 }

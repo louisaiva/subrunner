@@ -21,6 +21,7 @@ public class InputFeedback : MonoBehaviour
 
     [Header("Logs")]
     public bool log = false;
+    public bool log_callbacks = false;
 
     // START
     protected void Awake()
@@ -67,6 +68,7 @@ public class InputFeedback : MonoBehaviour
             action.canceled += reset_callback;
         }
         callbacks_registered = true;
+        if (log_callbacks) { Debug.Log($"(IF) registered callbacks for {action} on object of type : {GetType().Name}. callbacks are now registered".Cyan()); }
     }
     protected virtual void unregister_callbacks(InputAction action)
     {
@@ -83,6 +85,7 @@ public class InputFeedback : MonoBehaviour
             action.canceled -= reset_callback;
         }
         callbacks_registered = false;
+        if (log_callbacks) { Debug.Log($"(IF) unregistered callbacks for {action} on object of type : {GetType().Name}. callbacks are now unregistered".Magenta()); }
     }
     
     // ON ENABLE / DISABLE

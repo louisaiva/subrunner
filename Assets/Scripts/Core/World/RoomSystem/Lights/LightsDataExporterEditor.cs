@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
-using UnityEditor;
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
 
 [CustomEditor(typeof(LightsDataExporter))]
 public class LightsDataExporterEditor : Editor
@@ -19,3 +21,5 @@ public class LightsDataExporterEditor : Editor
         }
     }
 }
+
+#endif

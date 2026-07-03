@@ -14,7 +14,8 @@ public class InputIndicationEngine : MonoBehaviour
     [SerializeField] private ActionSwitcher switcher;
 
     public Loggable<InputIndicationEngine> log;
-    
+    public bool enable_if_log_callbacks = false;
+
     private void Update()
     {
         if (input_indication == null) { return; }
@@ -38,7 +39,7 @@ public class InputIndicationEngine : MonoBehaviour
 
         // we set the IF position and color
         input_indication.position = current_iic.transform.position;
-        switcher.SwitchAction(current_iic.InputName, current_iic.Color);
+        switcher.SwitchAction(current_iic.InputName, current_iic.Color, enable_if_log_callbacks);
 
         // we show the IF
         input_indication.gameObject.SetActive(true);

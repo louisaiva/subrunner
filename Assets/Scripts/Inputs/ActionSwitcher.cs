@@ -32,7 +32,7 @@ public class ActionSwitcher : MonoBehaviour
     [SerializeField] private bool log = false;
 
 
-    public async void SwitchAction(string action_name, Color? color=null)
+    public async void SwitchAction(string action_name, Color? color=null, bool log_callbacks=false)
     {
         // we get the binding names of the action
         InputManager.Instance.GetActionBindingForAction(action_name, ref kb_ref, ref gm_ref);
@@ -57,6 +57,14 @@ public class ActionSwitcher : MonoBehaviour
             if (gmpd == null) { Debug.LogError($"(ActionSwitcher) New gamepad IF for '{action_name}' and binding '{gm_ref}' could not be instantiated by IF_Bank !"); }
             if (kb == null) { Debug.LogError($"(ActionSwitcher) New keyboard IF for '{action_name}' and binding '{kb_ref}' could not be instantiated by IF_Bank !"); }
         }
+
+        if (log_callbacks)
+        {
+            // enable logs callbacks on the IFs
+            if (gmpd != null && gmpd.TryGetComponent(out InputFeedback gmpdIF)) { gmpdIF.log_callbacks = true; }
+            if (kb != null && kb.TryGetComponent(out InputFeedback kbIF)) { kbIF.log_callbacks = true; }
+        }
+
         if (switcher != null)
         {
             switcher.ClearIFs();

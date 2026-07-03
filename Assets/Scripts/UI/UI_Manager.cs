@@ -131,7 +131,7 @@ public class UI_Manager : Singleton<UI_Manager>
     }
 
     // UI POOL SWITCH
-    public void TogglePool(string pool_name, bool allow_mult_stacking = true)
+    public void TogglePool(string pool_name, bool allow_mult_stacking = false)
     {
         if (CurrentPool == pool_name)
         {

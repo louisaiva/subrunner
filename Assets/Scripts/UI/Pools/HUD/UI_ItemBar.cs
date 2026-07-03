@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -12,9 +13,14 @@ public class UI_ItemBar : MonoBehaviour
     [SerializeField] private UI_ItemStack weapon_prefab;
     [SerializeField] private UI_ItemStack device_prefab;
     [SerializeField] private UI_ItemStack file_prefab;
-
     private List<UI_ItemStack> item_stacks = new List<UI_ItemStack>();
 
+    [Header("Default color")]
+    [SerializeField] private Color default_color;
+
+    [Header("Callbacks")]
+    private Dictionary<(ItemPool,ActionSwitcher), Action<Item>> callbacks = new Dictionary<(ItemPool,ActionSwitcher), Action<Item>>();
+    private Dictionary<ItemPool,Graphic> notches = new Dictionary<ItemPool, Graphic>();
 
 
     // ATTACH TO INVENTORY
@@ -125,17 +131,46 @@ public class UI_ItemBar : MonoBehaviour
         new_stack.Init(stack);
         item_stacks.Add(new_stack);
 
-        // switch action, apply color to EFs
+        // get item, switcher & notch
         Item item = stack.Item;
-        if (item == null) { return; }
         ActionSwitcher switcher = new_stack.GetComponentInChildren<ActionSwitcher>(includeInactive:true);
-        switcher.SwitchAction(InputManager.Instance.GetActionFromItemPool(pool), item.Color);
-
-        // we also set the color of the notch
         Graphic notch = new_stack.transform.Find("notch").GetComponent<Graphic>();
-        if (notch == null) { return; }
-        notch.color = item.Color;
+        if (notch != null) { notches[pool] = notch; }
+
+        // register callback
+        Action<Item> callback = assign_callback(pool,switcher);
+        if (item == null || switcher == null) { return; }
+        callback.Invoke(item); // we fire the callback, which will switch the action, & set the colors
     }
+
+
+    // CALLBACKS
+    private Action<Item> assign_callback(ItemPool pool, ActionSwitcher switcher)
+    {
+        if (pool == null || switcher == null) { return null; }
+        Action<Item> callback = (item) => handle_item_received(item, pool, switcher);
+        callbacks[(pool,switcher)] = callback;
+        pool.OnItemGrabbed += callback;
+        return callback;
+    }
+    private void handle_item_received(Item item, ItemPool pool, ActionSwitcher switcher)
+    {
+        if (pool == null || switcher == null) { return; }
+        Color color = item != null ? item.Color : default_color;
+        switcher.SwitchAction(InputManager.Instance.GetActionFromItemPool(pool), color);
+        if (notches.ContainsKey(pool)) { notches[pool].color = color; }
+    }
+    private void clear_callbacks()
+    {
+        foreach (var kvp in callbacks)
+        {
+            ItemPool pool = kvp.Key.Item1;
+            if (pool == null) { continue; }
+            pool.OnItemGrabbed -= kvp.Value;
+        }
+        callbacks.Clear();
+    }
+
 
     // UPDATE
     private void Update()
@@ -151,7 +186,12 @@ public class UI_ItemBar : MonoBehaviour
     }
 
     // CLEAR
-    public void Clear() { clear_item_stacks(); }
+    public void Clear()
+    {
+        clear_callbacks();
+        notches.Clear();
+        clear_item_stacks();
+    }
     private void clear_item_stacks()
     {
         foreach (UI_ItemStack stack in item_stacks)
