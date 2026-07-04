@@ -228,7 +228,7 @@ public class AnimLayer : MonoBehaviour
         bool is_see_through = mat.name.Contains("see_through");
         if (is_see_through)
         {
-            Debug.LogWarning("(AnimLayer) See through material (" + mat.name + ") detected on layer " + name + " of skin " + skin + " on capable '" + (leader?.Capable == null ? "null" : leader.Capable.ID) + "'");
+            // Debug.LogWarning("(AnimLayer) See through material (" + mat.name + ") detected on layer " + name + " of skin " + skin + " on capable '" + (leader?.Capable == null ? "null" : leader.Capable.ID) + "'");
             sr.SetSharedMaterials(new List<Material> { mat });
         }
         else { sr.material = mat; }

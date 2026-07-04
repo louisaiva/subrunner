@@ -274,13 +274,14 @@ public class World : BSOD_System<World>
 
 
         ///
-        //  6. WE SUCCESSFULLY LOADED THE WORLD !
-        /* */ load_status = WorldLoadStatus.Loaded;
+        //  6. WE FINALIZE EVERYTHING
+        /* */
+        load_status = WorldLoadStatus.FinalizingLoading;
         ///
-        if (log)
-        {
-            Debug.Log($"(World) ----------------------------------- WORLD LOADED : (in {Time.realtimeSinceStartup - start_time}s{(!log_loading_extended ? ")" : $", previous phase duration: {Time.realtimeSinceStartup - phase_time}s)")}");
-        }
+        if (log_loading_extended) { Debug.Log($"(World) ----------------------------------- WAITING FOR PLAYER : (previous phase duration: {Time.realtimeSinceStartup - phase_time}s)"); }
+        phase_time = Time.realtimeSinceStartup;
+
+
         // we make sure the first chunk loaded are the one of the player
         /* string chunk_id = Controller.LazyInstance.data != null ? Controller.LazyInstance.data.player_chunk : null;
         if (string.IsNullOrEmpty(chunk_id))
@@ -310,6 +311,16 @@ public class World : BSOD_System<World>
             UI_Manager.Instance.SwitchToHUD();
             GameManager.State = GameState.Gaming;
             Timer.StartTimer();
+        }
+
+        ///
+        //  6. WE SUCCESSFULLY LOADED THE WORLD !
+        /* */
+        load_status = WorldLoadStatus.Loaded;
+        ///
+        if (log)
+        {
+            Debug.Log($"(World) ----------------------------------- WORLD LOADED : (in {Time.realtimeSinceStartup - start_time}s{(!log_loading_extended ? ")" : $", previous phase duration: {Time.realtimeSinceStartup - phase_time}s)")}");
         }
     }
     public async Task UnloadWorld()
@@ -570,6 +581,7 @@ public class World : BSOD_System<World>
     LoadingController,
     LoadingCinematics,
     LoadingPlayerLevel,
+    FinalizingLoading,
     Loaded,
     Unloading
 }

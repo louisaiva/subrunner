@@ -4250,10 +4250,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2427471456612112662, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: extract_json_on_load
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3744786912224508728, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -4293,18 +4289,6 @@ PrefabInstance:
     - target: {fileID: 3744786912224508728, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5077967483001363746, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: log_icons_paths
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5077967483001363746, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: log_selecting_world
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5077967483001363746, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: log_world_data_loading_on_awake
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5846687295635405809, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: m_Name

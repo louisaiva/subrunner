@@ -208,7 +208,7 @@ namespace subrunner.goap
         }
         private void on_target_changed_room(IMonoAgent agent, Data data)
         {
-            Debug.Log($"(AttackAction) {data.ia.ID} target {data.CapableTarget.CapableID} just changed room !!".AddColor(Color.aliceBlue));
+            if (Logger.LazyInstance.LOG_ATTACK_ACTION) { Debug.Log($"(AttackAction) {data.ia.ID} target {data.CapableTarget.CapableID} just changed room !!".AddColor(Color.aliceBlue)); }
             if (data.ia.TryGetCapacity(out MotorCapacity mc)) { mc.mdata.ClearDestination(typeof(KillBeingGoal)); }
             agent.StopAction(resolveAction: true);
             // Stop(agent, data); // we simply stops the action when the target changes room, will recalculate the good action

@@ -434,7 +434,7 @@ public class DoorEngine : MonoBehaviour
     {
         public List<RoomNode> rooms;
         public List<RoomLink> links;
-        private bool log_shortest_path_calculation = true;
+        private bool log_shortest_path_calculation = false;
         private bool hide_log_room_not_found = false;
         private bool log_recursive_path_calcul = false;
 
