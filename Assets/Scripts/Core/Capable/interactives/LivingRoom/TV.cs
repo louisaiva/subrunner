@@ -34,7 +34,7 @@ public class TV : Capable, Interactable, Openable
         { interactors.Remove(interact_capacity); }
 
         // if there is no more interactor we close the thing
-        if (interactors.Count == 0 && TryGetCapacity(out CloseCapacity close_capa))
+        if (interactors.Count == 0 && ((Openable)this).IsOpenOrOpening() && TryGetCapacity(out CloseCapacity close_capa))
         { close_capa.Close(); }
     }
     

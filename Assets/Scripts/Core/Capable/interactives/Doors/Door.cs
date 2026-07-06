@@ -194,18 +194,6 @@ public class Door : Capable, Interactable, Openable
     }
 
 
-    // GETTERS
-    public bool IsOpenOrOpening()
-    {
-        return (is_open && !is_moving) || (!is_open && is_moving);
-    }
-    public bool IsCloseOrClosing()
-    {
-        return (!is_open && !is_moving) || (is_open && is_moving);
-    }
-
-
-
     // LOAD / UNLOAD DATA
     public override void LoadData(CapableData data)
     {

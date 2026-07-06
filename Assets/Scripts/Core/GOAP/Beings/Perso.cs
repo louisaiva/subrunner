@@ -86,48 +86,6 @@ public class Perso : Movable, Hacker
     public Action<Device> OnDeviceGranted { get; set; } = delegate { };
 
 
-    // CONTROL
-    /* private bool callbacks_set = false;
-    public override void OnControlled()
-    {
-
-        // mets les callbacks de settings
-        // SettingsManager.Instance.RegisterCallback("skin", set_skin);
-        // SettingsManager.Instance.RegisterCallback("ghost", set_ghost);
-
-        // callbacks de health capacity
-        HealthCapacity health_capacity = GetCapacity<HealthCapacity>();
-        health_capacity.OnTakeDamage += OnDamageTaken;
-        health_capacity.OnHeal += OnLifeAdded;
-        health_capacity.OnDie += OnDie;
-
-        callbacks_set = true;
-
-        Debug.Log("(Perso) on controlled called on '" + this.ID + $"', health capa is {health_capacity.ID}");
-    }
-    public override void OnUncontrolled()
-    {
-
-        // remove callbacks
-        // SettingsManager.Instance.UnregisterCallback("skin", set_skin);
-        // SettingsManager.Instance.UnregisterCallback("ghost", set_ghost);
-
-        // callbacks de health capacity
-        HealthCapacity health_capacity = GetCapacity<HealthCapacity>();
-        health_capacity.OnTakeDamage -= OnDamageTaken;
-        health_capacity.OnHeal -= OnLifeAdded;
-        health_capacity.OnDie -= OnDie;
-
-        callbacks_set = false;
-
-        Debug.Log("(Perso) on uncontrolled called on '" + this.ID + "'");
-    } */
-    /* protected override void OnDestroy()
-    {
-        base.OnDestroy();
-        if (callbacks_set) { OnUncontrolled(); }
-    } */
-
     ///
     //
     /// PERSO CALLBACKS
