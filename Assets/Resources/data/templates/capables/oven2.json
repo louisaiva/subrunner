@@ -1,0 +1,122 @@
+﻿{
+    "<id>k__BackingField": "oven2",
+    "kind": "Oven",
+    "position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": -1.0
+    },
+    "layer": 29,
+    "tag": "Untagged",
+    "capacities_ids": [
+        "chest_iic",
+        "hover"
+    ],
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "oven",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "hover"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 2,
+                "capacity_playing": "",
+                "capacities": [
+                    "heating"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 3,
+                "capacity_playing": "",
+                "capacities": [
+                    "heating_up",
+                    "heating_down"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            }
+        ],
+        "current_capacity": "",
+        "material_name": "objects",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "never_flip": false,
+        "layers": [],
+        "local_position": {
+            "x": 0.0,
+            "y": 0.0
+        }
+    },
+    "inventory": {
+        "item_pools_data": [
+            {
+                "item_type": 2,
+                "stacks_data": [],
+                "pool_id": "pot",
+                "max_stacks": 1,
+                "min_stacks": 1,
+                "scalable": false,
+                "item_rule": "pot"
+            },
+            {
+                "item_type": 2,
+                "stacks_data": [],
+                "pool_id": "ingredients",
+                "max_stacks": 5,
+                "min_stacks": 5,
+                "scalable": false,
+                "item_rule": "food"
+            }
+        ],
+        "item_type": 2
+    },
+    "feet_data": {
+        "box_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 29,
+                "pathfinding_area": 1,
+                "shadow_caster_data": {
+                    "cast_and_self": false,
+                    "used_layers": []
+                },
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.1666666716337204
+                },
+                "size": {
+                    "x": 1.0,
+                    "y": 0.3333333432674408
+                }
+            }
+        ],
+        "circle_colliders": []
+    },
+    "effects": [],
+    "effects_ttl": []
+}

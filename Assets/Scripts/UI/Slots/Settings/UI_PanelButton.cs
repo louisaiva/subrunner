@@ -21,11 +21,15 @@ public class UI_PanelButton : UI_EventButton
     [Header("Panel Settings")]
     public Sprite panel_sprite;
     [SerializeField] private UI_Panel target_panel;
+    public UI_Panel TargetPanel => target_panel;
     [SerializeField] private UI_PanelManager panel_manager;
 
+
     // START
-    protected virtual void Start()
+    protected override void Start()
     {
+        base.Start();
+
         // we register to the panel manager events
         if (panel_manager == null)
         {
@@ -57,6 +61,16 @@ public class UI_PanelButton : UI_EventButton
     }
 
     // POINTER HANDLER
+
+    public override void OnPointerEnter(PointerEventData eventData)
+    {
+        base.OnPointerEnter(eventData);
+
+        // if we are not on our panel right now, it means
+        // that another ui_panelbutton is disabled but HOVERED
+        // -> its colorer is shown.
+        // we want to hide all 
+    }
     public override void OnPointerClick(PointerEventData eventData)
     {
         base.OnPointerClick(eventData);

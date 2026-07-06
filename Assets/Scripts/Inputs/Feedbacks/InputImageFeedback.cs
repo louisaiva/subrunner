@@ -13,7 +13,6 @@ public class InputImageFeedback : InputFeedback, Colorant
 
     [Header("Image")]
     [SerializeField] protected Image image;
-    [SerializeField]
     protected SpriteBank bank
     {
         get
@@ -37,7 +36,7 @@ public class InputImageFeedback : InputFeedback, Colorant
     [SerializeField] private TextMeshProUGUI label;
 
 
-    protected override void Start()
+    public override void InitializeWithAction(InputAction action)
     {
         // we verify the image & the input
         if (log)
@@ -46,7 +45,7 @@ public class InputImageFeedback : InputFeedback, Colorant
             if (input == null) { Debug.LogWarning("(InputImageFeedback : " + name + " ) input is not set ! you should assign it in the inspector"); }
         }
 
-        base.Start();
+        base.InitializeWithAction(action);
     }
 
     public override void OnInput()
@@ -108,6 +107,8 @@ public class InputImageFeedback : InputFeedback, Colorant
 
 public interface Colorant
 {
+    public GameObject gameObject { get; }
+    public Transform transform { get; }
     public List<UI_Colorer> Colorers { get; }
     public void SetColors(Color base_color, Color clicked_color);
     public Color HoverColor { get; }

@@ -1,16 +1,13 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 
-public class ItemBank : Singleton<ItemBank>
-{ 
+public class ItemBank : MonoBehaviour
+{
 
     [Header("Item Bank")]
-    public List<string> items_path = new List<string>() { "prefabs/items" };
+    public List<string> items_path = new List<string>() { "prefabs/items", "prefabs/files" };
     public Dictionary<string, Sprite> item_sprites = new Dictionary<string, Sprite>();
     public Dictionary<string, string> item_prefabs = new Dictionary<string, string>();
     public List<string> item_custom_references = new List<string>();
@@ -25,29 +22,30 @@ public class ItemBank : Singleton<ItemBank>
     public List<string> module_references = new List<string>();
 
     [Header("UI")]
-    public GameObject ui_item_prefab;
-    public GameObject ui_module_prefab;
+    [SerializeField] private List<UI_ItemSlotPrefab> ui_item_slot_prefabs = new List<UI_ItemSlotPrefab>();
+    // public GameObject ui_item_prefab;
+    // public GameObject ui_big_item_prefab;
+    // public GameObject ui_file_prefab;
+    // public GameObject ui_module_prefab;
 
     [Header("Logs")]
-    public bool debug = false;
+    public bool log_awake = false;
+    public bool log_awake_extended = false;
+    public bool log = false;
 
 
-    // AWAKE & LOADING
-    protected override void Awake()
+    // AWAKE & SINGLETON LOGIC & LOADING
+    public static ItemBank Instance { get; private set; }
+    private void Awake()
     {
-        base.Awake();
-
-        // on vérifie qu'on a un prefab pour l'UI
-        if (ui_item_prefab == null)
-        {
-            Debug.LogError("(ItemBank) missing ui_item_prefab, you need to set it in the inspector");
-        }
+        // SINGLETON LOGIC
+        if (Instance == null) { Instance = this; }
+        else { Destroy(gameObject); return; }
 
         // on charge les items
         loadItems();
-        Debug.Log(getItemsList());
+        if (log_awake) { Debug.Log(getItemsList()); }
     }
-    /* public void init(Sprite[] fake_sprites) {} */
     public void loadItems()
     {
         int item_count = 0;
@@ -64,7 +62,7 @@ public class ItemBank : Singleton<ItemBank>
                 Item item = prefab.GetComponent<Item>();
                 if (item == null)
                 {
-                    if (debug) { Debug.LogWarning("(ItemBank) prefab " + prefab.name + " has no Item component, skipping it"); }
+                    if (log_awake_extended) { Debug.LogWarning("(ItemBank) prefab " + prefab.name + " has no Item component, skipping it"); }
                     continue;
                 }
                 string reference = item.Reference;
@@ -78,7 +76,7 @@ public class ItemBank : Singleton<ItemBank>
 
                 item_count++;
 
-                if (debug)
+                if (log_awake_extended)
                 {
                     Debug.Log("(ItemBank) loaded item : " + reference +
                         (reference == prefab.name ? "" : " (prefab name is " + prefab.name + ")"));
@@ -86,7 +84,7 @@ public class ItemBank : Singleton<ItemBank>
             }
         }
 
-        if (debug) { Debug.Log("(ItemBank) loaded " + item_count + " items"); }
+        if (log_awake_extended) { Debug.Log("(ItemBank) loaded " + item_count + " items"); }
     }
 
 
@@ -98,7 +96,7 @@ public class ItemBank : Singleton<ItemBank>
         if (!item_prefabs.ContainsKey(reference))
         {
             Debug.LogError("(ItemBank) cannot find item prefab for " + reference
-                + ". are you sure its corresponding item prefab is in the " + items_path + " folder?");
+                + ". are you sure its corresponding item prefab is in the " + string.Join(" | ", items_path) + " folders ?");
             return null;
         }
 
@@ -115,7 +113,7 @@ public class ItemBank : Singleton<ItemBank>
             return null;
         }
 
-        if (debug) { Debug.Log("(ItemBank) Instanciating " + reference + " item prefab !!"); }
+        if (log) { Debug.Log("(ItemBank) Instanciating " + reference + " item prefab !!"); }
         return item;
     }
     public Module CreateModule(string reference)
@@ -124,7 +122,7 @@ public class ItemBank : Singleton<ItemBank>
         if (!item_prefabs.ContainsKey(reference))
         {
             Debug.LogError("(ItemBank) cannot find module prefab for " + reference
-                + ". are you sure its corresponding item prefab is in the " + items_path + " folder?");
+                + ". are you sure its corresponding item prefab is in the " + string.Join(" | ", items_path) + " folders ?");
             return null;
         }
 
@@ -153,33 +151,50 @@ public class ItemBank : Singleton<ItemBank>
             upcount++;
         }
 
-        if (debug) { Debug.Log("(ItemBank) Instanciating " + reference + " module prefab !!"); }
+        if (log) { Debug.Log("(ItemBank) Instanciating " + reference + " module prefab !!"); }
         return module;
     }
-    public Module CreateRandomModule(List<string> module_references)
+    /* public Module CreateRandomModule(List<string> module_references)
     {
         // we get a random reference
         string random_ref = module_references[UnityEngine.Random.Range(0, module_references.Count)];
         return CreateModule(random_ref);
-    }
+    } */
 
 
     // UI_ITEM GENERATOR
-    public GameObject CreateUI_Item()
+    public GameObject CreateUI_Item(Transform parent, string slot_type="item")
     {
-        // on instancie le prefab
-        GameObject ui_item = Instantiate(ui_item_prefab, Vector3.zero, Quaternion.identity);
+        // on récup le bon prefab
+        GameObject prefab = get_prefab_type(slot_type);
+        if (prefab == null)
+        {
+            Debug.LogError("(ItemBank) unknown slot type " + slot_type + ", cannot create UI_ItemStack");
+            return null;
+        }
 
+        /* switch (slot_type)
+        {
+            case "item": prefab = ui_item_prefab; break;
+            case "big_item": prefab = ui_big_item_prefab; break;
+            case "file": prefab = ui_file_prefab; break;
+            case "module": prefab = ui_module_prefab; break;
+            default: Debug.LogError("(ItemBank) unknown slot type " + slot_type + ", cannot create UI_ItemStack"); return null;
+        } */
+
+        // on crée le slot
+        GameObject ui_item = Instantiate(prefab, Vector3.zero, Quaternion.identity, parent);
         return ui_item;
     }
-    public GameObject CreateUI_Module()
+    private GameObject get_prefab_type(string slot_type)
     {
-        // we create the module
-        GameObject module = Instantiate(ui_module_prefab, Vector3.zero, Quaternion.identity);
-
-        return module;
+        foreach (UI_ItemSlotPrefab slot_prefab in ui_item_slot_prefabs)
+        {
+            if (slot_prefab.slot_type == slot_type) { return slot_prefab.prefab; }
+        }
+        Debug.LogError("(ItemBank) unknown slot type " + slot_type + ", cannot find prefab");
+        return null;
     }
-
 
 
     // GETTERS
@@ -189,6 +204,11 @@ public class ItemBank : Singleton<ItemBank>
         if (item_custom_references.Contains(item.Reference))
         {
             int index = item_custom_references.IndexOf(item.Reference);
+            return item_custom_sprites[index];
+        }
+        else if (item_custom_references.Contains(item.PrefixReference))
+        {
+            int index = item_custom_references.IndexOf(item.PrefixReference);
             return item_custom_sprites[index];
         }
 
@@ -201,7 +221,7 @@ public class ItemBank : Singleton<ItemBank>
         if (sprite != null) { return sprite; }
 
         Debug.LogError("(ItemBank) cannot find sprite " + item.Reference
-                + ". are you sure its corresponding item prefab is in the " + items_path + " folder?");
+                + ". are you sure its corresponding item prefab is in the " + string.Join(" | ", items_path) + " folders ?");
         return null;
     }
     public Sprite GetUI_Icon(string icon_name)
@@ -259,4 +279,10 @@ public class ItemBank : Singleton<ItemBank>
         return title + count + " items\n" + list;
     }
 
+}
+
+[Serializable] public class UI_ItemSlotPrefab
+{
+    public string slot_type;
+    public GameObject prefab;
 }

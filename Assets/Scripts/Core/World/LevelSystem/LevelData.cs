@@ -1,0 +1,66 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AI;
+
+public interface IData
+{
+    public string id { get; set; }
+    string GetDetails();
+}
+
+[Serializable] public class LevelData : IData
+{
+    [field: SerializeField] public string id { get; set; }
+
+    // rooms ids
+    public List<string> rooms_ids; // list of the rooms that are part of this level
+    public int TotalRoomsCount { get { return rooms_ids != null ? rooms_ids.Count : 0; } }
+    public int TotalChunksCount
+    {
+        get
+        {
+            List<RoomData> rooms_data = RoomEngine.Instance.GetRoomsDataFromIDs(rooms_ids);
+            int count = 0;
+            foreach (RoomData room_data in rooms_data)
+            {
+                count += room_data.TotalChunksCount;
+            }
+            return count;
+        }
+    }
+    public int TotalCapablesCount
+    {
+        get
+        {
+            List<RoomData> rooms_data = RoomEngine.Instance.GetRoomsDataFromIDs(rooms_ids);
+            int count = 0;
+            foreach (RoomData room_data in rooms_data)
+            {
+                count += room_data.TotalCapablesCount;
+            }
+            return count;
+        }
+    }
+    public int TotalCapacitiesCount
+    {
+        get
+        {
+            List<RoomData> rooms_data = RoomEngine.Instance.GetRoomsDataFromIDs(rooms_ids);
+            int count = 0;
+            foreach (RoomData room_data in rooms_data)
+            {
+                count += room_data.TotalCapacitiesCount;
+            }
+            return count;
+        }
+    }
+
+
+    public string GetDetails()
+    {
+        string details = $"Level {id} :\n";
+        details += $"  - rooms : {rooms_ids.Count} rooms\n  -{string.Join("\n  -", rooms_ids)}\n";
+        return details;
+    }
+}

@@ -18,6 +18,7 @@ public class FeedbackPoolSchematic : ScriptableObject
     public Color base_color = Color.white;
     public Color inputed_color = Color.green;
     public List<GameObject> prefabs;
+    public List<string> actions;
 }
 
 

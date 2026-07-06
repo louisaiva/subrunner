@@ -1,6 +1,0 @@
--
--
-- ## Description
-	- résultat d'une #Sensation
-	- voué à être transformé en #Feeling (peut etre)
--

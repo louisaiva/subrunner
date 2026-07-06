@@ -112,14 +112,16 @@ public class MotherboardBuilder : MonoBehaviour
         UI_ModulePool module_pool = slots_parent.GetComponent<UI_ModulePool>();
 
         // we apply the slots nb to the module_pool max_slots (bcz it is non scalable)
-        module_pool.MaxSlots = module_slots;
+        (module_pool.Storer as ItemPool).MaxStacks = module_slots;
         if (module_pool.Count > module_slots && Application.isPlaying)
         {
-            module_pool.DropOverheadSlots();
+            // module_pool.DropOverheadSlots();
+            Debug.LogError("(MotherboardBuilder) Motherboard is reducing its slots size which is NOT allowed !!!!");
         }
         else if (module_pool.Count < module_slots && Application.isPlaying)
         {
-            module_pool.CreateEmptySlots(module_slots - module_pool.Count);
+            // module_pool.CreateEmptySlots(module_slots - module_pool.Count);
+            // no need for this because if well done it will automatically sync with its ItemPool stacks :D
         }
 
         // we resize the entire motherboard to fit perfectly in the canvas
@@ -215,7 +217,7 @@ public class MotherboardBuilder : MonoBehaviour
         UI_ModulePool module_pool = slots_parent.GetComponent<UI_ModulePool>();
         for (int i = 0; i < module_pool.Count; i++)
         {
-            UI_Item slot = module_pool.GetSlotAt(i);
+            UI_ItemStack slot = module_pool.GetSlotAt(i);
             if (slot == null) { continue; }
             Image img = slot.GetComponent<Image>();
             if (img == null) { continue; }

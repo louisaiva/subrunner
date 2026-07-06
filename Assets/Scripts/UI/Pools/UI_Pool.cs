@@ -10,15 +10,17 @@ public class UI_Pool : MonoBehaviour
     public string Reference = "pool";
     public bool Showed = false;
     public bool Stacked = false; // if true the pool is stacked below another one
+    private bool prepared = false;
 
     [Header("Transition parameters")]
-    public PoolTransitionSettings TransitionSettings = PoolTransitionSettings.InGameDefault;
+    public UI_PoolSettings Settings;
+    // public PoolTransitionSettings TransitionSettings = PoolTransitionSettings.InGameDefault;
     protected Coroutine current_transition = null;
 
 
-    [Header("Pool navigation parameters")]
+    /* [Header("Pool navigation parameters")]
     [SerializeField] protected float angle_threshold = 45f;
-    [SerializeField] protected float angle_multiplicator = 0f;
+    [SerializeField] protected float angle_multiplicator = 0f; */
 
     [Header("UI Elements")]
     [SerializeField] protected List<GameObject> ui_elements = new List<GameObject>();
@@ -27,14 +29,16 @@ public class UI_Pool : MonoBehaviour
     [Header("Stacked UI Elements")]
     [SerializeField] protected List<GameObject> stacked_elements = new List<GameObject>(); // elements that will stay showed when stacking a pool on top of this pool
     // stacked elements must also be in ui_elements
-
+ 
     [Header("Logs")]
     [SerializeField] protected bool log = false;
+    [SerializeField] protected bool log_extended = false;
     [SerializeField] protected bool log_elements_showing = false;
 
     // AWAKE
     protected virtual void Awake()
     {
+        if (prepared) { return; }
         // we hide the pool for the first time
         for (int i = 0; i < ui_elements.Count; i++)
         {
@@ -53,37 +57,70 @@ public class UI_Pool : MonoBehaviour
         if (log) { Debug.Log("(UI_Pool) stopped current transition for pool : " + Reference); }
     }
 
+
+
+
+    ///
+    //
+    ///  MAIN COROUTINES
+    //
+    ///
+
+
     // SHOW / HIDE
     public IEnumerator ShowCoroutine(List<GameObject> dont_show = null, float duration_override = -1f, bool was_stacked = false)
     {
+        if (log_extended) { Debug.Log($"(UI_Pool) ShowCoroutine called on pool : {Reference}"); }
         // stop any started coroutine
         StopCoroutineIfAny();
 
+        // on fait les actions avant showing
+        if (!was_stacked) { before_adding_to_stack(); }
+        before_showing();
+
+
         // on lance l'affichage
+        if (log_extended) { Debug.Log($"(UI_Pool - ShowCoroutine) starting show coroutine : {Reference}"); }
         current_transition = StartCoroutine(show_coroutine(dont_show, duration_override, was_stacked));
         yield return current_transition;
+        if (log_extended) { Debug.Log($"(UI_Pool - ShowCoroutine) show coroutine succeeded ! : {Reference}"); }
 
         Showed = true;
         Stacked = false;
 
         // on enable
+        if (log_extended) { Debug.Log($"(UI_Pool - ShowCoroutine) starting enable coroutine : {Reference}"); }
         yield return StartCoroutine(enable_coroutine());
+        if (log_extended) { Debug.Log($"(UI_Pool - ShowCoroutine) enable coroutine succeeded ! : {Reference}"); }
+
+        // on added to stack
+        if (!was_stacked) { after_added_to_stack(); }
 
         // on clear la transition
         current_transition = null;
     }
     public IEnumerator HideCoroutine(List<GameObject> dont_hide = null, float duration_override = -1f)
     {
+        if (log_extended) { Debug.Log($"(UI_Pool) HideCoroutine called on pool : {Reference}"); }
+
         // stop any started coroutine
         StopCoroutineIfAny();
 
         // on lance le disabling
+        if (log_extended) { Debug.Log($"(UI_Pool - HideCoroutine) starting disable coroutine : {Reference}"); }
         yield return StartCoroutine(disable_coroutine());
+        if (log_extended) { Debug.Log($"(UI_Pool - HideCoroutine) disable coroutine succeeded ! : {Reference}"); }
         // disable();
 
         // on lance le hiding
+        if (log_extended) { Debug.Log($"(UI_Pool - HideCoroutine) starting hide coroutine : {Reference}"); }
         current_transition = StartCoroutine(hide_coroutine(dont_hide, duration_override));
         yield return current_transition;
+        if (log_extended) { Debug.Log($"(UI_Pool - HideCoroutine) hide coroutine succeeded ! : {Reference}"); }
+
+        // on removed to stack
+        after_removed_from_stack();
+        after_hiding();
 
         // on clear la transition
         current_transition = null;
@@ -92,15 +129,23 @@ public class UI_Pool : MonoBehaviour
     }
     public IEnumerator StackHideCoroutine(float duration_override = -1f, bool disable = true)
     {
+        if (log_extended) { Debug.Log($"(UI_Pool) StackHideCoroutine called on pool : {Reference}"); }
+
         // stop any started coroutine
         StopCoroutineIfAny();
 
         // on lance le disabling
+        if (log_extended) { Debug.Log($"(UI_Pool - StackHideCoroutine) starting disable coroutine : {Reference}"); }
         if (disable) { yield return StartCoroutine(disable_coroutine()); }
+        if (log_extended) { Debug.Log($"(UI_Pool - StackHideCoroutine) disable coroutine succeeded ! : {Reference}"); }
 
         // on lance le hiding
+        if (log_extended) { Debug.Log($"(UI_Pool - StackHideCoroutine) starting hide coroutine : {Reference}"); }
         current_transition = StartCoroutine(hide_coroutine(stacked_elements, duration_override, stacking: true));
         yield return current_transition;
+        if (log_extended) { Debug.Log($"(UI_Pool - StackHideCoroutine) hide coroutine succeeded ! : {Reference}"); }
+
+        after_hiding();
 
         // on clear la transition
         current_transition = null;
@@ -109,6 +154,8 @@ public class UI_Pool : MonoBehaviour
     }
     public IEnumerator StackShowCoroutine(float duration_override = -1f, bool enable = true)
     {
+        if (log_extended) { Debug.Log($"(UI_Pool) StackShowCoroutine called on pool : {Reference}"); }
+
         // stop any started coroutine
         StopCoroutineIfAny();
 
@@ -119,27 +166,45 @@ public class UI_Pool : MonoBehaviour
             if (!stacked_elements.Contains(ui_elements[i])) { dont_show.Add(ui_elements[i]); }
         }
 
+        before_adding_to_stack();
+        before_showing();
+
         // on lance l'affichage
+        if (log_extended) { Debug.Log($"(UI_Pool - StackShowCoroutine) starting show coroutine : {Reference}"); }
         current_transition = StartCoroutine(show_coroutine(dont_show, duration_override));
         yield return current_transition;
+        if (log_extended) { Debug.Log($"(UI_Pool - StackShowCoroutine) show coroutine succeeded ! : {Reference}"); }
 
         Showed = true;
         Stacked = true;
         
         // on enable
+        if (log_extended) { Debug.Log($"(UI_Pool - StackShowCoroutine) starting enable coroutine : {Reference}"); }
         if (enable) { yield return StartCoroutine(enable_coroutine()); }
+        if (log_extended) { Debug.Log($"(UI_Pool - StackShowCoroutine) enable coroutine succeeded ! : {Reference}"); }
 
         // on clear la transition
         current_transition = null;
     }
 
+
+
+
+
+
+    ///
+    //
+    ///  VIRTUAL METHODS
+    //
+    ///
+
     // LOW SHOWING
     protected virtual IEnumerator show_coroutine(List<GameObject> dont_show = null, float duration_override = -1f, bool was_stacked = false)
     {
-        if (TransitionSettings.UsePersoInputs) { InputManager.Instance.EnablePersoInputs(); }
+        if (Settings.UsePersoInputs) { InputManager.Instance.EnablePersoInputs(); }
 
         // on récupère la duration
-        float duration = duration_override >= 0f ? duration_override : TransitionSettings.Duration;
+        float duration = duration_override >= 0f ? duration_override : Settings.Duration;
 
         // on lance la transitions des elements avec transitionners et on retient les autres
         List<GameObject> uis_without_transitioner = new List<GameObject>();
@@ -169,13 +234,13 @@ public class UI_Pool : MonoBehaviour
         }
 
         // on desactive les perso inputs si on ne les utilise pas
-        if (!TransitionSettings.UsePersoInputs) { InputManager.Instance.DisablePersoInputs(); }
+        if (!Settings.UsePersoInputs) { InputManager.Instance.DisablePersoInputs(); }
         if (log) { Debug.Log("(UI_Pool) show_coroutine succeeded ! pool : " + Reference); }
     }
     protected virtual IEnumerator hide_coroutine(List<GameObject> dont_hide = null, float duration_override = -1f, bool stacking = false)
     {
         // on récupère la duration
-        float duration = duration_override >= 0f ? duration_override : TransitionSettings.Duration;
+        float duration = duration_override >= 0f ? duration_override : Settings.Duration;
 
         // on lance la transitions des elements avec transitionners et on cache direct les autres
         List<GameObject> uis_with_transitioner = new List<GameObject>();
@@ -210,6 +275,51 @@ public class UI_Pool : MonoBehaviour
     // LOW ENABLING
     protected virtual IEnumerator enable_coroutine() { yield break; } // only useful for overriding properly for pools that don't need to override the showing
     protected virtual IEnumerator disable_coroutine() { yield break; }
+
+
+    // EVENTS
+    protected virtual void before_adding_to_stack() { }  // not called when a stacked pool is unstacked (this pool get focus again) since it was stacked the whole time
+    protected virtual void after_added_to_stack() { } // same, happen after the stack adding
+    protected virtual void after_removed_from_stack() { } // same, not called when another pool is stacked on top since this pool is still stacked
+
+
+    // EVENTS
+    protected virtual void before_showing() { }  // always called before showing, even if it was already stacked
+    protected virtual void after_hiding() { } // same, happen after the hiding
+
+
+
+
+
+
+    ///
+    //
+    ///  SPECIFIC METHODS
+    //
+    ///
+
+
+
+    // PREPARING POOl
+    public void PreparePool()
+    {
+        if (log) {  Debug.Log($"(UI_Pool) Preparing pool : {Reference}"); }
+
+        // on cache tous les éléments du pool via canvas group
+        for (int i = 0; i < ui_elements.Count; i++)
+        {
+            // on prepare seulement les elements qui ont un canvas group
+            if (!ui_elements[i].TryGetComponent(out CanvasGroup cg)) { continue; }
+
+            // on cache l'element abruptement
+            cg.alpha = 0f;
+
+            // on active l'element (va appeler Awake + Start dans les prochaines frames)
+            // (et donc va préparer l'élement pour que son prochain show soit bcp plus rapide (on espere))
+            ui_elements[i].SetActive(true);
+        }
+        prepared = true;
+    }
 
     // REGISTER ELEMENTS
     public void RegisterToPool(GameObject ui_element, bool is_stacked = false)
@@ -254,8 +364,7 @@ public class UI_Pool : MonoBehaviour
     }
 }
 
-[Serializable]
-public class PoolTransitionSettings
+[Serializable] public class PoolTransitionSettings
 {
     public float Duration = 0.05f; // default duration of the transition
     public bool CanBeHidden = true; // if true, the pool can be hidden when switching to another pool
@@ -263,11 +372,15 @@ public class PoolTransitionSettings
     public bool UsePersoInputs = true; // if true, the UI_Manager will activate the inputs.perso when the pool is showed
     public float TimeScale = 1f; // time scale when the pool is showed
     public float BackgroundAlpha = 0f; // alpha of the background when the pool is showed
+    public float ChromaticAberration = 0f; // chromatic aberration effect intensity when the pool is showed
+    public float Bloom = 0f; // bloom effect intensity when the pool is showed
 
     public bool StopTime => TimeScale == 0f;
     public bool HasBackground => BackgroundAlpha > 0f;
 
-    public PoolTransitionSettings(float duration = 0.1f, bool can_be_hidden = true, bool can_be_canceled = false, bool use_perso_inputs = true, float time_scale = 1f, float background_alpha = 0f)
+    public PoolTransitionSettings(float duration = 0.1f, bool can_be_hidden = true, bool can_be_canceled = false,
+            bool use_perso_inputs = true, float time_scale = 1f, float background_alpha = 0f,
+            float chromatic_aberration = 0f, float bloom = 0f)
     {
         Duration = duration;
         CanBeHidden = can_be_hidden;
@@ -275,6 +388,8 @@ public class PoolTransitionSettings
         UsePersoInputs = use_perso_inputs;
         TimeScale = time_scale;
         BackgroundAlpha = background_alpha;
+        ChromaticAberration = chromatic_aberration;
+        Bloom = bloom;
     }
     public static PoolTransitionSettings InGameDefault => new PoolTransitionSettings();
     public static PoolTransitionSettings InMenuDefault => new PoolTransitionSettings(can_be_canceled: true, use_perso_inputs: false, time_scale: 0f, background_alpha: 0.96f);

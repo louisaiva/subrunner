@@ -1,0 +1,92 @@
+﻿{
+    "<id>k__BackingField": "katana",
+    "kind": "Katana",
+    "position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "layer": 24,
+    "tag": "Item",
+    "capacities_ids": [
+        "attack",
+        "hover",
+        "item_iic"
+    ],
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "katana",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "hover"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            }
+        ],
+        "current_capacity": "",
+        "material_name": "objects",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "never_flip": false,
+        "layers": [],
+        "local_position": {
+            "x": 0.0,
+            "y": 0.0
+        }
+    },
+    "inventory": {
+        "item_pools_data": [],
+        "item_type": 0
+    },
+    "feet_data": {
+        "box_colliders": [],
+        "circle_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 25,
+                "pathfinding_area": -1,
+                "shadow_caster_data": {
+                    "cast_and_self": false,
+                    "used_layers": []
+                },
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.10000000149011612
+                },
+                "radius": 0.09000000357627869
+            }
+        ]
+    },
+    "effects": [],
+    "effects_ttl": [],
+    "reference": "weapon:katana",
+    "color": {
+        "r": 0.8980392217636108,
+        "g": 0.2862745225429535,
+        "b": 0.2862745225429535,
+        "a": 1.0
+    },
+    "max_qty": 1,
+    "item_description": "careful sharp !!/l useful for cuttin onions, tomatos/l, and even that police officer that thinks he's the sheriff",
+    "is_grabbed": true
+}

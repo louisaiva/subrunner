@@ -7,7 +7,7 @@ namespace subrunner.goap
     {
         public override IAgentTypeConfig Create()
         {
-            var factory = new AgentTypeBuilder("cat");
+            var factory = CreateBuilder("cat");
 
             factory.AddCapability<WanderCapabilityFactory>();
             factory.AddCapability<EatCapabilityFactory>();

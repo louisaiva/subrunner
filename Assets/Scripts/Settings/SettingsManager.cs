@@ -9,11 +9,7 @@ public class SettingsManager : MonoBehaviour
     public static SettingsManager Instance;
 
     [Header("Factory settings")]
-    public SettingsSaveData factory_general;
-    public SettingsSaveData factory_gameplay;
-    public SettingsSaveData factory_graphics;
-    public SettingsSaveData factory_ui;
-    public SettingsSaveData factory_controls;
+    public List<SettingsSaveData> factory_settings;
 
     [Header("Settings")]
     private Dictionary<string, List<Setting>> settings = new Dictionary<string, List<Setting>>();
@@ -39,31 +35,81 @@ public class SettingsManager : MonoBehaviour
     // START
     private void Start()
     {
-        // on register certains callbacks directement
 
-        // fullscreen
-        GetSetting("fullscreen").OnValueChanged += (ctx) => AppManager.Instance.fullscreen(ctx >= 0.5f);
-        AppManager.Instance.fullscreen(GetValue("fullscreen") >= 0.5f);
+        // on register certains callbacks directement (app manager)
+        RegisterCallback("fullscreen", (setting) => AppManager.Instance.Fullscreen(setting.Value >= 0.5f));
+        RegisterCallback("vsync", (setting) => AppManager.Instance.SetVSync(setting.Value >= 0.5f));
 
-        // skin
-        // (GetSetting("skin") as StringSetting).OnStringChanged += (skin) => Perso.Instance.SetSkin(skin);
-        // Perso.Instance.SetSkin((GetSetting("skin") as StringSetting).ToString());
+        // ! do not register callbacks from game here, only app otherwise it won't work
     }
 
-    // SETTERS & GETTERS
+
+
+
+
+    ///
+    //
+    /// CALLBACKS REGISTRATION
+    //
+    ///
+
+    public void RegisterCallback(string settingName, Action<Setting> callback)
+    {
+        Setting setting = GetSetting(settingName);
+        if (setting == null)
+        {
+            Debug.LogWarning($"(SettingsManager) Setting {settingName} not found! Cannot register callback.");
+            return;
+        }
+        setting.OnSettingChanged += callback;
+
+        if (log) { Debug.Log($"(SettingsManager) Registered callback for setting {settingName}"); }
+
+        // fire the callback immediately with the current value so that the UI is updated at start
+        callback.Invoke(setting);
+    }
+    public void UnregisterCallback(string settingName, Action<Setting> callback)
+    {
+        Setting setting = GetSetting(settingName);
+        if (setting == null) { return; }
+        setting.OnSettingChanged -= callback;
+    }
+
+
+
+    ///
+    //
+    /// SETTERS & GETTERS
+    //
+    ///
+
+
+    public void Toggle(string settingName)
+    {
+        Setting setting = GetSetting(settingName);
+        if (setting == null) { return; }
+        setting.Value = 1 - setting.Value; // toggle between 0 and 1
+    }
     public void SetSetting(string settingName, float value)
     {
         // Logic to set the setting based on its name
         if (log) { Debug.Log($"(SettingsManager) Setting {settingName} set to {value}"); }
         Setting setting = GetSetting(settingName);
         if (setting == null) { return; }
-        setting.value = value;
+        setting.Value = value;
+    }
+    public void SetSettingWithoutNotifying(string settingName, float value)
+    {
+        // Logic to set the setting based on its name without notifying callbacks
+        Setting setting = GetSetting(settingName);
+        if (setting == null) { return; }
+        setting.SetValueWithoutNotify(value);
     }
     public float GetValue(string settingName)
     {
         // Logic to get the setting value based on its name
         Setting setting = GetSetting(settingName);
-        if (setting != null) { return setting.value; }
+        if (setting != null) { return setting.Value; }
         if (log) { Debug.LogWarning($"(SettingsManager) Setting {settingName} not found!"); }
         return -1f; // Default value if not found
     }
@@ -86,6 +132,16 @@ public class SettingsManager : MonoBehaviour
     }
 
 
+
+
+
+
+    ///
+    //
+    /// SAVE / LOAD SETTINGS DATA
+    //
+    ///
+
     // SAVE / LOAD SETTINGS
     public void SaveLocalSettings()
     {
@@ -100,7 +156,7 @@ public class SettingsManager : MonoBehaviour
             panel_settings = settings[panel_keys[p]];
             for (int s = 0; s < panel_settings.Count; s++)
             {
-                settings_values[panel_settings[s].name] = panel_settings[s].value;
+                settings_values[panel_settings[s].name] = panel_settings[s].Value;
             }
         }
 
@@ -116,19 +172,10 @@ public class SettingsManager : MonoBehaviour
                 writer.Write(json);
             }
         }
-
-        // we save to PlayerPrefs
-        // if (log) { Debug.Log("(SettingsManager) Saving local settings from PlayerPrefs"); }
-        // PlayerPrefs.SetString("local_settings", json);
     }
     public void LoadLocalSettings()
     {
         string json = "";
-
-        // we get the json string
-        // if (!PlayerPrefs.HasKey("local_settings")) { return; }
-        // if (log) { Debug.Log("(SettingsManager) Loading local settings from PlayerPrefs"); }
-        // json = PlayerPrefs.GetString("local_settings");
 
         // we load settings from Application.persistentDataPath
         try 
@@ -167,7 +214,7 @@ public class SettingsManager : MonoBehaviour
             if (entry.Value > setting.max_value) { continue; }
 
             // we set the value
-            setting.value = entry.Value;
+            setting.Value = entry.Value;
         }
     }
 
@@ -178,11 +225,11 @@ public class SettingsManager : MonoBehaviour
         settings.Clear();
 
         // we build settings from each factory
-        settings["general"] = factory_general.Clone();
-        settings["gameplay"] = factory_gameplay.Clone();
-        settings["graphics"] = factory_graphics.Clone();
-        settings["ui"] = factory_ui.Clone();
-        settings["controls"] = factory_controls.Clone();
+        foreach (SettingsSaveData factory in factory_settings)
+        {
+            if (factory == null) { continue; }
+            settings[factory.category_name] = factory.Clone();
+        }
     }
 }
 

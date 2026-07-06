@@ -63,7 +63,7 @@ public class TriggerTuto : MonoBehaviour
     }
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (AppManager.Instance.IsQuitting) { return; }
+        if (AppManager.IsQuitting) { return; }
 
         // we check if the other is the player
         if (!other.gameObject.CompareTag("Player")) { return; }

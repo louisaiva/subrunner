@@ -21,30 +21,8 @@ public class CharacterOrientationController : MonoBehaviour
     // START
     protected void Start()
     {
-        // if (rotateAction != null) { return; } // on ne fait rien si on a déjà Start()
-
-        // we get the actions
-        // input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
-        // rotateAction = input_manager.GetAction(rotateInput);
-
-        // we create the callbacks & set them
-        // playCallback = ctx => press_button(ctx);
-        // rotateCallback = ctx => HandleOrientation(ctx.ReadValue<Vector2>());
-        // setCallbacks();
-
         // we get the anim player
         animPlayer = GetComponent<UI_AnimPlayer>();
-
-        // we get the controls of the rotate action
-        // rotate_controls = rotateAction.controls.ToArray();
-        /* rotate_controls_paths = new string[rotate_controls.Length];
-        string s = "ROTATE CONTROLS: ";
-        foreach (InputControl c in rotate_controls)
-        {
-            s += "\n - " + c.path;
-            rotate_controls_paths[Array.IndexOf(rotate_controls, c)] = c.path;
-        } */
-        // Debug.Log(s);
     }
 
     // ORIENTATION UPDATING

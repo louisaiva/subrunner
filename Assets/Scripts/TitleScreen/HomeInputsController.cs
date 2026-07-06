@@ -6,14 +6,17 @@ using static PlayerInputActions;
 /// <summary>
 /// Controller des inputs pour l'UI (menus, inventaires, etc.)
 /// </summary>
-public class HomeInputsController : InputController
+public class HomeInputsController : InputController, UI_Controller
 {
     [Header("UI Inputs Parameters")]
     [SerializeField] private UI_Navigator navigator;
     [SerializeField] private UIActions ui_inputs;
 
+    [Header("Logs")]
+    [SerializeField] private bool log_scrolling = false;
+
     // START
-    protected async void Start()
+    protected void Start()
     {
         // on récupère les inputs
         ui_inputs = InputManager.Instance.inputs.UI;
@@ -36,7 +39,6 @@ public class HomeInputsController : InputController
     // INPUTS
     private void initInputs()
     {
-
         // on assigne les callbacks
         ui_inputs.navigate.performed += handle_navigate_input;
         ui_inputs.mouse_navigation.performed += handle_mouse_navigation;
@@ -164,9 +166,30 @@ public class HomeInputsController : InputController
 
         // on check si le current pool est un panelable (si non, ça sert a r de scroll)
         UI_Pool current_pool = UI_Manager.Instance.GetCurrentPool();
-        if (current_pool == null || current_pool is not Panelable panelable) { return; }
-
-        Debug.Log($"(HomeInputsController) rolling panel with input {input}");
-        panelable.PanelManager.RollPanel((int)input);
+        if (current_pool == null) { return; }
+        if (current_pool is Panelable panelable)
+        {
+            if (log_scrolling) { Debug.Log($"(HomeInputsController) rolling panel with input {input}"); }
+            panelable.PanelManager.RollPanel((int)input);
+        }
+        else if (current_pool is Scrollable scrollable)
+        {
+            if (log_scrolling) { Debug.Log($"(HomeInputsController) scrolling with input {input}"); }
+            scrollable.Scroller.Scroll(input);
+        }
     }
+
+
+
+    // UI_CONTROLLER INTERFACE
+    public void EnableInputs(bool ingame)
+    {
+        // we do nothing we don't care about enabling/disabling inputs for the home screen, we just let them work
+    }
+    public void DisableInputs() { }
+    public EndlessInput<T> GetEndlessInput<T>(string name) where T : struct
+    {
+        return get_endless_input<T>(name);
+    }
+
 }

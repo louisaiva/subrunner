@@ -1,126 +1,160 @@
 using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.Events;
 using System;
+using System.Linq;
+using Unity.Mathematics;
 
-public class Inventory : MonoBehaviour
+public class Inventory : MonoBehaviour, ItemStorer
 {
 
-    [Header("Items")]
-    public List<Item> Items = new List<Item>();
-    public int Count { get { return Items.Count; } }
+    // item type
+    [field:SerializeField] public ItemType ItemType { get; set; }
+    public string PoolID => "inventory on " + Capable.ID;
 
-    // [Header("Events")]
+
+    [Header("ItemPools")]
+    [SerializeField] private bool clear_and_assign_pools_in_awake = true;
+    [SerializeField] private List<ItemPool> pools = new List<ItemPool>();
+    public List<Item> Items { get { return pools.SelectMany(p => p.Items).ToList(); } }
+    public int Count { get { return pools.Sum(pool => pool.Count); } }
+    public List<ItemStack> Stacks { get { return pools.SelectMany(p => p.Stacks).ToList(); } }
+
+    // specific pool getters
+    protected ItemPool _shoes_stack = null;
+    protected ItemPool shoes_stack { 
+        get
+        {
+            if (_shoes_stack == null) { _shoes_stack = get_itempool("shoes"); }
+            return _shoes_stack;
+        }
+    }
+    protected ItemPool _weapon_stack = null;
+    protected ItemPool weapon_stack
+    {
+        get
+        {
+            if (_weapon_stack == null) { _weapon_stack = get_itempool("weapon"); }
+            return _weapon_stack;
+        }
+    }
+
+
+
+    // EVENTS
+    // public event Action<Item> OnItemGrabbedFromLowerLevel = delegate { };
     public event Action<Item> OnItemGrabbed = delegate { };
     public event Action<Item> OnItemDropped = delegate { };
 
+    // EVENTS
+    public event Action<ItemStack> OnStackCreated = delegate { };
+    public event Action<ItemStack> OnStackRemoved = delegate { };
 
-    [Header("Components")]
-    [SerializeField] private List<UI_Inventory> uis = new List<UI_Inventory>();
-    public UI_Inventory ui { get { return uis.Count > 0 ? uis[0] : null; } }
-    public UI_Slottable MainUI { get
+    private Capable _capable;
+    public Capable Capable
+    {
+        get
         {
-            if (ui == null) { return null; }
-            if (ui.Mixer != null) { return ui.Mixer; }
-            return ui;
+            if (_capable == null) { _capable = transform.parent.GetComponent<Capable>(); }
+            return _capable;
         }
+        set { _capable = value; }
     }
-    public Capable capable { get { return transform.parent.GetComponent<Capable>(); } }
 
     [Header("Logs")]
     [SerializeField] protected bool log = false;
+    [SerializeField] protected bool log_grab = false;
+    [SerializeField] protected bool log_get_items = false;
 
     // AWAKE
-    protected virtual void Awake()
+    /* protected virtual void Awake()
     {
-        if (capable is Perso && uis.Count > 0 && uis[0] == null)
+        if (clear_and_assign_pools_in_awake)
         {
-            // we just revived we don't have any uis, so we make them
-            uis = new List<UI_Inventory>
+            // we clear the pools list and assign it with all the ItemPool found in children
+            pools = new List<ItemPool>(GetComponents<ItemPool>());
+            
+            // we go through DIRECT children and DIRECT only otherwise we will pick the ItemPool of items in their inventory which we DO NOT want
+            for (int i = 0; i < transform.childCount; i++)
             {
-                UI_Manager.Instance.GetPool("inventory").transform.Find("ui_inventory").GetComponent<UI_Inventory>(),
-                // UI_Manager.Instance.GetPool("quick").GetComponent<UI_HUD>().perso_quick_inventory
-                UI_Manager.Instance.GetPool<UI_QuickInventoryPool>().UI
-            };
-        }
-
-        // we attach the inventory to the UI
-        foreach (UI_Inventory ui in uis)
-        {
-            if (ui == null) { continue; }
-            ui.Inventory = this;
-        }
-    }
-
-    // START
-    protected virtual void Start()
-    {
-        // on initialise l'UI
-        foreach (UI_Inventory ui in uis)
-        {
-            if (ui == null)
-            {
-                Debug.LogWarning("(Inventory) " + name + $" has a null UI_Inventory : skipping initialization");
-                continue;
+                pools.AddRange(transform.GetChild(i).GetComponents<ItemPool>());
             }
-            ui.Init();
+            
         }
 
-        // on récupère les items
-        foreach (Transform child in transform)
+        // we attach the inventory to the pools
+        for (int i = 0; i < pools.Count; i++)
         {
-            if (child == null || child.gameObject.activeSelf == false) { continue; }
-            Grab(child.GetComponent<Item>());
+            if (pools[i] == null) { continue; }
+            pools[i].AttachToInventory(this);
+
+            // & assign callbacks
+            pools[i].OnStackCreated += (stack) => { OnStackCreated?.Invoke(stack); };
+            pools[i].OnStackRemoved += (stack) => { OnStackRemoved?.Invoke(stack); };
+            pools[i].OnItemGrabbed += (item) => { OnItemGrabbed?.Invoke(item); };
         }
-    }
+    } */
 
 
     // GRAB / DROP
-    public virtual bool Grab(Item item, List<UI_Inventory> uis_to_ignore = null)
+    /// <summary>
+    /// these 3 methods are the main one. when they are activated they
+    /// make the right pool do the action, then trigger the event
+    /// </summary>
+    /// <param name="item"></param>
+    /// <returns></returns>
+    public virtual bool Grab(Item item)
     {
         // we check if we can add the item
         if (item == null) { return false; }
 
-        // we try to make the ui grab the item
-        if (!ui_grab(item, uis_to_ignore)) { return false; }
 
-        // we check if the item is already grabbed somewhere, if so we drop it
-        if (item.Grabbed && item.HolderInventory != null) { item.HolderInventory.Drop(item, uis_to_ignore); }
+        // special cases - if we have a shoes and shoes_stack is empty we force to drop it there first
+        if (item is Shoes && shoes_stack != null && shoes_stack.HasSpaceLeft)
+        {
+            if (shoes_stack.Grab(item))
+            {
+                // OnItemGrabbed.Invoke(item);
+                if (log_grab) { Debug.Log("(Inventory) " + Capable.name + " grabbed : " + item.name + " in shoes_stack"); }
+                return true;
+            }
+        }
+        else if (item is Weapon && weapon_stack != null && weapon_stack.HasSpaceLeft)
+        {
+            if (weapon_stack.Grab(item))
+            {
+                // OnItemGrabbed.Invoke(item);
+                if (log_grab) { Debug.Log("(Inventory) " + Capable.name + " grabbed : " + item.name + " in weapon_stack"); }
+                return true;
+            }
+        }
 
-        // we set the item parent and reset its local position
-        item.transform.SetParent(transform);
-        item.transform.localPosition = Vector3.zero;
 
-        // we add the item
-        Items.Add(item);
-        item.Grabbed = true;
+        // we try to make all the pools grab the item
+        if (!pool_grab(item, out ItemPool grabbed_pool))
+        {
+            if (log_grab) { Debug.LogWarning("(Inventory) " + Capable.name + " can't grab : " + item.name); }
+            return false;
+        }
+
 
         // we trigger the events
-        OnItemGrabbed.Invoke(item);
-
-        if (log) { Debug.Log("(Inventory) " + capable.name + " grabbed : " + item.name); }
-
+        // OnItemGrabbed.Invoke(item);
+        if (log_grab) { Debug.Log("(Inventory) " + Capable.name + " grabbed : " + item.name + $" in pool '{grabbed_pool?.name ?? "null"}'"); }
         return true;
     }
-    public virtual bool Drop(Item item, List<UI_Inventory> uis_to_ignore = null)
+    public virtual bool Drop(Item item, bool on_ground = true)
     {
         // we check if we can remove the item
         if (item == null) { return false; }
-        if (!Items.Contains(item)) { return false; }
 
-        // we remove the item
-        Items.Remove(item);
+        if (!pool_drop(item, on_ground)) { return false; }
 
-        // we set the item to dropped (which enables the hover collider)
-        item.Grabbed = false;
+        // todo call the potential DropCapacity of the capable ?
 
         // we trigger the event
         OnItemDropped.Invoke(item);
 
-        // we update the UI
-        ui_drop(item, uis_to_ignore);
-
-        if (log) { Debug.Log("(Inventory) " + capable.name + " dropped : " + item.name); }
+        if (log) { Debug.Log("(Inventory) " + Capable.name + " dropped : " + item.name); }
 
         return true;
     }
@@ -130,64 +164,146 @@ public class Inventory : MonoBehaviour
 
         // we check if we can remove the item
         if (item == null) { return false; }
-        if (!Items.Contains(item)) { return false; }
+        for (int i = 0; i < pools.Count; i++)
+        {
+            if (!pools[i].Drop(item, on_ground:false)) { continue; }
 
-        // we remove the item
-        Items.Remove(item);
+            if (log) { Debug.Log("(Inventory) " + Capable.name + " removed : " + item.name); }
+            return true;
+            
+        }
 
-        // we update the UI
-        uis.ForEach(ui => ui.UI_Drop(item));
-
-        if (log) { Debug.Log("(Inventory) " + capable.name + " removed : " + item.name); }
-
-        return true;
+        if (log) { Debug.LogWarning("(Inventory) " + Capable.name + " can't remove : " + item.name); }
+        return false;
     }
+
+
+    /// <summary>
+    /// These methods are low level equivalent of the aboves. it go through all the ItemPool and tries to make them grab/drop the item. Returns true if 
+    /// a ItemPool grabbed/dropped succesfully, false otherwise
+    /// </summary>
+    /// <returns></returns>
+    protected bool pool_grab(Item item, out ItemPool pool)
+    {
+        pool = null;
+        for (int i = 0; i < pools.Count; i++)
+        {
+            if (pools[i].Grab(item)) { pool = pools[i]; return true; }
+            if (log_grab) { Debug.Log($"(Inventory)          - trying to grab {item.Reference} in pool " + pools[i].PoolID + " but could not :///"); }
+        }
+        return false;
+    }
+    protected bool pool_drop(Item item, bool on_ground = true)
+    {
+        for (int i = 0; i < pools.Count; i++)
+        {
+            if (pools[i].Drop(item, on_ground: on_ground)) { return true; }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// This particular method should be thought of the same as Grab() but
+    /// the grab already happened in a lower level (ItemPool grabbed an Item during Start() probably)
+    /// Then we need to fire the event so that's the only purpose of this method after all
+    /// </summary>
+    /* public void GrabFromLowerLevel(Item item)
+    {
+        if (item == null) { return; }
+
+        // we trigger the events
+        OnItemGrabbedFromLowerLevel?.Invoke(item);
+
+        if (log) { Debug.Log("(Inventory) " + Capable.name + " grabbed from lower level : " + item.name); }
+    } */
+    public void DropFromLowerLevel(Item item)
+    {
+        if (item == null) { return; }
+
+        // we trigger the events
+        OnItemDropped?.Invoke(item);
+
+        if (log) { Debug.Log("(Inventory) " + Capable.name + " dropped from lower level : " + item.name); }
+    }
+
+
+    // STACK MANAGEMENT
+    public bool GrabInStack(Item item, ItemStack stack)
+    {
+        // we check if we have the stack
+        ItemPool pool = GetStackPool(stack);
+        if (pool == null)
+        {
+            // we don't have the stack, we don't care we try to grab it normally
+            bool grabbed = Grab(item);
+            return grabbed;
+        }
+
+        // we have the stack, we try to grab it in it
+        return pool.GrabInStack(item, stack);
+    }
+    public ItemPool GetStackPool(ItemStack stack)
+    {
+        // we get the stack in one of our pools
+        for (int i = 0; i < pools.Count; i++)
+        {
+            if (pools[i].HasStack(stack)) { return pools[i]; }
+        }
+        return null;
+    }
+
+
+
+    // SPECIFIC GETTERS
+    public Usable GetShoes() { return (Usable) get_item_from_rule_in_itempool("shoes"); }
+    public Usable GetWeapon() { return (Usable) get_item_from_rule_in_itempool("weapon"); }
+    public Usable GetConso(int index) { return (Usable) get_item_from_rule_in_itempool("conso_" + index); }
+    public Device GetDeviceItem() { return get_item_from_rule_in_itempool("device","device") as Device; }
+    private Item get_item_from_rule_in_itempool(string pool_id,string rule="usable")
+    {
+        // checks if we have the pool
+        ItemPool pool = get_itempool(pool_id);
+        if (pool == null)
+        {
+            if (log_get_items) { Debug.LogWarning($"(Inventory) {pool_id} ItemPool was NOT found :O"); }
+            return null;
+        }
     
-    // GRABBING / DROPPING LOW LEVEL
-    protected bool ui_grab(Item item, List<UI_Inventory> uis_to_ignore = null)
-    {
-        if (ui == null) { return true; } // no inventory so we successfully grabbed it ahah ^^
+        // find the matching item rule items
+        List<Item> usables_in_pool = pool.GetItemsByRule(rule);
+        if (usables_in_pool.Count > 0) { return usables_in_pool[0]; }
 
-        // we try to make the first ui_inventory (which is our reference ui_inventory) to grab it
-        // if it can grab it, all the others can grab it.
-        // if no, we return false
-        if (uis_to_ignore == null) { uis_to_ignore = new List<UI_Inventory>(); }
-        if (!uis_to_ignore.Contains(ui) && !ui.UI_Grab(item))
-        {
-            if (log) { Debug.LogWarning("(Inventory) " + capable.name + " can't grab : " + item.name + " in " + ui.name); }
-            return false; // if the first ui_inventory can't grab it, we return false
-        }
-        for (int i = 1; i < uis.Count; i++)
-        {
-            if (uis_to_ignore.Contains(uis[i])) { continue; } // we skip the ui_to_ignore
-            uis[i].UI_Grab(item); // we try to make the other ui_inventories grab it (we don't care if it can't grab as long as the 1st can)
-        }
-        return true;
+        // else we have no matching item in the pool
+        if (log_get_items) { Debug.LogWarning($"(Inventory) {pool_id} ItemPool was found but no \"{rule}\" inside ://"); }
+        return null;
     }
-    protected void ui_drop(Item item, List<UI_Inventory> uis_to_ignore = null)
+    private ItemPool get_itempool(string pool_id)
     {
-        if (uis_to_ignore == null) { uis_to_ignore = new List<UI_Inventory>(); }
-        for (int i = 0; i < uis.Count; i++)
+        // checks if we have the pool
+        for (int i = 0; i < pools.Count; i++)
         {
-            UI_Inventory ui = uis[i];
-            if (ui == null) { continue; }
-            if (uis_to_ignore.Contains(ui)) { continue; } // we skip the ui_to_ignore
-            ui.UI_Drop(item);
+            if (pools[i].PoolID != pool_id) { continue; }
+            return pools[i];
         }
+
+        // else we have no pool named like this
+        // if (log) { Debug.LogWarning($"(Inventory) {pool_id} ItemPool was NOT found :O"); }
+        return null;
     }
 
-    // GETTERS
+
+    // GLOBAL GETTERS
     public Inventory GetInteractingInventory()
     {
-        string s = "(Inventory) " + capable.name + " is looking for an interacting inventory\n\n";
+        string s = "(Inventory) " + Capable.name + " is looking for an interacting inventory\n\n";
 
         // check if we are the interactable (so we look for the interactor)
         // typically we are dropping an item from a Chest's UI_Inventory
-        if (capable is Interactable)
+        if (Capable is Interactable interactive)
         {
             // this is the other capable
             s += "we are the interactable\n";
-            InteractCapacity interactor = (capable as Interactable).Interactor;
+            InteractCapacity interactor = interactive.Interactor;
 
             // check if we have an interactor
             if (interactor == null) { if (log) { Debug.LogWarning(s + "we don't have an interactor\n"); } return null; }
@@ -195,19 +311,18 @@ public class Inventory : MonoBehaviour
             // yes we do !! return its inventory
             if (log)
             {
-                Debug.Log(s + "we have an interactor : " + interactor.capable.name
-                + "\nand its inventory is " + interactor.capable.Inventory.name);
+                Debug.Log(s + "we have an interactor : " + interactor.Capable.name
+                + "\nand its inventory is " + interactor.Capable.Inventory.name);
             }
-            return interactor.capable.Inventory;
+            return interactor.Capable.Inventory;
         }
 
         // check if we are the interactor (so we look for the interactable)
-        // typically we are dropping from an item our perso_quick_inventory or the UI_InventoryMenu
-        else if (capable.GetCapacity<InteractCapacity>() != null)
+        // typically we are dropping an item from our the UI_InventoryMenu
+        else if (Capable.TryGetCapacity(out HoverBasedInteractCapacity interactor))
         {
             // this is our capable
             s += "we are the interactor\n";
-            InteractCapacity interactor = capable.GetCapacity<InteractCapacity>();
 
             // check if we have an interactable
             Capable interactable = interactor.interactable as Capable;
@@ -216,16 +331,21 @@ public class Inventory : MonoBehaviour
             s += "we have an interactable : " + interactable.name + "\n";
 
             // checks if this is a chest
-            if (interactable is not Chest chest) { if (log) { Debug.LogWarning(s + "but it's not a Chest\n"); } return null; }
-            else if (interactable.Inventory == null) { if (log) { Debug.LogWarning(s + "but it doesn't have an inventory\n"); } return null; }
+            if (interactable is not Chestable chest) { if (log) { Debug.LogWarning(s + "but it's not a Chestable\n"); } return null; }
+            else if (chest.Inventory == null) { if (log) { Debug.LogWarning(s + "but it doesn't have an inventory\n"); } return null; }
 
-            s += "and it's a Chest\n";
+            s += $"and it's a Chestable : {chest.ChestType} \n";
 
-            // checks if the chest is not closed or closing
-            if (!chest.is_open && !chest.is_moving) { if (log) { Debug.LogWarning(s + "but it's closed & not opening\n"); } return null; }
-            else if (chest.is_open && chest.is_moving) { if (log) { Debug.LogWarning(s + "but it's closing\n"); } return null; }
+            if (chest is Openable openable)
+            {
+                s += $"and it's a Openable, we check if it is open\n";
 
-            s += "and it's open !!\n";
+                // checks if the chest is not closed or closing
+                if (!openable.is_open && !openable.is_moving) { if (log) { Debug.LogWarning(s + "but it's closed & not opening\n"); } return null; }
+                else if (openable.is_open && openable.is_moving) { if (log) { Debug.LogWarning(s + "but it's closing\n"); } return null; }
+
+                s += "and it's open !!\n";
+            }
 
             // we return the interactable's inventory
             if (log) { Debug.Log(s + "and its inventory is " + interactable.Inventory.name + "\n\n"); }
@@ -235,21 +355,12 @@ public class Inventory : MonoBehaviour
         // we return null
         return null;
     }
-    public Item GetItem(string reference)
-    {
-        // we check if the item is in the inventory
-        foreach (Item item in Items)
-        {
-            if (item.Reference == reference) { return item; }
-        }
-        return null;
-    }
     public T GetItem<T>() where T : Item
     {
-        // we get the first item of type T
-        foreach (Item item in Items)
+        for (int i = 0; i < pools.Count; i++)
         {
-            if (item is T) { return item as T; }
+            T item = pools[i].GetItem<T>();
+            if (item != null) { return item; }
         }
         return null;
     }
@@ -257,9 +368,9 @@ public class Inventory : MonoBehaviour
     {
         // we get all the items of type T
         List<T> items = new List<T>();
-        foreach (Item item in Items)
+        for (int i = 0; i < pools.Count; i++)
         {
-            if (item is T) { items.Add(item as T); }
+            items.AddRange(pools[i].GetItemsByType<T>());
         }
         return items;
     }
@@ -267,54 +378,231 @@ public class Inventory : MonoBehaviour
     {
         // we get all the items that match the rule
         List<Item> items = new List<Item>();
-        for (int i = 0; i < Items.Count; i++)
+        for (int i = 0; i < pools.Count; i++)
         {
-            Item item = Items[i];
-            if (item.ValidateRule(rule)) { items.Add(item); }
+            items.AddRange(pools[i].GetItemsByRule(rule));
         }
         return items;
     }
-    public Device GetDeviceItem()
+    public bool HasItem(Item item)
     {
-        // we check if one of our items is a device
-        foreach (Item item in Items)
+        for (int i = 0; i < pools.Count; i++)
         {
-            if (item is Device) { return item as Device; }
+            if (pools[i].HasItem(item)) { return true; }
+        }
+        return false;
+    }
+    public ItemPool GetItemPool(string poolID)
+    {
+        for (int i = 0; i < pools.Count; i++)
+        {
+            if (pools[i].PoolID == poolID) { return pools[i]; }
         }
         return null;
     }
-    public bool HasItem(Item item)
+    public List<ItemPool> GetItemPools() { return pools; }
+    public List<Item> GetAllItems()
     {
-        // we check if we have the item
-        return Items.Contains(item);
+        List<Item> items = new List<Item>();
+        for (int i = 0; i < pools.Count; i++)
+        {
+            items.AddRange(pools[i].GetAllItems());
+        }
+        return items;
     }
 
-    // UI MANAGEMENT
-    public void RemoveAllUIs()
+
+    // ITEM RULE
+    public bool ValidateRule(Item item) { return item.ValidateRule(item_rule); }
+    public string ItemRule { get { return item_rule; } }
+    private string item_rule
     {
-        // we remove all UIs
-        while (uis.Count > 0)
+        get
         {
-            RemoveUI(uis[0]);
+            if (pools.Count > 0)
+            {
+                string rules = "";
+                for (int i = 0; i < pools.Count; i++)
+                {
+                    rules += pools[i].item_rule + "|";
+                }
+                return rules.TrimEnd('|');
+            }
+            return "";
         }
     }
-    public void RemoveUI(UI_Inventory ui_inventory)
-    {
-        if (!uis.Contains(ui_inventory)) { return; }
 
-        // we remove the UI from the list
-        uis.Remove(ui_inventory);
-        ui_inventory.Inventory = null;
-        if (log) { Debug.Log("(Inventory) " + capable.name + " removed UI_Inventory : " + ui_inventory.name); }
+
+
+    // ENABLE / DISABLE LOGS
+    public void EnableLogs()
+    {
+        log = true;
+        log_grab = true;
+        log_get_items = true;
     }
-    public void AddUI(UI_Inventory ui_inventory)
+    public void DisableLogs()
     {
-        if (uis.Contains(ui_inventory)) { return; }
-
-        // we add the UI to the list
-        uis.Add(ui_inventory);
-        ui_inventory.Inventory = this;
-        if (log) { Debug.Log("(Inventory) " + capable.name + " added UI_Inventory : " + ui_inventory.name); }
+        log = false;
+        log_grab = false;
+        log_get_items = false;
     }
 
+
+
+
+    // LOADING / UNLOADING INVENTORY DATA
+    public void LoadInventoryData(InventoryData data)
+    {
+        // check if we have data
+        if (data == null /* || data.item_pools_data == null */) { return; }
+
+        // we set basic inventory data
+        this.ItemType = data.item_type;
+
+        // we suppose we already have the right amount of ItemPools (should be built in CapableBank)
+
+        // we gather the real ItemPool
+        List<ItemPool> pools_to_fill = new List<ItemPool>(GetComponents<ItemPool>());
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            pools_to_fill.AddRange(transform.GetChild(i).GetComponents<ItemPool>());
+        }
+
+        // we check if we have the same amount of what the data says
+        if (pools_to_fill.Count != data.item_pools_data.Count)
+        {
+            Debug.LogWarning($"(Inventory - LoadInventoryData) Inventory data has {data.item_pools_data.Count} pools but we have {pools_to_fill.Count} pools on {Capable.name}");
+        }
+
+        // we load the data in the pools
+        for (int i = 0; i < data.item_pools_data.Count; i++)
+        {
+            if (i >= pools_to_fill.Count) { break; }
+
+            // assign callbacks before loading pool data, so the LoadPoolData method fires the callbacks
+            set_callbacks(pools_to_fill[i]);
+            pools_to_fill[i].LoadPoolData(data.item_pools_data[i]);
+            if (pools_to_fill[i].gameObject != this.gameObject)
+            {
+                pools_to_fill[i].name = pools_to_fill[i].PoolID; // we rename the pool so we can find it more easily in the hierarchy
+            }
+
+            // we add the pool
+            pools.Add(pools_to_fill[i]);
+
+            // we attach the pool
+            pools_to_fill[i].AttachToInventory(this);
+        }
+    }
+    private void set_callbacks(ItemPool pool)
+    {
+        pool.OnStackCreated += (stack) => { OnStackCreated?.Invoke(stack); }; ;
+        pool.OnStackRemoved += (stack) => { OnStackRemoved?.Invoke(stack); };
+        pool.OnItemGrabbed += (item) => { OnItemGrabbed?.Invoke(item); };
+
+        // no need to remember the callbacks and destroy them in unload because
+        // the callbacks are cleared inside ItemPool.UnloadPoolData()
+    }
+    public void UnloadInventoryData()
+    {
+        for (int i = 0; i < pools.Count; i++)
+        {
+            pools[i].UnloadPoolData(); // we unload the pool
+        }
+
+        // finally we remove the pools
+        pools.Clear();
+    }
+    public void SaveDynamicInventoryData()
+    {
+        List<ItemPoolData> new_datas = new List<ItemPoolData>();
+
+        for (int i = 0; i < pools.Count; i++)
+        {
+            new_datas.Add(pools[i].GetDynamicPoolData()); // we get the data (so we can save it)
+        }
+
+        // we save the data into our capable.data.inventory.item_pools_data
+        Capable.data.inventory.item_pools_data = new_datas;
+    }
+
+    // STATIC DATA
+    public InventoryData GetStaticInventoryData()
+    {
+        InventoryData data = new InventoryData()
+        {
+            item_pools_data = new List<ItemPoolData>(),
+            item_type = this.ItemType
+        };
+
+        // we gather the real ItemPool
+        List<ItemPool> pools = GetStaticItemPools();
+        for (int i = 0; i < pools.Count; i++)
+        {
+            data.item_pools_data.Add(pools[i].GetStaticPoolData());
+        }
+
+        return data;
+    }
+    public List<ItemPool> GetStaticItemPools()
+    {
+        // we gather the real ItemPool
+        List<ItemPool> pools = gameObject.GetComponents<ItemPool>().ToList();
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            pools.AddRange(transform.GetChild(i).GetComponents<ItemPool>());
+        }
+        return pools;
+    }
+    public List<Item> GetStaticItems()
+    {
+        // we gather the real ItemPool
+        List<ItemPool> pools = GetStaticItemPools();
+        List<Item> items = new List<Item>();
+        for (int i = 0; i < pools.Count; i++)
+        {
+            items.AddRange(pools[i].GetStaticItems());
+        }
+        return items;
+    }
+
+
+
+
+}
+
+
+public interface ItemStorer
+{
+    public GameObject gameObject { get; }
+    public string PoolID { get; }
+    public virtual string GetDetails() { return $"ItemStorer with PoolID : {PoolID}"; }
+
+
+    // item type
+    public ItemType ItemType { get; }
+
+    // items access
+    public List<Item> Items { get; }
+    public int Count { get; }
+    public List<ItemStack> Stacks { get; }
+
+    // events
+    public event Action<ItemStack> OnStackCreated;
+    public event Action<ItemStack> OnStackRemoved;
+    public event Action<Item> OnItemGrabbed;
+    public event Action<Item> OnItemDropped;
+
+    // GRAB / DROP
+    public bool Grab(Item item);
+    public bool Drop(Item item, bool on_ground = true);
+
+    // STACK MANAGEMENT
+    // public void SwapStacks(ItemStack stack1, ItemStack stack2);
+    // public void MergeIntoStack(ItemStack from, ItemStack to);
+    public bool GrabInStack(Item item, ItemStack stack);
+    
+    // ITEM RULE
+    public bool ValidateRule(Item item);
 }

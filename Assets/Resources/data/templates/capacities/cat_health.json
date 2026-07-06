@@ -1,0 +1,36 @@
+﻿{
+    "<id>k__BackingField": "cat_health",
+    "<owner_id>k__BackingField": "cat",
+    "kind": "HealthCapacity",
+    "local_position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "layer": 23,
+    "tag": "Cat",
+    "health": 20.0,
+    "max_health": 20,
+    "regen_health": 0.0,
+    "hurted_animation": "hurted",
+    "box_colliders": [],
+    "circle_colliders": [
+        {
+            "local_position": {
+                "x": 0.0,
+                "y": 0.3709999918937683
+            },
+            "layerID": 23,
+            "pathfinding_area": -1,
+            "shadow_caster_data": {
+                "cast_and_self": false,
+                "used_layers": []
+            },
+            "is_trigger": true,
+            "offset": {
+                "x": 0.0,
+                "y": -0.15000000596046449
+            },
+            "radius": 0.21101270616054536
+        }
+    ]
+}

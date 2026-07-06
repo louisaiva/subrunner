@@ -26,14 +26,15 @@ public class ManualImageFeedback : InputFeedback, Colorant
     [SerializeField] protected Sprite base_sprite;
     // only has base sprite, please inherit the class to add sprites
 
-    protected override void Start()
+    public override void InitializeWithAction(InputAction action)
     {
         // we verify the image & the input
         if (log)
         {
             if (image == null) { Debug.LogWarning("(InputImageFeedback : " + name + " ) image is not set ! you should assign it in the inspector"); }
         }
-        base.Start();
+
+        base.InitializeWithAction(action);
     }
 
     public override void OnInput()
@@ -83,5 +84,9 @@ public class ManualImageFeedback : InputFeedback, Colorant
         {
             colorers[i].ApplyColor(clicked_color);
         }
+    }
+    public void SetColor(Color color)
+    {
+        SetColors(base_color, color);
     }
 }

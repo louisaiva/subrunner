@@ -71,8 +71,8 @@ public class Hackray : MonoBehaviour
     public void SetConnectors(ConnectCapacity hacker, ConnectCapacity target)
     {
         // set hacker and target
-        this.hacker = hacker.capable;
-        this.target = target.capable;
+        this.hacker = hacker.Capable;
+        this.target = target.Capable;
 
         // set hacker offset
         if (this.hacker is Item hacker_item)
@@ -146,9 +146,9 @@ public class Hackray : MonoBehaviour
         // if it is in a Inventory the offset depends on the Holder typer
         // -> being ? -> offset is the body of the skin offset
         Capable holder = item.Holder;
-        if (holder is Being being)
+        if (holder.HasCapacity<HealthCapacity>())
         {
-            return new Vector3(0f, AnimBank.Instance.GetBodyOffset(being.Skin), 0f);
+            return new Vector3(0f, AnimBank.Instance.GetBodyOffset(holder.Skin), 0f);
         }
 
         // -> capable ? -> offset is the item connect capa local pos

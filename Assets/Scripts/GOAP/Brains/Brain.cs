@@ -13,7 +13,7 @@ namespace subrunner.goap
         [Header("Agent Parameters")]
         [SerializeField] private string agent_type;
         protected IA ia;
-        protected Detector detector; // main detector on eyes
+        protected OldDetector detector; // main detector on eyes
         public IActionData currentActionData => agent.ActionState?.Data;
 
         [Header("Goal Selection")]
@@ -40,7 +40,7 @@ namespace subrunner.goap
             this.ia = this.transform.parent.GetComponent<IA>();
 
             // we set the provider's agent type
-            GoapBehaviour goap = GameObject.Find("/utils/goap_manager").GetComponent<GoapBehaviour>();
+            GoapBehaviour goap = GameObject.Find("/game/goap_manager").GetComponent<GoapBehaviour>();
             if (goap == null)
             {
                 Debug.LogError("(Brain) GoapBehaviour not found in the scene. Please add it to /utils/goap_manager");
@@ -49,7 +49,7 @@ namespace subrunner.goap
             provider.AgentType = goap.GetAgentType(agent_type);
 
             // get detector
-            detector = ia.transform.Find("eyes")?.GetComponent<Detector>();
+            detector = ia.transform.Find("eyes")?.GetComponent<OldDetector>();
 
             // we initialize the goals
             if (goals.Count == 0)

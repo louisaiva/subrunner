@@ -1,5 +1,6 @@
 ﻿using CrashKonijn.Agent.Core;
 using CrashKonijn.Goap.Core;
+using UnityEngine;
 
 namespace CrashKonijn.Goap.Runtime
 {
@@ -18,6 +19,8 @@ namespace CrashKonijn.Goap.Runtime
         {
             this.Unbind();
 
+            // Debug.Log($"(GoapAgentEvents) Binding to receiver {(receiver as MonoBehaviour).name}");
+
             receiver.Events.OnActionStart += this.ActionStart;
             receiver.Events.OnActionEnd += this.ActionEnd;
             receiver.Events.OnActionStop += this.ActionStop;
@@ -31,6 +34,8 @@ namespace CrashKonijn.Goap.Runtime
 
             if (this.actionProvider.Receiver == null)
                 return;
+
+            // Debug.Log($"(GoapAgentEvents) Unbinding from receiver {(actionProvider.Receiver as MonoBehaviour).name}");
 
             this.actionProvider.Receiver.Events.OnActionStart -= this.ActionStart;
             this.actionProvider.Receiver.Events.OnActionEnd -= this.ActionEnd;
@@ -84,6 +89,7 @@ namespace CrashKonijn.Goap.Runtime
             if (action is not IGoapAction goapAction)
                 return;
 
+            // Debug.Log($"(GoapAgentEvents) ActionStart called for {goapAction.GetType().Name}");
             this.OnActionStart?.Invoke(goapAction);
             this.typeEvents.ActionStart(this.actionProvider, goapAction);
         }
@@ -93,6 +99,7 @@ namespace CrashKonijn.Goap.Runtime
             if (action is not IGoapAction goapAction)
                 return;
 
+            // Debug.Log($"(GoapAgentEvents) ActionEnd called for {goapAction.GetType().Name}");
             this.OnActionEnd?.Invoke(goapAction);
             this.typeEvents.ActionEnd(this.actionProvider, goapAction);
         }

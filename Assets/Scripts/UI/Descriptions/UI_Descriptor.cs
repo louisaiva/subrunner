@@ -23,18 +23,29 @@ public class UI_Descriptor : MonoBehaviour
 
     // private Action<UI_Slot> slot_hover_callback;
 
-    // START
-    protected void OnEnable()
-    {
-        // on set le callback
-        UI_Navigator.Instance.OnSlotHoverEnter += handle_ui_slot_hover;
-    }
+    // ON ENABLE / DISABLE
+    protected void OnEnable() { register_callbacks(); }
     protected void OnDisable()
     {
-        // on reset le callback
+        unregister_callbacks();
+        name_desc.Clear();
+        data_desc.Clear();
+    }
+
+
+    // CALLBACKS REGISTER
+    protected virtual void register_callbacks()
+    {
+        UI_Navigator.Instance.OnSlotHoverEnter += handle_ui_slot_hover;
+    }
+    protected virtual void unregister_callbacks()
+    {
         UI_Navigator.Instance.OnSlotHoverEnter -= handle_ui_slot_hover;
     }
-    protected void handle_ui_slot_hover(UI_Slot slot)
+
+
+    // CALLBACKS HANDLERS    
+    protected virtual void handle_ui_slot_hover(UI_Slot slot)
     {
         if (slot is not Descriptable descriptable) { Describe(null); return; }
         Describe(descriptable);

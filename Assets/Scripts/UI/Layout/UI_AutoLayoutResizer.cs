@@ -12,11 +12,17 @@ public class UI_AutoLayoutResizer : MonoBehaviour
     [SerializeField] private RectTransform content;
     private RectTransform rect_transform;
 
+    [Header("Settings")]
+    [SerializeField] private ResizeAxis resize_axis = ResizeAxis.Both;
+
     [Header("Margins")]
     [SerializeField] private float margin_top;
     [SerializeField] private float margin_bottom;
     [SerializeField] private float margin_left;
     [SerializeField] private float margin_right;
+
+    [Header("Size Factor")]
+    [SerializeField] private float size_factor = 1f;
 
     // START
     private void Start()
@@ -30,9 +36,27 @@ public class UI_AutoLayoutResizer : MonoBehaviour
     // UPDATE
     public void Update()
     {
+        if (content == null || rect_transform == null) { return; }
+
         // update our size based on content's size & margins
-        float width = content.rect.width + margin_left + margin_right;
-        float height = content.rect.height + margin_top + margin_bottom;
-        rect_transform.sizeDelta = new Vector2(width, height);
+        float width = 1;
+        float height = 1;
+        
+        if (resize_axis == ResizeAxis.Horizontal || resize_axis == ResizeAxis.Both)
+        {
+            width = content.rect.width + margin_left + margin_right;
+        }
+        if (resize_axis == ResizeAxis.Vertical || resize_axis == ResizeAxis.Both)
+        {
+            height = content.rect.height + margin_top + margin_bottom;
+        }
+        rect_transform.sizeDelta = new Vector2(width*size_factor, height*size_factor);
     }
+}
+
+public enum ResizeAxis
+{
+    Horizontal,
+    Vertical,
+    Both
 }

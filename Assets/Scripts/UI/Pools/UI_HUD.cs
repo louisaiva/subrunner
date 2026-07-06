@@ -1,110 +1,41 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class UI_HUD : UI_Pool
 {
-    [Header("Perso Quick Inventory")]
-    public UI_Inventory perso_quick_inventory;
-    private HUD_PersoItemPool perso_quick_inventory_pool;
-
-    [Header("Components")]
-    [SerializeField] private UI_Inventory ui_chest;
     public UI_Notifier Notifier;
+    public UI_ItemBar ItemBar;
 
-    // AWAKE & START
-    /* protected override void Awake()
+    [Header("Color sweepers")]
+    public UI_GraphicColorSweeper HealthBarSweeper;
+    public UI_GraphicColorSweeper XP_BarSweeper;
+    public UI_GraphicColorSweeper XP_IconSweeper;
+
+    protected override void before_showing()
     {
-        base.Awake();
-
-        // on récupère les composants
-        if (perso_quick_inventory == null)
-        {
-            perso_quick_inventory = transform.Find("perso_quick_inventory").GetComponent<UI_Inventory>();
-        }
-        if (perso_quick_inventory == null)
-        {
-            Debug.LogWarning("(UI_HUD) missing perso_quick_inventory on " + name);
-            return;
-        }
-
-        perso_quick_inventory_pool = perso_quick_inventory.GetComponent<HUD_PersoItemPool>();
+        // check if we have a controller
+        if (Controller.Capable == null || Controller.Capable.Inventory == null) { return; }
+        ItemBar.AttachToInventory(Controller.Capable.Inventory);
     }
-    protected void Start()
+    protected override void after_hiding()
     {
-        // on met les callbacks pour vérifier que le select_hackable se désactive bien
-        InputManager.Instance.OnPersoInputsToggled += verify_right_joy_is_disabled;
-    } */
-
-    // ENABLING
-    /* protected override IEnumerator enable_coroutine()
-    {
-        if (ui_chest == null) { yield break; }
-
-        // on active le perso_quick_inventory & chest navigator
-        // UI_Navigator.Instance.Enable(ui_chest,ingame_navigation: true);
-        // UI_Navigator.Instance.Enable(perso_quick_inventory, ingame_navigation: true);
-        perso_quick_inventory.Enable(ingame: true);
-        ui_chest.Enable(ingame: true);
+        // we clear the item bar
+        ItemBar.Clear();
     }
-    protected override IEnumerator disable_coroutine()
+
+    // ENTRY POINTS
+    public void PersoTookDamage() { HealthBarSweeper.Run(); }
+    public void PersoHealed() { HealthBarSweeper.Run(); }
+    public void PersoGrabbedXP() { XP_BarSweeper.Run(); }
+    public void PersoLeveledUP(int level, int upgrade_points)
     {
-        if (ui_chest == null) { yield break; }
+        // we run the level up color sweep
+        XP_IconSweeper.Run();
 
-        // on active le perso_quick_inventory & chest navigator
-        ui_chest.Disable();
-        perso_quick_inventory.Disable();
-        // UI_Navigator.Instance.Disable(ui_chest);
-        // UI_Navigator.Instance.Disable(perso_quick_inventory);
-    } */
-
-
-    // REGISTER CHEST
-    /* public void RegisterChest(UI_Inventory ui_chest)
-    {
-        // on ajoute le chest au pool
-        // ui_chest.Show();
-        this.ui_chest = ui_chest;
-        perso_quick_inventory_pool.EnableItemsByRule(ui_chest.ItemRule);
-
-        // on ajoute le chest & persoquickinv au pool
-        RegisterToPool(ui_chest.gameObject,is_stacked:true);
-        RegisterToPool(perso_quick_inventory.gameObject,is_stacked:true);
-
-        // on s'assure que le right joystick est désactivé
-        InputManager.Instance.inputs.perso.select_hackable.Disable();
-
-        if (!Showed) { return; }
-        StartCoroutine(enable_coroutine());
+        // todo : here we can check the upgrade points and replace the image of "exp" with a tmp text with the nb of upgr.
     }
-    public void RemoveChest(UI_Inventory ui_chest)
+    public void PersoReleasedUP(int up_waiting)
     {
-        // on enlève le chest
-        StartCoroutine(disable_coroutine());
-
-        // on ajoute le chest & persoquickinv au pool
-        QuitPool(ui_chest.gameObject);
-        QuitPool(perso_quick_inventory.gameObject);
-
-        this.ui_chest = null;
-
-        // on active tous les ui_items
-        perso_quick_inventory_pool.EnableAllItems();
-
-        // on remet l'input de right joystick
-        InputManager.Instance.inputs.perso.select_hackable.Enable();
+        // if we have no more upgrade waiting, we stop the color sweep
+        if (up_waiting <= 0) { XP_IconSweeper.Stop(); }
     }
-    private void verify_right_joy_is_disabled(bool perso_inputs_enabled)
-    {
-
-        // todo : is there a better way to do this ? looks schlag. maybe it's better to bring back enhanced_perso map ? or hacking map ?
-
-        if (!perso_inputs_enabled) { return; }
-        if (!Showed) { return; }
-        if (ui_chest == null) { return; }
-
-        // on doit s'assurer que le right joystick est désactivé
-        InputManager.Instance.inputs.perso.select_hackable.Disable();
-    } */
 }

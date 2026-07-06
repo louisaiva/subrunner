@@ -1,24 +1,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UI_Laptop : UI_Inventory
+public class UI_Laptop : UI_ItemSlottable
 {
-    protected virtual Laptop TargetLaptop
+    /* protected virtual Laptop TargetLaptop
     {
         get
         {
             if (!UI_LaptopItemSlot.Instance.HasLaptop) { return null; }
             return UI_LaptopItemSlot.Instance.Laptop;
         }
-    }
+    } */
+
+    private Device target_device;
 
     [Header("Components")]
     [SerializeField] private MotherboardBuilder mb;
 
     // START
-    protected virtual void Start()
+    /* protected virtual void Start()
     {
-        UI_LaptopItemSlot.Instance.OnItemChanged += HandleLaptopChanged;
+        // UI_LaptopItemSlot.Instance.OnItemChanged += HandleLaptopChanged;
         if (mb == null)
         {
             Debug.LogError($"(UI_Laptop) {name} has no MotherboardBuilder assigned, please set one in the inspector");
@@ -28,32 +30,41 @@ public class UI_Laptop : UI_Inventory
         // we initialize ourselves as big child bcz we may not have inventory
         // to init us from the start
         Init();
+    } */
+
+    // ATTACH / DETACH DEVICE
+    public void AttachDevice(Device device)
+    {
+        if (device == null) { return; }
+        if (target_device != null) { DetachDevice(); }
+        target_device = device;
     }
+    public void DetachDevice() { target_device = null; }
 
     // LAPTOP CHANGED
-    private async void HandleLaptopChanged(List<Item> items)
+    /* private async void HandleLaptopChanged(Device new_device = null)
     {
-        if (Inventory != null) { Inventory.RemoveUI(this); }
-        if (items == null || items.Count == 0)
+        // if (Inventory != null) { Inventory.RemoveUI(this); }
+        if (new_device == null)
         {
             // we disable the modules
             await pools[0].GetComponentInParent<Transitioner>(includeInactive: true)?.Hide();
             (pools[0] as UI_ModulePool)?.DisableModulePool();
             
             // we refresh the ui_inventory menu
-            UI_Manager.Instance.GetPool<UI_InventoryMenu>()?.RefreshItemPools();
+            // UI_Manager.Instance.GetPool<UI_InventoryMenu>()?.RefreshItemPools();
             return;
         }
 
         // if we are here we have a laptop, so we create the motherboard & its modules
         // first we warn the new inventory that we are its ui now
-        TargetLaptop.Inventory.AddUI(this);
-        LaptopInventory inventory = TargetLaptop.Inventory as LaptopInventory;
+        // TargetLaptop.Inventory.AddUI(this);
+        LaptopInventory inventory = new_device.Inventory as LaptopInventory;
         mb.AssignLaptopInventory(inventory);
         // mb.Size = new Vector2Int(inventory.Columns, inventory.Rows);
 
         // we change the mb color based on laptop's color
-        mb.SetColor(TargetLaptop.MB_Color);
+        mb.SetColor(new_device.MB_Color);
 
         await System.Threading.Tasks.Task.Yield(); // wait for the next frame to ensure the UI is active
 
@@ -63,13 +74,13 @@ public class UI_Laptop : UI_Inventory
             Debug.LogError($"(UI_Laptop) {name} has no UI_ModulePool to initialize from inventory, please set one in the inspector");
             return;
         }
-        modulePool.InitFromInventory(inventory);
+        // modulePool.InitFromInventory(inventory);
 
         // we enable the modules
         modulePool.EnableModulePool();
 
         // we refresh the ui_inventory menu
-        UI_Manager.Instance.GetPool<UI_InventoryMenu>()?.RefreshItemPools();
+        // UI_Manager.Instance.GetPool<UI_InventoryMenu>()?.RefreshItemPools();
     }
 
 
@@ -86,5 +97,5 @@ public class UI_Laptop : UI_Inventory
         // we go through the module pool and check if one of the module slot contains the item,
         // if yes we return the index
         return pools[0].GetItemSlotIndex(item);
-    }
+    } */
 }

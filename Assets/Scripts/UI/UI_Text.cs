@@ -1,8 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using TMPro;
-using UnityEngine.InputSystem;
 using UnityEngine.Events;
 
 #if UNITY_EDITOR
@@ -46,7 +44,7 @@ public class UI_Text : UI_Slot
 
 
     // MAIN CLICK FUNCTIONS
-    public void play()
+    /* public void play()
     {
         // transform.parent.parent.GetComponent<UI_PauseMenu>().hide();
         UI_Manager.Instance.SwitchToHUD();
@@ -71,27 +69,27 @@ public class UI_Text : UI_Slot
     }
     public void ghost_mode()
     {
-        if (Perso.Instance == null) { return; }
-        Perso.Instance.ToggleGhost();
+        if (Controller.Perso == null) { return; }
+        Controller.Perso.ToggleGhost();
     }
     public void metamorph()
     {
-        if (Perso.Instance == null) { return; }
-        Perso.Instance.Metamorph();
+        if (Controller.Perso == null) { return; }
+        Controller.Perso.Metamorph();
     }
     public void heal()
     {
-        if (Perso.Instance == null) { return; }
-        Perso.Instance.healMax();
+        if (Controller.Perso == null) { return; }
+        Controller.Perso.GetCapacity<HealthCapacity>().HealMax();
     }
     public void toggle_vsync()
     {
-        AppManager.Instance.useVSync = !AppManager.Instance.useVSync;
+        AppManager.Instance.UseVSync = !AppManager.Instance.UseVSync;
     }
     public void credits()
     {
         UI_Manager.Instance.SwitchTo("credits");
-    }
+    } */
 
     // interface functions
     public override void OnPointerEnter(PointerEventData eventData)

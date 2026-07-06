@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Collections;
 using UnityEngine;
 
@@ -56,6 +57,7 @@ public class HalfMatrix<T> where T : struct
     private int population; // the count of our Agents
     private List<T> data = null; // the real data where all the T will be stored as an HalfMatrix list
     public int DataCount => data.Count; // the count of data we have
+    private List<int> usable_data_list = new List<int>(); // list of the data indexes that are usable (not related to a removed agent)
 
     // CONSTRUCTOR
     public HalfMatrix()
@@ -128,6 +130,27 @@ public class HalfMatrix<T> where T : struct
         // we now need to decrease the population
         this.population--;
     }
+    public void RemoveAgentsInBatch(List<int> agent_indexes, ref string log)
+    {
+        if (agent_indexes == null || agent_indexes.Count == 0) { return; }
+        if (agent_indexes.Count == 1) { RemoveAgent(agent_indexes[0], ref log); return; }
+
+        // we get all the indexes of the data that are related to these agents
+        List<int> single_indexes = data_indexes_of_agents(agent_indexes);
+        log += $"(HalfMatrix) Removing {agent_indexes.Count} agents data at indexes: {string.Join(", ", single_indexes)}\n";
+
+        // we remove all the data related to this agent
+        for (int i = single_indexes.Count - 1; i >= 0; i--)
+        {
+            int index = single_indexes[i];
+            if (index < 0 || index >= data.Count) { throw new ArgumentOutOfRangeException($"(HalfMatrix) Cannot remove data at index {index} because the data count is {data.Count}"); }
+            data.RemoveAt(index);
+        }
+
+        // we now need to decrease the population
+        this.population-= agent_indexes.Count;
+
+    }
 
     // GETTERS
     private int main_row_of_agent(int agent_index) => agent_index - 1;
@@ -147,24 +170,66 @@ public class HalfMatrix<T> where T : struct
     }
     private List<int> data_indexes_of_agent(int agent_index)
     {
-        List<int> indexes = new List<int>();
+        usable_data_list.Clear();
         int main_row = main_row_of_agent(agent_index);
         int main_row_index = get_first_row_index(main_row);
 
         // we add the main_row indexes to the indexes
         for (int i = 0; i < row_length(main_row); i++)
         {
-            indexes.Add(main_row_index + i);
+            usable_data_list.Add(main_row_index + i);
         }
 
         // we now add all the indexes of the agent in the above rows
         for (int r = main_row + 1; r < RowCount; r++)
         {
             int row_index = get_first_row_index(r);
-            indexes.Add(row_index + agent_index);
+            usable_data_list.Add(row_index + agent_index);
         }
 
-        return indexes;
+        return usable_data_list;
     }
+    private List<int> data_indexes_of_agents(List<int> agent_indexes)
+    {
+        usable_data_list.Clear();
 
+        agent_indexes.Sort();
+        agent_indexes = agent_indexes.Distinct().ToList();
+        List<int> main_rows = new List<int>();
+        for (int i = 0; i < agent_indexes.Count; i++)
+        {
+            main_rows.Add(main_row_of_agent(agent_indexes[i]));
+        }
+        int smallest_agent_row = main_rows[0];
+        
+        // we now add all the indexes of the agent in the above rows
+        for (int r = smallest_agent_row; r < RowCount; r++)
+        {
+            // checks if r is an agent_row -> if yes we simply add all the indexes of this row and go to next row
+            if (main_rows.Contains(r))
+            {
+                int agent_row_index = get_first_row_index(r);
+                int agent_row_length = row_length(r);
+                for (int j = 0; j < agent_row_length; j++)
+                {
+                    usable_data_list.Add(agent_row_index + j);
+                }
+                continue;
+            }
+            
+            // otherwise this row is the main row of an agent we don't care about,
+            // we need to add only indexes of our agents in this row
+            // ! but only agents that have a main row below r, bcz if they are above they are not in this row
+            int row_index = get_first_row_index(r);
+            for (int i = 0; i < agent_indexes.Count; i++)
+            {
+                if (main_rows[i] >= r) { break;}
+
+                // if below r then we need to add the index of this agent in this row
+                usable_data_list.Add(row_index + agent_indexes[i]);
+            }
+        }
+
+        return usable_data_list;
+    }
 }

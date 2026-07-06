@@ -1,0 +1,149 @@
+﻿{
+    "<id>k__BackingField": "printer",
+    "kind": "Printer3D",
+    "position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": -1.0
+    },
+    "layer": 29,
+    "tag": "Untagged",
+    "capacities_ids": [
+        "print_sorter",
+        "hover"
+    ],
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "printer",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "open",
+                    "craft",
+                    "close"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            }
+        ],
+        "current_capacity": "",
+        "material_name": "objects",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "never_flip": false,
+        "layers": [
+            {
+                "skin": "printer_ceil",
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "local_rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "material_name": "objects",
+                "sorting_layer_id": -438027575,
+                "order_in_layer": 1,
+                "never_flip": true,
+                "follow_duration": false
+            },
+            {
+                "skin": "printer_item",
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.00009999999747378752
+                },
+                "local_rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "material_name": "objects",
+                "sorting_layer_id": -667374433,
+                "order_in_layer": 0,
+                "never_flip": true,
+                "follow_duration": false
+            },
+            {
+                "skin": "printer_bloc",
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0003000000142492354
+                },
+                "local_rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "material_name": "objects",
+                "sorting_layer_id": -667374433,
+                "order_in_layer": 0,
+                "never_flip": true,
+                "follow_duration": false
+            }
+        ],
+        "local_position": {
+            "x": 0.0,
+            "y": -0.00019999999494757503
+        }
+    },
+    "inventory": {
+        "item_pools_data": [
+            {
+                "item_type": 2,
+                "stacks_data": [],
+                "pool_id": "stuff",
+                "max_stacks": 12,
+                "min_stacks": 12,
+                "scalable": true,
+                "item_rule": ""
+            }
+        ],
+        "item_type": 2
+    },
+    "feet_data": {
+        "box_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 29,
+                "pathfinding_area": 1,
+                "shadow_caster_data": {
+                    "cast_and_self": false,
+                    "used_layers": []
+                },
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.2083333283662796
+                },
+                "size": {
+                    "x": 0.9976510405540466,
+                    "y": 0.4166666567325592
+                }
+            }
+        ],
+        "circle_colliders": []
+    },
+    "effects": [],
+    "effects_ttl": [],
+    "contained_capable_ids": []
+}

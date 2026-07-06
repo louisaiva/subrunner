@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FileBank : Singleton<FileBank>
+public class FileBank : MonoBehaviour
 {
     public List<File> files = new List<File>();
     public List<File> keys = new List<File>();
@@ -52,5 +52,14 @@ public class FileBank : Singleton<FileBank>
         {
             return (T)files.Find(file => file.name == name);
         }
+    }
+
+
+    // AWAKE & SINGLETON LOGIC
+    public static FileBank Instance { get; private set; }
+    private void Awake()
+    {
+        if (Instance == null) { Instance = this; }
+        else { Destroy(gameObject); return; }
     }
 }

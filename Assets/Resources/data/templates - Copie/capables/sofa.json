@@ -1,0 +1,111 @@
+﻿{
+    "<id>k__BackingField": "sofa",
+    "kind": "Sofa",
+    "position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": -1.0
+    },
+    "layer": 29,
+    "tag": "Untagged",
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "sofa_R",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "idle",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "hurted"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            }
+        ],
+        "current_capacity": "",
+        "material_name": "objects",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "never_flip": false,
+        "layers": [
+            {
+                "skin": "sofa_L",
+                "local_position": {
+                    "x": -1.5,
+                    "y": 0.0
+                },
+                "local_rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "material_name": "objects",
+                "sorting_layer_id": -667374433,
+                "order_in_layer": 0,
+                "never_flip": false,
+                "follow_duration": false
+            }
+        ],
+        "local_position": {
+            "x": 0.0,
+            "y": 0.0
+        }
+    },
+    "inventory": {
+        "item_pools_data": [],
+        "item_type": 0
+    },
+    "feet_data": {
+        "box_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 29,
+                "pathfinding_area": -1,
+                "shadow_caster_data": {
+                    "cast_and_self": false,
+                    "used_layers": []
+                },
+                "is_trigger": false,
+                "offset": {
+                    "x": -0.7563481330871582,
+                    "y": 0.37201786041259768
+                },
+                "size": {
+                    "x": 2.7756433486938478,
+                    "y": 0.7334804534912109
+                }
+            }
+        ],
+        "circle_colliders": []
+    },
+    "capacities_ids": [
+        "sofa_hover",
+        "sofa_sorter",
+        "sofa_iic"
+    ],
+    "effects": [],
+    "effects_ttl": [],
+    "local_sitting_position": {
+        "x": -0.75,
+        "y": 0.5416666865348816
+    },
+    "local_standing_position": {
+        "x": -0.75,
+        "y": -0.20000000298023225
+    }
+}

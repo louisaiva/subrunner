@@ -38,8 +38,11 @@ public class UI_FileDescriptor : UI_Descriptor
         core_cost_desc.gameObject.SetActive(true);
         core_cost_desc.Write($"required cores : {program.cores_cost}");
 
-        // we check if the current perso.instance.device has enough free cores for this program
-        if (Perso.Instance.Device?.Processor.FreeCoresCount < program.cores_cost) { core_cost_desc.SetColor(not_enough_cores_color); }
+        // we check if the current Controller.Perso.device has enough free cores for this program
+        if (Controller.Perso != null && Controller.Perso.Device != null)
+        {
+            if (Controller.Perso.Device.Processor.FreeCoresCount < program.cores_cost) { core_cost_desc.SetColor(not_enough_cores_color); }
+        }
 
         base_duration_desc.gameObject.SetActive(true);
         base_duration_desc.Write($"base duration: {program.base_duration.ToString("F1")} s");

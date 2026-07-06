@@ -207,7 +207,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 574287140, guid: 0a4f37ef47fa3d0149cf518ae4f2a876, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 0, b: 0, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -725,6 +725,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2637764254354605675}
   - component: {fileID: 2396757424017905776}
+  - component: {fileID: 8810355226504685837}
   m_Layer: 7
   m_Name: inventory
   m_TagString: Untagged
@@ -759,8 +760,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2faf993164e7a436b9c49b4cd3379e40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlacerInventory
-  Items: []
-  uis: []
+  pools:
+  - {fileID: 8810355226504685837}
   log: 0
   place_positions:
   - {x: -0.06, y: 0.333}
@@ -768,6 +769,26 @@ MonoBehaviour:
   - {x: 0.06, y: 0.18}
   item_rule_placing: 
   authorize_overplace: 0
+--- !u!114 &8810355226504685837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8097682911300807571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemPool
+  stacks: []
+  MaxStacks: 9
+  MinStacks: 0
+  Scalable: 0
+  item_rule: 
+  Inventory: {fileID: 0}
+  log: 0
+  log_storage: 0
 --- !u!1 &8910784274748376873
 GameObject:
   m_ObjectHideFlags: 0

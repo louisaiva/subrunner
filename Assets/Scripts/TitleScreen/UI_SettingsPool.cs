@@ -5,23 +5,36 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_SettingsPool : UI_SlottablePool, Panelable
+public class UI_SettingsPool : UI_SlottablePool, Panelable, Descriptable
 {
     [Header("Panel Manager")]
     [SerializeField] private UI_PanelManager panel_manager;
     public UI_PanelManager PanelManager => panel_manager;
 
-    [Header("Input Feedbacks Builder")]
-    [SerializeField] protected FeedbackPoolBuilder IFB;
-
     [Header("Components")]
     protected List<UI_PanelButton> panel_buttons;
     protected RectTransform panel_bar;
+    private UI_SettingsBuilder _builder;
+    public UI_SettingsBuilder Builder
+    {
+        get
+        {
+            if (_builder == null) { _builder = GetComponentInChildren<UI_SettingsBuilder>(includeInactive: true); }
+            return _builder;
+        }
+    }
+
+    public string Name => "";
+    public string Description => "";
 
     // START
+
     protected void Start()
     {
         UI_Navigator.Instance.OnSlotHoverEnter += update_feedbacks;
+        
+        // on load l'ui
+        Builder?.Init();
     }
 
     // SHOW
@@ -38,7 +51,6 @@ public class UI_SettingsPool : UI_SlottablePool, Panelable
 
         yield return base.show_coroutine(dont_show, duration_override, was_stacked);
     }
-
     protected override IEnumerator enable_coroutine()
     {
         yield return base.enable_coroutine();
@@ -76,6 +88,15 @@ public class UI_SettingsPool : UI_SlottablePool, Panelable
         }
         return null;
     }
+
+
+    // FEEDBACKS
+    // todo - should we rather put those feedbacks parameters into UI_SlottablePool ?
+    // todo - or have a separate script that we can put on IFB gameobject ?
+
+    [Header("Input Feedbacks Builder")]
+    [SerializeField] protected FeedbackPoolBuilder IFB;
+
 
     // UPDATE FEEDBACKS
     private void update_feedbacks(UI_Slot slot)

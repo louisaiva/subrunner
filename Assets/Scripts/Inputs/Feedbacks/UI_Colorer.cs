@@ -13,8 +13,10 @@ public class UI_Colorer : MonoBehaviour
     private bool is_colored = false;
     private UnityEngine.UI.Graphic graphic;
 
-    [Header("Disabling")]
+    [Header("Parameters")]
+    public bool force_our_color = false;
     public bool disable_on_revert = false;
+    public bool disable_on_color = false;
 
     [Header("Logs")]
     public bool log = false;
@@ -31,13 +33,22 @@ public class UI_Colorer : MonoBehaviour
     // COLORER
     public void ApplyColor(Color? color = null)
     {
+        // ensure we have everything + save the base color
         if (graphic == null) { Start(); }
         if (!is_colored) { base_color = graphic.color; }
-        graphic.color = color == null ? this.color : color.Value;
+
+        // find the color to apply
+        if (force_our_color) { color = this.color; }
+        else if (color == null) { color = this.color; }
+
+        // apply the color
+        graphic.color = color.Value;
         is_colored = true;
         if (log) Debug.Log("(UI_Colorer) Applied color " + graphic.color + " to " + gameObject.name);
 
+        // we disable or enable the gameObject if needed
         if (disable_on_revert) { gameObject.SetActive(true); }
+        if (disable_on_color) { gameObject.SetActive(false); }
     }
     public void RevertColor()
     {
@@ -48,5 +59,6 @@ public class UI_Colorer : MonoBehaviour
         if (log) Debug.Log("(UI_Colorer) Reverted color to " + graphic.color + " on " + gameObject.name);
 
         if (disable_on_revert) { gameObject.SetActive(false); }
+        if (disable_on_color) { gameObject.SetActive(true); }
     }
 }

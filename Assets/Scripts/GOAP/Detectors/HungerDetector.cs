@@ -2,7 +2,7 @@ using UnityEngine;
 using subrunner.goap;
 
 
-public class HungerDetector : Detector
+public class HungerDetector : OldDetector
 {
     // calls EatGoal when health <= x
     // or hunger <= y
@@ -24,13 +24,16 @@ public class HungerDetector : Detector
 
     private void Update()
     {
+        // check if has health capacity
+        if (!ia.HasCapacity<HealthCapacity>()) { return; }
+
         // update timer
         if (Time.time - lastDetectionTime <= detectionInterval) { return; }
         lastDetectionTime = Time.time;
 
         // si le goal est inactif et (qu'on a faim ou pas assez de vie)
         if (!goal.enabled
-            && (ia.life <= healthPercentageThreshold * 0.01f * ia.max_life
+            && (ia.GetCapacity<HealthCapacity>().LifePourcent <= healthPercentageThreshold * 0.01f
             || eatCapacity.hunger >= hungerThreshold))
         {
             brain.EnableGoal(goal);
@@ -39,7 +42,7 @@ public class HungerDetector : Detector
 
         // si le goal est actif et qu'on a assez de vie et pas faim
         if (goal.enabled
-            && ia.life > healthPercentageThreshold * 0.01f * ia.max_life
+            && ia.GetCapacity<HealthCapacity>().LifePourcent > healthPercentageThreshold * 0.01f
             && eatCapacity.hunger < hungerThreshold)
         {
             brain.DisableGoal(goal);

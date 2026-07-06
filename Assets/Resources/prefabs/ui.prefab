@@ -532,6 +532,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -662,9 +663,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Target: {fileID: 0}
-  item: {fileID: 1166646537455574637}
-  qty: {fileID: 2880231611553245789}
-  feedback: {fileID: 5661291076499030527}
   log: 0
 --- !u!225 &1632935780741284428
 CanvasGroup:
@@ -715,6 +713,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FeedbackSwitcher
   keyboardFeedback: {fileID: 7018793681166539278}
   gamepadFeedback: {fileID: 7097367528638299079}
+  show_feedback_setting_name: show_input_feedbacks
 --- !u!1 &313226952281540195
 GameObject:
   m_ObjectHideFlags: 0
@@ -768,13 +767,7 @@ MonoBehaviour:
   Reference: device
   Showed: 0
   Stacked: 0
-  TransitionSettings:
-    Duration: 0.05
-    CanBeHidden: 1
-    CanBeCanceled: 0
-    UsePersoInputs: 1
-    TimeScale: 1
-    BackgroundAlpha: 0
+  Settings: {fileID: 0}
   angle_threshold: 45
   angle_multiplicator: 0
   ui_elements:
@@ -782,6 +775,7 @@ MonoBehaviour:
   stacked_elements:
   - {fileID: 6047172991181861186}
   log: 0
+  log_extended: 0
   log_elements_showing: 0
   windows_parent: {fileID: 1376400117247844845}
   windows: []
@@ -908,6 +902,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1044,6 +1039,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1216,6 +1212,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1262,6 +1259,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Colorer
   color: {r: 0.03529412, g: 1, b: 0, a: 1}
+  disable_on_revert: 0
   log: 0
 --- !u!1 &421157022807195537
 GameObject:
@@ -1367,6 +1365,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1591,6 +1590,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1913,6 +1913,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -2085,6 +2086,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -2543,10 +2545,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0c12fa58056bca4f99429ba2679fd45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Target: {fileID: 5557349333459508252}
-  item: {fileID: 8458420120432897478}
-  qty: {fileID: 304945733111795503}
-  feedback: {fileID: 9044740795094789998}
+  Target: {fileID: 0}
   log: 0
 --- !u!225 &7043773502128613087
 CanvasGroup:
@@ -2597,6 +2596,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FeedbackSwitcher
   keyboardFeedback: {fileID: 5887311761558378479}
   gamepadFeedback: {fileID: 981146490402995405}
+  show_feedback_setting_name: show_input_feedbacks
 --- !u!1 &1124701922093477598
 GameObject:
   m_ObjectHideFlags: 0
@@ -2851,6 +2851,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -3102,6 +3103,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -3283,6 +3285,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -3405,7 +3408,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panel_name: shorcuts_panel
-  require_laptop: 0
   required_enabled_item_pools:
   - {fileID: 4734001381855922422}
   - {fileID: 3125642494784453069}
@@ -3503,15 +3505,17 @@ MonoBehaviour:
   _hovered: 0
   _disabled: 0
   log: 0
+  image: {fileID: 7128835755493569818}
   base_sprite: {fileID: 722337240, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
   hover_sprite: {fileID: 1477167940, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
   down_sprite: {fileID: -1489766419, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
   disabled_sprite: {fileID: -908096685, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
-  image: {fileID: 7128835755493569818}
   drag_sprite: {fileID: 1075853624, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
   drag_hover_sprite: {fileID: 1844584853, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
+  Stack:
+    MaxQty: 0
+    Items: []
   quantity_text: {fileID: 4845137026190349956}
-  bank: {fileID: 0}
   item_image: {fileID: 0}
   current_item_sprite: {fileID: 0}
 --- !u!1 &1505321048343322506
@@ -3617,6 +3621,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -3969,6 +3974,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -4242,10 +4248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0c12fa58056bca4f99429ba2679fd45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Target: {fileID: 5944930231020604311}
-  item: {fileID: 4241104490473059461}
-  qty: {fileID: 7249977591341588691}
-  feedback: {fileID: 4705299924457931412}
+  Target: {fileID: 0}
   log: 0
 --- !u!225 &6705615521759426594
 CanvasGroup:
@@ -4386,6 +4389,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -4432,111 +4436,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Colorer
   color: {r: 0.03529412, g: 1, b: 0, a: 1}
+  disable_on_revert: 0
   log: 0
---- !u!1 &1735970842031980189
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6219005050402965155}
-  - component: {fileID: 7410501076331519398}
-  - component: {fileID: 4776109418449319106}
-  - component: {fileID: 5944930231020604311}
-  m_Layer: 10
-  m_Name: ui_laptop_slot
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &6219005050402965155
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1735970842031980189}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 8969609253766308476}
-  - {fileID: 5904882071383854840}
-  m_Father: {fileID: 4015414869232717426}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: 12}
-  m_SizeDelta: {x: 24, y: 24}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &7410501076331519398
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1735970842031980189}
-  m_CullTransparentMesh: 1
---- !u!114 &4776109418449319106
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1735970842031980189}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 722337240, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!114 &5944930231020604311
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1735970842031980189}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15991b66f1df3074b9cf9a24c908c8c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _hovered: 0
-  _disabled: 0
-  log: 0
-  base_sprite: {fileID: 722337240, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
-  hover_sprite: {fileID: 1477167940, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
-  down_sprite: {fileID: -1489766419, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
-  disabled_sprite: {fileID: -908096685, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
-  image: {fileID: 4776109418449319106}
-  drag_sprite: {fileID: 1075853624, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
-  drag_hover_sprite: {fileID: 1844584853, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
-  quantity_text: {fileID: 8650930632441125348}
-  bank: {fileID: 0}
-  item_image: {fileID: 0}
-  current_item_sprite: {fileID: 0}
 --- !u!1 &1792079146980138293
 GameObject:
   m_ObjectHideFlags: 0
@@ -4699,6 +4600,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -4835,6 +4737,7 @@ MonoBehaviour:
   m_VerticalAlignment: 1024
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -4926,13 +4829,7 @@ MonoBehaviour:
   Reference: inventory
   Showed: 0
   Stacked: 0
-  TransitionSettings:
-    Duration: 0.05
-    CanBeHidden: 1
-    CanBeCanceled: 1
-    UsePersoInputs: 0
-    TimeScale: 0.5
-    BackgroundAlpha: 0.96
+  Settings: {fileID: 0}
   angle_threshold: 45
   angle_multiplicator: 0
   ui_elements:
@@ -4959,16 +4856,13 @@ MonoBehaviour:
   - {fileID: 1401372864129505342}
   - {fileID: 7401164733686839625}
   log: 0
+  log_extended: 0
   log_elements_showing: 0
-  ui_inventory: {fileID: 1524634633796860591}
-  ui_laptop: {fileID: 129471366508900232}
+  log_refresh_pools: 0
   no_inventory_panel: {fileID: 4376614431564456865}
   base_transition: 0.2
-  fade_all_disabled: 1
-  drop_feedback: {fileID: 722952786615114122}
-  use_feedback: {fileID: 6257420737360658849}
-  move_feedback: {fileID: 327936851304602253}
-  Descriptor: {fileID: 6374746741652913567}
+  never_fade_pools: 1
+  IFs: {fileID: 0}
   slottable_mixer: {fileID: 3519912153783054744}
 --- !u!114 &3519912153783054744
 MonoBehaviour:
@@ -4986,7 +4880,7 @@ MonoBehaviour:
   log: 0
   log_starting_slot: 0
   slottables:
-  - {fileID: 1524634633796860591}
+  - {fileID: 0}
   - {fileID: 129471366508900232}
   master_slottable: {fileID: 0}
 --- !u!114 &2872471441051526316
@@ -5089,17 +4983,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fc4a6a908f46cf4db95a7028ed54910, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxSlots: 1
-  MinSlots: 0
-  Scalable: 0
-  ui_items: []
-  destroy_empty_on_init: 0
-  DoNotDisableEmptySlots: 0
-  item_rule: weapon
-  bank: {fileID: 0}
-  UI_Inventory: {fileID: 0}
+  starting_slot: {fileID: 0}
   log: 0
-  log_storage: 0
+  log_starting_slot: 0
+  item_slot_type: item
+  AlwaysShow: 0
+  ui_stacks: []
+  bank: {fileID: 0}
+  PoolID: stuff
 --- !u!1 &1984227957808503677
 GameObject:
   m_ObjectHideFlags: 0
@@ -5195,6 +5086,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FeedbackSwitcher
   keyboardFeedback: {fileID: 6106071554766247714}
   gamepadFeedback: {fileID: 5518698919006807026}
+  show_feedback_setting_name: show_input_feedbacks
 --- !u!1 &1985036081223219987
 GameObject:
   m_ObjectHideFlags: 0
@@ -5299,6 +5191,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -5345,6 +5238,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Colorer
   color: {r: 0, g: 0, b: 0, a: 0}
+  disable_on_revert: 0
   log: 1
 --- !u!1 &1985108611357710917
 GameObject:
@@ -5519,15 +5413,17 @@ MonoBehaviour:
   _hovered: 0
   _disabled: 0
   log: 0
+  image: {fileID: 294263405048612598}
   base_sprite: {fileID: 722337240, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
   hover_sprite: {fileID: 1477167940, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
   down_sprite: {fileID: -1489766419, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
   disabled_sprite: {fileID: -908096685, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
-  image: {fileID: 294263405048612598}
   drag_sprite: {fileID: 1075853624, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
   drag_hover_sprite: {fileID: 1844584853, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
+  Stack:
+    MaxQty: 0
+    Items: []
   quantity_text: {fileID: 3675290943608841162}
-  bank: {fileID: 0}
   item_image: {fileID: 0}
   current_item_sprite: {fileID: 0}
 --- !u!1 &2005229202916468868
@@ -5872,6 +5768,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -6098,6 +5995,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -6234,6 +6132,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -6441,6 +6340,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FeedbackSwitcher
   keyboardFeedback: {fileID: 821805593313549350}
   gamepadFeedback: {fileID: 3135695817615605953}
+  show_feedback_setting_name: show_input_feedbacks
 --- !u!1 &2299099727693034227
 GameObject:
   m_ObjectHideFlags: 0
@@ -6545,6 +6445,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -6688,6 +6589,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FeedbackSwitcher
   keyboardFeedback: {fileID: 4440667222817869576}
   gamepadFeedback: {fileID: 4900979893710863081}
+  show_feedback_setting_name: show_input_feedbacks
 --- !u!1 &2350569179263781791
 GameObject:
   m_ObjectHideFlags: 0
@@ -6941,6 +6843,7 @@ MonoBehaviour:
   m_VerticalAlignment: 1024
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -7259,6 +7162,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -7436,13 +7340,7 @@ MonoBehaviour:
   Reference: hacking
   Showed: 0
   Stacked: 0
-  TransitionSettings:
-    Duration: 0.05
-    CanBeHidden: 1
-    CanBeCanceled: 0
-    UsePersoInputs: 1
-    TimeScale: 1
-    BackgroundAlpha: 0
+  Settings: {fileID: 0}
   angle_threshold: 45
   angle_multiplicator: 0
   ui_elements:
@@ -7450,6 +7348,7 @@ MonoBehaviour:
   stacked_elements:
   - {fileID: 3532487678311861037}
   log: 0
+  log_extended: 0
   log_elements_showing: 0
 --- !u!1 &2640498653413180510
 GameObject:
@@ -7671,6 +7570,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -7807,6 +7707,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -7929,7 +7830,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panel_name: ui_laptop
-  require_laptop: 0
   required_enabled_item_pools:
   - {fileID: 5609916578867124607}
   - {fileID: 2220925454443362976}
@@ -8038,6 +7938,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -8175,6 +8076,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -8221,6 +8123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Colorer
   color: {r: 0, g: 0, b: 0, a: 0}
+  disable_on_revert: 0
   log: 1
 --- !u!1 &2798895522235080199
 GameObject:
@@ -8325,6 +8228,7 @@ MonoBehaviour:
   m_VerticalAlignment: 1024
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -8447,7 +8351,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panel_name: ui_inventory
-  require_laptop: 1
   required_enabled_item_pools: []
   log: 0
 --- !u!1 &2871141618868639359
@@ -8564,7 +8467,6 @@ RectTransform:
   - {fileID: 5718354069172723611}
   - {fileID: 4972779032802338330}
   - {fileID: 2721467404037524679}
-  - {fileID: 6396836957172934052}
   - {fileID: 3663993676892884190}
   - {fileID: 1098894666331274689}
   - {fileID: 7597088074862999593}
@@ -8676,6 +8578,7 @@ MonoBehaviour:
   CurrentSlot: {fileID: 0}
   log: 0
   log_hover: 0
+  log_handle_slot_disabled: 0
   log_slot_position: 0
   log_inputs: 0
   log_update_slots: 0
@@ -8693,6 +8596,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GamepadNavigator
   angle_threshold: 45
   angle_multiplicator: 0
+  use_dot_navigation: 0
   log: 0
 --- !u!114 &2824733737334845058
 MonoBehaviour:
@@ -8731,81 +8635,6 @@ MonoBehaviour:
   log: 0
   log_moving_items: 0
   log_receivable_slots: 0
---- !u!1 &2993804656602851118
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8969609253766308476}
-  - component: {fileID: 2919266000067199644}
-  - component: {fileID: 7319630445326015511}
-  m_Layer: 5
-  m_Name: item
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &8969609253766308476
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2993804656602851118}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6219005050402965155}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 24, y: 24}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &2919266000067199644
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2993804656602851118}
-  m_CullTransparentMesh: 1
---- !u!114 &7319630445326015511
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2993804656602851118}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 2067717106, guid: 3663b626bd9323741bb906f9681d3bc7, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &2995115389577452296
 GameObject:
   m_ObjectHideFlags: 0
@@ -8899,15 +8728,17 @@ MonoBehaviour:
   _hovered: 0
   _disabled: 0
   log: 0
+  image: {fileID: 2918337935890777513}
   base_sprite: {fileID: 722337240, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
   hover_sprite: {fileID: 1477167940, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
   down_sprite: {fileID: -1489766419, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
   disabled_sprite: {fileID: -908096685, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
-  image: {fileID: 2918337935890777513}
   drag_sprite: {fileID: 1075853624, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
   drag_hover_sprite: {fileID: 1844584853, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
+  Stack:
+    MaxQty: 0
+    Items: []
   quantity_text: {fileID: 4706051935699309832}
-  bank: {fileID: 0}
   item_image: {fileID: 0}
   current_item_sprite: {fileID: 0}
 --- !u!1 &3016471580656179715
@@ -9014,6 +8845,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -9196,6 +9028,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -9365,6 +9198,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FeedbackSwitcher
   keyboardFeedback: {fileID: 6858795727807523202}
   gamepadFeedback: {fileID: 531020815428092238}
+  show_feedback_setting_name: show_input_feedbacks
 --- !u!1 &3031920074445530371
 GameObject:
   m_ObjectHideFlags: 0
@@ -9469,6 +9303,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -9654,6 +9489,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -9700,6 +9536,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Colorer
   color: {r: 0.03529412, g: 1, b: 0, a: 1}
+  disable_on_revert: 0
   log: 0
 --- !u!1 &3261689245712872898
 GameObject:
@@ -9804,6 +9641,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -10090,6 +9928,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -10226,6 +10065,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -10362,6 +10202,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -10498,6 +10339,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -10608,8 +10450,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb91d5656e92bcf4395e14cf76abab8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name_desc: {fileID: 4439636683005514749}
-  data_desc: {fileID: 4800915946441388117}
+  name_desc: {fileID: 0}
+  data_desc: {fileID: 0}
+  empty_name: empty
+  empty_data: 
+  log: 0
   upgrade_descs: []
   upgrade_prefab: {fileID: 7352443385526347750, guid: 0756902dc5b2d3a4b8cf4a25fbed01b7, type: 3}
   tier_1_color: {r: 0.5, g: 1, b: 0.5, a: 1}
@@ -10617,7 +10462,6 @@ MonoBehaviour:
   tier_3_color: {r: 0.5019608, g: 0.5019608, b: 1, a: 1}
   tier_4_color: {r: 0.9056604, g: 0.89089453, b: 0.4229263, a: 1}
   tier_X_color: {r: 1, g: 0, b: 0.06387138, a: 1}
-  log: 0
 --- !u!1 &3524716049594573841
 GameObject:
   m_ObjectHideFlags: 0
@@ -10776,6 +10620,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -11117,6 +10962,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -11432,6 +11278,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -11523,13 +11370,7 @@ MonoBehaviour:
   Reference: hud
   Showed: 0
   Stacked: 0
-  TransitionSettings:
-    Duration: 0.05
-    CanBeHidden: 1
-    CanBeCanceled: 0
-    UsePersoInputs: 1
-    TimeScale: 1
-    BackgroundAlpha: 0
+  Settings: {fileID: 0}
   angle_threshold: 45
   angle_multiplicator: 0
   ui_elements:
@@ -11541,9 +11382,8 @@ MonoBehaviour:
   - {fileID: 5582045804357744758}
   - {fileID: 2143410973348318332}
   log: 0
+  log_extended: 0
   log_elements_showing: 0
-  perso_quick_inventory: {fileID: 0}
-  ui_chest: {fileID: 0}
   Notifier: {fileID: 2070240564987113813}
 --- !u!1 &3916433396999067944
 GameObject:
@@ -11648,6 +11488,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -11859,6 +11700,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -12071,6 +11913,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -12113,7 +11956,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6641991040167754052}
-  - component: {fileID: 1524634633796860591}
   - component: {fileID: 3142657869747533312}
   m_Layer: 5
   m_Name: ui_inventory
@@ -12149,29 +11991,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1524634633796860591
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4117788799314113824}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb97402ee6332cc4fb62827af8b39a3a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  starting_slot: {fileID: 0}
-  log: 0
-  log_starting_slot: 0
-  log_get_slots: 0
-  pools:
-  - {fileID: 5609916578867124607}
-  - {fileID: 4962439697037434}
-  - {fileID: 2220925454443362976}
-  - {fileID: 4734001381855922422}
-  - {fileID: 3125642494784453069}
-  Inventory: {fileID: 0}
 --- !u!114 &3142657869747533312
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12293,6 +12112,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -12455,10 +12275,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0c12fa58056bca4f99429ba2679fd45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Target: {fileID: 4647787620899142492}
-  item: {fileID: 3912523777746955233}
-  qty: {fileID: 528006512880709988}
-  feedback: {fileID: 0}
+  Target: {fileID: 0}
   log: 0
 --- !u!114 &4636611845962445734
 MonoBehaviour:
@@ -12509,6 +12326,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FeedbackSwitcher
   keyboardFeedback: {fileID: 1512354773851515420}
   gamepadFeedback: {fileID: 5937370755641481139}
+  show_feedback_setting_name: show_input_feedbacks
 --- !u!1 &4235759990970422154
 GameObject:
   m_ObjectHideFlags: 0
@@ -12613,6 +12431,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -12771,6 +12590,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FeedbackSwitcher
   keyboardFeedback: {fileID: 6354908887633747250}
   gamepadFeedback: {fileID: 5935078345032257691}
+  show_feedback_setting_name: show_input_feedbacks
 --- !u!1 &4312661155707467518
 GameObject:
   m_ObjectHideFlags: 0
@@ -12823,13 +12643,7 @@ MonoBehaviour:
   Reference: game_over
   Showed: 0
   Stacked: 0
-  TransitionSettings:
-    Duration: 1
-    CanBeHidden: 0
-    CanBeCanceled: 0
-    UsePersoInputs: 0
-    TimeScale: 0.1
-    BackgroundAlpha: 0.96
+  Settings: {fileID: 0}
   angle_threshold: 45
   angle_multiplicator: 0
   ui_elements:
@@ -12837,6 +12651,7 @@ MonoBehaviour:
   stacked_elements:
   - {fileID: 3026041792677540420}
   log: 0
+  log_extended: 0
   log_elements_showing: 0
   perso_prefab: {fileID: 3238169105776769028, guid: dd5bb13d1be1dd34caf6d4f9cb9f1125, type: 3}
   reviveInput: {fileID: -5345809961903225854, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
@@ -12945,6 +12760,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -12991,6 +12807,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Colorer
   color: {r: 0, g: 0, b: 0, a: 0}
+  disable_on_revert: 0
   log: 1
 --- !u!1 &4359838494796202909
 GameObject:
@@ -13187,7 +13004,7 @@ MonoBehaviour:
   cancel_last_hack_button: {fileID: 1259026007335759683}
   cursor_fixed: {fileID: 8167063532660826797}
   cursor: {fileID: 7182404578078858393}
-  Descriptor: {fileID: 0}
+  UI_ItemDescriptor: {fileID: 0}
   log_create_wheel: 0
   log_inputs: 0
   log: 0
@@ -13206,13 +13023,7 @@ MonoBehaviour:
   Reference: exploit_wheel
   Showed: 0
   Stacked: 0
-  TransitionSettings:
-    Duration: 0.05
-    CanBeHidden: 1
-    CanBeCanceled: 0
-    UsePersoInputs: 1
-    TimeScale: 0.75
-    BackgroundAlpha: 0.8
+  Settings: {fileID: 0}
   angle_threshold: 45
   angle_multiplicator: 0
   ui_elements:
@@ -13220,6 +13031,7 @@ MonoBehaviour:
   - {fileID: 5693330681386812040}
   stacked_elements: []
   log: 0
+  log_extended: 0
   log_elements_showing: 0
 --- !u!1 &4492141147712241138
 GameObject:
@@ -13550,6 +13362,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -13884,15 +13697,17 @@ MonoBehaviour:
   _hovered: 0
   _disabled: 0
   log: 0
+  image: {fileID: 6741977269915899987}
   base_sprite: {fileID: 722337240, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
   hover_sprite: {fileID: 1477167940, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
   down_sprite: {fileID: -1489766419, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
   disabled_sprite: {fileID: -908096685, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
-  image: {fileID: 6741977269915899987}
   drag_sprite: {fileID: 1075853624, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
   drag_hover_sprite: {fileID: 1844584853, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
+  Stack:
+    MaxQty: 0
+    Items: []
   quantity_text: {fileID: 1685590453486105588}
-  bank: {fileID: 0}
   item_image: {fileID: 0}
   current_item_sprite: {fileID: 0}
 --- !u!1 &4900979893710863081
@@ -14037,6 +13852,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -14083,6 +13899,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Colorer
   color: {r: 0, g: 0, b: 0, a: 0}
+  disable_on_revert: 0
   log: 1
 --- !u!1 &4964483224885529937
 GameObject:
@@ -14289,13 +14106,7 @@ MonoBehaviour:
   Reference: hdd
   Showed: 0
   Stacked: 0
-  TransitionSettings:
-    Duration: 0.05
-    CanBeHidden: 1
-    CanBeCanceled: 1
-    UsePersoInputs: 0
-    TimeScale: 1
-    BackgroundAlpha: 0.96
+  Settings: {fileID: 0}
   angle_threshold: 45
   angle_multiplicator: 0
   ui_elements:
@@ -14303,6 +14114,7 @@ MonoBehaviour:
   stacked_elements:
   - {fileID: 4879518007207531691}
   log: 0
+  log_extended: 0
   log_elements_showing: 0
   disk: {fileID: 0}
   disk_letter: {fileID: 5106527292561807992}
@@ -14493,10 +14305,10 @@ MonoBehaviour:
   starting_slot: {fileID: 0}
   log: 0
   log_starting_slot: 0
-  log_get_slots: 0
-  pools:
-  - {fileID: 5027530486096558737}
-  Inventory: {fileID: 0}
+  item_slot_type: item
+  AlwaysShow: 0
+  ui_stacks: []
+  bank: {fileID: 0}
   mb: {fileID: 1810091079841967640}
 --- !u!1 &5062933189911100208
 GameObject:
@@ -14588,10 +14400,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bg: {fileID: 4764134623269243693}
   bg_alpha_range: {x: 0, y: 245}
-  bloom: {fileID: 0}
-  pause_bloom_intensity: 15
-  chromatic_aberration: {fileID: 0}
-  chromatic_aberration_intensity: 1
 --- !u!1 &5088581277877453319
 GameObject:
   m_ObjectHideFlags: 0
@@ -14646,6 +14454,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FeedbackSwitcher
   keyboardFeedback: {fileID: 7578539540343240774}
   gamepadFeedback: {fileID: 7684534000452652271}
+  show_feedback_setting_name: show_input_feedbacks
 --- !u!1 &5096094217193107059
 GameObject:
   m_ObjectHideFlags: 0
@@ -14749,6 +14558,7 @@ MonoBehaviour:
   m_VerticalAlignment: 1024
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -14885,6 +14695,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -15021,6 +14832,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -15308,6 +15120,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -15354,6 +15167,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Colorer
   color: {r: 0.03529412, g: 1, b: 0, a: 1}
+  disable_on_revert: 0
   log: 0
 --- !u!1 &5270014671763664037
 GameObject:
@@ -15549,6 +15363,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -15686,6 +15501,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -15732,6 +15548,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Colorer
   color: {r: 0, g: 0, b: 0, a: 0}
+  disable_on_revert: 0
   log: 1
 --- !u!1 &5410773684200903689
 GameObject:
@@ -15836,6 +15653,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -15973,6 +15791,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -16019,6 +15838,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Colorer
   color: {r: 0.03529412, g: 1, b: 0, a: 1}
+  disable_on_revert: 0
   log: 0
 --- !u!1 &5518698919006807026
 GameObject:
@@ -16160,6 +15980,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -16258,17 +16079,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fc4a6a908f46cf4db95a7028ed54910, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxSlots: 4
-  MinSlots: 4
-  Scalable: 0
-  ui_items: []
-  destroy_empty_on_init: 0
-  DoNotDisableEmptySlots: 1
-  item_rule: usable;!laptop;!shoes
-  bank: {fileID: 0}
-  UI_Inventory: {fileID: 0}
+  starting_slot: {fileID: 0}
   log: 0
-  log_storage: 0
+  log_starting_slot: 0
+  item_slot_type: item
+  AlwaysShow: 0
+  ui_stacks: []
+  bank: {fileID: 0}
+  PoolID: stuff
 --- !u!1 &5582045804357744758
 GameObject:
   m_ObjectHideFlags: 0
@@ -16450,6 +16268,7 @@ MonoBehaviour:
   m_VerticalAlignment: 1024
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -16601,15 +16420,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c37ebdb3f5e78705dbbbafecac980c23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FileDescriptor
-  name_desc: {fileID: 7565291112873506886}
-  data_desc: {fileID: 1794707860109076026}
-  core_cost_desc: {fileID: 1025645137096022219}
-  base_duration_desc: {fileID: 2976614527971848735}
+  name_desc: {fileID: 0}
+  data_desc: {fileID: 0}
+  empty_name: empty
+  empty_data: 
+  log: 0
+  core_cost_desc: {fileID: 0}
+  base_duration_desc: {fileID: 0}
   core_cost_base_color: {r: 0.47058824, g: 0.89411765, b: 0.8, a: 1}
   not_enough_cores_color: {r: 1, g: 0.5, b: 0.5, a: 1}
-  secu_level_desc: {fileID: 5213790747555478766}
-  targets_desc: {fileID: 1032686985142152399}
-  log: 0
+  secu_level_desc: {fileID: 0}
+  targets_desc: {fileID: 0}
 --- !u!1 &5702220283973600864
 GameObject:
   m_ObjectHideFlags: 0
@@ -16713,6 +16534,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -16835,7 +16657,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panel_name: ui_inventory
-  require_laptop: 0
   required_enabled_item_pools:
   - {fileID: 4962439697037434}
   log: 0
@@ -16942,6 +16763,7 @@ MonoBehaviour:
   m_VerticalAlignment: 1024
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -16975,148 +16797,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!1 &5779498944341450021
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1355293807066005028}
-  - component: {fileID: 543253568658701663}
-  - component: {fileID: 7724454826991599713}
-  - component: {fileID: 7570140190268466590}
-  - component: {fileID: 8189247911824960011}
-  - component: {fileID: 4913250108355797823}
-  m_Layer: 10
-  m_Name: perso_quick_inventory
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!224 &1355293807066005028
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5779498944341450021}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
-  m_ConstrainProportionsScale: 1
-  m_Children: []
-  m_Father: {fileID: 6396836957172934052}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 15, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 0.5}
---- !u!114 &543253568658701663
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5779498944341450021}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 3
-  m_StartCorner: 2
-  m_StartAxis: 1
-  m_CellSize: {x: 24, y: 24}
-  m_Spacing: {x: 0, y: 0}
-  m_Constraint: 1
-  m_ConstraintCount: 2
---- !u!114 &7724454826991599713
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5779498944341450021}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb97402ee6332cc4fb62827af8b39a3a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  starting_slot: {fileID: 0}
-  log: 0
-  log_starting_slot: 0
-  log_get_slots: 0
-  pools:
-  - {fileID: 7570140190268466590}
-  Inventory: {fileID: 0}
---- !u!114 &7570140190268466590
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5779498944341450021}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2e1afa8f5d0edc4f83ec0cdfb86c35a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MaxSlots: 9
-  MinSlots: 0
-  Scalable: 1
-  ui_items: []
-  destroy_empty_on_init: 1
-  DoNotDisableEmptySlots: 0
-  item_rule: 
-  bank: {fileID: 0}
-  UI_Inventory: {fileID: 0}
-  log: 0
-  log_storage: 0
-  dynamic_rule: 
---- !u!225 &8189247911824960011
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5779498944341450021}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
---- !u!114 &4913250108355797823
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5779498944341450021}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ac3a151034802c4c8203973d3be9e59, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Transitioner
-  transitype: 0
-  hidden_value: 0
-  shown_value: 1
-  ease_show: 0
-  ease_hide: 0
-  default_duration: 1
-  unscaled_time: 1
-  reset_on_awake: 0
-  transition_on_enable: 0
-  ShouldBeVisibleOnEnable: 0
-  log: 0
 --- !u!1 &5935078345032257691
 GameObject:
   m_ObjectHideFlags: 0
@@ -17252,10 +16932,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0c12fa58056bca4f99429ba2679fd45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Target: {fileID: 4105921314593950470}
-  item: {fileID: 3222379660071820566}
-  qty: {fileID: 9167196783107380491}
-  feedback: {fileID: 0}
+  Target: {fileID: 0}
   log: 0
 --- !u!114 &7826184932733704757
 MonoBehaviour:
@@ -17306,6 +16983,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FeedbackSwitcher
   keyboardFeedback: {fileID: 8619449187626020349}
   gamepadFeedback: {fileID: 2919264001560014974}
+  show_feedback_setting_name: show_input_feedbacks
 --- !u!1 &5938307756494711460
 GameObject:
   m_ObjectHideFlags: 0
@@ -17358,19 +17036,14 @@ MonoBehaviour:
   Reference: paper
   Showed: 0
   Stacked: 0
-  TransitionSettings:
-    Duration: 1
-    CanBeHidden: 1
-    CanBeCanceled: 1
-    UsePersoInputs: 0
-    TimeScale: 0
-    BackgroundAlpha: 0.96
+  Settings: {fileID: 0}
   angle_threshold: 45
   angle_multiplicator: 0
   ui_elements:
   - {fileID: 2262254334862501229}
   stacked_elements: []
   log: 0
+  log_extended: 0
   log_elements_showing: 0
   content: {fileID: 0}
 --- !u!1 &5962589749350845935
@@ -17476,6 +17149,7 @@ MonoBehaviour:
   m_VerticalAlignment: 1024
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -17754,6 +17428,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -17890,6 +17565,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -18052,13 +17728,7 @@ MonoBehaviour:
   Reference: pause
   Showed: 0
   Stacked: 0
-  TransitionSettings:
-    Duration: 0.05
-    CanBeHidden: 1
-    CanBeCanceled: 1
-    UsePersoInputs: 0
-    TimeScale: 0
-    BackgroundAlpha: 0.96
+  Settings: {fileID: 0}
   angle_threshold: 45
   angle_multiplicator: 0
   ui_elements:
@@ -18067,6 +17737,7 @@ MonoBehaviour:
   stacked_elements:
   - {fileID: 8108647051166840509}
   log: 0
+  log_extended: 0
   log_elements_showing: 0
   slots_parent: {fileID: 2372389851678572456}
   slottable: {fileID: 1807993888285633165}
@@ -18302,6 +17973,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -18438,6 +18110,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -18639,6 +18312,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -18859,6 +18533,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -18909,142 +18584,6 @@ MonoBehaviour:
   slow_caractere_delay: 0.1
   pause_caractere_delay: 0.5
   log_writing: 0
---- !u!1 &6268021683757511074
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5904882071383854840}
-  - component: {fileID: 6072328058044979193}
-  - component: {fileID: 8650930632441125348}
-  m_Layer: 5
-  m_Name: qty
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!224 &5904882071383854840
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6268021683757511074}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6219005050402965155}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -0.61, y: -0.79999924}
-  m_SizeDelta: {x: 12.9121, y: 13.8731}
-  m_Pivot: {x: 1, y: 0}
---- !u!222 &6072328058044979193
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6268021683757511074}
-  m_CullTransparentMesh: 1
---- !u!114 &8650930632441125348
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6268021683757511074}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_text: 6
-  m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: c60dc2e81142dff44a9a4129c805e59b, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: c4f07e14116d70144bc1b03903474f35, type: 2}
-  m_fontSharedMaterials: []
-  m_fontMaterial: {fileID: 0}
-  m_fontMaterials: []
-  m_fontColor32:
-    serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
-  m_enableVertexGradient: 0
-  m_colorMode: 3
-  m_fontColorGradient:
-    topLeft: {r: 1, g: 1, b: 1, a: 1}
-    topRight: {r: 1, g: 1, b: 1, a: 1}
-    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
-    bottomRight: {r: 1, g: 1, b: 1, a: 1}
-  m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 0}
-  m_tintAllSprites: 0
-  m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
-  m_overrideHtmlColors: 0
-  m_faceColor:
-    serializedVersion: 2
-    rgba: 4294967295
-  m_fontSize: 9.7
-  m_fontSizeBase: 36
-  m_fontWeight: 400
-  m_enableAutoSizing: 1
-  m_fontSizeMin: 1
-  m_fontSizeMax: 72
-  m_fontStyle: 1
-  m_HorizontalAlignment: 4
-  m_VerticalAlignment: 256
-  m_textAlignment: 65535
-  m_characterSpacing: 0
-  m_wordSpacing: 0
-  m_lineSpacing: 0
-  m_lineSpacingMax: 0
-  m_paragraphSpacing: 0
-  m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
-  m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
-  m_linkedTextComponent: {fileID: 0}
-  parentLinkedComponent: {fileID: 0}
-  m_enableKerning: 0
-  m_ActiveFontFeatures: 6e72656b
-  m_enableExtraPadding: 0
-  checkPaddingRequired: 0
-  m_isRichText: 1
-  m_EmojiFallbackSupport: 1
-  m_parseCtrlCharacters: 1
-  m_isOrthographic: 1
-  m_isCullingEnabled: 0
-  m_horizontalMapping: 0
-  m_verticalMapping: 0
-  m_uvLineOffset: 0
-  m_geometrySortingOrder: 0
-  m_IsTextObjectScaleStatic: 0
-  m_VertexBufferAutoSizeReduction: 0
-  m_useMaxVisibleDescender: 1
-  m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
-  m_isUsingLegacyAnimationComponent: 0
-  m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
-  m_baseMaterial: {fileID: 0}
-  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &6301671335035933664
 GameObject:
   m_ObjectHideFlags: 0
@@ -19148,6 +18687,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -19284,6 +18824,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -19413,10 +18954,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0c12fa58056bca4f99429ba2679fd45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Target: {fileID: 2016090473139387061}
-  item: {fileID: 4989157958425813536}
-  qty: {fileID: 4552409819010719593}
-  feedback: {fileID: 0}
+  Target: {fileID: 0}
   log: 0
 --- !u!114 &5723165394224075107
 MonoBehaviour:
@@ -19467,6 +19005,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FeedbackSwitcher
   keyboardFeedback: {fileID: 2890484032713986988}
   gamepadFeedback: {fileID: 3836253634773062878}
+  show_feedback_setting_name: show_input_feedbacks
 --- !u!1 &6354908887633747250
 GameObject:
   m_ObjectHideFlags: 0
@@ -19684,6 +19223,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -19821,6 +19361,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -19867,6 +19408,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Colorer
   color: {r: 0.03529412, g: 1, b: 0, a: 1}
+  disable_on_revert: 0
   log: 0
 --- !u!1 &6612580026801219789
 GameObject:
@@ -20305,18 +19847,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb86f364a8c2de342a6f1c088c9c0202, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxSlots: 6
-  MinSlots: 0
-  Scalable: 0
-  ui_items: []
-  destroy_empty_on_init: 1
-  DoNotDisableEmptySlots: 0
-  item_rule: module
-  bank: {fileID: 0}
-  UI_Inventory: {fileID: 0}
+  starting_slot: {fileID: 0}
   log: 0
-  log_storage: 0
-  log_modules: 1
+  log_starting_slot: 0
+  item_slot_type: item
+  AlwaysShow: 0
+  ui_stacks: []
+  bank: {fileID: 0}
+  PoolID: stuff
   _has_device: 0
 --- !u!1 &6953414909838448244
 GameObject:
@@ -20422,6 +19960,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -20603,6 +20142,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -20741,6 +20281,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -20870,6 +20411,7 @@ MonoBehaviour:
   colorers: []
   label: {fileID: 0}
   joystick_direction: {x: 0, y: 0}
+  rl_image: {fileID: 0}
 --- !u!1 &7098504960807679863
 GameObject:
   m_ObjectHideFlags: 0
@@ -21372,6 +20914,7 @@ MonoBehaviour:
   m_VerticalAlignment: 1024
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -21518,95 +21061,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!1 &7362584207837583771
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6396836957172934052}
-  - component: {fileID: 1872010612978149022}
-  - component: {fileID: 1979197032996261112}
-  m_Layer: 5
-  m_Name: quick_inventory
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &6396836957172934052
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7362584207837583771}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1355293807066005028}
-  m_Father: {fileID: 3367170578473986185}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1872010612978149022
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7362584207837583771}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0104e3ed971c035468d1099cf4f8ff50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UI_SlottableMixer
-  starting_slot: {fileID: 0}
-  log: 0
-  log_starting_slot: 0
-  slottables:
-  - {fileID: 7724454826991599713}
-  master_slottable: {fileID: 0}
---- !u!114 &1979197032996261112
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7362584207837583771}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8fbc7fe1c44a32846a36192b9fdd33ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UI_QuickInventoryPool
-  Reference: quick_inventory
-  Showed: 0
-  Stacked: 0
-  TransitionSettings:
-    Duration: 0.05
-    CanBeHidden: 1
-    CanBeCanceled: 0
-    UsePersoInputs: 0
-    TimeScale: 1
-    BackgroundAlpha: 0
-  angle_threshold: 45
-  angle_multiplicator: 0
-  ui_elements:
-  - {fileID: 5779498944341450021}
-  stacked_elements:
-  - {fileID: 5779498944341450021}
-  log: 0
-  log_elements_showing: 0
-  slottable: {fileID: 1872010612978149022}
-  use_ingame_drop: 1
-  UI: {fileID: 7724454826991599713}
 --- !u!1 &7369067405943557491
 GameObject:
   m_ObjectHideFlags: 0
@@ -21712,6 +21166,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -21879,6 +21334,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -22166,6 +21622,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -22212,6 +21669,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: {r: 0.7882353, g: 0.8980392, b: 0.5568628, a: 1}
+  disable_on_revert: 0
   log: 0
 --- !u!1 &7433706963825224295
 GameObject:
@@ -22317,6 +21775,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -22545,6 +22004,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -22772,6 +22232,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -23336,6 +22797,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -23473,6 +22935,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -23519,6 +22982,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Colorer
   color: {r: 0.03529412, g: 1, b: 0, a: 1}
+  disable_on_revert: 0
   log: 0
 --- !u!1 &7767746512303483093
 GameObject:
@@ -23833,6 +23297,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -24067,17 +23532,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fc4a6a908f46cf4db95a7028ed54910, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxSlots: 6
-  MinSlots: 6
-  Scalable: 1
-  ui_items: []
-  destroy_empty_on_init: 1
-  DoNotDisableEmptySlots: 0
-  item_rule: '!module;!hardware;!laptop'
-  bank: {fileID: 0}
-  UI_Inventory: {fileID: 0}
+  starting_slot: {fileID: 0}
   log: 0
-  log_storage: 0
+  log_starting_slot: 0
+  item_slot_type: item
+  AlwaysShow: 0
+  ui_stacks: []
+  bank: {fileID: 0}
+  PoolID: stuff
 --- !u!1 &8030699225698279598
 GameObject:
   m_ObjectHideFlags: 0
@@ -24524,6 +23986,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -24662,6 +24125,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -24873,6 +24337,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -25009,6 +24474,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -25138,10 +24604,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0c12fa58056bca4f99429ba2679fd45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Target: {fileID: 5120583762793397114}
-  item: {fileID: 5919775890676130928}
-  qty: {fileID: 4947452910446713957}
-  feedback: {fileID: 0}
+  Target: {fileID: 0}
   log: 0
 --- !u!114 &7796860762344192421
 MonoBehaviour:
@@ -25192,6 +24655,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FeedbackSwitcher
   keyboardFeedback: {fileID: 4149524834742588814}
   gamepadFeedback: {fileID: 2075378893192645546}
+  show_feedback_setting_name: show_input_feedbacks
 --- !u!1 &8675238852862721097
 GameObject:
   m_ObjectHideFlags: 0
@@ -25370,6 +24834,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -25482,17 +24947,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fc4a6a908f46cf4db95a7028ed54910, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxSlots: 6
-  MinSlots: 6
-  Scalable: 1
-  ui_items: []
-  destroy_empty_on_init: 1
-  DoNotDisableEmptySlots: 0
-  item_rule: hardware,module,laptop
-  bank: {fileID: 0}
-  UI_Inventory: {fileID: 0}
+  starting_slot: {fileID: 0}
   log: 0
-  log_storage: 0
+  log_starting_slot: 0
+  item_slot_type: item
+  AlwaysShow: 0
+  ui_stacks: []
+  bank: {fileID: 0}
+  PoolID: stuff
 --- !u!1 &8780297823631914783
 GameObject:
   m_ObjectHideFlags: 0
@@ -25522,8 +24984,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 1
-  m_Children:
-  - {fileID: 6219005050402965155}
+  m_Children: []
   m_Father: {fileID: 6425967877417292004}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -25567,17 +25028,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fc4a6a908f46cf4db95a7028ed54910, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxSlots: 1
-  MinSlots: 1
-  Scalable: 0
-  ui_items: []
-  destroy_empty_on_init: 0
-  DoNotDisableEmptySlots: 0
-  item_rule: laptop
-  bank: {fileID: 0}
-  UI_Inventory: {fileID: 0}
+  starting_slot: {fileID: 0}
   log: 0
-  log_storage: 0
+  log_starting_slot: 0
+  item_slot_type: item
+  AlwaysShow: 0
+  ui_stacks: []
+  bank: {fileID: 0}
+  PoolID: stuff
 --- !u!1 &8815312007294854364
 GameObject:
   m_ObjectHideFlags: 0
@@ -25682,6 +25140,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -25836,6 +25295,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -26009,13 +25469,7 @@ MonoBehaviour:
   Reference: level_up
   Showed: 0
   Stacked: 0
-  TransitionSettings:
-    Duration: 0.5
-    CanBeHidden: 0
-    CanBeCanceled: 0
-    UsePersoInputs: 0
-    TimeScale: 0
-    BackgroundAlpha: 0.96
+  Settings: {fileID: 0}
   angle_threshold: 45
   angle_multiplicator: 0
   ui_elements:
@@ -26023,13 +25477,12 @@ MonoBehaviour:
   stacked_elements:
   - {fileID: 1984227957808503677}
   log: 0
+  log_extended: 0
   log_elements_showing: 0
   level_text: {fileID: 8692610865290962328}
   delay_before_activating_buttons: 0.4
   skills_parent: {fileID: 4337531550587478879}
   slottable: {fileID: 1671434997392482121}
-  Descriptor: {fileID: 7059216053851939363}
-  SkillNameDescriptor: {fileID: 2377750553376583936}
 --- !u!114 &1671434997392482121
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26382,6 +25835,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -26519,6 +25973,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -26837,6 +26292,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -28659,17 +28115,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 605537624630310800, guid: 072977a86300dbb4b941ff609eb15d12, type: 3}
   m_PrefabInstance: {fileID: 1124555598814663782}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5661291076499030527 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4687063478930118041, guid: 072977a86300dbb4b941ff609eb15d12, type: 3}
-  m_PrefabInstance: {fileID: 1124555598814663782}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 722de7716f79c484b8b02b30fa7ea1f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1283766085494672378
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -30175,6 +29620,7 @@ MonoBehaviour:
   - {fileID: 6245082871764302586}
   label: {fileID: 0}
   joystick_direction: {x: 0, y: 0}
+  rl_image: {fileID: 0}
 --- !u!1001 &2531732984911351297
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -30426,28 +29872,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &327936851304602253 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2859668563470488716, guid: 6c1bc2d18ef822d44b0722c7ebcb34dd, type: 3}
-  m_PrefabInstance: {fileID: 2531732984911351297}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c37711ed55897fe4484e791d8a7a4a15, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &722952786615114122 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2966451614612019083, guid: 6c1bc2d18ef822d44b0722c7ebcb34dd, type: 3}
-  m_PrefabInstance: {fileID: 2531732984911351297}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c37711ed55897fe4484e791d8a7a4a15, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6027400125839186028 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8108491189458425453, guid: 6c1bc2d18ef822d44b0722c7ebcb34dd, type: 3}
@@ -30457,17 +29881,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &6257420737360658849 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8499513768840810400, guid: 6c1bc2d18ef822d44b0722c7ebcb34dd, type: 3}
-  m_PrefabInstance: {fileID: 2531732984911351297}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c37711ed55897fe4484e791d8a7a4a15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &7301347501328061456 stripped
@@ -31706,6 +31119,7 @@ MonoBehaviour:
   - {fileID: 8970076918223377020}
   label: {fileID: 0}
   joystick_direction: {x: 0, y: 0}
+  rl_image: {fileID: 0}
 --- !u!1001 &3253371139023968887
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -31859,17 +31273,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 44ecfd6c9430d814cb017d42913f3113, type: 3}
---- !u!114 &4705299924457931412 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7812301186420496611, guid: 44ecfd6c9430d814cb017d42913f3113, type: 3}
-  m_PrefabInstance: {fileID: 3253371139023968887}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b62c7690aaea9664cb23c3b458e32385, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &8516559894657661351 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6563624588513666000, guid: 44ecfd6c9430d814cb017d42913f3113, type: 3}
@@ -34177,17 +33580,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 605537624630310800, guid: 072977a86300dbb4b941ff609eb15d12, type: 3}
   m_PrefabInstance: {fileID: 4363588588245220087}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &9044740795094789998 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4687063478930118041, guid: 072977a86300dbb4b941ff609eb15d12, type: 3}
-  m_PrefabInstance: {fileID: 4363588588245220087}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 722de7716f79c484b8b02b30fa7ea1f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &4714514609898857413
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -35873,17 +35265,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: abacdc781c511fc42b1c0e4dd87c3c7b, type: 3}
---- !u!114 &5557349333459508252 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: -9170513310328476977, guid: abacdc781c511fc42b1c0e4dd87c3c7b, type: 3}
-  m_PrefabInstance: {fileID: 5594703826607847123}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c085eeac05cbc4f4f933c07b1c61cfb7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &7734197288320757002 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2806026283884960729, guid: abacdc781c511fc42b1c0e4dd87c3c7b, type: 3}
@@ -39192,6 +38573,7 @@ MonoBehaviour:
   - {fileID: 4114604359998815479}
   label: {fileID: 0}
   joystick_direction: {x: 0, y: 0}
+  rl_image: {fileID: 0}
 --- !u!114 &7884993668753162444 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1444890302590989533, guid: 44ecfd6c9430d814cb017d42913f3113, type: 3}

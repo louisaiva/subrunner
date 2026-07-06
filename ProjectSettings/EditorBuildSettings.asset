@@ -6,14 +6,23 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Scenes/prototypages/anims_2.1-no-animator.unity
+    path: Assets/Scenes/prototypages/only-visuals_no_code/anims_2.1-no-animator.unity
     guid: cffea16804fd8d74f90fe7a16a2caee6
   - enabled: 1
     path: Assets/Scenes/subrunner-title-screen.unity
     guid: 6f997c6c5ae670546bba491b6c055710
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/subrunner-clean.unity
-    guid: cfa401ebdd0744946a6600960407162a
+    guid: 967c8e812ef357445a9fcf448d290638
+  - enabled: 0
+    path: Assets/Scenes/prototypages/world_level_room.unity
+    guid: 1a5035ac9d143fc4b982643f1eb67cf1
+  - enabled: 1
+    path: Assets/Scenes/prototypages/cinematics.unity
+    guid: 4934550f939068a49946f7d0162b5612
+  - enabled: 0
+    path: Assets/Scenes/prototypages/world_builder.unity
+    guid: 0522985e73ae8af429f46c45400c56dc
   - enabled: 1
     path: Assets/Scenes/subrunner-loading.unity
     guid: 65c80c258ac5fc44d9ac5eb768eef715

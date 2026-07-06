@@ -91,6 +91,7 @@ public class UI_SlottableMixer : UI_Slottable, Awakable
         // on ajoute tous les slots de tous les slottables
         for (int i = 0; i < slottables.Count; i++)
         {
+            if (log) { Debug.Log($"(UI_SlottableMixer) {name} getting slots from slottable {i} : {slottables[i].name}"); }
             slots.AddRange(slottables[i].GetSlots());
         }
 
@@ -123,24 +124,5 @@ public class UI_SlottableMixer : UI_Slottable, Awakable
             if (toggle != null) { return toggle; }
         }
         return null;
-    }
-
-    // GET ITEM RULES
-    public List<UI_Inventory> GetInventories()
-    {
-        List<UI_Inventory> inventories = new List<UI_Inventory>();
-        for (int i = 0; i < slottables.Count; i++)
-        {
-            if (slottables[i] is not UI_Inventory ui_inv) { continue; }
-            inventories.Add(ui_inv);
-        }
-        return inventories;
-    }
-    public string GetItemRule()
-    {
-        List<UI_Inventory> inventories = GetInventories();
-        if (inventories.Count == 0) { return "omg:not_existing_item"; }
-        List<string> item_rules = inventories.ConvertAll(inv => inv.ItemRule);
-        return string.Join("|", item_rules);
     }
 }

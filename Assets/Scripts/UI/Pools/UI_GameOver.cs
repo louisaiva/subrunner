@@ -43,17 +43,19 @@ public class UI_GameOver : UI_Pool
 
 
     // SHOWING
+    protected override void before_adding_to_stack()
+    {
+        // we update the text
+        oh_no_text.text = "oh n";
+        for (int i = 0; i < Perso.Deaths; i++)
+        {
+            oh_no_text.text += "o";
+        }
+    }
     protected override IEnumerator show_coroutine(List<GameObject> dont_show = null, float duration_override = -1f, bool was_stacked = false)
     {
         // we set the callbacks
         reviveAction.performed += reviveCallback;
-
-        // we update the text
-        oh_no_text.text = "oh n";
-        for (int i = 0; i < Perso.deaths; i++)
-        {
-            oh_no_text.text += "o";
-        }
 
         yield return base.show_coroutine(dont_show, duration_override);
     }
@@ -61,27 +63,14 @@ public class UI_GameOver : UI_Pool
     // DISABLING
     protected override IEnumerator disable_coroutine()
     {
+        yield return base.disable_coroutine();
+
         // we remove the callbacks
         reviveAction.performed -= reviveCallback;
 
-        // we remove the controller
-        Destroy(Controller.Instance.gameObject);
-        yield return null;
-
-        // we get the spawn point
-        Vector3 perso_spawn_point = Vector3.zero;
-        if (World.Instance.spawn_point != null)
-        {
-            perso_spawn_point = World.Instance.spawn_point.position;
-        }
-
-        // we instantiate the perso prefab at the spawn point
-        bool instantiated = false;
-        var instantiation = InstantiateAsync(perso_prefab, perso_spawn_point, Quaternion.identity);
-        instantiation.completed += (op) => instantiated = true;
-        yield return new WaitUntil(() => instantiated);
-        GameObject[] perso = instantiation.Result;
-        perso[0].name = "perso";
+        // we respawn the perso
+        if (Controller.LazyInstance == null) { yield break; } // if there is no controller, we do nothing
+        Controller.LazyInstance.RespawnPerso();
     }
 
 }

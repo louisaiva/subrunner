@@ -186,7 +186,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 6, y: -12}
-  m_SizeDelta: {x: 114.61, y: 24}
+  m_SizeDelta: {x: 0, y: 24}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &5293577439097294768
 CanvasRenderer:
@@ -254,6 +254,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -439,10 +440,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_AutoLayoutResizer
   content: {fileID: 3756354815787028761}
+  resize_axis: 2
   margin_top: 6
   margin_bottom: 6
   margin_left: 24
   margin_right: 24
+  size_factor: 1
 --- !u!225 &8019764193416661875
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -474,6 +477,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 1
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -490,9 +494,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Notif
   time_to_live: 5
+  notif_text: test cedric
+  tmp: {fileID: 0}
   new_text: {fileID: 3200451896683395174}
   element_name: {fileID: 8100783646722549351}
   element_icon: {fileID: 8950480947915218802}
+  Item: {fileID: 0}
+  File: {fileID: 0}
 --- !u!1 &5598420431035513388
 GameObject:
   m_ObjectHideFlags: 0
@@ -652,7 +660,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5959312496638905919, guid: 7b48bebd7d4673b0cbc4ea021961064f, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 176.7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5959312496638905919, guid: 7b48bebd7d4673b0cbc4ea021961064f, type: 3}
       propertyPath: m_SizeDelta.y

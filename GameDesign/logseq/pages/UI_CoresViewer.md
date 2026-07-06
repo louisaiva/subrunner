@@ -1,2 +1,0 @@
--
-- Permet d'afficher l'utilisation des #Core en direct depuis le #ui_hacking

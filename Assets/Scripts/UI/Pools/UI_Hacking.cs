@@ -11,7 +11,7 @@ public class UI_Hacking : UI_Pool
         get
         {
             if (in_transition) { return false; }
-            if (!Perso.Instance.Alive) { return false; }
+            if (!Controller.Perso.Alive) { return false; }
             if (UI_LaptopItemSlot.Instance == null || !UI_LaptopItemSlot.Instance.HasLaptop) { return false; }
             return true;
         }
@@ -25,8 +25,8 @@ public class UI_Hacking : UI_Pool
     /* private void Start()
     {
         // on met le callback de pour afficher ui_hacking
-        Perso.Instance.OnDeviceGranted += HandleDeviceGranted;
-        Perso.Instance.OnDeviceRemoved += HandleDeviceRemoved;
+        Controller.Perso.OnDeviceGranted += HandleDeviceGranted;
+        Controller.Perso.OnDeviceRemoved += HandleDeviceRemoved;
     } */
 
     // ON PERSO DEVICE CHANGED
@@ -47,8 +47,10 @@ public class UI_Hacking : UI_Pool
     // DEVICE
     public void HandleDeviceRemoved(Device old_device)
     {
+        
+
         // on cache hacking
-        UI_Manager.Instance.UnstackFromHUD("hacking", override_transition: true);
+        // UI_Manager.Instance.UnstackFromHUD("hacking", override_transition: true);
 
         // ! todo gaffe pcq vu que le UI_Manager n'autorise pas les transitions quand y'en a déjà une en cours,
         // todo bah ça risque de bug quand on passe d'un laptop à un computer et qu'on se trouve dans le hud
@@ -63,6 +65,6 @@ public class UI_Hacking : UI_Pool
     public void HandleDeviceGranted(Device new_device)
     {
         // on affiche hacking
-        UI_Manager.Instance.StackOnHUD("hacking", override_transition: true);
+        // UI_Manager.Instance.StackOnHUD("hacking", override_transition: true);
     }
 }

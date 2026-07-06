@@ -34,6 +34,16 @@ namespace subrunner.goap
                 injectable.Inject(this);
             }
         }
+
+        public void Inject(IAgentTypeFactory factory)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Inject(ICapabilityFactory factory)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 
     public interface IInjectable

@@ -21,7 +21,8 @@ public class UI_Paper : UI_Pool
         RegisterToPool(content_go, is_stacked: true);
 
         content = content_go.GetComponent<UI_Readable>();
-        TransitionSettings = content.transition_settings;
+        // Settings = content.transition_settings;
+        Settings = content.transi_settings;
 
         if (log) { Debug.Log("(UI_Reader) Set readable " + content.name); content.log = true; }
     }
@@ -31,7 +32,7 @@ public class UI_Paper : UI_Pool
         if (was_stacked) { yield return base.show_coroutine(dont_show, duration_override, was_stacked);  yield break; }
 
         content.gameObject.SetActive(true);
-        content.Show(duration_override >= 0f ? duration_override : TransitionSettings.Duration);
+        content.Show(duration_override >= 0f ? duration_override : Settings.Duration);
         if (dont_show == null) { dont_show = new List<GameObject>(); }
         dont_show.Add(content.gameObject);
 
@@ -50,7 +51,7 @@ public class UI_Paper : UI_Pool
         // sinon on veut vraiment cacher UI_Reader, on cache donc le UI_Readable puis on le supprime
 
         // we transition the content away
-        float duration = duration_override >= 0f ? duration_override : TransitionSettings.Duration;
+        float duration = duration_override >= 0f ? duration_override : Settings.Duration;
         content.Hide(duration);
 
         // we transition away from the ui_paper pool

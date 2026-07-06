@@ -11,7 +11,7 @@ using Unity.Properties;
 using UnityEditor;
 #endif
 
-public class AnimBank : Singleton<AnimBank>
+public class AnimBank : MonoBehaviour
 {
     // stocke toutes les animations et sprites utilisées dans le jeu
     // permet de les charger et de les stocker pour les utiliser plus tard
@@ -19,6 +19,17 @@ public class AnimBank : Singleton<AnimBank>
     // un peu chiant parce qu'on doit extraire les données des AnimationClips afin
     // de les stocker dans des fichiers .json pour pouvoir les récupérer en BUILD
     // mais ça marche bien et c'est assez simple à utiliser
+
+    // subsystems
+    private AnimGenerator _anim_generator;
+    private AnimGenerator anim_generator
+    {
+        get
+        {
+            if (_anim_generator == null) { _anim_generator = GetComponentInChildren<AnimGenerator>(includeInactive: true); }
+            return _anim_generator;
+        }
+    }
 
 
     [Header("Animations")]
@@ -47,13 +58,22 @@ public class AnimBank : Singleton<AnimBank>
     [Header("Logs")]
     public bool log = false;
     public bool log_LAFAC = false;
+    public bool log_variant_awake = false;
     public bool log_variant_skins = false;
+    public bool log_awake_extended = false;
 
-    // INITIALIZATION
-    protected override void Awake()
+    [Header("Logs Runtime")]
+    public bool log_get_anim = false;
+
+    // AWAKE & SINGLETON LOGIC
+    public static AnimBank Instance { get; private set; }
+    private void Awake()
     {
-        base.Awake();
+        // singleton logic
+        if (Instance == null) { Instance = this; }
+        else { Destroy(gameObject); return; }
 
+        // load anims
         LoadAnims();
 
         Debug.Log(getAnimsList());
@@ -87,6 +107,15 @@ public class AnimBank : Singleton<AnimBank>
             foreach (SkinVariant skin_variant in skin_variants)
             {
                 generateVariantSkin(skin_variant);
+            }
+
+            // we also generate simple anims from the anim generator if we have some
+            List<Anim> generated_anims = anim_generator.GenerateAnims(spritesheets_path);
+            foreach (Anim anim in generated_anims)
+            {
+                if (anim == null) { continue; }
+                saveAnimToJson(anim);
+                AddAnim(anim);
             }
 
             return;
@@ -350,6 +379,11 @@ public class AnimBank : Singleton<AnimBank>
                 }
                 if (!found)
                 {
+                    if (!skin_variant.keep_base_anim_if_spritesheet_not_found)
+                    {
+                        if (log_variant_skins) { Debug.LogWarning("(AnimBank - CreateVariantAnim) Skipping anim because sprite not found and keep_base_anim_if_spritesheet_not_found is false : " + anim.name); }
+                        return null;
+                    }
                     if (log_variant_skins) { Debug.LogWarning("(AnimBank - CreateVariantAnim) Sprite not found in any base spritesheet : " + variant_anim.sprites[i].name + " in anim " + anim.name); }
                     continue;
                 }
@@ -440,14 +474,35 @@ public class AnimBank : Singleton<AnimBank>
             anim.name = skin + "." + capacity + "." + splitted_name[2].Replace("LR", "L").Replace("RL", "R");
         }
 
+        // we check if the orientation has "DU" or "UD" in it.
+        // if it does, we add the animation to the bank with "DU" replaced by "D" and "U" & "UD" replaced by "U" & "D"
+        // "UD" stands for basic anim is facing U & "DU" is for basic anim is facing D
+        // no need to flip the anim because we don't have left and right in this case, we just duplicate it
+        if (splitted_name[2].Contains("DU") || splitted_name[2].Contains("UD"))
+        {
+            // we copy the animation
+            Anim anim_D = new Anim(anim);
+            anim_D.name = skin + "." + capacity + ".D";
+
+            // load the sprites
+            anim_D.LoadSprites(spritesheets_path);
+
+            // we add the animation to the bank
+            anims[skin][capacity].Add(anim_D);
+
+            // we change the anim name
+            anim.name = skin + "." + capacity + ".U";
+        }
+
         // load the sprites
         anim.LoadSprites(spritesheets_path);
 
         // add the animation to the bank
         anims[skin][capacity].Add(anim);
     }
-    public Anim GetAnim(string name)
+    public Anim GetAnim(string name, bool return_empty_if_not_found = false)
     {
+        // if (log_get_anim) { Debug.Log("(AnimBank - GetAnim) Getting animation : " + name); }
         string[] splitted_name = name.Split('.');
         string skin = splitted_name[0];
         string capacity = splitted_name[1];
@@ -456,15 +511,20 @@ public class AnimBank : Singleton<AnimBank>
         // check if we do not have the skin
         if (!anims.ContainsKey(skin))
         {
-            if (log) { Debug.LogWarning($"(AnimBank - GetAnim : {skin}.{capacity}.{orientation} ) Skin not found, returning sphere anim"); }
-            return anims["sphere"]["idle"][0]; // return the sphere anim of the sphere skin
+            if (log_get_anim) { Debug.LogWarning($"(AnimBank - GetAnim : {skin}.{capacity}.{orientation} ) Skin not found, returning sphere anim"); }
+            return return_empty_if_not_found ? anims["none"]["idle"][0] : anims["sphere"]["idle"][0]; // return the sphere anim of the sphere skin
         }
 
         // check if we do not have the capacity
         if (!anims[skin].ContainsKey(capacity) || anims[skin][capacity].Count == 0)
         {
             // return the idle anim of the skin
-            if (log) { Debug.LogWarning($"(AnimBank - GetAnim : {skin}.{capacity}.{orientation} ) Capacity not found, returning idle"); }
+            if (!anims[skin].ContainsKey("idle") || anims[skin]["idle"].Count == 0)
+            {
+                if (log_get_anim) { Debug.LogWarning($"(AnimBank - GetAnim : {skin}.{capacity}.{orientation} ) Idle anim not found for skin, returning sphere anim"); }
+                return return_empty_if_not_found ? anims["none"]["idle"][0] : anims["sphere"]["idle"][0]; // return the sphere anim of the sphere skin
+            }
+            if (log_get_anim) { Debug.LogWarning($"(AnimBank - GetAnim : {skin}.{capacity}.{orientation} ) Capacity not found, returning idle"); }
             return GetAnim(skin + ".idle." + orientation);
         }
 
@@ -473,23 +533,65 @@ public class AnimBank : Singleton<AnimBank>
     }
     private Anim get_closest_orientation_anim(string skin, string capacity, string orientation)
     {
-        // checks if we have the perfect animation (orientation)
-        Anim exact_anim = anims[skin][capacity].Find(anim => anim.orientation == orientation);
-        if (exact_anim != null) { return exact_anim; }
+        // we gather the orientations we have for this skin and capacity
+        // if we find the perfect orientation we return it directly
+        Vector2 target = AnimOrientationHelper.GetOrientationVector(orientation);
+        if (target == Vector2.zero)
+        {
+            if (log_get_anim) { Debug.LogWarning($"(AnimBank - GetClosestOrientationAnim : {skin}.{capacity}.{orientation} ) Orientation is zero vector, returning first anim of the list"); }
+            return anims[skin][capacity][0];
+        }
 
-        // todo improve this
-        // if we have only one letter in the orientation (L,R,U or D) we turn to find the closest other one letter
-        if (orientation == "U") { return get_closest_orientation_anim(skin, capacity, "L"); }
-        else if (orientation == "L") { return get_closest_orientation_anim(skin, capacity, "D"); }
-        else if (orientation == "D") { return get_closest_orientation_anim(skin, capacity, "R"); }
-        else if (orientation == "R") { return get_closest_orientation_anim(skin, capacity, "U"); }
 
-        // checks some special cases
-        if (skin == "zombo" && capacity == "attack" && (orientation == "LD" || orientation == "RD"))
-        { return get_closest_orientation_anim(skin, capacity, "D"); }
+        // we gather the best orientation
+        // if we have exact one, we return it directly
+        Anim bestAnim = null;
+        float bestDot = float.NegativeInfinity;
+        List<string> existing = new List<string>();
+        List<Anim> existing_anims = new List<Anim>();
+        foreach (Anim anim in anims[skin][capacity])
+        {
+            if (anim.orientation == orientation) { return anim; } // exact match, we return it directly
 
-        // if we have a 2 letters orientation (LU,LD,RU,RD) we delete the 2nd letter (and so we look either for L or R)
-        else { return get_closest_orientation_anim(skin, capacity, orientation[0].ToString()); }
+            Vector2 animDir = AnimOrientationHelper.GetOrientationVector(anim.orientation);
+            if (animDir == Vector2.zero) { continue; } // weird case, no orientation, we skip it
+
+            existing.Add(anim.orientation);
+            existing_anims.Add(anim);
+
+            float dot = Vector2.Dot(target.normalized, animDir.normalized);
+            if (dot > bestDot)
+            {
+                bestDot = dot;
+                bestAnim = anim;
+            }
+        }
+        // here we have no exact match, but we have the best match, as well as the list of existing orientations
+        if (log_get_anim) { Debug.LogWarning($"(AnimBank - GetClosestOrientationAnim : {skin}.{capacity}.{orientation} ) Exact Orientation not found, found closest one : {bestAnim.orientation} (with dot : {bestDot}).   ---- BUT FIRST --- we are checking some special cases so the return anim may be different (try putting more logs if you want to know which one :D)"); }
+
+        // we filter some special cases
+
+        // D attack is better than L/R if LD/RD asked
+        if (capacity == "attack" && existing.Contains("D") && (orientation == "LD" || orientation == "RD"))
+        {
+            return existing_anims[existing.IndexOf("D")];
+        }
+        
+        // L/R run & walk are better than D if LD/RD asked
+        // L/R run & walk also better than U if LU/RU asked
+        if (capacity == "run" || capacity == "walk")
+        {
+            if (existing.Contains("L") && (orientation == "LD" || orientation == "LU"))
+            {
+                return existing_anims[existing.IndexOf("L")];
+            }
+            else if (existing.Contains("R") && (orientation == "RD" || orientation == "RU"))
+            {
+                return existing_anims[existing.IndexOf("R")];
+            }
+        }
+        
+        return bestAnim;
     }
 
     /// <summary>
@@ -545,7 +647,7 @@ public class AnimBank : Singleton<AnimBank>
 
     // SKINS MANAGEMENT
     [Header("Skins management")]
-    public List<string> skins = new List<string>() { "perso", "cat", "zombo", "robot", "rat", "nobody" };
+    public List<string> skins = new List<string>() { "bob", "cat", "zombo", "robot", "rat", "nobody" };
     public List<float> head_offset_per_skin = new List<float>() { 0.7f, 0.7f, 0.7f, 0.7f, 0.7f, 0.7f };
     public List<float> body_offset_per_skin = new List<float>() { 0.4f, 0.15f, 0.4f, 0.2f, 0.1f, 0.42f };
     public float GetHeadOffset(string skin)
@@ -620,6 +722,7 @@ public class AnimBank : Singleton<AnimBank>
                 {
                     list += "\t\t" + anim.name + "\n";
                     count++;
+                    if (log_awake_extended) { Debug.Log("(AnimBank - getAnimsList) Found anim : " + anim.name); }
                 }
             }
         }
@@ -628,11 +731,16 @@ public class AnimBank : Singleton<AnimBank>
 
 }
 
-[Serializable]
-public class Anim
+/// <summary>
+/// this Anim class store ONE animation and so it has a skin, a capacity & an orientation.
+/// One instance of this class is stored in the big shared AnimBank.anims dict per skin/capacity/orientation.
+/// THIS MEANS THAT IF 2 ZOMBIES PLAY THE SAME attack.D ANIM AT THE SAME TIME THEY WILL SHARE THE SAME
+/// ANIM INSTANCE, so we sould NOT store in this class any capable-specific related things (speed for example)
+/// </summary>
+[Serializable] public class Anim
 {
+
     // stocke UNE animation
-    // ainsi que quelques parametres utiles au AnimHandler
     public string name; // nom de l'animation au format : skin.capacity.orientation
     public string skin { get { return name.Split('.')[0]; } }
     public string capacity { get { return name.Split('.')[1]; } }
@@ -648,8 +756,8 @@ public class Anim
 
     // parametres utiles à l'AnimPlayer
     public bool loop = true; // si c'est false, l'AnimPlayer revient sur l'animation par defaut
-    public float speed = 1f; // vitesse de l'animation
-    public bool flipX = false; // flip le sprite renderer si besoin
+    public float speed = 1f; // vitesse de l'animation // ! todo : remove this since it is capable-instance based
+    public bool flipX = false; // flip le sprite renderer si besoin // ! todo : remove this since it is capable-instance based
 
     public Anim() { }
     public Anim(string name, string[] sprites_paths, float[] sprites_durations)
@@ -736,15 +844,7 @@ public class Anim
         return true;
     }
 
-    public float GetDuration()
-    {
-        float duration = 0f;
-        foreach (float d in sprites_durations)
-        {
-            duration += d;
-        }
-        return duration / speed;
-    }
+    public float GetDuration() { return GetBaseDuration() / speed; }
     public float GetBaseDuration()
     {
         // same as up but without the speed
@@ -755,7 +855,17 @@ public class Anim
         }
         return duration;
     }
-
+    public float GetDurationUntilFrame(int frame_index) { return GetBaseDurationUntilFrame(frame_index) / speed; }
+    public float GetBaseDurationUntilFrame(int frame_index)
+    {
+        // same as up but without the speed
+        float duration = 0f;
+        for (int i = 0; i < frame_index && i < sprites_durations.Length; i++)
+        {
+            duration += sprites_durations[i];
+        }
+        return duration;
+    }
 }
 
 
@@ -766,4 +876,48 @@ public class SkinVariant
     public List<string> variant_spritesheets;
     public string base_skin;
     public List<string> base_spritesheets;
+    public bool keep_base_anim_if_spritesheet_not_found = true; // if false, we won't generate variant anim if we don't have the spritesheet
+}
+
+public class AnimOrientationHelper
+{
+    public Vector2 orientation;
+    public Anim anim;
+
+    public AnimOrientationHelper(Anim anim)
+    {
+        this.anim = anim;
+        this.orientation = GetOrientationVectorFromAnim(anim);
+    }
+    public static Vector2 GetOrientationVector(string orientation, bool log = false)
+    {
+        if (orientation == "U") { return new Vector2(0, 1); }
+        else if (orientation == "D") { return new Vector2(0, -1); }
+        else if (orientation == "L") { return new Vector2(-1, 0); }
+        else if (orientation == "R") { return new Vector2(1, 0); }
+        else if (orientation == "LU") { return new Vector2(-0.7071f, 0.7071f); }
+        else if (orientation == "UL") { return new Vector2(-0.7071f, 0.7071f); }
+        else if (orientation == "LD") { return new Vector2(-0.7071f, -0.7071f); }
+        else if (orientation == "DL") { return new Vector2(-0.7071f, -0.7071f); }
+        else if (orientation == "RU") { return new Vector2(0.7071f, 0.7071f); }
+        else if (orientation == "UR") { return new Vector2(0.7071f, 0.7071f); }
+        else if (orientation == "RD") { return new Vector2(0.7071f, -0.7071f); }
+        else if (orientation == "DR") { return new Vector2(0.7071f, -0.7071f); }
+        else
+        {
+            if (log) { Debug.LogWarning("(AnimOrientationHelper) Unknown orientation : " + orientation); }
+            return Vector2.zero;
+        }
+    }
+    public static Vector2 GetOrientationVectorFromAnim(Anim anim, bool log = false)
+    {
+        string orientation = anim.orientation;
+        Vector2 orientation_vector = GetOrientationVector(orientation, log: false);
+        if (orientation_vector == Vector2.zero)
+        {
+            if (log) { Debug.LogWarning("(AnimOrientationHelper) Unknown orientation : " + orientation + " in anim : " + anim.name); }
+            return Vector2.zero;
+        }
+        return orientation_vector;
+    }
 }

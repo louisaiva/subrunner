@@ -12,7 +12,9 @@ public class DebugManager : Singleton<DebugManager>
 {
     [Header("Debug")]
     [SerializeField] private Transform debug;
-    private List<Debugger> debugs = new List<Debugger>();
+    private Transform debugs_group; // parent of all debugs except FPS
+    private List<SingleDebugger> debugs = new List<SingleDebugger>();
+    private Dictionary<Type, Debuggable> debuggables = new Dictionary<Type, Debuggable>();
 
     [Header("FPS Debug")]
     [SerializeField] private TextMeshProUGUI fps;
@@ -22,36 +24,43 @@ public class DebugManager : Singleton<DebugManager>
     [SerializeField] private string precision = "F0"; // precision of the fps text
     [SerializeField] private bool show_unscaled_fps = false; // if we want to show the unscaled fps or not (djizzi)
 
-    [Header("Settings")]
-    private Setting debug_setting;
 
     [Header("Logs")]
     [SerializeField] private bool log = false; // if we want to log warnings when
+    [SerializeField] private bool log_debuggables_added = false;
 
     // START
     protected override void Awake()
     {
         base.Awake();
 
-        // find all debugs in children
-        debugs = debug.GetComponentsInChildren<Debugger>(includeInactive: true).ToList();
+        // find all debuggables in our children
+        Debuggable[] debuggables_array = GetComponentsInChildren<Debuggable>(includeInactive: true);
+        foreach (Debuggable d in debuggables_array)
+        {
+            Type type = d.GetType();
+            if (!debuggables.ContainsKey(type))
+            {
+                debuggables.Add(type, d);
+            }
+        }
+
+        // find all debugs in ui debug children
+        debugs_group = debug.Find("group");
+        debugs = debug.GetComponentsInChildren<SingleDebugger>(includeInactive: true).ToList();
         debugs = debugs.Where(d => d.gameObject.activeSelf).ToList(); // we get only active debugs
-        foreach (Debugger d in debugs)
+        foreach (SingleDebugger d in debugs)
         {
             d.gameObject.SetActive(false); // disable all debugs at start
         }
     }
     protected void Start()
     {
-        // on met le skin en fonction du settings skin
-        debug_setting = SettingsManager.Instance.GetSetting("debug");
-        if (debug_setting == null) { return; }
-        toggle_debug(debug_setting.value);
-        debug_setting.OnValueChanged += toggle_debug;
+        SettingsManager.Instance.RegisterCallback("debug", on_debug_setting_changed);
     }
     void OnDestroy()
     {
-        if (debug_setting != null) { debug_setting.OnValueChanged -= toggle_debug; }
+        SettingsManager.Instance?.UnregisterCallback("debug", on_debug_setting_changed);
     }
 
     // UPDATE + FPS
@@ -82,25 +91,55 @@ public class DebugManager : Singleton<DebugManager>
     }
 
     // TOGGLE DEBUG
-    private void toggle_debug(float value)
+    private void on_debug_setting_changed(Setting setting)
     {
-        bool enable = (value > 0.5f) ? true : false;
-        debug.gameObject.SetActive(enable);
+        switch (setting.Value)
+        {
+            case 0f:
+                debug.gameObject.SetActive(false);
+                break;
+            case 1f: // only fps
+                debug.gameObject.SetActive(true);
+                debugs_group.gameObject.SetActive(false);
+                break;
+            case 2f: // all debugs
+                debug.gameObject.SetActive(true);
+                debugs_group.gameObject.SetActive(true);
+                break;
+        }
     }
 
     // ADD DEBUGGABLE TO DEBUGGER
-    public void AddDebuggable(Debuggable debuggable,string name)
+    public void AddDebuggable(Debuggable debuggable, string name)
     {
         // find the debug with the right name
-        Debugger debug = debugs.Find(d => d.name == name);
+        SingleDebugger debug = debugs.Find(d => d.name == name);
         if (debug == null)
         {
             if (log) { Debug.LogWarning("(DebugManager) No debug found with name " + name); }
             return;
         }
 
+        // we add the debuggable to the dictionary if not already there
+        Type type = debuggable.GetType();
+        if (!debuggables.ContainsKey(type)) { debuggables.Add(type, debuggable); }
+
         // add the debuggable to the debug
         debug.SetDebuggable(debuggable);
         debug.gameObject.SetActive(true); // enable the debug
+
+        if (log_debuggables_added) { Debug.Log($"(DebugManager) Added debuggable of type {type} to debug {name}"); }
+    }
+
+    // GETTERS
+    public T GetDebuggable<T>() where T : Debuggable
+    {
+        Type type = typeof(T);
+        if (debuggables.ContainsKey(type))
+        {
+            if (debuggables[type] is T debuggable) { return debuggable; }
+        }
+        if (log) { Debug.LogWarning("(DebugManager) No debuggable found with type " + type); }
+        return default(T);
     }
 }

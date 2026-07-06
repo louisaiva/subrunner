@@ -1,20 +1,22 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+[Obsolete("UI_ItemRenderer is deprecated, use UI_ItemStack instead, which is kind of a renderer for ItemStack now")]
 public class UI_ItemRenderer : MonoBehaviour
 {
-    [Header("UI_Item Target")]
-    public UI_Item Target;
+    [Header("UI_ItemStack Target")]
+    public UI_ItemStack Target;
 
-    [Header("Components")]
-    [SerializeField] private Image item;
-    [SerializeField] private TextMeshProUGUI qty;
+    // [Header("Components")]
+    // [SerializeField] private Image item;
+    // [SerializeField] private TextMeshProUGUI qty;
 
-    [Header("Colors & Feedbacks")]
-    [SerializeField] private InputImageFeedback feedback; // optionnel
-    private float color_shift = 60f;
+    // [Header("Colors & Feedbacks")]
+    // [SerializeField] private InputImageFeedback feedback; // optionnel
+    // private float color_shift = 60f;
 
     [Header("Log")]
     public bool log = false;
@@ -28,11 +30,11 @@ public class UI_ItemRenderer : MonoBehaviour
         }
 
         // subscribe to the event
-        Target.OnItemChanged += UpdateItemDisplay;
+        // Target.OnItemChanged += UpdateItemDisplay;
     }
 
     // SETTING NEW TARGET
-    public void SetTarget(UI_Item new_Target)
+    /* public void SetTarget(UI_ItemStack new_Target)
     {
         // we unsubscribe from the old Target
         if (Target != null)
@@ -47,10 +49,10 @@ public class UI_ItemRenderer : MonoBehaviour
         // we subscribe to the new Target
         Target.OnItemChanged += UpdateItemDisplay;
         UpdateItemDisplay(Target.GetItems()); // we update the display
-    }
+    } */
 
     // UPDATE DISPLAY
-    private void UpdateItemDisplay(List<Item> items)
+    /* private void UpdateItemDisplay(List<Item> items)
     {
         if (Target == null) { return; }
 
@@ -72,5 +74,5 @@ public class UI_ItemRenderer : MonoBehaviour
                 Mathf.Clamp01(base_color.b + (color_shift / 255f))
             );
         feedback.SetColors(base_color, shifted_color);
-    }
+    } */
 }

@@ -1,0 +1,35 @@
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public interface Device
+{
+    public GameObject gameObject { get; }
+    public string name { get; }
+    public Color MB_Color { get; } // color of the motherboard
+    public Inventory Inventory { get; } // the inventory of the device, which can be a LaptopInventory or a regular Inventory
+
+    public ProcessCapacity Processor { get; }
+    public ConnectCapacity Connector { get; }
+    public HackCapacity Hacker { get; } // this is the os actually ...
+
+    // MODULES MANAGEMENT
+    public void OnNetworkModuleChanged();
+    public void OnHDD_Changed();
+    public event System.Action<List<StoreCapacity>> OnDisksChanged;
+
+    // FILES MANAGEMENT
+    public bool WriteFile(File file);
+    public System.Action<File> OnFileWritten { get; set; }
+    public List<StoreCapacity> GetDisks();
+    public List<Exploit> GetExploits();
+    public List<File> GetFiles();
+
+    // KEYS MANAGEMENT
+    public bool HasKeyFor(Lockable target);
+    public Key GetKeyFor(Lockable target);
+
+ 
+    // UI
+    public List<WindowType> WindowsTypes { get; }
+}

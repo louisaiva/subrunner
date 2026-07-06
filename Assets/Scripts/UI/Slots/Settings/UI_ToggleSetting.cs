@@ -13,6 +13,16 @@ public class UI_ToggleSetting : UI_Toggle, UI_SettingSlot
             set_manager_setting();
         }
     }
+    public string Name { get { return setting_name; } }
+    public string Description
+    {
+        get
+        {
+            Setting setting = SettingsManager.Instance?.GetSetting(setting_name);
+            if (setting == null) { return ""; }
+            return setting.Description;
+        }
+    }
 
     [Header("On Off Sprites")]
     [SerializeField] private Image icon;
@@ -87,7 +97,7 @@ public class UI_ToggleSetting : UI_Toggle, UI_SettingSlot
         if (setting == null) { return; }
 
         // set current value
-        is_on = setting.value > 0;
+        is_on = setting.Value > 0;
 
         // update the image bcz sometimes it does not update
         icon.sprite = is_on ? Hovered ? on_hover_sprite : on_sprite
@@ -102,7 +112,7 @@ public class UI_ToggleSetting : UI_Toggle, UI_SettingSlot
         if (setting == null) { return; }
 
         // set current value
-        is_on = setting.value > 0;
+        is_on = setting.Value > 0;
         if (log) { Debug.Log("(UI_ToggleSetting) New boolean from manager : " + is_on); }
 
         // change icon based on is_on

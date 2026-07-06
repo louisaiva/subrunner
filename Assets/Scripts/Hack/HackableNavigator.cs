@@ -13,6 +13,7 @@ public class HackableNavigator : MonoBehaviour
 {
 
     public bool IsSelecting = false;
+    public bool IsConnected => targeted_connector != null;
 
     [Header("Hackables selection")]
     [SerializeField] private GameObject targeted_connector;
@@ -33,10 +34,10 @@ public class HackableNavigator : MonoBehaviour
 
 
     [Header("Components")]
-    private Device device => Perso.Instance.Device;
+    private Device device => Controller.Perso.Device;
     public HackCapacity hacker => device?.Hacker;
     public ConnectionTree Tree => device?.Connector.Tree;
-    private ConnectCapacity connector => Controller.Instance.Capable.Connector;
+    private ConnectCapacity connector => Controller.Capable.Connector;
     [SerializeField] private ConnectCapacity cursor;
     private TextMeshProUGUI kf_exploit_text;
 
@@ -44,6 +45,7 @@ public class HackableNavigator : MonoBehaviour
     [SerializeField] private bool log = false;
     [SerializeField] private bool log_update = false;
     [SerializeField] private bool log_enabling = false;
+    [SerializeField] private bool log_material_switching = false;
 
     // START
     void Start()
@@ -71,7 +73,7 @@ public class HackableNavigator : MonoBehaviour
     }
     private string update_connector(ConnectCapacity target)
     {
-        string logg = "(VulnerableNavigator) Updating vulnerable : " + target.capable.name + " --> ";
+        string logg = "(VulnerableNavigator) Updating vulnerable : " + target.Capable.ID + " --> ";
 
 
         // check if we can't connect to the vulnerable
@@ -90,7 +92,7 @@ public class HackableNavigator : MonoBehaviour
         }
 
         // check if we have the required cores
-        if (!(hacker.capable as Device).Processor.HasFreeCores(exploit.cores_cost))
+        if (!(hacker.Capable as Device).Processor.HasFreeCores(exploit.cores_cost))
         {
             hover_hackray.SetColor(no_cores_hackray_color);
             return logg + "(no cores)";
@@ -107,12 +109,13 @@ public class HackableNavigator : MonoBehaviour
         // we switch the current target
         if (targeted_connector != null) { unselect_target(); }
         targeted_connector = target.gameObject;
-        if (log) { Debug.Log($"(VulnerableNavigator) ready to launch connection : {connector.capable.name} --> {target.capable.name}"); }
+        if (log) { Debug.Log($"(VulnerableNavigator) ready to launch connection : {connector.Capable.ID} --> {target.Capable.ID}"); }
 
         connector.Connect(target,hacker);
 
         // we set the hovered target material
         target.Vulnerable.Renderer.material = target.Vulnerable.TargetMaterial;
+        if (log_material_switching) { Debug.Log($"(VulnerableNavigator) switched material of {target.Capable.ID} to targeted material"); }
 
         // we update the hackray
         hover_hackray.SetColor(connector.IsConnectedTo(target) ? hackray_color : out_of_range_hackray_color);
@@ -138,10 +141,12 @@ public class HackableNavigator : MonoBehaviour
             targeted_connector = null;
             return;
         }
-        vulnerable.Renderer.material = vulnerable.DefaultMaterial;
+        vulnerable.Renderer.material = vulnerable.BaseMaterial;
+        if (log_material_switching) { Debug.Log($"(VulnerableNavigator) resetted material of {vulnerable.Capable.ID} to base material"); }
+
 
         // we reset the current target
-        if (log) { Debug.Log($"(VulnerableNavigator) resetted connection : {connector.capable.name} -x> {vulnerable.capable.name}"); }
+        if (log) { Debug.Log($"(VulnerableNavigator) resetted connection : {connector.Capable.ID} -x> {vulnerable.Capable.ID}"); }
         targeted_connector = null;
     }
 
@@ -204,9 +209,6 @@ public class HackableNavigator : MonoBehaviour
     // TARGET SELECTION HANDLE INPUT
     public void HandleHackNavigationInput(Vector2 input)
     {
-        // on vérifie qu'on est au moins dans le threshold min
-        if (input.magnitude < InputManager.Instance.JOYSTICK_MIN_THRESHOLD) { return; }
-
         // update cursor & hackray
         update_cursor(input);
         hover_hackray.gameObject.SetActive(true);
@@ -249,17 +251,17 @@ public class HackableNavigator : MonoBehaviour
             if (target == null) { continue; }
             
             // we remove ourselves
-            if (target.capable == Controller.Instance.Capable) { continue; }
-            if (target.capable is Item item && item.Holder != null && item.Holder == Controller.Instance.Capable) { continue; }
+            if (target.Capable == Controller.Capable) { continue; }
+            if (target.Capable is Item item && item.Holder != null && item.Holder == Controller.Capable) { continue; }
 
             // we remove the target we are already hacking
             if (hacker?.IsHacking(target.Vulnerable) == true) { being_hacked_connector = target; continue; }
 
             // we check if this is a lockable unlocked we skip it
-            if (target.capable is Lockable lockable && !lockable.Locked) { continue; }
+            if (target.Capable is Lockable lockable && !lockable.Locked) { continue; }
 
             // or a powered off Onnable
-            if (target.capable is Onnable onnable && !onnable.IsOn) { continue; }
+            if (target.Capable is Onnable onnable && !onnable.IsOn) { continue; }
 
             // we compare the distance
             float distance = Vector2.Distance(transform.position, target_go.transform.position);
@@ -278,6 +280,6 @@ public class HackableNavigator : MonoBehaviour
     {
         // on met à jour le curseur
         if (cursor == null || connector == null) { return; }
-        cursor.capable.transform.localPosition = new Vector3(input.x * connector.Radius, input.y * connector.Radius, 0f);
+        cursor.Capable.transform.localPosition = new Vector3(input.x * connector.Radius, input.y * connector.Radius, 0f);
     }
 }

@@ -13,9 +13,9 @@ public class JoystickEndlessFeedback : JoystickFeedback
     private Color saved_clicked_color;
     protected System.Action<Vector2> endless_callback;
 
-    protected override void Start()
+    public override void InitializeWithAction(InputAction action)
     {
-        base.Start();
+        base.InitializeWithAction(action);
 
         // we save the clicked color
         saved_clicked_color = clicked_color;
@@ -24,9 +24,15 @@ public class JoystickEndlessFeedback : JoystickFeedback
     // ONENABLE/DISABLE
     protected override void OnEnable()
     {
+        base.OnEnable();
+        
         // we get the endless input
         if (endless_input_name == "") { return; }
-        if (endless_input == null) { endless_input = Controller.Instance.GetEndlessInput<Vector2>(endless_input_name); }
+        if (endless_input == null)
+        {
+            if (Controller._Instance != null) { endless_input = Controller.LazyInstance.GetEndlessInput<Vector2>(endless_input_name); }
+            if (endless_input == null) { endless_input = UI_Manager.Instance.UIC.GetEndlessInput<Vector2>(endless_input_name); }
+        }
         if (endless_input == null)
         {
             if (log) { Debug.LogError("(JEF) endless input " + endless_input_name + " not found!"); }
@@ -44,6 +50,8 @@ public class JoystickEndlessFeedback : JoystickFeedback
     }
     protected override void OnDisable()
     {
+        base.OnDisable();
+        
         // we remove listeners
         endless_input.OnStarted -= input_callback;
         endless_input.OnHold -= endless_callback;

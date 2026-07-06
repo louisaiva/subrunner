@@ -1,13 +1,12 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 
 [CreateAssetMenu(fileName = "Setting", menuName = "Settings/Setting", order = 2)]
-[Serializable] public class Setting : ScriptableObject
+[Serializable] public class Setting : ScriptableObject, Descriptable
 {
     [SerializeField] protected float _value;
-    public virtual float value
+    public virtual float Value
     {
         get { return _value; }
         set
@@ -16,7 +15,12 @@ using UnityEngine;
 
             _value = value;
             OnValueChanged?.Invoke(_value);
+            OnSettingChanged?.Invoke(this);
         }
+    }
+    public virtual void SetValueWithoutNotify(float value)
+    {
+        _value = value;
     }
 
     [Header("Framing")]
@@ -27,8 +31,12 @@ using UnityEngine;
     public SettingShowSettings show_settings;
     public string label = "";
     public string description = "";
+    public string Name { get { return name; } }
+    public string Description { get { return description; } }
+
 
     public Action<float> OnValueChanged;
+    public Action<Setting> OnSettingChanged;
 
     public float GetPercentage()
     {
@@ -60,11 +68,11 @@ using UnityEngine;
         // we show integer
         if (show_settings.show_as_integer)
         {
-            return Mathf.RoundToInt(value).ToString();
+            return Mathf.RoundToInt(Value).ToString();
         }
 
         // we show float
-        return value.ToString("F" + show_settings.decimal_places);
+        return Value.ToString("F" + show_settings.decimal_places);
     }
     
     // CLONING

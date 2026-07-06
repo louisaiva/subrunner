@@ -46,16 +46,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40baaaf7f60a88e4286abc7c952fbba4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cooldown: 0
-  debug: 0
-  walk_speed: 0
+  data:
+    <id>k__BackingField: 
+    <owner_id>k__BackingField: 
+    kind: 
+    local_position: {x: 0, y: 0}
+    layer: 0
+    tag: 
+  log: 0
+  log_footsteps_audio: 0
+  log_footsteps_repeating: 0
+  speed: 0
   walk_percentage_target: 0
-  max_speed: 1
+  max_walk_speed: 3
+  max_run_speed: 3
   random_speed_modifier_at_start: 0
-  walk_particles: {fileID: 0}
+  delay_between_footsteps: 0.5
 --- !u!199 &7427386377428732974
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -74,6 +83,8 @@ ParticleSystemRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -95,9 +106,11 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -129,7 +142,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!198 &8825874904198225900
 ParticleSystem:
   m_ObjectHideFlags: 0

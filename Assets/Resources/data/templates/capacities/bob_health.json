@@ -1,0 +1,39 @@
+﻿{
+    "<id>k__BackingField": "bob_health",
+    "<owner_id>k__BackingField": "bob",
+    "kind": "HealthCapacity",
+    "local_position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "layer": 23,
+    "tag": "Player",
+    "health": 100.0,
+    "max_health": 100,
+    "regen_health": 0.0,
+    "hurted_animation": "hurted",
+    "box_colliders": [
+        {
+            "local_position": {
+                "x": 0.0,
+                "y": 0.3709999918937683
+            },
+            "layerID": 23,
+            "pathfinding_area": -1,
+            "shadow_caster_data": {
+                "cast_and_self": false,
+                "used_layers": []
+            },
+            "is_trigger": true,
+            "offset": {
+                "x": -0.015527233481407166,
+                "y": 0.08580735325813294
+            },
+            "size": {
+                "x": 0.3566302955150604,
+                "y": 0.5128641724586487
+            }
+        }
+    ],
+    "circle_colliders": []
+}

@@ -1,0 +1,268 @@
+﻿{
+    "<id>k__BackingField": "bob",
+    "kind": "Perso",
+    "position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "layer": 7,
+    "tag": "Player",
+    "capacities_ids": [
+        "bob_walk",
+        "exp",
+        "bob_health",
+        "bob_sit",
+        "bob_talk",
+        "bob_eat",
+        "bob_interact"
+    ],
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "bob",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "walk",
+                    "run"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 2,
+                "capacity_playing": "",
+                "capacities": [
+                    "hack"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            },
+            {
+                "priority": 3,
+                "capacity_playing": "",
+                "capacities": [
+                    "attack",
+                    "dodge"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            },
+            {
+                "priority": 4,
+                "capacity_playing": "",
+                "capacities": [
+                    "hurted",
+                    "eat"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            },
+            {
+                "priority": 5,
+                "capacity_playing": "",
+                "capacities": [
+                    "talk"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 6,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle_sit"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 7,
+                "capacity_playing": "",
+                "capacities": [
+                    "talk_sit"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 8,
+                "capacity_playing": "",
+                "capacities": [
+                    "zap_tv",
+                    "sit",
+                    "stand",
+                    "zip",
+                    "unzip",
+                    "start_talk"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            },
+            {
+                "priority": 9,
+                "capacity_playing": "",
+                "capacities": [
+                    "eat_sit_1",
+                    "eat_sit_2",
+                    "eat_sit_3"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            },
+            {
+                "priority": 10,
+                "capacity_playing": "",
+                "capacities": [
+                    "die"
+                ],
+                "lock_orientation": true,
+                "one_shot": false
+            }
+        ],
+        "current_capacity": "",
+        "material_name": "perso",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "never_flip": false,
+        "layers": [
+            {
+                "skin": "bob_hair",
+                "local_position": {
+                    "x": 0.0,
+                    "y": -0.0010000000474974514
+                },
+                "local_rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "material_name": "perso",
+                "sorting_layer_id": -667374433,
+                "order_in_layer": 0,
+                "never_flip": false,
+                "follow_duration": false
+            }
+        ],
+        "local_position": {
+            "x": 0.0,
+            "y": 0.0
+        }
+    },
+    "inventory": {
+        "item_pools_data": [
+            {
+                "item_type": 2,
+                "stacks_data": [],
+                "pool_id": "shoes",
+                "max_stacks": 1,
+                "min_stacks": 1,
+                "scalable": false,
+                "item_rule": "shoes"
+            },
+            {
+                "item_type": 2,
+                "stacks_data": [],
+                "pool_id": "weapon",
+                "max_stacks": 1,
+                "min_stacks": 1,
+                "scalable": false,
+                "item_rule": "weapon"
+            },
+            {
+                "item_type": 2,
+                "stacks_data": [],
+                "pool_id": "device",
+                "max_stacks": 1,
+                "min_stacks": 1,
+                "scalable": false,
+                "item_rule": "laptop"
+            },
+            {
+                "item_type": 2,
+                "stacks_data": [],
+                "pool_id": "conso_1",
+                "max_stacks": 1,
+                "min_stacks": 1,
+                "scalable": false,
+                "item_rule": "usable"
+            },
+            {
+                "item_type": 2,
+                "stacks_data": [],
+                "pool_id": "conso_2",
+                "max_stacks": 1,
+                "min_stacks": 1,
+                "scalable": false,
+                "item_rule": "usable"
+            },
+            {
+                "item_type": 2,
+                "stacks_data": [],
+                "pool_id": "conso_3",
+                "max_stacks": 1,
+                "min_stacks": 1,
+                "scalable": false,
+                "item_rule": "usable"
+            },
+            {
+                "item_type": 2,
+                "stacks_data": [],
+                "pool_id": "conso_4",
+                "max_stacks": 1,
+                "min_stacks": 1,
+                "scalable": false,
+                "item_rule": "usable"
+            },
+            {
+                "item_type": 2,
+                "stacks_data": [],
+                "pool_id": "stuff",
+                "max_stacks": 20,
+                "min_stacks": 20,
+                "scalable": false,
+                "item_rule": "!virtual"
+            }
+        ],
+        "item_type": 0
+    },
+    "feet_data": {
+        "box_colliders": [],
+        "circle_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 25,
+                "pathfinding_area": -1,
+                "shadow_caster_data": {
+                    "cast_and_self": false,
+                    "used_layers": []
+                },
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.10000000149011612
+                },
+                "radius": 0.09000000357627869
+            }
+        ]
+    },
+    "effects": [],
+    "effects_ttl": []
+}

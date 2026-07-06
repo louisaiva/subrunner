@@ -18,7 +18,9 @@ public class UI_PanelManager : MonoBehaviour
             return current_panel;
         }
     }
+    public bool IsCurrentPanel(UI_Panel panel) => panel.name == CurrentPanel;
     [SerializeField] private List<UI_Panel> panels;
+    [SerializeField] private bool gather_panels_in_children_at_start = false;
     public event Action<string,float> OnPanelChanged = delegate { };
 
     [Header("Panels Indicators")]
@@ -27,7 +29,7 @@ public class UI_PanelManager : MonoBehaviour
     [Header("Eases")]
     [SerializeField] private Ease showing_ease = Ease.Default;
     [SerializeField] private Ease hiding_ease = Ease.Default;
-    private float default_duration = 0.2f;
+    [SerializeField, Range(0f, 5f)] private float default_duration = 0.2f;
 
     [Header("Logs")]
     [SerializeField] private bool log = false;
@@ -37,10 +39,15 @@ public class UI_PanelManager : MonoBehaviour
     {
         UI_Navigator.Instance.OnSlotOutOfScreen += TweenToSlot;
 
-        if (panels == null || panels.Count == 0)
+        if (panels == null || panels.Count == 0) { panels = new List<UI_Panel>(); }
+        if (gather_panels_in_children_at_start)
         {
-            Debug.LogWarning("(UI_PanelManager) No panels defined in the inspector.");
-            return;
+            UI_Panel[] panels_in_children = GetComponentsInChildren<UI_Panel>(includeInactive: true);
+            for (int i=0; i<panels_in_children.Length; i++)
+            {
+                if (panels.Contains(panels_in_children[i])) { continue; }
+                panels.Add(panels_in_children[i]);
+            }
         }
 
         // Initialize each panel indicator
@@ -52,7 +59,10 @@ public class UI_PanelManager : MonoBehaviour
 
         // initialize the sequence list to keep track of sequences happening
         sequences = new List<Sequence?>();
-        foreach (UI_Panel panel in panels) { sequences.Add(null); }
+        foreach (UI_Panel panel in panels)
+        {
+            sequences.Add(null);
+        }
 
         // we tween to the current panel
         TweenToPanel(get_panel(current_panel));
@@ -65,10 +75,10 @@ public class UI_PanelManager : MonoBehaviour
         string log_msg = "";
         log_msg += $"(UI_PanelManager) Slot {slot.gameObject.name} is out of screen";
         log_msg += $"\n\t current panel is {current_panel}";
-        log_msg += $"\n\t is an ui_item ? {slot is UI_Item}";
+        log_msg += $"\n\t is an ui_item ? {slot is UI_ItemStack}";
 
-        // we check if it's a UI_Item & if it belongs to one of our panels
-        // if (slot is not UI_Item uiItem || uiItem.ItemPool == null) { if (log) { Debug.Log(log_msg); } return; }
+        // we check if it's a UI_ItemStack & if it belongs to one of our panels
+        // if (slot is not UI_ItemStack uiItem || uiItem.ItemPool == null) { if (log) { Debug.Log(log_msg); } return; }
 
         // checks if it has a UI_Panel in its above hierarchy
         UI_Panel ui_panel = slot.GetComponentInParent<UI_Panel>(/* includeInactive: true */);
@@ -93,11 +103,32 @@ public class UI_PanelManager : MonoBehaviour
         if (currentPanel == null) { Debug.LogError($"(UI_PanelManager) Current panel not found: {CurrentPanel}"); return; }
 
         // get next panel
-        UI_Panel targetPanel = null;
         int next_index = panels.IndexOf(currentPanel) - direction;
         next_index = Mathf.Clamp(next_index, 0, panels.Count - 1);
-        targetPanel = panels[next_index];
+        UI_Panel targetPanel = panels[next_index];
         if (targetPanel == currentPanel) { return; } // we are already on/moving to the target panel
+
+        // check if target panel is active in hierarchy
+        if (!targetPanel.gameObject.activeInHierarchy)
+        {
+            // here we need to go back from the target panel in the opposite direction of direction, and target the first active panel we
+            // find. if we go back until currentPanel, we do nothing
+            for (int i=0; i<direction; i++)
+            {
+                next_index += Mathf.Sign(direction) > 0f ? 1 : -1;
+                next_index = Mathf.Clamp(next_index, 0, panels.Count - 1);
+                UI_Panel next_panel = panels[next_index];
+                if (next_panel == targetPanel)
+                {
+                    Debug.LogError("(UI_PanelManager) scrolling in the wrong direction !");
+                    return;
+                }
+                if (next_panel == currentPanel) { return; }
+                if (!next_panel.gameObject.activeInHierarchy) { continue; }
+                targetPanel = next_panel;
+                break;
+            }
+        }
 
         if (log) { Debug.Log($"(UI_PanelManager) Rolling : {currentPanel.name} --> {targetPanel.name}"); }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -12,6 +13,8 @@ public class MouseNavigator : MonoBehaviour, Navigator
     [Header("Mouse navigation parameters")]
     public LayerMask ui_slot_layer;
     public Vector2 BasePosition => new Vector2(Screen.width / 2f, Screen.height / 2f);
+    public List<Type> UnwantedTypesAfterActivate => new List<Type>();
+
     private float move_threshold = 15f;
     [SerializeField] private Vector2 last_mouse_position = Vector2.zero;
 
@@ -40,7 +43,7 @@ public class MouseNavigator : MonoBehaviour, Navigator
         // si on a des slots on navigue tout simplement
         Navigate(start_moving_item: false);
     }
-    public async void NavigateToClosest(Vector2 position, System.Type favorised_type = null)
+    public async void NavigateToClosest(Vector2 position, System.Type favorised_type = null, List<System.Type> unwanted_types = null)
     {
         // wait a frame for ui to update it self
         await System.Threading.Tasks.Task.Yield();
@@ -64,17 +67,6 @@ public class MouseNavigator : MonoBehaviour, Navigator
         if (!navigating_to_closest && Vector2.Distance(last_mouse_position, Input.mousePosition) < move_threshold) { return; }
         last_mouse_position = Input.mousePosition;
         if (log_hover) { Debug.Log($"(UI_MouseNavigator) navigating with mouse position : {Input.mousePosition}"); }
-
-
-        // checks if we are holding ui_drop_ingame (and so waiting for endless drop) we cancel it
-        // -> because it means we are going to move items
-        /* if (start_moving_item && Controller.Instance.UIC.InGame)
-        {
-            EndlessInput<float> endless_drop_input = Controller.Instance.UIC.get_endless_input<float>("ui_drop_ingame");
-            // if (!IsEndlessInputDown<float>("ui_drop_ingame")) { return; }
-            // get_endless_input<float>("ui_drop_ingame").Cancel();
-            endless_drop_input.Cancel();
-        } */
 
 
         // on move item potentiellement
@@ -137,7 +129,22 @@ public class MouseNavigator : MonoBehaviour, Navigator
 
         // on récupère le premier résultat
         slot = hovered_slots[0];
-        if (log_hover) { Debug.Log($"(UI_MouseNavigator) hovered {hovered_slots.Count} ui_slots ! first is {slot.name}"); }
+
+        // special cases when it's an OutlinerSlot and is Disabled we skip it
+        if (slot is UI_OutlineSlot outline_slot && outline_slot.Disabled)
+        {
+            if (hovered_slots.Count > 1)
+            {
+                slot = hovered_slots[1];
+                if (log_hover) { Debug.Log($"(UI_MouseNavigator) skipped disabled outline slot, hovered another slot : {slot.name}"); }
+            }
+            else
+            {
+                if (log_hover) { Debug.Log($"(UI_MouseNavigator) only hovered slot is a disabled outline slot, unhovering."); }
+                return null;
+            }
+        }
+        if (log_hover) { Debug.Log($"(UI_MouseNavigator) hovered {hovered_slots.Count} ui_slots ! chosen one is {slot.name}"); }
 
         return slot;
     }

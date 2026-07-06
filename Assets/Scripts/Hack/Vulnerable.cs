@@ -23,11 +23,18 @@ public class Vulnerable : MonoBehaviour
 
 
     [Header("Components")]
-    [HideInInspector] public Capable capable = null;
-    [HideInInspector] public ConnectCapacity Connector = null;
-    [HideInInspector] public SpriteRenderer Renderer = null;
+    public Capable Capable { get { return Connector.Capable; } }
+    private ConnectCapacity _connector = null;
+    public ConnectCapacity Connector
+    {
+        get
+        {
+            if (_connector == null) { _connector = GetComponent<ConnectCapacity>(); }
+            return _connector;
+        } }
+    public SpriteRenderer Renderer { get { return Capable.AnimPlayer.Renderer; } }
     [HideInInspector] public Material TargetMaterial;
-    [HideInInspector] public Material DefaultMaterial;
+    [HideInInspector] public Material BaseMaterial;
 
 
     [Header("Log")]
@@ -35,14 +42,9 @@ public class Vulnerable : MonoBehaviour
     [SerializeField] private bool log_vulnerabilities = false;
 
     // AWAKE
-    private void Awake()
+    private void Start()
     {
-        capable = transform.parent.GetComponent<Capable>();
-        if (capable == null) { Debug.LogError($"(Vulnerable) {name} has no capable parent!"); }
-        Renderer = capable.GetComponent<SpriteRenderer>();
-        Connector = GetComponent<ConnectCapacity>();
-
-        DefaultMaterial = Renderer.material;
+        BaseMaterial = Capable.AnimPlayer.GetMaterial();
         TargetMaterial = Resources.Load<Material>("materials/targeted/hack_door");
     }
 
@@ -50,7 +52,7 @@ public class Vulnerable : MonoBehaviour
     public bool IsVulnerableTo(Exploit exploit)
     {
         if (exploit.name == "nmap") { return true; }
-        if (capable is Lockable lockable && exploit.name == "type_password")
+        if (Capable is Lockable lockable && exploit.name == "type_password")
         {
             if (exploit is not FileExploit file_exploit) { return false; }
             if (file_exploit.file == null)
@@ -118,8 +120,11 @@ public class Vulnerable : MonoBehaviour
     // OnDISABLE
     private void OnDisable()
     {
-        Renderer.material = DefaultMaterial;
-        int hacks = running_hacks.Count;
+        if (BaseMaterial != null)
+        {
+            // Renderer.material = BaseMaterial;
+            Capable.AnimPlayer.ChangeMaterial(BaseMaterial);
+        }
         while (running_hacks.Count > 0)
         {
             Hack hack = running_hacks[0];
@@ -152,24 +157,24 @@ public class Vulnerable : MonoBehaviour
             magnitude: knockback_magnitude
         );
 
-        if (capable is Being being) { being.take_damage(damage, knockback); }
+        if (Capable.TryGetCapacity(out HealthCapacity health)) { health.TakeDamage(damage, knockback); }
     }
     public void ControlCapable(Hack hack)
     {
         // we move the PersoInputsController to the capable for duration seconds
-        float duration = -888f;
-        if (hack.exploit is TimerExploit timer) { duration = timer.end_timer; }
-        Controller.Instance.ChangeCapableTarget(capable, duration);
+        // float duration = -888f;
+        Controller.LazyInstance.Control(Capable.ID);
+        if (hack.exploit is TimerExploit timer)
+        {
+            // todo put an Invoke here to uncontrol the capable after duration seconds
+            float duration = timer.end_timer;
+        }
     }
-    public void UncontrolController(Hack hack)
-    {
-        Controller.Instance.BreakCapableTarget(capable);
-    }
-
+    public void UncontrolController(Hack hack) { Controller.LazyInstance.Uncontrol(Capable.ID); }
     // UNLOCKING
     public void TypePassword(Hack hack)
     {
-        if (capable is not Lockable lockable) { return; }
+        if (Capable is not Lockable lockable) { return; }
         if (hack.program is not FileExploit file_exploit) { return; }
         bool unlocked = lockable.Key.Matches(file_exploit.file.data);
 
@@ -179,7 +184,7 @@ public class Vulnerable : MonoBehaviour
     }
     public void BruteforcePassword(Hack hack)
     {
-        if (capable is not Lockable lockable) { return; }
+        if (Capable is not Lockable lockable) { return; }
 
         // the hack found the password
         hack.Download(lockable.Key);

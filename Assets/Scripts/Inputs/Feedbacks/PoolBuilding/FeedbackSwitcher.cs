@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// todo rename into "InputsSwitcher"
 public class FeedbackSwitcher : MonoBehaviour
 {
     
@@ -18,7 +19,7 @@ public class FeedbackSwitcher : MonoBehaviour
         {
             show_feedbacks.OnValueChanged += toggle_feedbacks;
             // Initial toggle based on setting value
-            toggle_feedbacks(show_feedbacks.value);
+            toggle_feedbacks(show_feedbacks.Value);
         }
     }
     private void OnDestroy()
@@ -47,7 +48,7 @@ public class FeedbackSwitcher : MonoBehaviour
     // METHOD TO SWITCH FEEDBACK BASED ON INPUT TYPE
     private void switch_feedback(string input_type)
     {
-        if (show_feedbacks != null && show_feedbacks.value <= 0.5f)
+        if (show_feedbacks != null && show_feedbacks.Value <= 0.5f)
         {
             // If feedbacks are disabled in settings, turn both off
             keyboardFeedback.SetActive(false);

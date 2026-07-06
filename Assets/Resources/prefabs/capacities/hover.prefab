@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2301345579811965954
+--- !u!1 &1409926578816055942
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,55 +8,37 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6234543502669162689}
-  - component: {fileID: 1235818638904784760}
-  - component: {fileID: 1209247947733942506}
+  - component: {fileID: 3319013053561053962}
+  - component: {fileID: 1578570040144306023}
   m_Layer: 24
-  m_Name: hover
+  m_Name: collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6234543502669162689
+--- !u!4 &3319013053561053962
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2301345579811965954}
+  m_GameObject: {fileID: 1409926578816055942}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 6378803932534245458}
-  m_Father: {fileID: 0}
+  m_Children: []
+  m_Father: {fileID: 6234543502669162689}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1235818638904784760
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2301345579811965954}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a41173bb095cd5544a4a649fbdba78b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cooldown: 0
-  debug: 0
-  hoverers: []
-  canvas_kf: {fileID: 0}
---- !u!58 &1209247947733942506
+--- !u!58 &1578570040144306023
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2301345579811965954}
+  m_GameObject: {fileID: 1409926578816055942}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
@@ -86,6 +68,60 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.15
+--- !u!1 &2301345579811965954
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6234543502669162689}
+  - component: {fileID: 1235818638904784760}
+  m_Layer: 24
+  m_Name: hover
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6234543502669162689
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2301345579811965954}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3319013053561053962}
+  - {fileID: 6378803932534245458}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1235818638904784760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2301345579811965954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a41173bb095cd5544a4a649fbdba78b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data:
+    <id>k__BackingField: 
+    kind: 
+    local_position: {x: 0, y: 0}
+  cooldown: 0
+  log: 0
+  hoverers: []
+  canvas_kf: {fileID: 0}
 --- !u!1001 &1043463284902270628
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -373,6 +409,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EF_keyboard
       objectReference: {fileID: 0}
+    - target: {fileID: 5073313702871382076, guid: da227f607e8661e4a858b45433a715e2, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6380900198815103699, guid: da227f607e8661e4a858b45433a715e2, type: 3}
       propertyPath: input
       value: 
@@ -556,7 +596,7 @@ PrefabInstance:
     - target: {fileID: 4001626016353791431, guid: da227f607e8661e4a858b45433a715e2, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -886139674, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+      objectReference: {fileID: -1121951427, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
     - target: {fileID: 5073313702871382076, guid: da227f607e8661e4a858b45433a715e2, type: 3}
       propertyPath: m_Name
       value: EF_gamepad
@@ -564,7 +604,7 @@ PrefabInstance:
     - target: {fileID: 6380900198815103699, guid: da227f607e8661e4a858b45433a715e2, type: 3}
       propertyPath: input
       value: 
-      objectReference: {fileID: -9163571213754876807, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
+      objectReference: {fileID: -4695119259665599169, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
     - target: {fileID: 6467849385363025477, guid: da227f607e8661e4a858b45433a715e2, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1

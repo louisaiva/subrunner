@@ -1,0 +1,216 @@
+﻿{
+    "<id>k__BackingField": "chest_food",
+    "kind": "Chest",
+    "position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": -1.0
+    },
+    "layer": 29,
+    "tag": "Untagged",
+    "capacities_ids": [
+        "hover",
+        "chest_iic",
+        "chest_close",
+        "chest_open"
+    ],
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "blue_chest",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "idle",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "hover"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 2,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle_open"
+                ],
+                "lock_orientation": true,
+                "one_shot": false
+            },
+            {
+                "priority": 3,
+                "capacity_playing": "",
+                "capacities": [
+                    "open",
+                    "close"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            }
+        ],
+        "current_capacity": "",
+        "material_name": "objects",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "never_flip": false,
+        "layers": [],
+        "local_position": {
+            "x": 0.0,
+            "y": 0.0
+        }
+    },
+    "inventory": {
+        "item_pools_data": [
+            {
+                "item_type": 2,
+                "stacks_data": [
+                    {
+                        "item_ref": "lentils",
+                        "items_ids": [
+                            "lentils",
+                            "lentils",
+                            "lentils",
+                            "lentils",
+                            "lentils",
+                            "lentils"
+                        ]
+                    },
+                    {
+                        "item_ref": "beans",
+                        "items_ids": [
+                            "beans",
+                            "beans",
+                            "beans",
+                            "beans",
+                            "beans",
+                            "beans",
+                            "beans",
+                            "beans"
+                        ]
+                    },
+                    {
+                        "item_ref": "ticket",
+                        "items_ids": [
+                            "ticket",
+                            "ticket",
+                            "ticket",
+                            "ticket",
+                            "ticket",
+                            "ticket",
+                            "ticket",
+                            "ticket",
+                            "ticket",
+                            "ticket"
+                        ]
+                    },
+                    {
+                        "item_ref": "onion",
+                        "items_ids": [
+                            "onion",
+                            "onion",
+                            "onion",
+                            "onion",
+                            "onion",
+                            "onion",
+                            "onion",
+                            "onion"
+                        ]
+                    },
+                    {
+                        "item_ref": "tomato_sauce",
+                        "items_ids": [
+                            "tomato_sauce",
+                            "tomato_sauce",
+                            "tomato_sauce",
+                            "tomato_sauce",
+                            "tomato_sauce",
+                            "tomato_sauce",
+                            "tomato_sauce",
+                            "tomato_sauce"
+                        ]
+                    },
+                    {
+                        "item_ref": "apple",
+                        "items_ids": [
+                            "apple",
+                            "apple",
+                            "apple",
+                            "apple",
+                            "apple"
+                        ]
+                    },
+                    {
+                        "item_ref": "meat",
+                        "items_ids": [
+                            "meat",
+                            "meat",
+                            "meat",
+                            "meat"
+                        ]
+                    },
+                    {
+                        "item_ref": "plate_empty",
+                        "items_ids": [
+                            "plate_empty",
+                            "plate_empty",
+                            "plate_empty"
+                        ]
+                    },
+                    {
+                        "item_ref": "fork",
+                        "items_ids": [
+                            "fork",
+                            "fork",
+                            "fork"
+                        ]
+                    }
+                ],
+                "pool_id": "chest",
+                "max_stacks": 12,
+                "min_stacks": 12,
+                "scalable": false,
+                "item_rule": "!virtual"
+            }
+        ],
+        "item_type": 2
+    },
+    "feet_data": {
+        "box_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 29,
+                "pathfinding_area": 1,
+                "shadow_caster_data": {
+                    "cast_and_self": false,
+                    "used_layers": []
+                },
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.19611191749572755
+                },
+                "size": {
+                    "x": 1.442360281944275,
+                    "y": 0.375521183013916
+                }
+            }
+        ],
+        "circle_colliders": []
+    },
+    "effects": [],
+    "effects_ttl": []
+}

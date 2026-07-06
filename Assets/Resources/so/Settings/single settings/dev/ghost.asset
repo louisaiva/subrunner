@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01e9f7f14e495824c9028a68b0d1a2a8, type: 3}
+  m_Name: ghost
+  m_EditorClassIdentifier: Assembly-CSharp::Setting
+  _value: 0
+  min_value: 0
+  max_value: 1
+  show_settings:
+    is_toggle: 1
+    show_percentage: 0
+    show_as_integer: 0
+    decimal_places: 0
+  label: ghost
+  description: the player is now a ghost ! booo

@@ -7,6 +7,6 @@ public interface Hacker
     public Laptop Laptop { get; set; }
     public Computer Computer { get; set; }
     public Device Device { get; }
-    public System.Action<Device> OnDeviceRemoved { get; }
-    public System.Action<Device> OnDeviceGranted { get; }
+    public System.Action<Device> OnDeviceRemoved { get; set; }
+    public System.Action<Device> OnDeviceGranted { get; set; }
 }

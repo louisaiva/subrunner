@@ -131,7 +131,7 @@ public class SeeThroughHandler : MonoBehaviour
             wall_hit = wall;
             wall.SeeThrough();
         }
-        else if (wall == wall_hit && debug) { Debug.Log("(SeeThroughHandler) hit the same wall : " + wall.name); }
+        else if (wall != null && wall == wall_hit && debug) { Debug.Log("(SeeThroughHandler) hit the same wall : " + wall.name); }
         else if (debug) { Debug.Log("(SeeThroughHandler) hit something : " + hits[0].name); }
 
         // we log the position of the hit

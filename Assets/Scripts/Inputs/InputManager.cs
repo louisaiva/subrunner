@@ -3,14 +3,37 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 using System;
 using System.Collections;
+using Unity.VisualScripting;
+using System.Collections.Generic;
+using System.Linq;
 
-public class InputManager : Singleton<InputManager>
+public class InputManager : MonoBehaviour
 {
+
+
+
+    /// SUBSYSTEMS
+    private IF_Bank _if_bank;
+    public IF_Bank IF_Bank
+    {
+        get
+        {
+            if (_if_bank != null) { return _if_bank; }
+            _if_bank = GetComponentInChildren<IF_Bank>(includeInactive:true);
+            return _if_bank;
+        }
+    }
+
+
+
+
     [Header("INPUT MANAGER")]
     [SerializeField] private string current_input_type = "keyboard"; // keyboard or gamepad
     public string CurrentInputType => current_input_type;
+    public bool UsingGamepad { get; private set; } = false;
     public event Action<string> OnInputTypeChanged = delegate { };
     public PlayerInputActions inputs;
+    private InputSystemUIInputModule ui_input_module;
 
 
     [Header("Inputs thresholds")]
@@ -18,7 +41,8 @@ public class InputManager : Singleton<InputManager>
     [SerializeField] public float JOYSTICK_MAX_THRESHOLD = 0.95f;
     [SerializeField] public float BUTTON_MIN_THRESHOLD = 0.2f;
     [SerializeField] public float BUTTON_MAX_THRESHOLD = 0.8f;
-    // [SerializeField] public float MOUSE_DELTA_MIN_THRESHOLD = 5f;
+    [SerializeField] public float MOUSE_DELTA_MIN_THRESHOLD = 5f;
+    public float MOUSE_DELTA_BIG_THRESHOLD = 15f;
 
     [Header("Inputing endlessly")]
     [SerializeField] public float BUTTON_ENDLESSLY_SHORT_THRESHOLD = 0.3f; // time threshold input need to be maintain before inputing endlessly
@@ -28,20 +52,35 @@ public class InputManager : Singleton<InputManager>
 
     // private bool callbacks_sets = false;
 
-    [Header("Components")]
-    [SerializeField] private InputSystemUIInputModule input_system_ui_input_module;
-
     [Header("Logs")]
     public bool log = false;
     public bool log_input_maps_enabled = false;
+    public bool log_get_bindings = false;
 
-    // unity functions
-    protected override void Awake()
+    // AWAKE & SINGLETON LOGIC
+    public static InputManager Instance { get; private set; }
+    public static InputManager LazyInstance
     {
-        base.Awake();
+        get
+        {
+            if (Instance != null) { return Instance; }
+            Instance = FindFirstObjectByType<InputManager>(FindObjectsInactive.Include);
+            return Instance;
+        }
+    }
+    private void Awake()
+    {
+        if (Instance == null) { Instance = this; }
+        else if (Instance != this) { Destroy(gameObject); return; }
+
+        // on récupère le module d'input system ui
+        ui_input_module = GetComponent<InputSystemUIInputModule>();
+        if (ui_input_module != null) { ui_input_module.enabled = false; }
+        else { Debug.LogWarning("(InputManager) no InputSystemUIInputModule found on " + gameObject.name); }
 
         // on crée les inputs
         inputs = new PlayerInputActions();
+        IF_Bank.GenerateDynamicKeyboardBindings(inputs.feedbacks);
 
         // on active les inputs
         inputs.perso.Enable();
@@ -49,6 +88,8 @@ public class InputManager : Singleton<InputManager>
         inputs.any.Enable();
         inputs.menus.Enable();
         inputs.feedbacks.Enable();
+        inputs.settings.Enable();
+        inputs.camera.Enable();
 
         Invoke(nameof(set_callbacks), 0.2f); // slight delay to avoid issues on start
     }
@@ -58,6 +99,19 @@ public class InputManager : Singleton<InputManager>
         inputs.any.keyboard.performed += ctx => setInputType("keyboard");
         inputs.any.gamepad.performed += ctx => setInputType("gamepad");
         if (log) { Debug.Log("(InputManager) input type callbacks set"); }
+
+        // et certains listeners d'actions spécifiques
+        inputs.settings.F1.performed += ctx => SettingsManager.Instance.Toggle("dev_minimap");
+        // inputs.settings.F2.performed += ctx => SettingsManager.Instance.Toggle();
+        inputs.settings.F3.performed += ctx => handle_f3();
+        inputs.settings.F5.performed += ctx => WorldPlacer.LazyInstance?.AskAndThenStartPlacingObject();
+        inputs.settings.F11.performed += ctx => SettingsManager.Instance.Toggle("fullscreen");
+    }
+    private void handle_f3()
+    {
+        StepSetting debug_setting = SettingsManager.Instance.GetSetting("debug") as StepSetting;
+        // Debug.Log("(InputManager) F3 pressed, debug setting: " + debug_setting);
+        debug_setting.ScrollLooping();
     }
 
     void Update()
@@ -81,6 +135,7 @@ public class InputManager : Singleton<InputManager>
 
         // on met à jour le type d'input
         current_input_type = input_type;
+        UsingGamepad = input_type == "gamepad";
         // input_system_ui_input_module.enabled = input_type == "keyboard";
         Cursor.visible = input_type == "keyboard";
         if (log) { Debug.Log("(InputManager) switching to " + input_type); }
@@ -110,6 +165,7 @@ public class InputManager : Singleton<InputManager>
     {
         // on découpe via / pour avoir l'inputMap
         string[] action_name_parts = action_name.Split('/');
+        if (action_name_parts.Length < 2) { return null; }
         string inputMap = action_name_parts[0];
         action_name = action_name_parts[1];
 
@@ -130,15 +186,58 @@ public class InputManager : Singleton<InputManager>
         // on retourne l'action
         return action;
     }
-    public bool isUsingGamepad()
+    public void GetActionBindingForAction(string action_name, ref string kb_key, ref string gm_key)
     {
-        return current_input_type == "gamepad";
+        InputAction input = getActionFromString(action_name);
+        if (input == null) { return; }
+
+        var bindings = input.bindings;
+        if (log_get_bindings) { Debug.Log($"(InputManager) Action '{action_name}' found {bindings.Count} bindings :"); }
+        foreach (InputBinding binding in bindings)
+        {
+            string[] schems = binding.groups.Split(";");
+            string first_part = binding.path.Split("/").FirstOrDefault() + "/";
+            string reference = binding.path.Replace(first_part, "");
+            if (log_get_bindings) { Debug.Log($"(InputManager) Biding is {reference} on schem(s) {string.Join(" & ", schems)} : {binding}"); }
+            if (schems.Contains("keyboard")) { kb_key = reference; }
+            else if (schems.Contains("xbox")) { gm_key = reference; }
+        }
     }
-    public string getCurrentInputType()
+    public Vector2 PersoMovementInputs
     {
-        return current_input_type;
+        get
+        {
+            if (UsingGamepad) { return inputs.perso.move.ReadValue<Vector2>(); } // already normalized
+            else { return inputs.perso.move.ReadValue<Vector2>().normalized; } // keyboard inputs need to be normalized to avoid diagonal advantage
+        }
     }
-    public Vector2 MovementRawInputs { get => inputs.perso.move.ReadValue<Vector2>(); }
+    public Vector2 CameraMovementInputs
+    {
+        get
+        {
+            if (UsingGamepad) { return inputs.camera.move.ReadValue<Vector2>(); } // already normalized
+            else { return inputs.camera.move.ReadValue<Vector2>().normalized; } // keyboard inputs need to be normalized to avoid diagonal advantage
+        }
+    }
+
+
+
+    // ITEM POOL <-> BINDING
+    [Header("Binding of Item Pools")]
+    [SerializeField] private List<ItemPoolBinding> pool_bindings;
+    public string GetActionFromItemPool(ItemPool pool)
+    {
+        foreach (ItemPoolBinding ipb in pool_bindings)
+        {
+            if (ipb.pool_id != pool.PoolID) { continue; }
+            return ipb.action.name;
+        }
+        Debug.LogError("(InputManager) Could not find action name for pool : '" + pool.PoolID + "'");
+        return null;
+    }
+
+
+
 
     // INPUTS MAP TOGGLING
     public event Action<bool> OnPersoInputsToggled = delegate { };
@@ -158,6 +257,22 @@ public class InputManager : Singleton<InputManager>
     }
 
 
+    // INPUT MODULE TOGGLING
+    public void EnableInputModule()
+    {
+        if (log) { Debug.Log("(InputManager) enabling input module"); }
+        inputs.UI.Disable();
+        inputs.menus.Disable();
+        ui_input_module.enabled = true;
+    }
+    public void DisableInputModule()
+    {
+        if (log) { Debug.Log("(InputManager) disabling input module"); }
+        ui_input_module.enabled = false;
+        inputs.UI.Enable();
+        inputs.menus.Enable();
+    }
+
     // INPUTS COROUTINES
     public Coroutine StartInputCoroutine(IEnumerator coroutine)
     {
@@ -174,4 +289,10 @@ public class InputManager : Singleton<InputManager>
         OnInputTypeChanged = null;
     }
 
+}
+
+[Serializable] public class ItemPoolBinding
+{
+    public string pool_id;
+    public InputActionReference action;
 }

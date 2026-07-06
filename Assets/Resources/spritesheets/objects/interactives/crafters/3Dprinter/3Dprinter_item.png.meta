@@ -1,0 +1,946 @@
+fileFormatVersion: 2
+guid: 643b3acfdd5782948bda83a931d70b49
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1033381852585535215
+    second: 3Dprinter_item_0
+  - first:
+      213: -5520887455726796037
+    second: 3Dprinter_item_1
+  - first:
+      213: 7499949766754043744
+    second: 3Dprinter_item_2
+  - first:
+      213: -7880758791045866115
+    second: 3Dprinter_item_3
+  - first:
+      213: 1285089294574602139
+    second: 3Dprinter_item_4
+  - first:
+      213: -2212959289183124410
+    second: 3Dprinter_item_5
+  - first:
+      213: -199680687036253331
+    second: 3Dprinter_item_6
+  - first:
+      213: 3808009314228926346
+    second: 3Dprinter_item_7
+  - first:
+      213: -4993535043727818443
+    second: 3Dprinter_item_8
+  - first:
+      213: 7419665282506055913
+    second: 3Dprinter_item_9
+  - first:
+      213: -8121492212845603390
+    second: 3Dprinter_item_10
+  - first:
+      213: 3247624490166413162
+    second: 3Dprinter_item_11
+  - first:
+      213: -15595142359486557
+    second: 3Dprinter_item_12
+  - first:
+      213: 2759244388135033550
+    second: 3Dprinter_item_13
+  - first:
+      213: -5083591796075278556
+    second: 3Dprinter_item_14
+  - first:
+      213: 3524386833076735592
+    second: 3Dprinter_item_15
+  - first:
+      213: 2579643905066481484
+    second: 3Dprinter_item_16
+  - first:
+      213: 262196871658531708
+    second: 3Dprinter_item_17
+  - first:
+      213: -4538120596831853841
+    second: 3Dprinter_item_18
+  - first:
+      213: 7550811121811160650
+    second: 3Dprinter_item_19
+  - first:
+      213: 3111494438156091073
+    second: 3Dprinter_item_20
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 24
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: 3Dprinter_item_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b2c80d769b836e48a6c136a465c5e7a
+      internalID: 1780389305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_1
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 526072cff3f9da248a53bc933c1b125f
+      internalID: 2112210773
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_2
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e76aa63e8c73004b88593eacb245faa
+      internalID: -1416879559
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_3
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 13609abf3ef43354baf0d21ad11c725a
+      internalID: -1577374252
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_4
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ffa3466a8f1f5f94faf9e82d27a9c01b
+      internalID: 570701778
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_5
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e57500bf5a191e043804e5d932b9a09f
+      internalID: -1806525673
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_6
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: beb54b03cbd1bc940992710d1298a8fb
+      internalID: -687286310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_7
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b6b97d3924a9be4d8304ea1e0936343
+      internalID: 1013750277
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_8
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cb1464733a59ccc428c35c57efaa9b28
+      internalID: 435506579
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_9
+      rect:
+        serializedVersion: 2
+        x: 432
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6c62c5b838ceb2a4a97928f16c6a56f2
+      internalID: -761776687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_10
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0ccdba19df9d9de4aa9bac88f9e02ddc
+      internalID: 2053355656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_11
+      rect:
+        serializedVersion: 2
+        x: 528
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c58a9790d31c83d448ccafb50cf5e317
+      internalID: -1172981051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_12
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 48099b01ec66aca4ea408dab971ef613
+      internalID: 101351829
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_13
+      rect:
+        serializedVersion: 2
+        x: 624
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c67e703ba2192324abf8f992ee922a8b
+      internalID: -427675270
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_14
+      rect:
+        serializedVersion: 2
+        x: 672
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 887b96a4d2d399b4ea89dd9b1a34c725
+      internalID: -1839219134
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_15
+      rect:
+        serializedVersion: 2
+        x: 720
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8b01b3d56acbffc47bfac1400fb1d008
+      internalID: -1479546515
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_16
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d27097eea752f2f47814c3dd7762b8e1
+      internalID: 778986919
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_17
+      rect:
+        serializedVersion: 2
+        x: 816
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 350fe736f9028074087810318d3a4284
+      internalID: -942513104
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_18
+      rect:
+        serializedVersion: 2
+        x: 864
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d5d0a4c942b5ad44da527114bc2b5b78
+      internalID: -1008657521
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_19
+      rect:
+        serializedVersion: 2
+        x: 912
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8acb840f5397bd844accc62ce1b51d03
+      internalID: -1357826041
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_20
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1601e39a6865f964f8f3584af67ec8b0
+      internalID: -1426356977
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_21
+      rect:
+        serializedVersion: 2
+        x: 1008
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d344f126f452a91429740b691c8fa729
+      internalID: -832951779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_22
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd9b2dc0d17e50f4382bc23a594ca44d
+      internalID: 1779745278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_23
+      rect:
+        serializedVersion: 2
+        x: 1104
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c987b52a5e1b44040a253c411acceda7
+      internalID: 644547184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_24
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8e4d24511684cd049bccbfd8b76f841c
+      internalID: -976084537
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_25
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c486ab76954b661459154c22a71c1c3b
+      internalID: 220427198
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_26
+      rect:
+        serializedVersion: 2
+        x: 1248
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4fec08721fb140f45927fa39667a999d
+      internalID: 758581202
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_27
+      rect:
+        serializedVersion: 2
+        x: 1296
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c6e6fd330b1733d409321bd9343e3876
+      internalID: 1685739551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_28
+      rect:
+        serializedVersion: 2
+        x: 1344
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fc53c7c6cbc123c40bacad9b4405a90d
+      internalID: -644808861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_29
+      rect:
+        serializedVersion: 2
+        x: 1392
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0e0023f8bab6f1c4aaa0737207b38e53
+      internalID: -1971812399
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_30
+      rect:
+        serializedVersion: 2
+        x: 1440
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 427be585b8d25a84982eb8938b7acc0d
+      internalID: -532319830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 3Dprinter_item_31
+      rect:
+        serializedVersion: 2
+        x: 1488
+        y: 0
+        width: 48
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.01369863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 847059387445fa94590ef9e332c4ca1f
+      internalID: -1316567139
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures:
+    - texture: {fileID: 2800000, guid: a346824ca164c5548b3c06f948f2e922, type: 3}
+      name: _Emission
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":48.0,"y":73.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.013698630034923554},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":9,"pivotUnitMode":1,"slicingType":1,"keepEmptyRects":true,"isAlternate":false}'
+    nameFileIdTable:
+      3Dprinter_item_0: 1780389305
+      3Dprinter_item_1: 2112210773
+      3Dprinter_item_10: 2053355656
+      3Dprinter_item_11: -1172981051
+      3Dprinter_item_12: 101351829
+      3Dprinter_item_13: -427675270
+      3Dprinter_item_14: -1839219134
+      3Dprinter_item_15: -1479546515
+      3Dprinter_item_16: 778986919
+      3Dprinter_item_17: -942513104
+      3Dprinter_item_18: -1008657521
+      3Dprinter_item_19: -1357826041
+      3Dprinter_item_2: -1416879559
+      3Dprinter_item_20: -1426356977
+      3Dprinter_item_21: -832951779
+      3Dprinter_item_22: 1779745278
+      3Dprinter_item_23: 644547184
+      3Dprinter_item_24: -976084537
+      3Dprinter_item_25: 220427198
+      3Dprinter_item_26: 758581202
+      3Dprinter_item_27: 1685739551
+      3Dprinter_item_28: -644808861
+      3Dprinter_item_29: -1971812399
+      3Dprinter_item_3: -1577374252
+      3Dprinter_item_30: -532319830
+      3Dprinter_item_31: -1316567139
+      3Dprinter_item_4: 570701778
+      3Dprinter_item_5: -1806525673
+      3Dprinter_item_6: -687286310
+      3Dprinter_item_7: 1013750277
+      3Dprinter_item_8: 435506579
+      3Dprinter_item_9: -761776687
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

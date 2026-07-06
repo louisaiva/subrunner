@@ -1,24 +1,20 @@
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
 public class UI_SettingsBuilder : MonoBehaviour
 {
-    private SettingsManager manager;
 
     [Header("Transforms")]
-    private Transform general_parent;
-    private Transform gameplay_parent;
-    private Transform graphics_parent;
-    private Transform ui_parent;
-    private Transform controls_parent;
+
+    private Dictionary<string, UI_Panel> settings_panels;
 
     [Header("Colors")]
-    private Color general_color;
-    private Color gameplay_color;
-    private Color graphics_color;
-    private Color ui_color;
-    private Color controls_color;
+    private Dictionary<string, Color> category_colors;
+
+    [Header("References")]
+    [SerializeField] private Transform panel_bar;
 
     [Header("Prefabs")]
     [SerializeField] private GameObject toggle_prefab;
@@ -26,31 +22,30 @@ public class UI_SettingsBuilder : MonoBehaviour
     [SerializeField] private GameObject step_slider_prefab;
 
     [Header("Logs")]
-    [SerializeField] private bool log = false;
+    [SerializeField] private Loggable<UI_SettingsBuilder> log;
 
-    // AWAKE
-    public void Start()
+    public void Init()
     {
-        // any initialization logic needed during Awake
-        // made a specific method instead of Awake() because i want the SettingsManager to have
-        // full control on the builder (don't want the builder to Awake() after SettingsManager.Awake(),
-        // otherwise it would break the building)
+        settings_panels = new Dictionary<string, UI_Panel>();
+        category_colors = new Dictionary<string, Color>();
 
-        manager = SettingsManager.Instance;
+        // we grab all the panels
+        UI_Panel[] panels = GetComponentsInChildren<UI_Panel>(includeInactive: true);
+        for (int i = 0; i < panels.Length; i++)
+        {
+            settings_panels[panels[i].name] = panels[i];
+        }
 
-        // get the transforms
-        general_parent = transform.Find("general");
-        gameplay_parent = transform.Find("gameplay");
-        graphics_parent = transform.Find("graphics");
-        ui_parent = transform.Find("ui");
-        controls_parent = transform.Find("controls");
+        // and the colorants
+        for (int i = 0; i < panel_bar.childCount; i++)
+        {
+            Transform child = panel_bar.GetChild(i);
+            // get the colorant
+            Colorant colorant = child.GetComponent<Colorant>();
+            if (colorant == null) { continue; }
 
-        // get the colors from the panel bar
-        general_color = transform.Find("panel_bar/general").GetComponent<Colorant>().HoverColor;
-        gameplay_color = transform.Find("panel_bar/gameplay").GetComponent<Colorant>().HoverColor;
-        graphics_color = transform.Find("panel_bar/graphics").GetComponent<Colorant>().HoverColor;
-        ui_color = transform.Find("panel_bar/ui").GetComponent<Colorant>().HoverColor;
-        controls_color = transform.Find("panel_bar/controls").GetComponent<Colorant>().HoverColor;
+            category_colors[colorant.gameObject.name] = colorant.HoverColor;
+        }
 
         // we build settings from the manager
         BuildFromManager();
@@ -59,8 +54,8 @@ public class UI_SettingsBuilder : MonoBehaviour
     // BUILDING
     public void BuildFromManager()
     {
-        // build settings from manager's settings
-        Dictionary<string, List<Setting>> settings = manager.Settings;
+        // grab manager settings
+        Dictionary<string, List<Setting>> settings = SettingsManager.Instance.Settings;
 
         List<string> keys = new List<string>(settings.Keys);
         for (int i = 0; i < keys.Count; i++)
@@ -68,14 +63,23 @@ public class UI_SettingsBuilder : MonoBehaviour
             string category = keys[i];
             List<Setting> category_settings = settings[category];
             build_panel(category_settings, category);
-            if (log) { Debug.Log($"(UI_SettingsBuilder) Built panel for category: {category}"); }
+            log.Log($"Built panel for category: {category}");
         }
     }
     public void build_panel(List<Setting> data, string category)
     {
-        // get the category transform & color
-        Transform parent = getCategoryParent(category);
-        Color category_color = getCategoryColor(category);
+        // get the parent and color
+        if (!settings_panels.TryGetValue(category, out UI_Panel panel))
+        {
+            log.LogExtended($"No related Panel found for settings category: {category}");
+            return;
+        }
+        if (!category_colors.TryGetValue(category, out Color category_color))
+        {
+            log.Warning($"Color not found for settings category: {category}");
+            category_color = Color.lightGray;
+        }
+
 
         // we build settings from the data into the parent
         for (int i = 0; i < data.Count; i++)
@@ -84,7 +88,7 @@ public class UI_SettingsBuilder : MonoBehaviour
             Setting setting = data[i];
 
             // instantiate a UI_Slot for this setting and applies things to it
-            UI_SettingSlot slot = create_slot_for_setting(setting, parent);
+            UI_SettingSlot slot = create_slot_for_setting(setting, panel.transform);
             slot.SetColors(Color.white, category_color);
             slot.SettingName = setting.name;
 
@@ -118,29 +122,5 @@ public class UI_SettingsBuilder : MonoBehaviour
         GameObject slot_go = Instantiate(prefab_to_instantiate, parent);
         UI_SettingSlot slot = slot_go.GetComponent<UI_SettingSlot>();
         return slot;
-    }
-    private Color getCategoryColor(string category)
-    {
-        switch (category)
-        {
-            case "general": return general_color;
-            case "gameplay": return gameplay_color;
-            case "graphics": return graphics_color;
-            case "ui": return ui_color;
-            case "controls": return controls_color;
-            default: return Color.white;
-        }
-    }
-    private Transform getCategoryParent(string category)
-    {
-        switch (category)
-        {
-            case "general": return general_parent;
-            case "gameplay": return gameplay_parent;
-            case "graphics": return graphics_parent;
-            case "ui": return ui_parent;
-            case "controls": return controls_parent;
-            default: return null;
-        }
     }
 }

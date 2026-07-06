@@ -2,14 +2,39 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
+
+
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 [RequireComponent(typeof(SpriteRenderer))]
 public class AnimPlayer : MonoBehaviour
 {
 
     [Header("Components")]
-    private SpriteRenderer sr;
-
+    private SpriteRenderer _sr;
+    public SpriteRenderer Renderer
+    {
+        get
+        {
+            if (_sr == null) { _sr = GetComponent<SpriteRenderer>(); }
+            return _sr;
+        }
+    }
+    private Capable _capable = null;
+    public Capable Capable
+    {
+        get
+        {
+            if (_capable == null && transform.parent != null) { _capable = transform.parent.GetComponent<Capable>(); }
+            if (_capable == null) { _capable = GetComponent<Capable>(); }
+            return _capable;
+        }
+    }
+    public static Loggable<Capable> LogGSD => Capable.LogGSD;
 
     [Header("Skin")]
     [SerializeField] private string skin;
@@ -27,22 +52,25 @@ public class AnimPlayer : MonoBehaviour
     public event Action<string> OnSkinChange = delegate { };
 
     [Header("Orientation")]
-    public string orientation { get; private set; } = "D";
-    public event Action<Vector2> OnOrientationChange = delegate { };
+    [field:SerializeField] public string orientation { get; private set; } = "D";
+    public Action<string> OnOrientationChanged = delegate { };
 
 
     [Header("Current Animation")]
-    public string current_capacity = "";
-    public Anim current_anim = null;
+    [SerializeField] private string current_capacity = "";
+    private Anim current_anim = null;
     private float frame_timer = 0f;
     private int current_frame = -1; // if -1, the animation is over
     [SerializeField] private bool update_each_frame = true; // if false, it means that the animation is a single frame anim, we don't want to check it each frame
-    public Action<string, int> OnAnimPlayedAtFrame = delegate { };
+    public Action<string, int, float> OnAnimPlayedAtFrame = delegate { };
 
 
     [Header("Anim Capacity Priorities")]
     [SerializeField] private List<AnimCapacityPriority> anim_capacity_priorities = new();
     private AnimCapacityPriority current_capacity_priority = null;
+
+    [Header("Parameters")]
+    [SerializeField] private bool never_flip = false;
 
     [Header("Logs")]
     public bool log = false;
@@ -50,22 +78,50 @@ public class AnimPlayer : MonoBehaviour
     public bool log_advanced = false;
     public bool log_frames = false;
     public bool log_pile = false;
+    public bool log_material = false;
 
+
+    ///
+    //
+    /// AWAKE & START
+    //
+    ///
 
     // AWAKE & START
     private void Awake()
     {
-        // we get the sprite renderer
-        sr = GetComponent<SpriteRenderer>();
+
+        // todo maybe this won't work with CapableSystem because we load anim data after instantiating
+        // the capable prefab with anim player.. so maybe it won't work -> if yes then we need to move it
+        // to LoadPlayerData + another small little method for capable that are not in capable system + bool loaded_data
+        // check how we did it in animlayer
 
         // we inform each anim capacity priority of its priority
+        re_index_priorities();
+    }
+    private void re_index_priorities()
+    {
         for (int i = 0; i < anim_capacity_priorities.Count; i++)
         {
             anim_capacity_priorities[i].priority = i;
         }
     }
-    private void Start() { AddToPile("idle"); }
+    private void Start()
+    {
+        // if the capable is not in the capable system, we play idle
+        if (!CapableBank.Instance.HasCapable(Capable)) { AddToPile("idle"); }
+    }
 
+
+
+
+
+
+    ///
+    //
+    /// MAIN PLAY / STOP METHODS
+    //
+    ///
 
 
     // PLAY ANIMATION
@@ -77,14 +133,14 @@ public class AnimPlayer : MonoBehaviour
         AnimCapacityPriority capacity_priority = getAnimCapacityPriority(capacity);
         if (capacity_priority == null)
         {
-            if (log) { Debug.LogWarning($"(AnimPlayer - {name}) The capacity " + capacity + " doesn't exist in the anim_capacity_priorities list"); }
+            if (log) { Debug.LogWarning($"(AnimPlayer - {Capable.ID}) The capacity " + capacity + " doesn't exist in the anim_capacity_priorities list"); }
             return null;
         }
 
         // we check if the index is < than current prio we don't play it
         if (current_capacity_priority != null && capacity_priority.priority < current_capacity_priority.priority)
         {
-            if (log_pile) { Debug.LogWarning($"(AnimPlayer - {name}) The capacity " + capacity + " has a lower priority than the current one (" + current_capacity_priority.priority + ")"); }
+            if (log_pile) { Debug.LogWarning($"(AnimPlayer - {Capable.ID}) The capacity " + capacity + " has a lower priority than the current one (" + current_capacity_priority.priority + ")"); }
             return null;
         }
 
@@ -99,10 +155,10 @@ public class AnimPlayer : MonoBehaviour
         Anim anim = AnimBank.Instance.GetAnim(anim_name);
         if (log)
         {
-            Debug.Log($"(AnimPlayer - {name}) Bank found anim : " + anim.name
+            Debug.Log($"(AnimPlayer - {Capable.ID}) Playing anim : " + anim.name
                 + (anim_name == anim.name
-                ? ""
-                : " (" + anim_name + " was asked)"));
+                ? " (bank found exact match)"
+                : " (" + anim_name + " was asked to bank)"));
         }
 
         // we check if this anim is a single frame anim
@@ -119,17 +175,19 @@ public class AnimPlayer : MonoBehaviour
         }
         else { anim.speed = 1f; }
 
+
         // we check if the animation is not actually playing
-        if (anim.name == current_anim.name && current_frame != -1)
+        if (current_anim != null && anim.name == current_anim.name && current_frame != -1)
         {
             if (log)
             {
-                Debug.LogWarning($"(AnimPlayer - {name}) The animation " + anim.name + " is already playing at frame " + current_frame);
+                Debug.LogWarning($"(AnimPlayer - {Capable.ID}) The animation " + anim.name + " is already playing at frame " + current_frame);
             }
             return current_anim;
         }
 
-        // we play the animation    
+        // we play the animation
+        OnAnimPlayedAtFrame.Invoke(anim_name, 0, duration_override);
         play_now_at_frame(anim);
 
         // we set the current capacity
@@ -143,15 +201,6 @@ public class AnimPlayer : MonoBehaviour
         string capacity = "";
         AnimCapacityPriority capacity_priority = null;
 
-        /* // we check if we have a capacity in the pile
-        if (capacity_pile != "")
-        {
-            capacity = capacity_pile.Split(',').FirstOrDefault();
-            capacity_priority = getAnimCapacityPriority(capacity);
-            capacity_pile = capacity_pile.Remove(0, capacity.Length + 1); // remove the first capacity and the comma after it
-        }
-        else
-        { */
         // we go through the anim capacity priorities and we get the highest one playing a capacity
         int highest_priority = -1;
         foreach (AnimCapacityPriority priority in anim_capacity_priorities)
@@ -172,16 +221,17 @@ public class AnimPlayer : MonoBehaviour
         Anim anim = AnimBank.Instance.GetAnim(anim_name);
         if (log)
         {
-            Debug.Log($"(AnimPlayer - {name}) Bank found anim : " + anim.name
+            Debug.Log($"(AnimPlayer - {(Capable.ID == null ? "Unknown" : Capable.ID)}) Playing next pile anim : " + anim.name
                 + (anim_name == anim.name
-                ? ""
+                ? " (exact match)"
                 : " (" + anim_name + " was asked)"));
         }
 
         // we check if this anim is a single frame anim
         update_each_frame = !(anim.sprites.Length == 1);
 
-        // we play the animation    
+        // we play the animation
+        OnAnimPlayedAtFrame.Invoke(anim_name, 0, 1f);
         play_now_at_frame(anim);
 
         // we set the current capacity
@@ -190,7 +240,71 @@ public class AnimPlayer : MonoBehaviour
         current_capacity_priority.capacity_playing = capacity;
     }
 
+    /// <summary>
+    /// play the animation with the right orientation according to the look_at vector.
+    /// After playing the anim the orientation will be reset to the previous orientation,
+    /// so this look_at orientation is only an override for this animation.
+    /// </summary>
+    /// <param name="capacity"></param>
+    /// <param name="look_at"></param>
+    /// <returns></returns>
+    public Anim PlayWithOrientation(string capacity, Vector2 look_at)
+    {
+        string old_orientation = this.orientation;
+        SetOrientation(look_at);
+        Anim anim = Play(capacity);
+        setOrientation(old_orientation);
+        return anim;
+     }
 
+    // STOP ANIMATION
+    public void StopPlaying(string capacity) { StopPlaying(capacity, false); }
+    public void StopPlaying(string capacity, bool dont_stop_if_currently_playing = false)
+    {
+        // we get the anim capa prio
+        AnimCapacityPriority priority = getAnimCapacityPriority(capacity);
+        if (priority == null)
+        {
+            if (log_pile) { Debug.LogWarning("(AnimPlayer - StopPlaying) The capacity " + capacity + " doesn't exist in the anim_capacity_priorities list"); }
+            return;
+        }
+
+        // we make it stop playing
+        if (priority.capacity_playing != capacity)
+        {
+            if (log_pile) { Debug.LogWarning("(AnimPlayer - StopPlaying) The capacity " + capacity + " is not currently playing"); }
+            return;
+        }
+        priority.capacity_playing = "";
+        if (log) { Debug.Log($"(AnimPlayer - {Capable.ID}) Stopping " + capacity); }
+
+        // we check if we have to brutally stop the current playing animation
+        if (dont_stop_if_currently_playing || current_capacity != capacity) { return; }
+        playNextAnim();
+
+    }
+    public void ClearPile()
+    {
+        // we remove ALL animations from the pile
+        foreach (AnimCapacityPriority priority in anim_capacity_priorities)
+        {
+            priority.capacity_playing = "";
+        }
+
+        // we play the idle animation
+        Play("idle");
+    }
+
+
+
+
+
+
+    ///
+    //
+    /// UPDATE, LOW LEVEL PLAYING & PILE MANAGEMENT
+    //
+    ///
 
     // PLAY ANIM LOW LEVEL
     private void Update()
@@ -214,7 +328,7 @@ public class AnimPlayer : MonoBehaviour
         current_frame++;
         if (current_frame < current_anim.sprites_durations.Length)
         {
-            sr.sprite = current_anim.sprites[current_frame];
+            Renderer.sprite = current_anim.sprites[current_frame];
             return;
         }
 
@@ -234,7 +348,6 @@ public class AnimPlayer : MonoBehaviour
     }
     private void play_now_at_frame(Anim anim, int frame = 0)
     {
-        OnAnimPlayedAtFrame.Invoke(anim.name, frame);
 
         // we saturate the frame
         if (frame < 0) { frame = 0; }
@@ -249,58 +362,16 @@ public class AnimPlayer : MonoBehaviour
         frame_timer = 0f;
 
         // we set the sprite
-        sr.sprite = anim.sprites[current_frame];
+        Renderer.sprite = anim.sprites[current_frame];
 
         // we flip the sprite renderer if needed
-        if (anim.flipX && !sr.flipX) { sr.flipX = true; }
-        else if (!anim.flipX && sr.flipX) { sr.flipX = false; }
+        if (never_flip) { Renderer.flipX = false; }
+        else if (anim.flipX && !Renderer.flipX) { Renderer.flipX = true; }
+        else if (!anim.flipX && Renderer.flipX) { Renderer.flipX = false; }
 
         if (log_advanced) { Debug.Log("(AnimPlayer) Playing " + anim.name + " at frame " + frame + " flipX: " + anim.flipX); }
     }
 
-    // STOP ANIMATION
-    public void StopPlaying(string capacity) { StopPlaying(capacity, false); }
-    public void StopPlaying(string capacity, bool dont_stop_if_currently_playing = false)
-    {
-
-        // we get the anim capa prio
-        AnimCapacityPriority priority = getAnimCapacityPriority(capacity);
-        if (priority == null)
-        {
-            if (log_pile) { Debug.LogWarning("(AnimPlayer - StopPlaying) The capacity " + capacity + " doesn't exist in the anim_capacity_priorities list"); }
-            return;
-        }
-
-        // we make it stop playing
-        priority.capacity_playing = "";
-
-        // we check if we have to brutally stop the current playing animation
-        if (dont_stop_if_currently_playing || current_capacity != capacity) { return; }
-        playNextAnim();
-
-    }
-    public void ClearPile()
-    {
-        // we remove ALL animations from the pile
-        foreach (AnimCapacityPriority priority in anim_capacity_priorities)
-        {
-            priority.capacity_playing = "";
-        }
-
-        // we play the idle animation
-        Play("idle");
-    }
-    public bool IsPlaying(string capacity)
-    {
-        AnimCapacityPriority priority = getAnimCapacityPriority(capacity);
-        if (priority == null)
-        {
-            if (log_pile) { Debug.LogWarning("(AnimPlayer - IsPlaying) The capacity " + capacity + " doesn't exist in the anim_capacity_priorities list"); }
-            return false;
-        }
-
-        return priority.capacity_playing == capacity;
-    }
 
     // PILE MANAGEMENT
     private AnimCapacityPriority getAnimCapacityPriority(string capacity)
@@ -312,7 +383,7 @@ public class AnimPlayer : MonoBehaviour
         AnimCapacityPriority capacity_priority = getAnimCapacityPriority(capacity);
         if (capacity_priority == null)
         {
-            if (log_pile) { Debug.LogWarning("(AnimPlayer - AddToPile) The capacity " + capacity + " doesn't exist in the anim_capacity_priorities list"); }
+            if (log_pile) { Debug.LogWarning("(AnimPlayer - " + Capable.ID + ") The capacity " + capacity + " doesn't exist in the anim_capacity_priorities list"); }
             return;
         }
 
@@ -322,14 +393,14 @@ public class AnimPlayer : MonoBehaviour
         // we check if the index is >= than current prio we play it also
         if (capacity_priority.priority >= current_capacity_priority.priority)
         {
-            if (log_pile) { Debug.LogWarning("(AnimPlayer - AddToPile) The capacity " + capacity + " has a higher priority than the current one. we play it rn"); }
+            if (log_pile) { Debug.LogWarning("(AnimPlayer - " + Capable.ID + ") The capacity " + capacity + " has a higher priority than the current one. we play it rn"); }
             Play(capacity);
             return;
         }
 
         // else we don't want to play it rn we simply add it to the pile for it to be played next
         capacity_priority.capacity_playing = capacity;
-        if (log_pile) { Debug.Log("(AnimPlayer - AddToPile) Added " + capacity + " to the pile"); }
+        if (log) { Debug.Log("(AnimPlayer - " + Capable.ID + ") Added " + capacity + " to the pile"); }
     }
     public void ClearIdles()
     {
@@ -342,7 +413,100 @@ public class AnimPlayer : MonoBehaviour
     }
 
 
-    // ORIENTATION
+
+
+
+
+    ///
+    //
+    /// GETTERS
+    //
+    ///
+
+    /// <summary>
+    /// returns true if the capacity is actually
+    /// the main playing animation. This means
+    /// it only returns true if current_capacity is set
+    /// and equals to capacity
+    /// </summary>
+    /// <param name="capacity"></param>
+    /// <returns></returns>
+    public bool IsShowing(string capacity)
+    {
+        if (string.IsNullOrEmpty(current_capacity)) { return false; }
+        return current_capacity == capacity;
+    }
+
+
+    /// <summary>
+    /// returns true if the capacity is somewhere inside
+    /// the animcapacity priority list. If not found it returns false.
+    /// This means that the method could return true even if the AnimPlayer.current_capacity
+    /// is not the one passed in parameter, because the capacity can be playing
+    /// but another capacity is playing on top of it so it's hidden beneath.
+    /// </summary>
+    /// <param name="capacity"></param>
+    /// <returns></returns>
+    public bool IsPlaying(string capacity)
+    {
+        AnimCapacityPriority priority = getAnimCapacityPriority(capacity);
+        if (priority == null)
+        {
+            if (log_pile) { Debug.LogWarning("(AnimPlayer - IsPlaying) The capacity " + capacity + " doesn't exist in the anim_capacity_priorities list"); }
+            return false;
+        }
+
+        return priority.capacity_playing == capacity;
+    }
+
+
+    /// <summary>
+    /// returns the current percentage done
+    /// of the current animation. If no animation is playing, it returns -1f.
+    /// </summary>
+    /// <returns>the completed percentage of the current animation playing. equals to -1f if no anim is playing</returns>
+    public float GetCurrentAnimPercentDone()
+    {
+        // we check if we are playing an animation
+        if (current_anim == null || current_frame == -1) { return -1f; }
+
+        // we get the total duration of the animation
+        float anim_duration = current_anim.GetDuration();
+        float time_played = current_anim.GetDurationUntilFrame(current_frame) + frame_timer;
+        return time_played / anim_duration;
+    }
+
+    /// <summary>
+    /// returns the current animation duration
+    /// </summary>
+    public float GetCurrentAnimationDuration()
+    {
+        if (current_anim == null || current_frame == -1) { return 0f; }
+        return current_anim.GetDuration();
+    }
+
+    /// <summary>
+    /// returns the current anim
+    /// </summary>
+    public Anim GetCurrentAnim() { return current_anim; }
+
+    /// <summary>
+    /// returns true if we have the capacity somwhere in our ACP list. false otherwise
+    /// </summary>
+    public bool HasCapacity(string capacity)
+    {
+        return getAnimCapacityPriority(capacity) != null;
+    }
+
+
+
+    ///
+    //
+    /// SPECIFIC EDGE CASE METHODS
+    //
+    ///
+
+    // ORIENTATION & FLIP
     public void SetOrientation(Vector2 look_at)
     {
         if (log_orientation) { Debug.Log("(AnimPlayer) Changing " + name + " orientation to " + look_at); }
@@ -365,7 +529,7 @@ public class AnimPlayer : MonoBehaviour
         else if (angle >= 67.5f) { setOrientation("D"); }
         else { setOrientation("LD"); }
 
-        OnOrientationChange?.Invoke(look_at);
+        // OnOrientationChange?.Invoke(look_at);
     }
     private void setOrientation(string orientation)
     {
@@ -396,9 +560,27 @@ public class AnimPlayer : MonoBehaviour
             s += new_anim.name;
             Debug.Log(s);
         }
+        OnOrientationChanged?.Invoke(orientation);
     }
+    /// <summary>
+    /// this method is different from SetOrientation because
+    /// it does not override the orientation. This means the
+    /// flip will only affect the current animation ! Very
+    /// useful for the 'hurted' anim for example; where we
+    /// want the anim to face the opposite of knockabk direction even
+    /// if we are looking in the direction of the knockback
+    /// </summary>
+    /// <param name="flipX">the direction to flip the animation</param>
+    public void FlipCurrentAnim(bool flipX)
+    {
+        Renderer.flipX = flipX;
 
-
+        // we flip all the anim layers renderers
+        for (int i = 0; i < anim_layers.Count; i++)
+        {
+            anim_layers[i].Renderer.flipX = flipX;
+        }
+    }
 
 
     // LAYERS & SPRITE RENDERER MANAGEMENT
@@ -408,9 +590,14 @@ public class AnimPlayer : MonoBehaviour
         if (anim_layers.Contains(anim_layer)) { return; }
         anim_layers.Add(anim_layer);
     }
-    public void DisableRenderer()
+    public void UnregisterAnimLayer(AnimLayer anim_layer)
     {
-        sr.enabled = false;
+        if (!anim_layers.Contains(anim_layer)) { return; }
+        anim_layers.Remove(anim_layer);
+    }
+    /* public void DisableRenderer()
+    {
+        Renderer.enabled = false;
 
         // we disable all the anim layers renderers
         for (int i = 0; i < anim_layers.Count; i++)
@@ -420,14 +607,241 @@ public class AnimPlayer : MonoBehaviour
     }
     public void EnableRenderer()
     {
-        sr.enabled = true;
+        Renderer.enabled = true;
 
         // we enable all the anim layers renderers
         for (int i = 0; i < anim_layers.Count; i++)
         {
             anim_layers[i].EnableRenderer();
         }
+    } */
+    public List<AnimLayer> GetAnimLayers()
+    {
+        return new List<AnimLayer>(anim_layers);
     }
+    public List<AnimLayer> GetStaticAnimLayers()
+    {
+        return transform.GetComponentsInChildren<AnimLayer>(includeInactive: true).ToList();
+    }
+    public AnimLayer GetLayerWithSkin(string skin)
+    {
+        foreach (AnimLayer layer in anim_layers)
+        {
+            if (layer == null) { continue; }
+            if (layer.skin != skin) { continue; }
+            return layer;
+        }
+        return null;
+    }
+
+
+    ///
+    //
+    /// RENDERER & MATERIAL MANAGEMENT
+    //
+    ///
+
+    // RENDERER VISIBILITY
+    public event Action OnHidden = delegate { };
+    public event Action OnShown = delegate { };
+    [Header("Visibility (debug only)")]
+    [SerializeField] private bool visible_on = true; // RTO
+    public void Hide()
+    {
+        if (!visible_on) { return; }
+
+        // we set the material Visible bool to false
+        if (visibleKeyword != null) { Renderer.material.SetKeyword(visibleKeyword.Value, false); }
+        OnHidden?.Invoke();
+        visible_on = false;
+        if (log) { Debug.Log("(AnimPlayer) " + Capable.ID + " is now hidden"); }
+    }
+    public void Show()
+    {
+        if (visible_on) { return; }
+
+        // we set the material Visible bool to true
+        if (visibleKeyword != null) { Renderer.material.SetKeyword(visibleKeyword.Value, true); }
+        OnShown?.Invoke();
+        visible_on = true;
+        if (log) { Debug.Log("(AnimPlayer) " + Capable.ID + " is now visible"); }
+    }
+    public bool IsVisible()
+    {
+        if (visibleKeyword == null) { return true; }
+        return Renderer.material.IsKeywordEnabled(visibleKeyword.Value);
+    }
+
+    // MATERIAL
+    public Material GetMaterial() { return Renderer.material; }
+    public void ChangeMaterial(Material material)
+    {
+        if (log_material) { Debug.Log($"(AnimPlayer - {Capable.ID}) Changing material to {material.name} (is_visible: {visible_on}, visibleKeyword name: {visibleKeyword.Value.name})"); }
+        Renderer.material = material;
+        
+        // we just change material, we need to save the value of visible on then null the keyword then try to reapply it
+        visible_on = IsVisible();
+        if (!has_material_keyword(Renderer.material, "_VISIBLE"))
+        {
+            visible_on = true;
+            visibleKeyword = null;
+            return;
+        }
+        visibleKeyword = new LocalKeyword(Renderer.material.shader, "_VISIBLE");
+        Renderer.material.SetKeyword(visibleKeyword.Value, visible_on);
+    }
+
+
+
+
+
+    ///
+    //
+    /// DATA MANAGEMENT
+    //
+    ///
+
+
+    // LOAD DATA
+    private LocalKeyword? visibleKeyword;
+    public void LoadPlayerData(AnimPlayerData data)
+    {
+        if (CapableBank.Instance.LayerBank.log_anim_layers) { Debug.Log($"(AnimPlayer) {name}'s loading data : {(data != null ? data.GetDetails() : "null")}"); }
+
+        transform.localPosition = data.local_position;
+
+        // we clear runtime data
+        _capable = null;
+        current_anim = null;
+        current_capacity = "";
+        current_capacity_priority = null;
+        current_frame = -1;
+        frame_timer = 0f;
+
+        // ! does not load layers !! but we don't want to it's inside CapableBank because we pool them
+        if (data.anim_capacity_priorities == null || data.anim_capacity_priorities.Count == 0) { return; }
+        skin = data.skin;
+        current_capacity = data.current_capacity;
+        anim_capacity_priorities = data.anim_capacity_priorities;
+
+        // we load the sr data
+        if (CapableBank.Instance.LayerBank.log_anim_player) { Debug.Log($"(AnimPlayer) {data.skin}'s data default material is {data.material_name}"); }
+        Material mat = MaterialBank.GetMaterial(data.material_name);
+        Renderer.material = mat;
+        Renderer.sortingLayerID = data.sorting_layer_id;
+        Renderer.sortingOrder = data.order_in_layer;
+
+        // and hide it by default
+        if (has_material_keyword(mat, "_VISIBLE"))
+        {
+            visibleKeyword = new LocalKeyword(Renderer.material.shader, "_VISIBLE");
+        }
+        else { visibleKeyword = null; }
+        visible_on = true;
+        Hide();
+
+        // and parameters
+        never_flip = data.never_flip;
+
+        // we inform each anim capacity priority of its priority
+        re_index_priorities();
+
+        // play current capacity
+        if (!string.IsNullOrEmpty(current_capacity)) { Play(current_capacity); }
+        else { AddToPile("idle"); }
+    }
+    private bool has_material_keyword(Material material, string name)
+    {
+        Shader shader = material.shader;
+        LocalKeywordSpace keywordSpace = shader.keywordSpace;
+        foreach (LocalKeyword localKeyword in keywordSpace.keywords)
+        {
+            if (localKeyword.name == name) { return true; }
+        }
+        return false;
+    }
+
+    // SAVE DATA
+    public void SaveDynamicPlayerData(AnimPlayerData data)
+    {
+        // we save data
+        data.current_capacity = current_capacity;
+    }
+
+
+    // GET STATIC DATA
+
+    /// <summary>
+    /// just as other GetStaticData() methods (ie Capable's one), this method
+    /// is not meant to be run in a BUILD !!! IT WON T WORK because it does not
+    /// update the anim_data, it creates a new data based from actual static
+    /// variables states of the object. if run inside a build, it could overwrite
+    /// some data such as material paths which would break the save.
+    /// </summary>
+    /// <returns></returns>
+    public AnimPlayerData GetStaticAnimData()
+    {
+        re_index_priorities();
+
+        // get basic player data
+        AnimPlayerData data = new AnimPlayerData
+        {
+            skin = skin,
+            anim_capacity_priorities = anim_capacity_priorities,
+
+            sorting_layer_id = Renderer.sortingLayerID,
+            order_in_layer = Renderer.sortingOrder,
+
+            // and local position
+            local_position = get_static_local_position(),
+
+            // and parameters
+            never_flip = never_flip
+        };
+
+        data.material_name = MaterialBank.GetMaterialName(Renderer, Capable.ID);
+        data.current_capacity = current_capacity;
+
+
+        // get the layers by going through the hierarchy (so we can do it even when not playing)
+        List<AnimLayerData> layers_data = new List<AnimLayerData>();
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            Transform layer_transform = transform.GetChild(i);
+            AnimLayer anim_layer = layer_transform.GetComponent<AnimLayer>();
+            if (anim_layer == null) { continue; }
+            layers_data.Add(anim_layer.GetStaticData());
+        }
+
+        data.layers = layers_data;
+        return data;
+    }
+    private Vector2 get_static_local_position()
+    {
+        if (GetComponent<Capable>() != null)
+        {
+            return Vector2.zero;
+            // if we have a capable on it, it means we are at the top of the capable hierarchy,
+            // so our local pos is a world pos in fact. that's why we return zero, because when
+            // the capable will be constructed by the CapableBank, it will receive an "anim_player"
+            // transform which is a direct child of the capable. and so if we return the world pos
+            // it will move the anim player FFAAAAR AWAY from the capable, which is not what we want !
+        }
+        return transform.localPosition;
+    }
+    /* private string get_material_name(SpriteRenderer sr)
+    {
+        if (sr == null || sr.sharedMaterial == null)
+        {
+            LogGSD?.Error($"[AnimPlayer - {Capable.ID}] The SpriteRenderer or its material is null, returning empty material name");
+            return "";
+        }
+        
+        string mat_name = MaterialBank.GetMaterialName(sr.sharedMaterial);
+        LogGSD?.Log($"[AnimPlayer - {Capable.ID}] get_material_name found the material name: {mat_name}");
+
+        return mat_name;
+    } */
 
 }
 
@@ -443,5 +857,103 @@ public class AnimPlayer : MonoBehaviour
     public AnimCapacityPriority(List<string> capacities)
     {
         this.capacities = capacities;
+    }
+
+    public AnimCapacityPriority Duplicate()
+    {
+        AnimCapacityPriority new_priority = new AnimCapacityPriority(new List<string>(this.capacities))
+        {
+            priority = this.priority,
+            capacity_playing = this.capacity_playing,
+            lock_orientation = this.lock_orientation,
+            one_shot = this.one_shot
+        };
+        return new_priority;
+    }
+}
+
+
+// ANIMATIONS
+[Serializable] public class AnimPlayerData
+{
+    public string skin_kind;
+    public string skin;
+    public List<AnimCapacityPriority> anim_capacity_priorities;
+    public string current_capacity; // runtime only
+
+    // player sr data
+    public string material_name;
+    public int sorting_layer_id;
+    public int order_in_layer;
+    public bool never_flip;
+
+    // layers
+    public List<AnimLayerData> layers;
+
+    // position
+    public Vector2 local_position;
+
+
+    // GET & DUPLICATE
+    public AnimPlayerData Duplicate()
+    {
+        AnimPlayerData new_data = new AnimPlayerData
+        {
+            skin = this.skin,
+            current_capacity = this.current_capacity,
+            local_position = this.local_position,
+            material_name = this.material_name,
+            sorting_layer_id = this.sorting_layer_id,
+            order_in_layer = this.order_in_layer,
+            never_flip = this.never_flip,
+        };
+
+        // duplicate anim_capacity_priorities
+        if (this.anim_capacity_priorities != null)
+        {
+            new_data.anim_capacity_priorities = new List<AnimCapacityPriority>();
+            foreach (AnimCapacityPriority acp in this.anim_capacity_priorities)
+            {
+                new_data.anim_capacity_priorities.Add(acp.Duplicate());
+            }
+        }
+        else { new_data.anim_capacity_priorities = null; }
+
+        // duplicate layers
+        if (this.layers != null)
+        {
+            new_data.layers = new List<AnimLayerData>();
+            foreach (AnimLayerData ald in this.layers)
+            {
+                new_data.layers.Add(ald.Duplicate());
+            }
+        }
+        else { new_data.layers = null; }
+
+        return new_data;
+    }
+    public string GetDetails()
+    {
+        string details = $"anim_data :\n";
+        details += $"     - skin : {skin}\n";
+        details += $"     - current_capacity : {current_capacity}\n";
+        if (anim_capacity_priorities != null) { details += $"     - anim_capacity_priorities : {anim_capacity_priorities.Count} priorities\n"; }
+        else { details += $"     - anim_capacity_priorities : null\n"; }
+        details += $"     - local_position : {local_position}\n";
+        details += $"     - material_name : {material_name}\n";
+        details += $"     - sorting_layer_id : {sorting_layer_id}\n";
+        details += $"     - order_in_layer : {order_in_layer}\n";
+        details += $"     - never_flip : {never_flip}\n";
+
+        if (layers == null || layers.Count == 0) { details += $"     - layers : no layers\n"; }
+        else
+        {
+            details += $"     - layers : {layers.Count} layers\n";
+            for (int i = 0; i < layers.Count; i++)
+            {
+                details += $"          - layer {i} : " + layers[i].GetDetails() + "\n";
+            }
+        }
+        return details;
     }
 }

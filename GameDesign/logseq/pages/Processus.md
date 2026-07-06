@@ -1,2 +1,0 @@
-- classe mère des #Hack
--

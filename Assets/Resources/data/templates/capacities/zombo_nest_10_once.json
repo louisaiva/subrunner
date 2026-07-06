@@ -1,0 +1,36 @@
+﻿{
+    "<id>k__BackingField": "zombo_nest_10_once",
+    "<owner_id>k__BackingField": "no_capable_id",
+    "kind": "TriggerNestCapacity",
+    "local_position": {
+        "x": 0.0,
+        "y": 0.4000000059604645
+    },
+    "layer": 20,
+    "tag": "Untagged",
+    "species": "zombo",
+    "capacity": 10,
+    "store_mode": 1,
+    "spawned_once": false,
+    "spawn_mode": 1,
+    "trigger": {
+        "local_position": {
+            "x": 0.0,
+            "y": 0.4000000059604645
+        },
+        "layerID": 20,
+        "pathfinding_area": -1,
+        "shadow_caster_data": {
+            "cast_and_self": false,
+            "used_layers": []
+        },
+        "is_trigger": true,
+        "offset": {
+            "x": 0.0,
+            "y": 0.0
+        },
+        "radius": 5.0
+    },
+    "stored_entities": 10,
+    "entities_to_spawn": []
+}

@@ -10,20 +10,20 @@ public class LaptopInventory : Inventory
     public event System.Action<int> MB_SizeChanged = delegate { };
 
     [Header("Items slots indexes")]
-    protected Dictionary<Item, int> items_slots = new Dictionary<Item, int>(); // store les indexes de slot de chaque item via item.ID
+    protected Dictionary<ItemStack, int> items_slots = new Dictionary<ItemStack, int>(); // store les indexes de slot de chaque item via item.ID
 
     // START
-    protected override void Start()
+    protected /* override  */void Start()
     {
         // we subscribe to events
         OnItemGrabbed += HandleModuleGrabbed;
         OnItemDropped += HandleModuleDropped;
-        base.Start();
+        // base.Start();
         // (capable as Laptop).Processor.OnCPU_Changed();
     }
 
     // GRAB DROP REMOVE ITEMS
-    public override bool Grab(Item item, List<UI_Inventory> uis_to_ignore = null)
+    /* public override bool Grab(Item item, List<UI_Inventory> uis_to_ignore = null)
     {
         // we save the laptop's files
         List<File> old_laptop_files = (capable as Device).GetFiles();
@@ -76,20 +76,20 @@ public class LaptopInventory : Inventory
         // we remove the item from the dictionary
         items_slots.Remove(item);
         return true;
-    }
+    } */
 
     // GETTERS
-    public List<Item> GetItemsInSlot(int slot_index)
+    public ItemStack GetStackInSlot(int slot_index)
     {
-        List<Item> items = new List<Item>();
-        foreach (KeyValuePair<Item, int> kvp in items_slots)
+        // List<Item> items = new List<Item>();
+        foreach (KeyValuePair<ItemStack, int> kvp in items_slots)
         {
             if (kvp.Value == slot_index)
             {
-                items.Add(kvp.Key);
+                return kvp.Key;
             }
         }
-        return items;
+        return null;
     }
     private List<int> get_free_slots()
     {
@@ -97,7 +97,7 @@ public class LaptopInventory : Inventory
         List<int> free_slots = new List<int>();
         for (int i = 0; i < MaxSlots; i++)
         {
-            if (GetItemsInSlot(i).Count == 0)
+            if (GetStackInSlot(i) == null)
             {
                 free_slots.Add(i);
             }
@@ -109,7 +109,7 @@ public class LaptopInventory : Inventory
     // MODULES GRABBED/DROPPED
     private void HandleModuleGrabbed(Item item)
     {
-        if (capable is not Device device) { return; }
+        if (Capable is not Device device) { return; }
         if (item is Module_CPU cpu)
         {
             device.Processor.OnProcessorGrabbed(cpu);
@@ -125,7 +125,7 @@ public class LaptopInventory : Inventory
     }
     private void HandleModuleDropped(Item item)
     {
-        if (capable is not Device device) { return; }
+        if (Capable is not Device device) { return; }
         if (item is Module_CPU cpu)
         {
             device.Processor.OnProcessorDropped(cpu);
@@ -139,15 +139,10 @@ public class LaptopInventory : Inventory
             device.OnNetworkModuleChanged();
         }
     }
-    public void HandleUI_ModuleMoved(List<Item> items, int new_slot_index)
+    public void HandleUI_ModuleMoved(ItemStack stack, int new_slot_index)
     {
-        // we go through the items_slots list and update it
-        for (int i = 0; i < items.Count; i++)
-        {
-            Item item = items[i];
-            if (log) { Debug.Log($"(LaptopInventory) moved {item.Reference} to slot {new_slot_index}"); }
-            items_slots[item] = new_slot_index;
-        }
+        if (log) { Debug.Log($"(LaptopInventory) moved {stack.ItemReference} to slot {new_slot_index}"); }
+        items_slots[stack] = new_slot_index;
     }
 
     // CHANGE MOTHERBOARD SLOTS SIZE

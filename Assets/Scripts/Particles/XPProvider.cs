@@ -1,12 +1,21 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Rendering;
 
 [RequireComponent(typeof(ParticleSystem))]
 public class XPProvider : Singleton<XPProvider>
 {
     // PARTICLES
-    List<ParticleSystem.Particle> particles = new List<ParticleSystem.Particle>();
-    ParticleSystem generator;
+    protected List<ParticleSystem.Particle> particles = new List<ParticleSystem.Particle>();
+    private ParticleSystem _part_system;
+    public ParticleSystem ParticuleSystem
+    {
+        get
+        {
+            if (_part_system == null) { _part_system = GetComponent<ParticleSystem>(); }
+            return _part_system;
+        }
+    }
 
     // PARTICLES RADIUS GENERATION
     public float radius = 0.5f;
@@ -16,25 +25,33 @@ public class XPProvider : Singleton<XPProvider>
     private Color life_color = new Color(1f, 0f, 0f);
 
     // materials
-    public Material life_material;
-    public Material xp_material;
+    // public Material xp_material;
+    // public Material life_material;
+    private LocalKeyword visibleKeyword;
 
     // generator continue
     public bool generate_continuously = false;
     public Vector3 generator_position = new Vector3(-47, -9, 0);
     public float generator_strengh = 1f;
 
+    [Header("Logs")]
+    public bool log_triggers = false;
+
+    // START
     private void Start()
     {
+        ParticleSystemRenderer renderer = ParticuleSystem.GetComponent<ParticleSystemRenderer>();
+        visibleKeyword = new LocalKeyword(renderer.material.shader, "_VISIBLE");
+        renderer.material.EnableKeyword(visibleKeyword);
 
-        // on récupère le particle system
-        generator = GetComponent<ParticleSystem>();
-        // on emet une particule
-        // EmitXP(500, new Vector3(0, -1, 0),10f);
-        // EmitXP(500, new Vector3(-30, -12, 0), 10f);
+
+        // todo make this global through capable.LoadData() or something so any capable can be a trigger for the xp provider
+        /* if (Controller.Perso == null) { return; } // no player, no trigger
+        ParticuleSystem.trigger.SetCollider(0, Controller.Perso.transform.Find("particles").GetComponent<Collider2D>()); */
     }
 
-    void Update()
+    // UPDATE
+    private void Update()
     {
         if (generate_continuously)
         {
@@ -42,53 +59,7 @@ public class XPProvider : Singleton<XPProvider>
         }
     }
 
-    private void OnParticleTrigger()
-    {
-        if (Perso.Instance == null) { return; } // no player, no trigger
-
-        // on récupère les particules
-        int triggeredParticles = generator.GetTriggerParticles(ParticleSystemTriggerEventType.Enter, particles);
-
-        // print("we just collided with " + triggeredParticles+" particles");
-
-        int life_bonus = 0;
-        int xp_bonus = 0;
-
-        // on change la life des particules
-        for (int i = 0; i < triggeredParticles; i++)
-        {
-            ParticleSystem.Particle p = particles[i];
-
-            // on regarde la couleur de la particule
-            Color color = p.GetCurrentColor(generator);
-            if (color == life_color)
-            {
-                // on ajoute de la life
-                life_bonus += 1;
-            }
-            else
-            {
-                // on ajoute de l'xp
-                xp_bonus += 1;
-            }
-
-            // on change la life de la particule
-            p.remainingLifetime = 0;
-            particles[i] = p;
-        }
-
-        // on applique les changements
-        generator.SetTriggerParticles(ParticleSystemTriggerEventType.Enter, particles);
-
-
-
-        // on ajoute l'xp au player
-        if (xp_bonus > 0) { Perso.Instance.addXP(xp_bonus); }
-
-        // on ajoute de la life au player
-        if (life_bonus > 0) { Perso.Instance.heal(life_bonus); }
-    }
-
+    // XP EMISSION
     public void EmitXP(int count, Vector3 position,float strengh = 1f)
     {
         // on crée un EmitParams pour pouvoir changer la position de l'émission
@@ -117,13 +88,42 @@ public class XPProvider : Singleton<XPProvider>
 
 
             // on emet les particules
-            generator.Emit(emitParams, 1);
+            ParticuleSystem.Emit(emitParams, 1);
         }
     }
-
     private void emitEndlessly()
     {
         EmitXP((int) generator_strengh, generator_position);
     }
 
+    // TRIGGERS
+    private List<ParticleCollisionEvent> triggered_particles = new List<ParticleCollisionEvent>();
+    private void OnParticleCollision(GameObject receiver)
+    {
+        if (log_triggers) { Debug.Log("(XPProvider) Particles are colliding with : " + receiver.name); }
+
+        // check if receiver has a ExpCapacity
+        if (!receiver.TryGetComponent(out Capable capable)) { return; }
+        if (!capable.TryGetCapacity(out ExpCapacity exp_capacity)) { return; }
+
+        // on récupère les particules
+        if (log_triggers)
+        {
+            int triggeredParticles = ParticuleSystem.GetCollisionEvents(receiver, triggered_particles);
+            Debug.Log("(XPProvider) Colliding particles: " + triggeredParticles);
+        }
+
+        exp_capacity.AddXP(1);
+    }
+
+
+    // REGISTER TRIGGERS
+    public void RegisterTrigger(Collider2D collider)
+    {
+        ParticuleSystem.trigger.AddCollider(collider);
+    }
+    public void UnregisterTrigger(Collider2D collider)
+    {
+        ParticuleSystem.trigger.RemoveCollider(collider);
+    }
 }

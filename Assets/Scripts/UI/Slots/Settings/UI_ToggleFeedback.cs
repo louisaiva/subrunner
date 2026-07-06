@@ -18,12 +18,12 @@ public class UI_ToggleFeedback : MonoBehaviour
         setting = SettingsManager.Instance.GetSetting(toggle.SettingName);
         if (setting == null) { return; }
         setting.OnValueChanged += update_text;
-        update_text(setting.value);
+        update_text(setting.Value);
     }
     private void Update()
     {
         if (setting == null) { return; }
-        update_text(setting.value);
+        update_text(setting.Value);
     }
     private void update_text(float value)
     {

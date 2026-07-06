@@ -45,14 +45,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0753d3276f6148409f3b514a4467654, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  capable_rb: {fileID: 0}
+  targets: []
+  debug_targets: []
   timeOffset: 0.2
+  default_size: 3.5
+  target_size: 3.5
   dynamic_cam: 0
   Y_OFF: 0.38
   min_velocity: 2
   Y_OFF_MAX: 3
   Y_OFF_SPEED: 1
+  log_target: 1
 --- !u!1 &3276565310682106961
 GameObject:
   m_ObjectHideFlags: 0
@@ -87,6 +90,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &631809520497051556
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -132,6 +136,7 @@ SpriteRenderer:
   m_SortingLayerID: 1245113987
   m_SortingLayer: 1
   m_SortingOrder: -15
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 42f376b8ac438884e9b2833acc92d59a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -141,7 +146,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &7524928821920757171
 GameObject:
@@ -156,6 +160,8 @@ GameObject:
   - component: {fileID: 8468975596296763291}
   - component: {fileID: 2097667893863336651}
   - component: {fileID: 6192322663727346270}
+  - component: {fileID: 6532303638724812578}
+  - component: {fileID: 8826650089214777496}
   m_Layer: 0
   m_Name: cam
   m_TagString: MainCamera
@@ -247,7 +253,7 @@ MonoBehaviour:
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras: []
-  m_RendererIndex: -1
+  m_RendererIndex: 1
   m_VolumeLayerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -322,7 +328,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PauseMenuBackgroundEffect
   bg: {fileID: 0}
   bg_alpha_range: {x: 0, y: 245}
-  bloom: {fileID: 0}
-  pause_bloom_intensity: 0
-  chromatic_aberration: {fileID: 0}
-  chromatic_aberration_intensity: 1
+--- !u!114 &6532303638724812578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7524928821920757171}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioListener
+  nonRigidbodyVelocity: 0
+  attenuationObject: {fileID: 0}
+--- !u!114 &8826650089214777496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7524928821920757171}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c0d1b9e10975e842bd86abfbd6dc834, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraRendererDataSwitcher

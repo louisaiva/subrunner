@@ -22,7 +22,7 @@ public class InputButton : MonoBehaviour
     private void Start()
     {
         // we get the button action
-        buttonAction = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().GetAction(buttonInput);
+        buttonAction = InputManager.Instance.GetComponent<InputManager>().GetAction(buttonInput);
 
         // we set the callbacks
         buttonAction.performed += ctx => OnButton(ctx);

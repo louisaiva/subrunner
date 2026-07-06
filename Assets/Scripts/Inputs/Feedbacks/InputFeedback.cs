@@ -21,18 +21,23 @@ public class InputFeedback : MonoBehaviour
 
     [Header("Logs")]
     public bool log = false;
+    public bool log_callbacks = false;
 
     // START
-    protected virtual void Start()
+    protected void Awake()
     {
-
         // we get the input manager & input
-        input_manager = InputManager.Instance;
-        action = input_manager.GetAction(input);
-
+        input_manager = InputManager.LazyInstance;
+        if (input == null) { return; }
+        this.action = input_manager.GetAction(input);
         defineCallbacks();
-
-        OnEnable();
+    }
+    public virtual void InitializeWithAction(InputAction action)
+    {
+        this.action = action;
+        defineCallbacks();
+        register_callbacks(action);
+        OnReset();
     }
 
     // DEFINE CALLBACKS
@@ -46,10 +51,11 @@ public class InputFeedback : MonoBehaviour
         press_and_release_callback = ctx => HandlePressAndReleaseInput(ctx);
     }
 
-    // ONENABLE/DISABLE
-    protected virtual void OnEnable()
+    // REGISTER / UNREGISTER CALLBACKS
+    protected bool callbacks_registered = false;
+    protected virtual void register_callbacks(InputAction action)
     {
-        if (action == null) { return; }
+        if (callbacks_registered) { return; }
 
         // we add the listeners
         if (use_press_and_release)
@@ -61,13 +67,12 @@ public class InputFeedback : MonoBehaviour
             action.performed += input_callback;
             action.canceled += reset_callback;
         }
-
-        // we reset the IF
-        OnReset();
+        callbacks_registered = true;
+        if (log_callbacks) { Debug.Log($"(IF) registered callbacks for {action} on object of type : {GetType().Name}. callbacks are now registered".Cyan()); }
     }
-    protected virtual void OnDisable()
+    protected virtual void unregister_callbacks(InputAction action)
     {
-        if (action == null) { return; }
+        if (!callbacks_registered) { return; }
 
         // we remove the listeners
         if (use_press_and_release)
@@ -79,6 +84,21 @@ public class InputFeedback : MonoBehaviour
             action.performed -= input_callback;
             action.canceled -= reset_callback;
         }
+        callbacks_registered = false;
+        if (log_callbacks) { Debug.Log($"(IF) unregistered callbacks for {action} on object of type : {GetType().Name}. callbacks are now unregistered".Magenta()); }
+    }
+    
+    // ON ENABLE / DISABLE
+    protected virtual void OnEnable()
+    {
+        if (action == null) { return; }
+        register_callbacks(action);
+        OnReset();
+    }
+    protected virtual void OnDisable()
+    {
+        if (action == null) { return; }
+        unregister_callbacks(this.action);
     }
 
 

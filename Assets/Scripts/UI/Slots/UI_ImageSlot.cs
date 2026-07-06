@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 public class UI_ImageSlot : UI_Slot
 {
+
+    [Header("Components")]
+    public Image image;
     
     [Header("Sprites")]
     public Sprite base_sprite;
@@ -12,8 +15,6 @@ public class UI_ImageSlot : UI_Slot
     public Sprite disabled_sprite;
 
 
-    [Header("Components")]
-    public Image image;
 
 
     // DISABLE
@@ -47,7 +48,7 @@ public class UI_ImageSlot : UI_Slot
         if (log) { Debug.Log("(UI_ImageSlot) OnPointerExit on " + gameObject.name); }
 
         // on change le sprite du slot
-        image.sprite = base_sprite;
+        if (!Disabled) { image.sprite = base_sprite; }
 
         // on met à jour le fait qu'on est survolé
         Hovered = false;

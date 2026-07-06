@@ -1,15 +1,15 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 
 
+[RequireComponent(typeof(TMP_Text))]
 public class FloatingText : MonoBehaviour {
     
     [Header("Parameters")]
-    [SerializeField] private float speed = 0.5f;
-    [SerializeField] private float fade_out_speed = 0.5f;
-    [SerializeField] private float ttl = 3f;
+    public float speed = 0.5f;
+    public float fade_out_speed = 0.5f;
+    public float ttl = 3f;
     [SerializeField] private float size = 30f;
     [SerializeField] private float scale = 0.1f;
 
@@ -19,7 +19,7 @@ public class FloatingText : MonoBehaviour {
 
 
     [Header("Colors")]
-    private Dictionary<string,Color> colors = new Dictionary<string, Color>
+    private static readonly Dictionary<string,Color> colors = new Dictionary<string, Color>
     {
         {"red", Color.red},
         {"green", Color.green},
@@ -39,84 +39,49 @@ public class FloatingText : MonoBehaviour {
 
 
     [Header("Components")]
-    [SerializeField] private TMP_Text text_mesh;
-
-    [Header("Logs")]
-    [SerializeField] private bool initialised_read_only = false;
-    [SerializeField] private bool log = false;
-
-    private void Start()
+    [SerializeField] private TMP_Text text_mesh = null;
+    public TMP_Text TextMesh
     {
-        if (text_mesh == null)
+        get
         {
-            Debug.LogError("FloatingText: no text mesh found");
-            return;
-        }
-
-        if (text_mesh.text != "") 
-        {
-            init(text_mesh.text, base_color);
-        }
-    }
+            if (text_mesh == null) { text_mesh = GetComponent<TMP_Text>(); }
+            return text_mesh;
+        }}
 
     // INIT
-    public void init(string text, string color, float size = -1f, float speed = -1f, float fade_out_speed = -1f, float ttl = -1f)
+    public void Init(string text, string color, float size = -1f, float speed = -1f, float fade_out_speed = -1f, float ttl = -1f)
     {
-        if (initialised_read_only) { if (log) { Debug.LogWarning("FloatingText: already initialised"); } return; }
-
-        initialised_read_only = true;
+        // on initialise le texte & couleur et font size
+        TextMesh.text = text;
         base_color = color;
-
-        if (text_mesh == null)
-        {
-            text_mesh = GetComponent<TMP_Text>();
-            if (text_mesh == null) { Debug.LogError("FloatingText: no text mesh found"); }
-        }
-
-        // on initialise le texte
-        text_mesh.text = text;
-        text_mesh.color = colors[color];
-        text_mesh.fontSize = 1;
+        TextMesh.color = colors[color];
+        TextMesh.fontSize = 1;
 
         // on ajuste le material
-        ajustMaterial();
+        AdjustMaterial();
 
         // ajustement de la taille
-        if (size != -1f) { this.size = size; }
+        this.size = (size == -1f) ? 50f : size;
         transform.localScale = new Vector3(scale, scale, scale) * this.size;
 
         // on initialise les variables
-        if (speed != -1f) { this.speed = speed; }
-        if (fade_out_speed != -1f) { this.fade_out_speed = fade_out_speed; }
-        if (ttl != -1f) { this.ttl = ttl; }
+        this.speed = (speed == -1f) ? 0.5f : speed;
+        this.fade_out_speed = (fade_out_speed == -1f) ? 0.5f : fade_out_speed;
+        this.ttl = (ttl == -1f) ? 3f : ttl;
     }
 
 
     // UPDATING
-    void Update()
-    {
-        // on fait disparaitre le texte
-        ttl -= Time.deltaTime;
-        if (ttl < 0) { Destroy(gameObject); }
-
-        // on fait monter le texte
-        transform.position += new Vector3(0, speed * Time.deltaTime, 0);
-
-        // on fait disparaitre le texte
-        Color color = text_mesh.color;
-        color.a -= fade_out_speed * Time.deltaTime;
-        text_mesh.color = color;
-    }
-    public void ajustMaterial()
+    public void AdjustMaterial()
     {
         // on récupère le material
         string material_name = font_name + "_mat_" + base_color;
         Material material = Resources.Load<Material>(materials_path + material_name);
 
         // on le met
-        text_mesh.fontMaterial = material;
+        TextMesh.fontMaterial = material;
     }
-    public void setTTL(float ttl)
+    public void SetTTL(float ttl)
     {
         this.ttl = ttl;
     }

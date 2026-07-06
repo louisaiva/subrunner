@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 /// <summary>
 /// UI_Slot est la classe mère de tous les slots d'UI qu'on va être amené à travailler avec.
 /// De cette classe dérive notamment 2 grandes classes, 
-/// - UI_ImageSlot pour les slots ayant des images (ex UI_Button, UI_Toggle, UI_Item)
+/// - UI_ImageSlot pour les slots ayant des images (ex UI_Button, UI_Toggle, UI_ItemStack)
 /// - UI_TextSlot pour les slots ayant du text (ex UI_Text)
 /// </summary>
 public class UI_Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, IPointerDownHandler
@@ -76,8 +76,19 @@ public class UI_Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
     {
         // get slot type
         Type slot_type = null;
-        if (this is UI_Item) { slot_type = typeof(UI_Item); }
+        if (this is UI_ItemStack) { slot_type = typeof(UI_ItemStack); }
         if (this is UI_PanelButton) { slot_type = typeof(UI_SettingSlot); }
         return slot_type;
+    }
+    public bool IsActivable()
+    {
+        if (this is UI_ItemStack ui_stack)
+        {
+            if (ui_stack.Stack != null
+            && ui_stack.Stack.Item != null
+            && ui_stack.Stack.Item is not Activable) { return false; }
+        }
+
+        return true;
     }
 }

@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+#pragma warning disable 4014 // we don't care about unassigned serialized fields in this class
+
 public class UI_Readable : MonoBehaviour
 {
     [Header("Transition parameters")]
+    public UI_PoolSettings transi_settings;
     public PoolTransitionSettings transition_settings = PoolTransitionSettings.InMenuDefault;
 
     [Header("Content showing parameters")]

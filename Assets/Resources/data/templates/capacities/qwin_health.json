@@ -1,0 +1,39 @@
+﻿{
+    "<id>k__BackingField": "qwin_health",
+    "<owner_id>k__BackingField": "no_capable_id",
+    "kind": "HealthCapacity",
+    "local_position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "layer": 23,
+    "tag": "Boss",
+    "health": 300.0,
+    "max_health": 300,
+    "regen_health": 0.0,
+    "hurted_animation": "hurted",
+    "box_colliders": [
+        {
+            "local_position": {
+                "x": 0.0,
+                "y": 0.3709999918937683
+            },
+            "layerID": 23,
+            "pathfinding_area": -1,
+            "shadow_caster_data": {
+                "cast_and_self": false,
+                "used_layers": []
+            },
+            "is_trigger": true,
+            "offset": {
+                "x": 0.017057806253433229,
+                "y": 0.07022956013679505
+            },
+            "size": {
+                "x": 0.4218003749847412,
+                "y": 0.5440197587013245
+            }
+        }
+    ],
+    "circle_colliders": []
+}

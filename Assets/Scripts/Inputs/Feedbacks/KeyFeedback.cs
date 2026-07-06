@@ -26,9 +26,9 @@ public class KeyFeedback : InputImageFeedback
 
 
     // START
-    protected override void Start()
+    public override void InitializeWithAction(InputAction action)
     {
-        base.Start();
+        base.InitializeWithAction(action);
 
         // we get the sprite from the bank
         Sprite sprite = bank.GetInputFeedbackSprite(dark ? "key_dark" : "key_light");

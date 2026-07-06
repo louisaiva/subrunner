@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 /// <summary>
 /// special type of ManualImage Feedback that adds 2 sprites
 /// to the base sprite for having full axis cover
@@ -17,10 +18,9 @@ public class AxisFeedback : ManualImageFeedback
     // minimal input value to consider the input as valid : 5f for mouse is good, -7f to get min threshold for joystick from input manager
     [SerializeField] protected float reset_delay = 0.1f;
 
-    // START & CALLBACKS
-    protected override void Start()
+    public override void InitializeWithAction(InputAction action)
     {
-        base.Start();
+        base.InitializeWithAction(action);
 
         // if input_threshold is -7f it means we wants joystick input
         if (input_threshold == -7f)

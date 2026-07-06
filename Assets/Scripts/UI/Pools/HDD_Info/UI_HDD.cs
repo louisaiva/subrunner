@@ -85,7 +85,7 @@ public class UI_HDD : UI_Pool/* , Slottable */
         capacity_text.text = get_space_left(disk);
 
         // we update the temp slider
-        temperer = disk.capable.GetCapacity<TempCapacity>();
+        temperer = disk.Capable.GetCapacity<TempCapacity>();
         update_temp_slider();
     }
     private void create_filename(File file)
