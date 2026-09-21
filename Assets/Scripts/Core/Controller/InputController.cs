@@ -46,6 +46,11 @@ public class InputController : MonoBehaviour
         return null;
     }
 
+    protected void cancel_all_inputs()
+    {
+        foreach (EndlessInput<float> floaty in endless_floats) { floaty.Cancel(); }
+        foreach (EndlessInput<Vector2> vecty in endless_vectors) { vecty.Cancel(); }
+    }
 }
 
 public interface UI_Controller

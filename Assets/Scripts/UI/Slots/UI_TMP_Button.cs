@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -20,8 +21,19 @@ public class UI_TMP_Button : UI_Button, Colorant, Descriptable
 
     [Header("Descriptable")]
     [SerializeField] protected string description;
+    [SerializeField] protected bool use_pool_description = false;
     public string Name => name;
-    public string Description => description;
+    public string Description => get_description();
+
+    private string get_description()
+    {
+        if (!use_pool_description) { return description; }
+        
+        // we check if we have a descriptable UI_Pool in the parents
+        UI_Pool pool = GetComponentInParent<UI_Pool>(includeInactive:true);
+        if (pool is null || pool is not Descriptable desc) { return description; }
+        return desc.Description;        
+    }
 
 
     [Header("Event")]

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -6,6 +7,7 @@ public class UI_CinematicPool : UI_Pool
 {
     private Dictionary<string, PlayableDirector> timelines;
     private PlayableDirector current_timeline;
+    private UI_CinematicInputsController UCIC;
 
     protected override void Awake()
     {
@@ -16,6 +18,8 @@ public class UI_CinematicPool : UI_Pool
             timelines.Add(timeline.gameObject.name, timeline);
             timeline.gameObject.SetActive(false);
         }
+        UCIC = GetComponent<UI_CinematicInputsController>();
+        if (UCIC == null) { Debug.LogError($"(UI_CinematicPool) Missing UI_CinematicInputsController component on {name} gameObject"); }
     }
 
     public void PlayCinematic(string cinematic_id)
@@ -55,4 +59,17 @@ public class UI_CinematicPool : UI_Pool
         }
 
     }
+
+
+    protected override IEnumerator enable_coroutine()
+    {
+        UCIC.EnableInputs(true);
+        yield break;
+    }
+    protected override IEnumerator disable_coroutine()
+    {
+        UCIC.DisableInputs();
+        yield break;
+    }
+
 }

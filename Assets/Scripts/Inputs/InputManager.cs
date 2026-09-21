@@ -49,6 +49,8 @@ public class InputManager : MonoBehaviour
     [SerializeField] public float BUTTON_ENDLESSLY_SHORT_DELAY = 0.06f; // when inputing endlessly, delay btwn each input
     [SerializeField] public float BUTTON_ENDLESSLY_LONG_THRESHOLD = 0.6f; // time threshold input need to be maintain before inputing endlessly
     [SerializeField] public float BUTTON_ENDLESSLY_LONG_DELAY = 0.1f; // when inputing endlessly, delay btwn each input
+    [SerializeField] public float BUTTON_ENDLESSLY_XTREM_LONG_THRESHOLD = 2f;
+    [SerializeField] public float BUTTON_ENDLESSLY_XTREM_LONG_DELAY = 0.4f;
 
     // private bool callbacks_sets = false;
 
