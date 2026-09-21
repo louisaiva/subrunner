@@ -1700,7 +1700,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LoadedSceneCount: 0
-  prototype: july26demo
+  prototype: oct26demo - qol fixes
   log: 0
   log_stats: 0
 --- !u!114 &714515157948744320
@@ -2163,6 +2163,8 @@ MonoBehaviour:
   BUTTON_ENDLESSLY_SHORT_DELAY: 0.06
   BUTTON_ENDLESSLY_LONG_THRESHOLD: 0.6
   BUTTON_ENDLESSLY_LONG_DELAY: 0.1
+  BUTTON_ENDLESSLY_XTREM_LONG_THRESHOLD: 2
+  BUTTON_ENDLESSLY_XTREM_LONG_DELAY: 0.4
   log: 0
   log_input_maps_enabled: 0
   log_get_bindings: 0
