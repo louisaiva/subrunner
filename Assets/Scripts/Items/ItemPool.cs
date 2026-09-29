@@ -121,6 +121,9 @@ public class ItemPool : MonoBehaviour, ItemStorer
             ItemStack new_stack = new ItemStack(this);
             stacks.Add(new_stack);
 
+            // if the stack contains multiple items with a NON-prefix item_id, then we have a problem
+            // if (stack_data.items_ids.Count > 1 && stack_data.items_ids)
+
             for (int j = 0; j < stack_data.items_ids.Count; j++)
             {
                 string item_id = stack_data.items_ids[j];

@@ -931,6 +931,11 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
         // we load the capable from the data
         Capable capable = CapableBank.Instance.Load(data);
+        if (capable == null)
+        {
+            Debug.LogWarning("(CapableEngine) Bank could not load " + data.id + " :/ probably another capable with same ID exists already");
+            return null;
+        }
         loaded_capables_data.Add(data.id, data);
         if (log_loading) { Debug.Log("(CapableEngine) Loaded " + data.id); }
 

@@ -21654,7 +21654,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::World
   load_status: 0
-  world_to_load: e4
+  world_to_load: demo3
   save:
     world:
       game_version: 1.5.1c
@@ -66800,10 +66800,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d40ce9c756996e842a7e1064c7b7a2d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CapableBank
-  loaded_capables: []
   capable_prefab: {fileID: 5145456041456219900, guid: 2e2198340ed98684cbe88e8106899adb, type: 3}
   feet_prefab: {fileID: 6157973582211797263, guid: 390c173041bfffa479a693b4481f31a8, type: 3}
   item_pool_prefab: {fileID: 5145456041456219900, guid: 7ca812c61a9951c46a006c287543f41c, type: 3}
+  log_loading: 0
   log_types: 1
   log_inventory_build: 0
   log_feet: 0

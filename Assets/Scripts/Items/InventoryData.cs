@@ -113,7 +113,7 @@ using System.Collections.Generic;
             string item_ref = "";
             if (stacks_data[i] != null && stacks_data[i].items_ids.Count > 0)
             {
-                item_ref = stacks_data[i].items_ids[0];
+                item_ref = stacks_data[i].items_ids[0].GetPrefix() + " : " + string.Join(" ; ", stacks_data[i].items_ids);
             }
             details += $"        - {stacks_data[i].items_ids.Count} {item_ref}\n";
         }

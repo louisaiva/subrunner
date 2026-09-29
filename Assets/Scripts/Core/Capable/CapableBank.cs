@@ -31,7 +31,7 @@ public class CapableBank : MonoBehaviour
 
     // CAPABLE LOADING
     [Header("Loaded capables")]
-    [SerializeField] protected Dictionary<string,Capable> loaded_capables;
+    [SerializeField] protected Dictionary<string,Capable> loaded_capables = new Dictionary<string, Capable>();
     
     [Header("Prefabs")]
     [SerializeField] protected GameObject capable_prefab; // with no kind at all : when instantiating we need to add component to it
@@ -71,6 +71,7 @@ public class CapableBank : MonoBehaviour
 
 
     [Header("Logs")]
+    public bool log_loading = false;
     public bool log_types = false;
     public bool log_inventory_build = false;
     public bool log_feet = false;
@@ -85,6 +86,13 @@ public class CapableBank : MonoBehaviour
     // LOAD CAPABLES
     public Capable Load(CapableData data)
     {
+        // first we ensure we don't have a capable like this one already
+        if (loaded_capables.ContainsKey(data.id))
+        {
+            if (log_loading) { Debug.LogError("(CapableBank) We already have a loaded capable with id : " + data.id); }
+            return null;
+        }
+
         // we first try to extract a capable of the right kind from the pool
         Capable capable = extractFromPool(data.kind);
 
@@ -107,6 +115,7 @@ public class CapableBank : MonoBehaviour
             capable.LoadData(data);
             capable.gameObject.SetActive(true);
             loaded_capables.Add(data.id,capable);
+            if (log_loading) { Debug.Log("(CapableBank) Added capable to loaded : " + data.id); }
 
             // fire the loaded callback
             OnCapableLoaded?.Invoke(capable);
@@ -150,6 +159,7 @@ public class CapableBank : MonoBehaviour
         // then we can load the data
         capable.LoadData(data);
         loaded_capables.Add(data.id,capable);
+        if (log_loading) { Debug.Log("(CapableBank) Added capable to loaded : " + data.id); }
         OnCapableLoaded?.Invoke(capable);
         return capable;
     }
@@ -257,7 +267,16 @@ public class CapableBank : MonoBehaviour
     {
         // get capable
         Capable capable = GetLoadedCapable(data);
-        if (capable == null) { return null; }
+        if (capable == null)
+        {
+            if (loaded_capables.ContainsKey(data.id))
+            {
+                // todo : improve this, because why do we have null capables in the first place ?
+                if (log_loading) { Debug.LogWarning($"(CapableBank) unloading {data.id} returned null but we still have a loaded capable with this id..."); }
+                loaded_capables.Remove(data.id);
+            }
+            return null;
+        }
 
         // fire the callback
         OnCapableUnloading?.Invoke(capable);
@@ -290,6 +309,7 @@ public class CapableBank : MonoBehaviour
 
         // remove the capable from the loaded capables list
         loaded_capables.Remove(id);
+        if (log_loading) { Debug.Log("(CapableBank) Removed capable from loaded : " + id); }
 
         // disable the gameObject
         capable.gameObject.SetActive(false);
