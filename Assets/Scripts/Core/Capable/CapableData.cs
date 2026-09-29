@@ -182,7 +182,7 @@ public interface ICapableData : IData
     {
         get
         {
-            if (loaded_assigned_capable is not null && loaded_assigned_capable.Loaded) { return loaded_assigned_capable.transform.position; }
+            if (loaded_assigned_capable != null && loaded_assigned_capable.Loaded) { return loaded_assigned_capable.transform.position; }
             return this.position;
         }
     }

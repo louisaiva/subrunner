@@ -13611,7 +13611,7 @@ MonoBehaviour:
   log_neighbours: 0
   hide_log_outsider_created: 0
   log_dynamic_room_assignement: 0
-  hide_log_no_room_of_capable_found: 1
+  hide_log_no_room_of_capable_found: 0
   log_chunk_distance: 0
   log_ignore_triggers_timings: 0
   log_tilemaps_loading: 0
@@ -21608,6 +21608,7 @@ GameObject:
   - component: {fileID: 155458650}
   - component: {fileID: 155458651}
   - component: {fileID: 155458652}
+  - component: {fileID: 155458653}
   m_Layer: 0
   m_Name: world
   m_TagString: Untagged
@@ -36969,6 +36970,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpeedrunTimer
   is_running: 0
+--- !u!114 &155458653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 155458646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cec29ad99096e649ad5c122200e3fe3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldLogger
+  periodic_fast_delay: 2
+  periodic_slow_delay: 20
 --- !u!1 &155566097
 GameObject:
   m_ObjectHideFlags: 0

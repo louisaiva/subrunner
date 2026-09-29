@@ -436,15 +436,16 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
         if (log_enter_exit) { Debug.Log($"(ChunkEngine) FreeCapable : {id} is going to be freed"); }
 
         // we free the capable from any room, it may be destroyed or else
-        ChunkData room = GetCapableChunk(id);
-        if (room == null) { return; }
-        removeCapableFromChunk(id, room);
+        ChunkData chunk = GetCapableChunk(id);
+        if (chunk == null) { return; }
+        removeCapableFromChunk(id, chunk);
 
         // we save the id and time of detach to prevent the calling of room triggers
         capables_attach_times[id] = Time.time;
 
-        if (log_chunk_transfers) { Debug.Log($"(ChunkEngine) [{room.id}] >> {id} >> [none]         -- was freed !!"); }
-        if (log_loaded_area_transfers) { Debug.Log($"(ChunkEngine) [{room.id}] >> {id} >> [none]         -- was freed !!"); }
+        if (log_chunk_transfers) { Debug.Log($"(ChunkEngine) [{chunk.id}] >> {id} >> [none]         -- was freed !!"); }
+        if (log_loaded_area_transfers) { Debug.Log($"(ChunkEngine) [{chunk.id}] >> {id} >> [none]         -- was freed !!"); }
+        WorldLogger.Log($"(ChunkEngine) [{chunk.id}] >> {id} >> [none]         -- was freed !!");
     }
     public bool ShouldIgnoreRoomTrigger(string id)
     {
@@ -550,6 +551,7 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
             string out_chunk_id = current_chunk != null ? current_chunk.id : "none";
             string in_chunk_id = best_chunk != null ? best_chunk.id : "none";
             if (log_chunk_transfers) { Debug.Log($"(ChunkEngine) [{out_chunk_id}] >> {capable_id} >> [{in_chunk_id}]"); }
+            WorldLogger.Log($"(ChunkEngine) [{out_chunk_id}] >> {capable_id} >> [{in_chunk_id}]");
             if (current_chunk != null) { removeCapableFromChunk(capable_id, current_chunk); }
             addCapableToChunk(capable_id, best_chunk, CapableEngine.Instance.IsMovable(capable_id));
             OnCapableChangedChunk?.Invoke(capable_id, current_chunk, best_chunk);

@@ -107,4 +107,5 @@ using UnityEngine;
         details += $" - last sofa id : {last_sofa_id}\n";
         return details;
     }
+
 }

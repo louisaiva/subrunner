@@ -89,10 +89,11 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
 
     // EVENTS
+    public Action<CapableData> OnCapableSpawned; // only first time a capable appear
+    public Action<CapableData> OnCapableDespawned; // after this we MAY have no capable data stored anymore
+    public Action<CapableData> OnCapableDestroyed; // after this we have no capable data stored anymore
     public Action<CapableData> OnCapableAppear; // =/= spawned bcz it works for items too. a dropped item appears BUT is was not spawned !
     public Action<CapableData> OnCapableDisappear; // despawned capables + grabbed items
-    public Action<CapableData> OnCapableSpawned; // only first time a capable appear
-    public Action<CapableData> OnCapableDespawned; // after this we have no capable data stored anymore
 
 
     ///
@@ -678,6 +679,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
         // 2. we fire events
         OnCapableAppear?.Invoke(data);
         OnCapableSpawned?.Invoke(data);
+        WorldLogger.Log("(CapableEngine) Spawned & Loaded " + data.id);
 
         if (log_spawning) { Debug.Log($"(CapableEngine) Spawned {data.id}"); }
 
@@ -718,6 +720,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
         // then we unload the capable
         unload_capable(cdata.id);
+        WorldLogger.Log("(CapableEngine) Despawned & Unloaded" + cdata.id);
 
         if (!destroy_data) { return; }
 
@@ -734,6 +737,8 @@ public class CapableEngine : BSOD_System<CapableEngine>
         remove_from_cached_kind_dict(cdata);
         remove_runtime_id(cdata.id);
         World.Instance.UnregisterUniqueID(cdata.id);
+        OnCapableDestroyed?.Invoke(cdata);
+        WorldLogger.Log("(CapableEngine) Destroyed " + cdata.id);
     }
 
     // ITEMS EVENTS
@@ -849,6 +854,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
         if (loading_queue.Contains(id_or_template)) { loading_queue.Remove(id_or_template); }
 
         // and we finally load it
+        WorldLogger.Log("(CapableData) Loading instantly " + id_or_template);
         return load_capable(id_or_template, duplicate_if_template: true);
     }
 
@@ -875,16 +881,27 @@ public class CapableEngine : BSOD_System<CapableEngine>
             else { loading_queue.Add(id); }
         }
     }
+    private readonly List<string> loaded_this_frame = new List<string>();
     private void load_in_queue(int count)
     {
         if (loading_queue.Count <= 0) { return; }
+        loaded_this_frame.Clear();
         for (int i = 0; i < count; i++)
         {
             if (loading_queue.Count <= 0) { break; }
             string capable_id = loading_queue[0];
-            load_capable(capable_id);
+            if (load_capable(capable_id) == null) { continue; }
+            
+            // here we successfully loaded the capable :)
+            loaded_this_frame.Add(capable_id);
             loading_queue.RemoveAt(0);
         }
+        
+        // world log for the loaded entities
+        if (loaded_this_frame.Count == 0) { return; }
+        string details = $"(CapableEngine) Loaded {loaded_this_frame.Count} Capable this frame :\n";
+        foreach (string id in loaded_this_frame) { details += "  " + id + "\n"; }
+        WorldLogger.Log(details);
     }
     private Capable load_capable(string id, bool duplicate_if_template = false)
     {
@@ -919,7 +936,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
         hide_show_capable_on_load(capable, data);
 
-        return capable;        
+        return capable;
     }
     
     /// <summary>
@@ -971,29 +988,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
 
         // else the capable is not a door.
-
-        // check if capable needs to be hidden bcz it is in a not visible room
-        /* ChunkData chunk;
-        ChunkEngine.Instance.TryGetCapableChunk(data.id, out chunk);
-        if (chunk == null)
-        {
-            // we check if the capable has a sit capacity
-            if (!capable.TryGetCapacity(out SitCapacity sit_capa))
-            {
-                if (log_visibility) { Debug.LogWarning($"(CapableSystem - Load) Capable {data.id} is not in any room ?! --> CANT SHOW / HIDE"); }
-                return;
-            }
-            if (sit_capa.CurrentSofa == null)
-            {
-                if (log_visibility) { Debug.LogWarning($"(CapableSystem - Load) Capable {data.id} has a SitCapacity but is not currently sitting on any sofa ?! --> CANT SHOW / HIDE"); }
-                return;
-            }
-            if (!ChunkEngine.Instance.TryGetCapableChunk(sit_capa.CurrentSofa.ID, out chunk))
-            {
-                if (log_visibility) { Debug.LogWarning($"(CapableSystem - Load) Capable {data.id} is sitting on sofa {sit_capa.CurrentSofa.ID} but we cant find the chunk of this sofa ?! --> CANT SHOW / HIDE"); }
-                return;
-            }
-        } */
+        
 
         // RoomData room = ;
         string room_on_load = data.room;
@@ -1037,6 +1032,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
         // and we finally unload it
         unload_capable(id);
+        WorldLogger.Log("(CapableEngine) Unloaded instantly " + id);
         return;
     }
 
@@ -1066,18 +1062,21 @@ public class CapableEngine : BSOD_System<CapableEngine>
             else if (!unloading_queue.Contains(id)) { unloading_queue.Add(id); }
         }
     }
+    private readonly List<string> unloaded_this_frame = new List<string>();
     private int unload_in_queue(int count)
     {
         if (unloading_queue.Count <= 0) { return 0; }
         List<Movable> movables_to_unregister = new List<Movable>();
-        int capables_unloaded = 0;
+        // int capables_unloaded = 0;
+        unloaded_this_frame.Clear();
         for (int i = 0; i < count; i++)
         {
             if (unloading_queue.Count <= 0) { break; }
             string capable_id = unloading_queue[0];
             Capable capable = unload_capable(capable_id);
             unloading_queue.RemoveAt(0);
-            capables_unloaded++;
+            unloaded_this_frame.Add(capable_id);
+            // capables_unloaded++;
 
             // add to the unregistering list if movable
             if (capable != null && capable is Movable)
@@ -1086,11 +1085,19 @@ public class CapableEngine : BSOD_System<CapableEngine>
             }
         }
 
+        // we world log
+        if (unloaded_this_frame.Count > 0)
+        {
+            string details = $"(CapableEngine) Unloaded {unloaded_this_frame.Count} Capable this frame :\n";
+            foreach (string id in unloaded_this_frame) { details += "  " + id + "\n"; }
+            WorldLogger.Log(details);
+        }
+
         // we call MovableEngine.UnregisterInBatch to remove all the capable we just disabled
         if (log_loading_extended && movables_to_unregister.Count > 0) { Debug.Log($"(CapableSystem - unload_in_queue) Calling MovableEngine.UnregisterInBatch for {movables_to_unregister.Count} entities : \n  - {(string.Join("\n  - ", movables_to_unregister))}"); }
         MovableEngine.Instance.UnregisterInBatch(movables_to_unregister);
         
-        return capables_unloaded;
+        return unloaded_this_frame.Count;
     }
     private Capable unload_capable(string id)
     {
@@ -1305,6 +1312,24 @@ public class CapableEngine : BSOD_System<CapableEngine>
             doors_data.Add(door_data);
         }
         return doors_data;
+    }
+
+    // debug details
+    public string GetWorldCapablesInfo()
+    {
+        string details = $"CAPABLES (loaded / total) : {loaded_capables_data.Count} / {world_capables_data.Count}";
+        string capdetails = "";
+        foreach (KeyValuePair<string,CapableData> kvp in world_capables_data)
+        {
+            capdetails = kvp.Key + " - ";
+            capdetails += kvp.Value.room + " - ";
+            capdetails += kvp.Value.Position;
+
+            if (loaded_capables_data.ContainsKey(kvp.Key)) { capdetails += " : LOADED"; }
+            details += "\n  " + capdetails;
+        }
+
+        return details;
     }
 
 

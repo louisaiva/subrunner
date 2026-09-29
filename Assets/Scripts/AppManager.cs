@@ -321,6 +321,18 @@ public class AppManager : MonoBehaviour
         }
         if (verbose >= Verbosity.Normal) { Debug.Log($"(AppManager) Saved json to asset: {path}\n{json}"); }
     }
+    private static StreamWriter sw;
+    public static void AddLogToWorldLogger(string world_id, string log)
+    {
+        string path = Path.Combine(WorldManager.WorldsDataPath, world_id, "log.txt");
+        using (sw = System.IO.File.AppendText(path))
+        {
+            // add the real time to the log
+            log = "\n[" + DateTime.Now + "] " + log;
+            sw.Write(log);
+            sw.Close();
+        }
+    }
 
 
     // FILE MANAGEMENT

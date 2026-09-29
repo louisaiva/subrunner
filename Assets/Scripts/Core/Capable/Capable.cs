@@ -170,12 +170,12 @@ public class Capable : MonoBehaviour, Debuggable
         
         // we register the capable in the debug manager
         try { DebugManager.Instance?.GetDebuggable<EntitiesDebug>()?.AddCapable(this); }
-        catch {}
+        catch (Exception e) { Debug.LogError(e); }
     }
     protected virtual void OnDisable()
     {
         try { DebugManager.Instance?.GetDebuggable<EntitiesDebug>()?.RemoveCapable(this); }
-        catch { }
+        catch (Exception e) { Debug.LogError(e); }
     }
 
 

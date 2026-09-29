@@ -19,6 +19,7 @@ public class DebugManager : Singleton<DebugManager>
     [Header("FPS Debug")]
     [SerializeField] private TextMeshProUGUI fps;
     [SerializeField] private float smoothed_fps = 0f; // smoothed fps for the debug text
+    public float FPS { get { return smoothed_fps; } }
     private List<float> fps_samples = new List<float>(); // list of fps samples for smoothing
     [SerializeField] private int fps_sample_size = 60;
     [SerializeField] private string precision = "F0"; // precision of the fps text
