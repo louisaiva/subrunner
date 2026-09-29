@@ -109,10 +109,10 @@ public class MovableEngine : MonoBehaviour
         if (agent_indexes.Count == 0) { return; }
         agent_indexes.Sort();
 
-        if (log_movables) { Debug.Log($"(MovableEngine) Unregistering in batch {agent_indexes.Count} movables at indexes {string.Join(", ", agent_indexes)}: \n - {string.Join("\n - ", to_unregister_movables.Select(m => m.name))}\n + \n{log}"); }
 
         // on remove les agents de la matrice (resize la matrice)
-        distances_matrix.RemoveAgentsInBatch(agent_indexes, ref log);
+        distances_matrix.RemoveAgentsInBatch(agent_indexes, ref log, create_log:log_movables);
+        if (log_movables) { Debug.Log($"(MovableEngine) Unregistered in batch {agent_indexes.Count} movables at indexes {string.Join(", ", agent_indexes)}: \n - {string.Join("\n - ", to_unregister_movables.Select(m => m.name))}\n + \n{log}"); }
         for (int i = 0; i < agent_indexes.Count; i++) { movables.RemoveAt(agent_indexes[i] - i); }
 
         // on resize les arrays

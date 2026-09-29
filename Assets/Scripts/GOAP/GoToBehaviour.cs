@@ -41,10 +41,11 @@ namespace subrunner.goap
             }
         }
         private IA _ia;
-        private IA ia
+        private IA ia // ! OPTIMIZABLE
         {
             get
             {
+                // faire que GoToBehaviour.ia soit récupérée manuellement soit sur MotorCapacity ou autre mais voila
                 if (transform.parent == null || transform.parent.parent == null) { return null; }
                 if (_ia == null) { _ia = transform.parent.parent.GetComponent<IA>(); }
                 return _ia;

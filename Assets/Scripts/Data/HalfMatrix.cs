@@ -103,7 +103,7 @@ public class HalfMatrix<T> where T : struct
         // now we have a new agent so population + 1
         this.population++;
     }
-    public void RemoveAgent(int agent_index, ref string log)
+    public void RemoveAgent(int agent_index, ref string log, bool create_log = false)
     {
         if (agent_index < 0 || agent_index >= Population) { throw new ArgumentOutOfRangeException($"(HalfMatrix) Cannot remove agent at index {agent_index} because the population is {Population}"); }
 
@@ -117,7 +117,7 @@ public class HalfMatrix<T> where T : struct
 
         // we get all the indexes of the data that are related to this agent
         List<int> indexes = data_indexes_of_agent(agent_index);
-        log += $"(HalfMatrix) Removing agent {agent_index} data at indexes: {string.Join(", ", indexes)}\n";
+        if (create_log) { log += $"(HalfMatrix) Removing agent {agent_index} data at indexes: {string.Join(", ", indexes)}\n"; }
 
         // we remove all the data related to this agent
         for (int i = indexes.Count - 1; i >= 0; i--)
@@ -130,14 +130,14 @@ public class HalfMatrix<T> where T : struct
         // we now need to decrease the population
         this.population--;
     }
-    public void RemoveAgentsInBatch(List<int> agent_indexes, ref string log)
+    public void RemoveAgentsInBatch(List<int> agent_indexes, ref string log, bool create_log = false)
     {
         if (agent_indexes == null || agent_indexes.Count == 0) { return; }
         if (agent_indexes.Count == 1) { RemoveAgent(agent_indexes[0], ref log); return; }
 
         // we get all the indexes of the data that are related to these agents
         List<int> single_indexes = data_indexes_of_agents(agent_indexes);
-        log += $"(HalfMatrix) Removing {agent_indexes.Count} agents data at indexes: {string.Join(", ", single_indexes)}\n";
+        if (create_log) { log += $"(HalfMatrix) Removing {agent_indexes.Count} agents data at indexes: {string.Join(", ", single_indexes)}\n"; }
 
         // we remove all the data related to this agent
         for (int i = single_indexes.Count - 1; i >= 0; i--)
