@@ -19,7 +19,7 @@ public class SaveEngine : MonoBehaviour
             Instance = FindFirstObjectByType<SaveEngine>();
             if (Instance == null)
             {
-                Debug.LogError("No instance of SaveManager found in the scene. Please make sure to add a SaveManager component to a game object in the scene.");
+                Debug.LogError("No instance of SaveEngine found in the scene. Please make sure to add a SaveEngine component to a game object in the scene.");
             }
             return Instance;
         }

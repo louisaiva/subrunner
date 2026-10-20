@@ -28,6 +28,7 @@ public class AnimLayer : MonoBehaviour
     private int current_frame = -1; // if -1, the animation is over
     private bool update_each_frame = true; // if false, it means that the animation is a single frame anim, we don't want to check it each frame
     [SerializeField] private bool follow_duration = false; // if true, the layer will sync its speed with the leader's one
+    // TODO : DEBUG FOLLOW DURATION SINCE WE STILL HAVE SOME MAJOR ISSUES WITH IT
     [SerializeField] private bool never_flip = false;
     private bool choose_perfect_orientation_if_available =  true;
     // if true, when the leader changes Orientation, the layer will
@@ -128,7 +129,7 @@ public class AnimLayer : MonoBehaviour
     private void play_now_at_frame_with_duration(Anim anim, int frame = 0, float duration_override = -1f)
     {
         // we check if the duration is overriden
-        if (follow_duration && duration_override != 1f)
+        if (follow_duration && duration_override != -1f)
         {
             // we get the duration of the animation
             float duration = anim.GetBaseDuration();

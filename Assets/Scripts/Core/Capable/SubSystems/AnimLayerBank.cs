@@ -81,8 +81,20 @@ public class AnimLayerBank : MonoBehaviour
         Transform layer_parent = player.transform;
 
         // check that we do have some layers / layer_parent
-        if (layer_parent == null || anim_data.layers == null) { return; }
-        if (log_anim_layers) { Debug.Log($"(CapableBank - Load) Loading anim data for {anim_data.skin}, loading {anim_data.layers.Count} anim layers"); }
+        if (layer_parent == null) { return; }
+
+        // unload anim layers
+        List<AnimLayer> anim_layers = player.GetStaticAnimLayers();
+        if (log_anim_layers) { Debug.Log($"(AnimLayerBank) Removing layers of {player.Skin}, unloading {anim_layers.Count} anim layers"); }
+        while (anim_layers.Count > 0)
+        {
+            anim_layers[0].UnassignLeader();
+            insertAnimLayerInPool(anim_layers[0]);
+            anim_layers.RemoveAt(0);
+        }
+        
+        if (anim_data.layers == null || anim_data.layers.Count == 0) { return; }
+        if (log_anim_layers) { Debug.Log($"(AnimLayerBank) Loading anim data for {anim_data.skin}, loading {anim_data.layers.Count} anim layers"); }
 
         // we go through all the layers inside anim_data and we load a layer for each
         for (int i = 0; i < anim_data.layers.Count; i++)

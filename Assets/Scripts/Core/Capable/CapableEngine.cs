@@ -38,6 +38,21 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
     [Header("Templates Capables data")]
     public Dictionary<string, CapableData> templates_capables_data = new Dictionary<string, CapableData>();
+    public static void LoadTemplatesCapablesData()
+    {
+        if (!LazyInstance)
+        {
+            Debug.LogError("(CapableEngine) Can't load templates because we have no CapableEngine in scene...");
+            return;
+        }
+
+        // load templates data
+        if (!LazyInstance.templates_loaded)
+        {
+            LazyInstance.loadTemplatesCapablesData();
+            Debug.Log($"(CapableEngine) Loaded {LazyInstance.templates_capables_data.Count} templates capables data");
+        }
+    }
 
     [Header("World Capables data")]
     // private string world_data_path = "data/capables/";
