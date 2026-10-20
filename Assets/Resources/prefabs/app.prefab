@@ -1052,6 +1052,15 @@ MonoBehaviour:
     base_spritesheets:
     - objects/interactives/crafters/distributor/distributor_fg
     keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: spyk_hair
+    variant_spritesheets:
+    - beings/boss/spyk/spyk_hair
+    - beings/boss/spyk/spyk_attack_hair
+    base_skin: spyk
+    base_spritesheets:
+    - beings/boss/spyk/spyk_base
+    - beings/boss/spyk/spyk_attack_base
+    keep_base_anim_if_spritesheet_not_found: 0
   log: 0
   log_LAFAC: 0
   log_variant_awake: 0
@@ -1155,6 +1164,19 @@ MonoBehaviour:
   - {fileID: -129852262, guid: 83d20de3bc490bc43aa8d2d7f451dc97, type: 3}
   - {fileID: 1241098219, guid: 83d20de3bc490bc43aa8d2d7f451dc97, type: 3}
   - {fileID: 979033039, guid: 83d20de3bc490bc43aa8d2d7f451dc97, type: 3}
+  - {fileID: 1021896847, guid: 446d865788f00404e837b56994831170, type: 3}
+  - {fileID: 900064990, guid: 446d865788f00404e837b56994831170, type: 3}
+  - {fileID: 2092579413, guid: 446d865788f00404e837b56994831170, type: 3}
+  - {fileID: -1899451792, guid: 446d865788f00404e837b56994831170, type: 3}
+  - {fileID: 435787958, guid: 446d865788f00404e837b56994831170, type: 3}
+  - {fileID: -401257352, guid: 446d865788f00404e837b56994831170, type: 3}
+  - {fileID: 1850686231, guid: 446d865788f00404e837b56994831170, type: 3}
+  - {fileID: 21082006, guid: 446d865788f00404e837b56994831170, type: 3}
+  - {fileID: 902362302, guid: 446d865788f00404e837b56994831170, type: 3}
+  - {fileID: -97743176, guid: 446d865788f00404e837b56994831170, type: 3}
+  - {fileID: 1701190347, guid: 446d865788f00404e837b56994831170, type: 3}
+  - {fileID: -1122276252, guid: 446d865788f00404e837b56994831170, type: 3}
+  - {fileID: 1211026501, guid: 446d865788f00404e837b56994831170, type: 3}
   IF_gamepad_path: spritesheets/ui/inputs/ui_interactables
   IF_kb_path: spritesheets/ui/inputs/input_kb_feedback
   joystick_feedback_icons:

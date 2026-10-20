@@ -12,6 +12,12 @@ public static class StringExtensions
     public static string Cyan(this string text) => AddColor(text, Color.cyan);
     public static string Magenta(this string text) => AddColor(text, Color.magenta);
 
+    // NATURAL ORDER SORTING
+    private static NaturalSortComparer comparer = new NaturalSortComparer(System.StringComparison.Ordinal);
+    public static int NumericOrderingCompare(string a,string b)
+    {
+        return comparer.Compare(a,b);
+    }
 
 
     // PREFIX

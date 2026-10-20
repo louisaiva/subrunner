@@ -499,6 +499,9 @@ public class AnimBank : MonoBehaviour
 
         // add the animation to the bank
         anims[skin][capacity].Add(anim);
+        
+        // we sort by alphabet order to make sure variants & base skins always are in the same order
+        anims[skin][capacity].Sort((a, b) => string.Compare(a.orientation, b.orientation));
     }
     public Anim GetAnim(string name, bool return_empty_if_not_found = false)
     {
