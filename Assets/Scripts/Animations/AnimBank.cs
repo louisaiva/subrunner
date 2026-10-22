@@ -83,43 +83,8 @@ public class AnimBank : MonoBehaviour
 
         if (extract_json_on_load)
         {
-#if UNITY_EDITOR
-
-            // we remove all the .json files in the Resources/anims/ folder
-            // string[] jsons_paths = Directory.GetFiles("Assets/Resources/" + jsons_path, "*.json", SearchOption.AllDirectories);
-            FileUtil.DeleteFileOrDirectory("Assets/Resources/" + jsons_path);
-            Directory.CreateDirectory("Assets/Resources/" + jsons_path);
-
-            if (log) { Debug.Log("(AnimBank - LoadAnims) Extracting animations from AnimationClips and saving them as .json files."); }
-
-            // if in the editor, we load AnimationClips and store them as .json files
-            string[] anims_paths = Directory.GetFiles("Assets/Resources/" + anims_path, "*.anim", SearchOption.AllDirectories);
-            if (log) { Debug.Log("(AnimBank - LoadAnims) Found " + anims_paths.Length + " animations :\n\t" + string.Join("\n\t", anims_paths)); }
-            foreach (string path in anims_paths)
-            {
-                // we remove Assets/Resources/anims/ from the path
-                string new_path = path.Replace("Assets/Resources/" + anims_path, "");
-                new_path = new_path.Replace(".anim", "");
-                loadAnimFromAnimationClip(new_path);
-            }
-
-            // we generate the skins variants if we have some
-            foreach (SkinVariant skin_variant in skin_variants)
-            {
-                generateVariantSkin(skin_variant);
-            }
-
-            // we also generate simple anims from the anim generator if we have some
-            List<Anim> generated_anims = anim_generator.GenerateAnims(spritesheets_path);
-            foreach (Anim anim in generated_anims)
-            {
-                if (anim == null) { continue; }
-                saveAnimToJson(anim);
-                AddAnim(anim);
-            }
-
+            ExtractAnims();
             return;
-#endif
         }
 
         if (log) { Debug.Log("(AnimBank - LoadAnims) Loading animations from .json files."); }
@@ -140,7 +105,45 @@ public class AnimBank : MonoBehaviour
             loadAnimFromJson(new_path);
         }
     }
+    private void ExtractAnims()
+    {
+#if UNITY_EDITOR
 
+        // we remove all the .json files in the Resources/anims/ folder
+        // string[] jsons_paths = Directory.GetFiles("Assets/Resources/" + jsons_path, "*.json", SearchOption.AllDirectories);
+        FileUtil.DeleteFileOrDirectory("Assets/Resources/" + jsons_path);
+        Directory.CreateDirectory("Assets/Resources/" + jsons_path);
+
+        if (log) { Debug.Log("(AnimBank - LoadAnims) Extracting animations from AnimationClips and saving them as .json files."); }
+
+        // if in the editor, we load AnimationClips and store them as .json files
+        string[] anims_paths = Directory.GetFiles("Assets/Resources/" + anims_path, "*.anim", SearchOption.AllDirectories);
+        if (log) { Debug.Log("(AnimBank - LoadAnims) Found " + anims_paths.Length + " animations :\n\t" + string.Join("\n\t", anims_paths)); }
+        foreach (string path in anims_paths)
+        {
+            // we remove Assets/Resources/anims/ from the path
+            string new_path = path.Replace("Assets/Resources/" + anims_path, "");
+            new_path = new_path.Replace(".anim", "");
+            loadAnimFromAnimationClip(new_path);
+        }
+
+        // we generate the skins variants if we have some
+        foreach (SkinVariant skin_variant in skin_variants)
+        {
+            generateVariantSkin(skin_variant);
+        }
+
+        // we also generate simple anims from the anim generator if we have some
+        List<Anim> generated_anims = anim_generator.GenerateAnims(spritesheets_path);
+        foreach (Anim anim in generated_anims)
+        {
+            if (anim == null) { continue; }
+            saveAnimToJson(anim);
+            AddAnim(anim);
+        }
+
+#endif
+    }
 
     // ANIMATIONS MANAGEMENT
     private void loadAnimFromJson(string path)
@@ -732,6 +735,24 @@ public class AnimBank : MonoBehaviour
         return title + count + " animations\n" + list;
     }
 
+
+#if UNITY_EDITOR
+    [CustomEditor(typeof(AnimBank))]
+    public class AnimBankEditor : Editor
+    {
+        public override void OnInspectorGUI()
+        {
+            AnimBank bank = (AnimBank)target;
+
+            if (GUILayout.Button("Extract Anims"))
+            {
+                bank.ExtractAnims();
+                Debug.Log(bank.getAnimsList());
+            }
+            DrawDefaultInspector();
+        }
+    }
+#endif
 }
 
 /// <summary>
