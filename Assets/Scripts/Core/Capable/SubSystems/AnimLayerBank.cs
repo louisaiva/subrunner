@@ -68,13 +68,14 @@ public class AnimLayerBank : MonoBehaviour
 
 
     // LOAD / UNLOAD
+
     /// <summary>
-    /// Feed the AnimData into the AnimPlayer.
-    /// Ensure we exactly have the required AnimLayers + Load their data.
-    /// AND THEN also Load the data of the main AnimPlayer
+    /// Feed the anim data into the AnimPlayer.
+    /// Ensures we exactly have the required AnimLayers + loads their data.
+    /// AND THEN also loads the data of the main AnimPlayer
     /// </summary>
     /// <param name="player">The main AnimPlayer that will receive the data</param>
-    /// <param name="anim_data">The AnimPlayerData to feed. This also includes a List<AnimLayerData> for the layers</param>
+    /// <param name="anim_data">The AnimPlayerData to feed. This also includes a List-AnimLayerData- for the layers</param>
     public void LoadAnimData(AnimPlayer player, AnimPlayerData anim_data)
     {
         if (player == null) { return; }

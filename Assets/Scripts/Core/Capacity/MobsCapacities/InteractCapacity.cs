@@ -5,9 +5,8 @@ using UnityEngine;
 
 /// <summary>
 /// InteractCapacity is a capacity that allows a Capable to interact with Interactable objects.
-/// When approaching an Interactable, the capacity make the object play hover.
-/// And when pressing the Interact Button, the PIC (PersoInputController) will call the this.Interact() method
-/// which will trigger Interactable.OnInteract() method (or Interactable.OnEndlessInteract())
+/// This is a global capacity that any Mob can use, only through code. It requires manual calling
+/// of the InteractWithInteractable() method.
 /// </summary>
 
 public class InteractCapacity : Capacity
