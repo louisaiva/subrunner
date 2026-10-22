@@ -76,10 +76,8 @@ public class AnimViewer : MonoBehaviour
             Debug.LogWarning($"(AnimViewer) No animdata found for skin {skin} ://");
             return;
         }
-
-        // we load the anims
-        player.LoadPlayerData(data.anim_data);
-        // ensure_all_acp_are_one_shots(player);
+        
+        // we load the layers + the player
         CapableBank.LazyInstance.LayerBank.LoadAnimData(player, data.anim_data);
         
         // finally we launch the player
