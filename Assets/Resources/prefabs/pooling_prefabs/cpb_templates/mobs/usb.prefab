@@ -10,11 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 2779202217902244076}
   - component: {fileID: 7208066328217349858}
-  - component: {fileID: 2152234968455776478}
   - component: {fileID: 3933269431797653870}
+  - component: {fileID: 3247269124882285411}
   m_Layer: 23
   m_Name: usb
-  m_TagString: Boss
+  m_TagString: Police
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -39,6 +39,7 @@ Transform:
   - {fileID: 2001444908192565999}
   - {fileID: 9137177770088866671}
   - {fileID: 513077608903197376}
+  - {fileID: 6995022652854255871}
   - {fileID: 1340604045218317366}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -54,7 +55,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 4
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 0
@@ -69,7 +70,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!114 &2152234968455776478
+--- !u!114 &3933269431797653870
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -78,9 +79,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 3780083747204790414}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1152e2e71cbe3ae4eafc7845b1985d57, type: 3}
+  m_Script: {fileID: 11500000, guid: 9b38a876e5f6fba4ab1dde6d23fd0f96, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
+  capacity_template_id: mob_exp
+  capacity_template_ids:
+  - interact_with_door
+--- !u!114 &3247269124882285411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3780083747204790414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e929c9358c72ff64dae634f7a643006c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::USB
   data:
     <id>k__BackingField: 
     kind: 
@@ -109,7 +125,7 @@ MonoBehaviour:
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 0}
-  orientation: {x: 0, y: 0}
+  orientation: {x: 0, y: -1}
   capacities: []
   effects: 
   effects_timetolive: []
@@ -118,13 +134,13 @@ MonoBehaviour:
   log_static_data: 0
   debug_velocity: 0
   log_avoidance: 0
-  weight: 8
-  random_weight_modifier_at_start: 0.2
+  weight: 100
+  random_weight_modifier_at_start: 0
   friction: 7
   forces: []
   input_speed: 0
   Velocity: {x: 0, y: 0}
-  base_tag: Boss
+  base_tag: Police
   SocialData:
     exploration_radius: 4
     range_detection: 15
@@ -136,21 +152,6 @@ MonoBehaviour:
     - qwin
     - nikita
   log_actions: 0
---- !u!114 &3933269431797653870
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3780083747204790414}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b38a876e5f6fba4ab1dde6d23fd0f96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
-  capacity_template_id: mob_exp
-  capacity_template_ids:
-  - interact_with_door
 --- !u!1 &4269318907990890064
 GameObject:
   m_ObjectHideFlags: 0
@@ -265,7 +266,7 @@ MonoBehaviour:
     loop: 1
     speed: 1
     flipX: 0
-  follow_duration: 0
+  follow_duration: 1
   never_flip: 0
   log: 0
   log_frames: 0
@@ -386,7 +387,7 @@ MonoBehaviour:
     loop: 1
     speed: 1
     flipX: 0
-  follow_duration: 0
+  follow_duration: 1
   never_flip: 0
   log: 0
   log_frames: 0
@@ -526,8 +527,7 @@ MonoBehaviour:
   - priority: 3
     capacity_playing: 
     capacities:
-    - attack
-    - slam
+    - shoot
     - kick
     lock_orientation: 1
     one_shot: 1
@@ -764,6 +764,76 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 64677485766301868, guid: bbad179de34e6134bbf77cc73af372d8, type: 3}
   m_PrefabInstance: {fileID: 1332801134995201178}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &2998517868065326159
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2779202217902244076}
+    m_Modifications:
+    - target: {fileID: 392631906392750740, guid: ab2e05ee3c6867a4e9398d637ba44508, type: 3}
+      propertyPath: attack_cycle.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 392631906392750740, guid: ab2e05ee3c6867a4e9398d637ba44508, type: 3}
+      propertyPath: 'attack_cycle.Array.data[0]'
+      value: shoot
+      objectReference: {fileID: 0}
+    - target: {fileID: 2272879689673499586, guid: ab2e05ee3c6867a4e9398d637ba44508, type: 3}
+      propertyPath: m_Name
+      value: usb_combo
+      objectReference: {fileID: 0}
+    - target: {fileID: 5228591307806622896, guid: ab2e05ee3c6867a4e9398d637ba44508, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5228591307806622896, guid: ab2e05ee3c6867a4e9398d637ba44508, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5228591307806622896, guid: ab2e05ee3c6867a4e9398d637ba44508, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5228591307806622896, guid: ab2e05ee3c6867a4e9398d637ba44508, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5228591307806622896, guid: ab2e05ee3c6867a4e9398d637ba44508, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5228591307806622896, guid: ab2e05ee3c6867a4e9398d637ba44508, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5228591307806622896, guid: ab2e05ee3c6867a4e9398d637ba44508, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5228591307806622896, guid: ab2e05ee3c6867a4e9398d637ba44508, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5228591307806622896, guid: ab2e05ee3c6867a4e9398d637ba44508, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5228591307806622896, guid: ab2e05ee3c6867a4e9398d637ba44508, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ab2e05ee3c6867a4e9398d637ba44508, type: 3}
+--- !u!4 &6995022652854255871 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5228591307806622896, guid: ab2e05ee3c6867a4e9398d637ba44508, type: 3}
+  m_PrefabInstance: {fileID: 2998517868065326159}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7765929814606486801
 PrefabInstance:
@@ -1034,7 +1104,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: damage
-      value: 16
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
+      propertyPath: unstoppable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
+      propertyPath: split_damage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
+      propertyPath: renderer_name
+      value: layer_usb_arms
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: knockback_base
@@ -1042,15 +1124,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: attack_duration
-      value: 0.4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: unstoppable_rate
-      value: 0.2
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: distance_to_attack
-      value: 1.5
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
+      propertyPath: attackant_advantage
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: not_attackable_tags.Array.size
@@ -1058,11 +1144,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: random_damage_modifier_at_start
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: attack_duration_random_variation
-      value: 0.15
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: 'not_attackable_tags.Array.data[0]'

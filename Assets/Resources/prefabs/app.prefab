@@ -1064,16 +1064,29 @@ MonoBehaviour:
   - variant_name: usb_hair
     variant_spritesheets:
     - beings/units/usb/usb_hair
+    - beings/units/usb/usb_shoot_hair
     base_skin: usb
     base_spritesheets:
     - beings/units/usb/usb_base
+    - beings/units/usb/usb_shoot_base
     keep_base_anim_if_spritesheet_not_found: 0
   - variant_name: usb_arms
     variant_spritesheets:
     - beings/units/usb/usb_arms
+    - beings/units/usb/usb_shoot_arms
     base_skin: usb
     base_spritesheets:
     - beings/units/usb/usb_base
+    - beings/units/usb/usb_shoot_base
+    keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: usb_shield
+    variant_spritesheets:
+    - beings/units/usb/usb_shield
+    - beings/units/usb/usb_shoot_shield
+    base_skin: usb
+    base_spritesheets:
+    - beings/units/usb/usb_base
+    - beings/units/usb/usb_shoot_base
     keep_base_anim_if_spritesheet_not_found: 0
   log: 0
   log_LAFAC: 0
@@ -1191,6 +1204,9 @@ MonoBehaviour:
   - {fileID: 1701190347, guid: 446d865788f00404e837b56994831170, type: 3}
   - {fileID: -1122276252, guid: 446d865788f00404e837b56994831170, type: 3}
   - {fileID: 1211026501, guid: 446d865788f00404e837b56994831170, type: 3}
+  - {fileID: 374087177, guid: 649b66b9eb86cf645a2948fe195c759b, type: 3}
+  - {fileID: -2029178852, guid: 649b66b9eb86cf645a2948fe195c759b, type: 3}
+  - {fileID: -1069179877, guid: 649b66b9eb86cf645a2948fe195c759b, type: 3}
   IF_gamepad_path: spritesheets/ui/inputs/ui_interactables
   IF_kb_path: spritesheets/ui/inputs/input_kb_feedback
   joystick_feedback_icons:
@@ -1736,7 +1752,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LoadedSceneCount: 0
-  prototype: anims viewer
+  prototype: nikita + usb + few bugs fixed
   log: 0
   log_stats: 0
 --- !u!114 &714515157948744320

@@ -15,7 +15,7 @@ public class TemplatesManager : MonoBehaviour
 
 
     // TEMPLATES BANKS
-    private TemplateObjectsBank _object_bank;
+    /* private TemplateObjectsBank _object_bank;
     public TemplateObjectsBank ObjectBank
     {
         get
@@ -35,6 +35,15 @@ public class TemplatesManager : MonoBehaviour
             _item_bank = GetComponentInChildren<TemplateItemsBank>(includeInactive: true);
             if (_item_bank == null) { Debug.LogError("(TemplatesManager) no TemplateItemsBank in children !!"); }
             return _item_bank;
+        }
+    } */
+
+    // public List<TemplateBank> TemplateBanks = new List<TemplateBank>();
+    public List<TemplateBank> TemplateBanks
+    {
+        get
+        {
+            return GetComponentsInChildren<TemplateBank>(includeInactive: false).ToList();
         }
     }
 
@@ -65,21 +74,25 @@ public class TemplatesManager : MonoBehaviour
             saveCapableTemplate(capable);
         }
 
-        // we also get all the objects templates from the TemplateObjectsBank and save them as capable templates
-        List<Capable> objects = ObjectBank.GetAllCapablesTemplates();
-        foreach (Capable obj in objects)
+        foreach (TemplateBank bank in TemplateBanks)
         {
-            saveCapableTemplate(obj);
+            // we also get all the templates templates from the TemplateObjectsBank and save them as capable templates
+            List<Capable> templates = bank.GetAllCapablesTemplates();
+            foreach (Capable obj in templates)
+            {
+                saveCapableTemplate(obj);
+            }
+            log_banks.Log($"Saved {templates.Count} {bank.template_category.ToUpper()} templates from bank");
         }
-        log_banks.Log($"Saved {objects.Count} OBJECTS templates from TemplateObjectsBank");
+
 
         // and the items templates
-        List<Capable> items = ItemBank.GetAllCapablesTemplates();
+        /* List<Capable> items = ItemBank.GetAllCapablesTemplates();
         foreach (Capable obj in items)
         {
             saveCapableTemplate(obj);
         }
-        log_banks.Log($"Saved {items.Count} ITEMS templates from TemplateItemsBank");
+        log_banks.Log($"Saved {items.Count} ITEMS templates from TemplateItemsBank"); */
 
         #if UNITY_EDITOR
         AssetDatabase.Refresh();

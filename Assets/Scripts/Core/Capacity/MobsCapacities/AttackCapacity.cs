@@ -66,6 +66,8 @@ public class AttackCapacity : CooldownCapacity
     private AnimPlayer anim_player;
     private PolygonCollider2D pc;
 
+    [Header("GET STATIC DATA"), Tooltip("These requires a template save in order to affect something. Changing it at runtime won't have any effect")]
+    [SerializeField] private string renderer_name = ""; // leave blank for default renderer (the bearer.AnimPlayer) or specify the name of the specific anim_layer you want to target (the one that has the damage sprites)
 
     // EVENTS
     public Action<HealthCapacity, float> OnDamageDealt = delegate { };
@@ -102,8 +104,9 @@ public class AttackCapacity : CooldownCapacity
         // we set the bearer and its components
         bearer = capable;
         anim_player = bearer.AnimPlayer;
-        sr = bearer.AnimPlayer.Renderer;
         if (anim_player.IsShowing(attack_capacity)) { return; } // we check if we are already attacking
+        sr = bearer.AnimPlayer.GetRendererByName(((AttackData)data).renderer_name); // ! don't cache since we need to be able to use the katana
+        Debug.Log($"(AttackCapacity) {bearer.ID} is attacking and checking the damage sprites on the {sr.name} (p)layer");
 
         // we update damage value if capable is Perso
         // if (bearer is Perso perso) { damage = perso.skillManager.GetSkillValue("stat:damage"); }
@@ -496,6 +499,7 @@ public class AttackCapacity : CooldownCapacity
     {
         AttackData static_data = new AttackData(base.GetStaticData())
         {
+            renderer_name = renderer_name,
             template_damage = damage,
             random_damage_modifier = random_damage_modifier_at_start,
             distance_to_attack = distance_to_attack,
@@ -521,6 +525,7 @@ public class AttackData : CapacityData
 {
 
     // TYPE DATA (static at runtime, one per template)
+    public string renderer_name = "";
     public float template_damage;
     public float random_damage_modifier; // replace with an "exp" system for mobs ?
     public float distance_to_attack;
@@ -547,6 +552,7 @@ public class AttackData : CapacityData
     {
         return new AttackData(base.Duplicate() as CapacityData)
         {
+            renderer_name = renderer_name,
             template_damage = template_damage,
             random_damage_modifier = random_damage_modifier,
             distance_to_attack = distance_to_attack,
@@ -567,6 +573,7 @@ public class AttackData : CapacityData
     public override string GetDetails()
     {
         string details = "";
+        details += $"  - renderer name : {(string.IsNullOrEmpty(renderer_name) ? "default renderer" : renderer_name)}\n";
         details += $"  - template damage : {template_damage} (+/- {random_damage_modifier})\n";
         details += $"  - distance to attack : {distance_to_attack}\n";
         details += $"  - single hit : {single_hit}\n";

@@ -748,6 +748,7 @@ public class AnimBank : MonoBehaviour
             {
                 bank.ExtractAnims();
                 Debug.Log(bank.getAnimsList());
+                AssetDatabase.Refresh();
             }
             DrawDefaultInspector();
         }

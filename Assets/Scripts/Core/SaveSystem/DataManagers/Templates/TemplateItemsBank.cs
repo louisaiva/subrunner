@@ -5,10 +5,10 @@ using System.Linq;
 using System;
 
 
-public class TemplateItemsBank : MonoBehaviour
+public class TemplateItemsBank : TemplateBank
 {
 
-    [Header("Items templates folders")]
+    /* [Header("Items templates folders")]
     public List<string> template_paths = new List<string>();
     public List<Capable> GetAllCapablesTemplates()
     {
@@ -16,7 +16,7 @@ public class TemplateItemsBank : MonoBehaviour
         all_templates.AddRange(get_all_aditional_templates_from_paths());
         return all_templates;
     }
-    private List<Capable> get_all_aditional_templates_from_paths()
+    protected  List<Capable> get_all_aditional_templates_from_paths()
     {
         List<Capable> templates = new List<Capable>();
         foreach (string path in template_paths)
@@ -25,10 +25,10 @@ public class TemplateItemsBank : MonoBehaviour
         }
         return templates;
     }
-    private List<Capable> get_templates_from_path(string path)
+    protected  List<Capable> get_templates_from_path(string path)
     {
         Capable[] templates = Resources.LoadAll<Capable>(path);
         // Debug.Log($"[TemplateObjectsBank] Found {templates.Length} templates in path : {path}");
         return new List<Capable>(templates);
-    }
+    } */
 }

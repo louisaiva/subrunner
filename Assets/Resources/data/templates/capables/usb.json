@@ -1,20 +1,21 @@
 ﻿{
     "<id>k__BackingField": "usb",
-    "kind": "Zombo",
+    "kind": "USB",
     "position": {
         "x": 0.0,
         "y": 0.0
     },
     "orientation": {
         "x": 0.0,
-        "y": 0.0
+        "y": -1.0
     },
     "layer": 23,
-    "tag": "Boss",
+    "tag": "Police",
     "capacities_ids": [
         "usb_health",
         "usb_walk",
         "usb_attack",
+        "usb_combo",
         "usb_motor",
         "interact_with_door",
         "mob_exp"
@@ -55,8 +56,7 @@
                 "priority": 3,
                 "capacity_playing": "",
                 "capacities": [
-                    "attack",
-                    "slam",
+                    "shoot",
                     "kick"
                 ],
                 "lock_orientation": true,
@@ -102,7 +102,7 @@
                 "sorting_layer_id": -667374433,
                 "order_in_layer": 0,
                 "never_flip": false,
-                "follow_duration": false
+                "follow_duration": true
             },
             {
                 "skin": "usb_hair",
@@ -119,7 +119,7 @@
                 "sorting_layer_id": -667374433,
                 "order_in_layer": 0,
                 "never_flip": false,
-                "follow_duration": false
+                "follow_duration": true
             }
         ],
         "local_position": {

@@ -506,6 +506,24 @@ public class AnimPlayer : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// returns the Renderer of a Layer or itself based on the name given. the name should be the exact name of the anim_layer' gameobject
+    /// otherwise it will return itself (the renderer from the anim player) by default.
+    /// </summary>
+    public SpriteRenderer GetRendererByName(string renderer_name)
+    {
+        Debug.Log($"(AnimPlayer) Getting renderer of {renderer_name}. Our layers are {string.Join(" & ", anim_layers.Select(al => al.name))}");
+        // go through all the layers
+        foreach (AnimLayer layer in anim_layers)
+        {
+            if (layer.name == renderer_name) { return layer.Renderer; }
+            if (layer.name == "layer_" + renderer_name) { return layer.Renderer; }
+        }
+        return Renderer;
+    }
+
+
+
 
     ///
     //

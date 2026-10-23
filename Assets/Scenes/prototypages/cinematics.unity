@@ -255018,14 +255018,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Controller
   data:
-    capable_template: 
-    controlled_capable_id: bob
+    capable_template: bob
+    controlled_capable_id: bob-1
     stack_capable_ids: []
-    player_level: 
-    player_room: 
-    player_chunk: 
+    player_level: -1
+    player_room: b60
+    player_chunk: b60-1
     container_id: 
-    last_sofa_id: 
+    last_sofa_id: sofa-0
   pic: {fileID: 1409124454}
   hackable_navigator: {fileID: 598553482}
   exploit_navigator: {fileID: 598553481}
@@ -328502,20 +328502,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplatesManager
   capables_templates:
-  - {fileID: 8940805219290677501, guid: 4a7b7d63d41b4724ba926bd2b5d087e4, type: 3}
-  - {fileID: 8074454940356753118, guid: 9ea950ac9b967a1429cd2d6d303efed3, type: 3}
-  - {fileID: -5260680249891615082, guid: 65dd86eb95608c64db22ca17c88b610c, type: 3}
-  - {fileID: 6067341419625358920, guid: d9b20669646046c43bdd78c1b43fd1f2, type: 3}
-  - {fileID: 8231662095987882839, guid: 11f9660e72c9ad34596f8074f9e4dca4, type: 3}
-  - {fileID: -4664043396583567553, guid: e5b395bf746ec07439e2137df13cbbc5, type: 3}
-  - {fileID: 1124466000399361642, guid: fc29a806443626f45ab728787ee66656, type: 3}
-  - {fileID: 5556932218411784815, guid: 129dcb0138847114096659c91552aad9, type: 3}
-  - {fileID: 8100417847447987613, guid: ced09aaf8c911c847beb841edd496bd2, type: 3}
   - {fileID: 3771096402560910632, guid: 467dcf0162f5e6b46a356d40b89ec2dd, type: 3}
-  - {fileID: 8569965792380036972, guid: a99c634429a0c844b8ce09844d1c3869, type: 3}
-  - {fileID: 81736738766840830, guid: 2949c3ec5eef2ae458ce1c4e8ce6efae, type: 3}
-  - {fileID: 8100417847447987613, guid: 952fccab60ffcab4898b5645f3d921da, type: 3}
-  - {fileID: 2152234968455776478, guid: 99b47ff4d8a24fd40907379e98ea14e8, type: 3}
   capacities_templates:
   - {fileID: 1235818638904784760, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
   - {fileID: 5002837106037361536, guid: 46eb1eda27de36548bc5952fd80d32cd, type: 3}
@@ -348567,8 +348554,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1817391348}
-  - component: {fileID: 1817391349}
   - component: {fileID: 1817391350}
+  - component: {fileID: 1817391349}
+  - component: {fileID: 1817391351}
   m_Layer: 0
   m_Name: templates_bank
   m_TagString: Untagged
@@ -348603,6 +348591,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 264ac5aa4c0d9e24bad9893906a58132, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateObjectsBank
+  template_category: objects
   template_paths:
   - prefabs/pooling_prefabs/cpb_templates/objects
 --- !u!114 &1817391350
@@ -348617,8 +348606,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f12cd99e0b0965a4cb95ad5d9b2bb06d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateItemsBank
+  template_category: items
   template_paths:
   - prefabs/pooling_prefabs/cpb_templates/items
+--- !u!114 &1817391351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1817391347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96e762aae8cb7c548b579383284d296d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TemplateBank
+  template_category: mobs
+  template_paths:
+  - prefabs/pooling_prefabs/cpb_templates/mobs
 --- !u!1 &1817759213
 GameObject:
   m_ObjectHideFlags: 0
