@@ -106,7 +106,7 @@ public class AnimLayer : MonoBehaviour
 
         // we play the current animation
         if (current_frame == -1) { return; }
-        if (current_frame >= current_anim.sprites.Length) { return; }
+        if (current_frame >= current_anim.sprites.Count) { return; }
         if (!update_each_frame) { return; }
         updateAnim();
     }
@@ -119,7 +119,7 @@ public class AnimLayer : MonoBehaviour
         // we go to the next frame
         frame_timer = 0f;
         current_frame++;
-        if (current_frame < current_anim.sprites_durations.Length)
+        if (current_frame < current_anim.sprites_durations.Count)
         {
             sr.sprite = current_anim.sprites[current_frame];
             return;
@@ -141,7 +141,7 @@ public class AnimLayer : MonoBehaviour
 
         // we saturate the frame
         if (frame < 0) { frame = 0; }
-        else if (frame >= anim.sprites.Length) { frame = 0; }
+        else if (frame >= anim.sprites.Count) { frame = 0; }
 
         // we play the animation
         if (current_anim != anim)
@@ -160,7 +160,7 @@ public class AnimLayer : MonoBehaviour
         else if (!anim.flipX && sr.flipX) { sr.flipX = false; }
 
         // we check if this anim is a single frame anim
-        update_each_frame = !(anim.sprites.Length == 1);
+        update_each_frame = !(anim.sprites.Count == 1);
 
         if (log) { Debug.Log("(AnimLayer) Playing " + anim.name + " at frame " + frame + " flipX: " + anim.flipX + $" (never_flip: {never_flip})"); }
     }

@@ -3321,16 +3321,16 @@ MonoBehaviour:
   skin: steel_door_midup
   leader: {fileID: 1499624632}
   current_anim:
-    name: steel_door_midup.idle.R
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_LR_up.steel_door_LR_up_0
     sprites:
     - {fileID: 182987510, guid: 45c16d13183e30e478b617122ef254ce, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 1
   follow_duration: 1
   never_flip: 1
   log: 0
@@ -4918,16 +4918,16 @@ MonoBehaviour:
   skin: steel_door_ceil
   leader: {fileID: 736660915}
   current_anim:
-    name: steel_door_ceil.idle.R
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_LR_ceil.steel_door_LR_ceil_0
     sprites:
     - {fileID: -632751217, guid: 30acb946a19f1854eaf9b18df4c526a4, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 1
   follow_duration: 1
   never_flip: 1
   log: 0
@@ -12408,16 +12408,16 @@ MonoBehaviour:
   skin: door_ground
   leader: {fileID: 135769176}
   current_anim:
-    name: door_ground.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ground/door_ground.door_ground_0
     sprites:
     - {fileID: 1471092109, guid: cf3c5b333510b8249a578c42324aae44, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -14574,16 +14574,16 @@ MonoBehaviour:
   skin: steel_door_ceil
   leader: {fileID: 1457801798}
   current_anim:
-    name: steel_door_ceil.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_ceil.steel_door_ceil_0
     sprites:
     - {fileID: -754984741, guid: bd5e0d486d82560488cad808e2c03bc6, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 0
   follow_duration: 1
   never_flip: 0
   log: 0
@@ -20016,16 +20016,16 @@ MonoBehaviour:
   skin: pckg_back
   leader: {fileID: 1012090348}
   current_anim:
-    name: pckg_back.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/box/bue_box_fg.bue_box_fg_0
     sprites:
     - {fileID: 892497048, guid: 47ea19e94d77b164e9ee2c23bc7a9b3b, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -20140,16 +20140,16 @@ MonoBehaviour:
   skin: dummy_base
   leader: {fileID: 1087945183}
   current_anim:
-    name: dummy_base.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - beings/dummy_target/dummy_base.dummy_base_0
     sprites:
     - {fileID: 932191111, guid: 66517fb33f01069478d75e31e40c465c, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -40815,16 +40815,16 @@ MonoBehaviour:
   skin: door_icon
   leader: {fileID: 1007913444}
   current_anim:
-    name: door_icon.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ui_door.ui_door_0
     sprites:
     - {fileID: 83956777, guid: 5bcd23e470bcbf84ab7f7a29f65e6167, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -41362,16 +41362,16 @@ MonoBehaviour:
   skin: pckg_back
   leader: {fileID: 2023114575}
   current_anim:
-    name: pckg_back.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/box/bue_box_fg.bue_box_fg_0
     sprites:
     - {fileID: 892497048, guid: 47ea19e94d77b164e9ee2c23bc7a9b3b, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -44531,6 +44531,7 @@ MonoBehaviour:
   attackant_advantage: 10
   base_attack_shake_magnitude: 0.5
   base_kill_shake_magnitude: 0.8
+  renderer_name: 
 --- !u!60 &198444212
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -46663,16 +46664,16 @@ MonoBehaviour:
   skin: door_icon
   leader: {fileID: 4007188}
   current_anim:
-    name: door_icon.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ui_door.ui_door_0
     sprites:
     - {fileID: 83956777, guid: 5bcd23e470bcbf84ab7f7a29f65e6167, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -56463,16 +56464,16 @@ MonoBehaviour:
   skin: door_icon
   leader: {fileID: 715411121}
   current_anim:
-    name: door_icon.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ui_door.ui_door_0
     sprites:
     - {fileID: 83956777, guid: 5bcd23e470bcbf84ab7f7a29f65e6167, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -68752,16 +68753,16 @@ MonoBehaviour:
   skin: pckg_back
   leader: {fileID: 157320449}
   current_anim:
-    name: pckg_back.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/box/box_bg.box_bg_0
     sprites:
     - {fileID: 892497048, guid: 47ea19e94d77b164e9ee2c23bc7a9b3b, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -70793,7 +70794,9 @@ MonoBehaviour:
   skin: rack_fg
   leader: {fileID: 1735019309}
   current_anim:
-    name: rack_fg.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/computers/servers/blue_server_fg.blue_server_fg_9
     - objects/interactives/computers/servers/blue_server_fg.blue_server_fg_9
@@ -70815,9 +70818,7 @@ MonoBehaviour:
     - 0.116666675
     - 0.100000024
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -71130,16 +71131,16 @@ MonoBehaviour:
   skin: steel_door_ceil
   leader: {fileID: 990565086}
   current_anim:
-    name: steel_door_ceil.idle.R
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_LR_ceil.steel_door_LR_ceil_0
     sprites:
     - {fileID: -632751217, guid: 30acb946a19f1854eaf9b18df4c526a4, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 1
   follow_duration: 1
   never_flip: 1
   log: 0
@@ -76213,16 +76214,16 @@ MonoBehaviour:
   skin: pckg_back
   leader: {fileID: 651459914}
   current_anim:
-    name: pckg_back.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/box/bue_box_fg.bue_box_fg_0
     sprites:
     - {fileID: 892497048, guid: 47ea19e94d77b164e9ee2c23bc7a9b3b, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -81857,16 +81858,16 @@ MonoBehaviour:
   skin: steel_door_midup
   leader: {fileID: 736660915}
   current_anim:
-    name: steel_door_midup.idle.R
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_LR_up.steel_door_LR_up_0
     sprites:
     - {fileID: 182987510, guid: 45c16d13183e30e478b617122ef254ce, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 1
   follow_duration: 1
   never_flip: 1
   log: 0
@@ -82607,16 +82608,16 @@ MonoBehaviour:
   skin: steel_door_ceil
   leader: {fileID: 135769176}
   current_anim:
-    name: steel_door_ceil.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_ceil.steel_door_ceil_0
     sprites:
     - {fileID: -754984741, guid: bd5e0d486d82560488cad808e2c03bc6, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 0
   follow_duration: 1
   never_flip: 0
   log: 0
@@ -82880,16 +82881,16 @@ MonoBehaviour:
   skin: pckg_back
   leader: {fileID: 351860844}
   current_anim:
-    name: pckg_back.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/box/bue_box_fg.bue_box_fg_0
     sprites:
     - {fileID: 892497048, guid: 47ea19e94d77b164e9ee2c23bc7a9b3b, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -88207,16 +88208,16 @@ MonoBehaviour:
   skin: steel_door_ceil
   leader: {fileID: 4007188}
   current_anim:
-    name: steel_door_ceil.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_ceil.steel_door_ceil_0
     sprites:
     - {fileID: -754984741, guid: bd5e0d486d82560488cad808e2c03bc6, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 0
   follow_duration: 1
   never_flip: 0
   log: 0
@@ -88733,16 +88734,16 @@ MonoBehaviour:
   skin: door_icon
   leader: {fileID: 1663315842}
   current_anim:
-    name: door_icon.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ui_door.ui_door_0
     sprites:
     - {fileID: 83956777, guid: 5bcd23e470bcbf84ab7f7a29f65e6167, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -93856,16 +93857,16 @@ MonoBehaviour:
   skin: pckg_back
   leader: {fileID: 18059823}
   current_anim:
-    name: pckg_back.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/box/box_bg.box_bg_0
     sprites:
     - {fileID: 892497048, guid: 47ea19e94d77b164e9ee2c23bc7a9b3b, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -95433,16 +95434,16 @@ MonoBehaviour:
   skin: door_ground
   leader: {fileID: 715411121}
   current_anim:
-    name: door_ground.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ground/door_ground.door_ground_0
     sprites:
     - {fileID: 1471092109, guid: cf3c5b333510b8249a578c42324aae44, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -96009,16 +96010,16 @@ MonoBehaviour:
   skin: door_icon
   leader: {fileID: 4007188}
   current_anim:
-    name: door_icon.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ui_door.ui_door_0
     sprites:
     - {fileID: 83956777, guid: 5bcd23e470bcbf84ab7f7a29f65e6167, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -99752,16 +99753,16 @@ MonoBehaviour:
   skin: pckg_back
   leader: {fileID: 513998642}
   current_anim:
-    name: pckg_back.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/box/bue_box_fg.bue_box_fg_0
     sprites:
     - {fileID: 892497048, guid: 47ea19e94d77b164e9ee2c23bc7a9b3b, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -101004,16 +101005,16 @@ MonoBehaviour:
   skin: steel_door_midup
   leader: {fileID: 990565086}
   current_anim:
-    name: steel_door_midup.idle.R
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_LR_up.steel_door_LR_up_0
     sprites:
     - {fileID: 182987510, guid: 45c16d13183e30e478b617122ef254ce, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 1
   follow_duration: 1
   never_flip: 1
   log: 0
@@ -103824,16 +103825,16 @@ MonoBehaviour:
   skin: steel_door_ceil
   leader: {fileID: 1663315842}
   current_anim:
-    name: steel_door_ceil.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_ceil.steel_door_ceil_0
     sprites:
     - {fileID: -754984741, guid: bd5e0d486d82560488cad808e2c03bc6, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 0
   follow_duration: 1
   never_flip: 0
   log: 0
@@ -107331,16 +107332,16 @@ MonoBehaviour:
   skin: pckg_back
   leader: {fileID: 1196705137}
   current_anim:
-    name: pckg_back.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/box/bue_box_fg.bue_box_fg_0
     sprites:
     - {fileID: 892497048, guid: 47ea19e94d77b164e9ee2c23bc7a9b3b, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -107694,16 +107695,16 @@ MonoBehaviour:
   skin: door_ground
   leader: {fileID: 1380064490}
   current_anim:
-    name: door_ground.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ground/door_ground.door_ground_0
     sprites:
     - {fileID: 1471092109, guid: cf3c5b333510b8249a578c42324aae44, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -115418,16 +115419,16 @@ MonoBehaviour:
   skin: door_icon
   leader: {fileID: 181968532}
   current_anim:
-    name: door_icon.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ui_door.ui_door_0
     sprites:
     - {fileID: 83956777, guid: 5bcd23e470bcbf84ab7f7a29f65e6167, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -115834,16 +115835,16 @@ MonoBehaviour:
   skin: pckg_back
   leader: {fileID: 163581699}
   current_anim:
-    name: pckg_back.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/box/box_bg.box_bg_0
     sprites:
     - {fileID: 892497048, guid: 47ea19e94d77b164e9ee2c23bc7a9b3b, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -118744,16 +118745,16 @@ MonoBehaviour:
   skin: door_ground
   leader: {fileID: 1581102873}
   current_anim:
-    name: door_ground.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ground/door_ground.door_ground_0
     sprites:
     - {fileID: 1471092109, guid: cf3c5b333510b8249a578c42324aae44, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -121570,16 +121571,16 @@ MonoBehaviour:
   skin: door_ground
   leader: {fileID: 283086432}
   current_anim:
-    name: door_ground.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ground/door_ground.door_ground_0
     sprites:
     - {fileID: 1471092109, guid: cf3c5b333510b8249a578c42324aae44, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -121694,16 +121695,16 @@ MonoBehaviour:
   skin: steel_door_ceil
   leader: {fileID: 715411121}
   current_anim:
-    name: steel_door_ceil.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_ceil.steel_door_ceil_0
     sprites:
     - {fileID: -754984741, guid: bd5e0d486d82560488cad808e2c03bc6, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 0
   follow_duration: 1
   never_flip: 0
   log: 0
@@ -124695,16 +124696,16 @@ MonoBehaviour:
   skin: steel_door_ceil
   leader: {fileID: 1581102873}
   current_anim:
-    name: steel_door_ceil.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_ceil.steel_door_ceil_0
     sprites:
     - {fileID: -754984741, guid: bd5e0d486d82560488cad808e2c03bc6, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 0
   follow_duration: 1
   never_flip: 0
   log: 0
@@ -125390,16 +125391,16 @@ MonoBehaviour:
   skin: pckg_back
   leader: {fileID: 1715683509}
   current_anim:
-    name: pckg_back.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/box/box_bg.box_bg_0
     sprites:
     - {fileID: 892497048, guid: 47ea19e94d77b164e9ee2c23bc7a9b3b, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -127523,16 +127524,16 @@ MonoBehaviour:
   skin: pckg_back
   leader: {fileID: 1416225437}
   current_anim:
-    name: pckg_back.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/box/box_bg.box_bg_0
     sprites:
     - {fileID: 892497048, guid: 47ea19e94d77b164e9ee2c23bc7a9b3b, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -138266,16 +138267,16 @@ MonoBehaviour:
   skin: steel_door_ceil
   leader: {fileID: 1380064490}
   current_anim:
-    name: steel_door_ceil.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_ceil.steel_door_ceil_0
     sprites:
     - {fileID: -754984741, guid: bd5e0d486d82560488cad808e2c03bc6, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 0
   follow_duration: 1
   never_flip: 0
   log: 0
@@ -144221,16 +144222,16 @@ MonoBehaviour:
   skin: steel_door_ceil
   leader: {fileID: 1581102873}
   current_anim:
-    name: steel_door_ceil.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_ceil.steel_door_ceil_0
     sprites:
     - {fileID: -754984741, guid: bd5e0d486d82560488cad808e2c03bc6, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 0
   follow_duration: 1
   never_flip: 0
   log: 0
@@ -145734,16 +145735,16 @@ MonoBehaviour:
   skin: door_icon
   leader: {fileID: 715411121}
   current_anim:
-    name: door_icon.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ui_door.ui_door_0
     sprites:
     - {fileID: 83956777, guid: 5bcd23e470bcbf84ab7f7a29f65e6167, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -151436,10 +151437,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2427471456612112662, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: log_awake_extended
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3744786912224508728, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -151479,10 +151476,6 @@ PrefabInstance:
     - target: {fileID: 3744786912224508728, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4604947998673824248, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: log_extraction
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5846687295635405809, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: m_Name
@@ -153372,16 +153365,16 @@ MonoBehaviour:
   skin: pckg_back
   leader: {fileID: 1090141135}
   current_anim:
-    name: pckg_back.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/box/bue_box_fg.bue_box_fg_0
     sprites:
     - {fileID: 892497048, guid: 47ea19e94d77b164e9ee2c23bc7a9b3b, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -156572,16 +156565,16 @@ MonoBehaviour:
   skin: door_icon
   leader: {fileID: 135769176}
   current_anim:
-    name: door_icon.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ui_door.ui_door_0
     sprites:
     - {fileID: 83956777, guid: 5bcd23e470bcbf84ab7f7a29f65e6167, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -156819,16 +156812,16 @@ MonoBehaviour:
   skin: pckg_back
   leader: {fileID: 798166289}
   current_anim:
-    name: pckg_back.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/box/bue_box_fg.bue_box_fg_0
     sprites:
     - {fileID: 892497048, guid: 47ea19e94d77b164e9ee2c23bc7a9b3b, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -161083,16 +161076,16 @@ MonoBehaviour:
   skin: door_icon
   leader: {fileID: 345160534}
   current_anim:
-    name: door_icon.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ui_door.ui_door_0
     sprites:
     - {fileID: 83956777, guid: 5bcd23e470bcbf84ab7f7a29f65e6167, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -161920,16 +161913,16 @@ MonoBehaviour:
   skin: door_ground
   leader: {fileID: 1380064490}
   current_anim:
-    name: door_ground.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ground/door_ground.door_ground_0
     sprites:
     - {fileID: 1471092109, guid: cf3c5b333510b8249a578c42324aae44, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -162044,16 +162037,16 @@ MonoBehaviour:
   skin: door_icon
   leader: {fileID: 1499624632}
   current_anim:
-    name: door_icon.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ui_door.ui_door_0
     sprites:
     - {fileID: 83956777, guid: 5bcd23e470bcbf84ab7f7a29f65e6167, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -162168,16 +162161,16 @@ MonoBehaviour:
   skin: door_ground
   leader: {fileID: 1007913444}
   current_anim:
-    name: door_ground.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ground/door_ground.door_ground_0
     sprites:
     - {fileID: 1471092109, guid: cf3c5b333510b8249a578c42324aae44, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -166943,16 +166936,16 @@ MonoBehaviour:
   skin: steel_door_midup
   leader: {fileID: 345160534}
   current_anim:
-    name: steel_door_midup.idle.R
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_LR_up.steel_door_LR_up_0
     sprites:
     - {fileID: 182987510, guid: 45c16d13183e30e478b617122ef254ce, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 1
   follow_duration: 1
   never_flip: 1
   log: 0
@@ -168093,16 +168086,16 @@ MonoBehaviour:
   skin: door_icon
   leader: {fileID: 1007913444}
   current_anim:
-    name: door_icon.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ui_door.ui_door_0
     sprites:
     - {fileID: 83956777, guid: 5bcd23e470bcbf84ab7f7a29f65e6167, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -170407,16 +170400,16 @@ MonoBehaviour:
   skin: steel_door_ceil
   leader: {fileID: 1007913444}
   current_anim:
-    name: steel_door_ceil.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_ceil.steel_door_ceil_0
     sprites:
     - {fileID: -754984741, guid: bd5e0d486d82560488cad808e2c03bc6, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 0
   follow_duration: 1
   never_flip: 0
   log: 0
@@ -176255,16 +176248,16 @@ MonoBehaviour:
   skin: steel_door_ceil
   leader: {fileID: 1733076057}
   current_anim:
-    name: steel_door_ceil.idle.R
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_LR_ceil.steel_door_LR_ceil_0
     sprites:
     - {fileID: -632751217, guid: 30acb946a19f1854eaf9b18df4c526a4, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 1
   follow_duration: 1
   never_flip: 1
   log: 0
@@ -176554,16 +176547,16 @@ MonoBehaviour:
   skin: steel_door_ceil
   leader: {fileID: 345160534}
   current_anim:
-    name: steel_door_ceil.idle.R
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_LR_ceil.steel_door_LR_ceil_0
     sprites:
     - {fileID: -632751217, guid: 30acb946a19f1854eaf9b18df4c526a4, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 1
   follow_duration: 1
   never_flip: 1
   log: 0
@@ -177219,16 +177212,16 @@ MonoBehaviour:
   skin: door_icon
   leader: {fileID: 736660915}
   current_anim:
-    name: door_icon.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ui_door.ui_door_0
     sprites:
     - {fileID: 83956777, guid: 5bcd23e470bcbf84ab7f7a29f65e6167, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -183872,16 +183865,16 @@ MonoBehaviour:
   skin: door_ground
   leader: {fileID: 4007188}
   current_anim:
-    name: door_ground.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ground/door_ground.door_ground_0
     sprites:
     - {fileID: 1471092109, guid: cf3c5b333510b8249a578c42324aae44, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -186838,16 +186831,16 @@ MonoBehaviour:
   skin: door_ground
   leader: {fileID: 4007188}
   current_anim:
-    name: door_ground.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ground/door_ground.door_ground_0
     sprites:
     - {fileID: 1471092109, guid: cf3c5b333510b8249a578c42324aae44, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -187187,6 +187180,7 @@ MonoBehaviour:
   attackant_advantage: 10
   base_attack_shake_magnitude: 0.5
   base_kill_shake_magnitude: 0.8
+  renderer_name: 
 --- !u!60 &1015162155
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -192697,16 +192691,16 @@ MonoBehaviour:
   skin: door_icon
   leader: {fileID: 283086432}
   current_anim:
-    name: door_icon.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ui_door.ui_door_0
     sprites:
     - {fileID: 83956777, guid: 5bcd23e470bcbf84ab7f7a29f65e6167, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -195817,16 +195811,16 @@ MonoBehaviour:
   skin: door_icon
   leader: {fileID: 1663315842}
   current_anim:
-    name: door_icon.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ui_door.ui_door_0
     sprites:
     - {fileID: 83956777, guid: 5bcd23e470bcbf84ab7f7a29f65e6167, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -198046,16 +198040,16 @@ MonoBehaviour:
   skin: dummy_base
   leader: {fileID: 1293031481}
   current_anim:
-    name: dummy_base.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - beings/dummy_target/dummy_base.dummy_base_0
     sprites:
     - {fileID: 932191111, guid: 66517fb33f01069478d75e31e40c465c, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -198761,16 +198755,16 @@ MonoBehaviour:
   skin: door_ground
   leader: {fileID: 1663315842}
   current_anim:
-    name: door_ground.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ground/door_ground.door_ground_0
     sprites:
     - {fileID: 1471092109, guid: cf3c5b333510b8249a578c42324aae44, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -204803,16 +204797,16 @@ MonoBehaviour:
   skin: steel_door_ceil
   leader: {fileID: 1499624632}
   current_anim:
-    name: steel_door_ceil.idle.R
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_LR_ceil.steel_door_LR_ceil_0
     sprites:
     - {fileID: -632751217, guid: 30acb946a19f1854eaf9b18df4c526a4, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 1
   follow_duration: 1
   never_flip: 1
   log: 0
@@ -206284,16 +206278,16 @@ MonoBehaviour:
   skin: steel_door_ceil
   leader: {fileID: 1457801798}
   current_anim:
-    name: steel_door_ceil.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_ceil.steel_door_ceil_0
     sprites:
     - {fileID: -754984741, guid: bd5e0d486d82560488cad808e2c03bc6, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 0
   follow_duration: 1
   never_flip: 0
   log: 0
@@ -215211,16 +215205,16 @@ MonoBehaviour:
   skin: door_icon
   leader: {fileID: 283086432}
   current_anim:
-    name: door_icon.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ui_door.ui_door_0
     sprites:
     - {fileID: 83956777, guid: 5bcd23e470bcbf84ab7f7a29f65e6167, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -215786,16 +215780,16 @@ MonoBehaviour:
   skin: sofa_R
   leader: {fileID: 574498084}
   current_anim:
-    name: sofa_R.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/living_room/sofa/sofa_R.sofa_R_0
     sprites:
     - {fileID: 1292788694, guid: 5353ad606805e6142a51615a1d97c8c7, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -218169,16 +218163,16 @@ MonoBehaviour:
   skin: door_icon
   leader: {fileID: 1733076057}
   current_anim:
-    name: door_icon.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ui_door.ui_door_0
     sprites:
     - {fileID: 83956777, guid: 5bcd23e470bcbf84ab7f7a29f65e6167, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -228110,16 +228104,16 @@ MonoBehaviour:
   skin: door_icon
   leader: {fileID: 1581102873}
   current_anim:
-    name: door_icon.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ui_door.ui_door_0
     sprites:
     - {fileID: 83956777, guid: 5bcd23e470bcbf84ab7f7a29f65e6167, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -230457,16 +230451,16 @@ MonoBehaviour:
   skin: door_ground
   leader: {fileID: 1581102873}
   current_anim:
-    name: door_ground.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ground/door_ground.door_ground_0
     sprites:
     - {fileID: 1471092109, guid: cf3c5b333510b8249a578c42324aae44, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -233825,16 +233819,16 @@ MonoBehaviour:
   skin: pckg_back
   leader: {fileID: 316174579}
   current_anim:
-    name: pckg_back.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/box/box_bg.box_bg_0
     sprites:
     - {fileID: 892497048, guid: 47ea19e94d77b164e9ee2c23bc7a9b3b, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -234732,7 +234726,9 @@ MonoBehaviour:
   skin: rack_fg
   leader: {fileID: 533437537}
   current_anim:
-    name: rack_fg.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/computers/servers/blue_server_fg.blue_server_fg_9
     - objects/interactives/computers/servers/blue_server_fg.blue_server_fg_9
@@ -234754,9 +234750,7 @@ MonoBehaviour:
     - 0.116666675
     - 0.100000024
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -239407,16 +239401,16 @@ MonoBehaviour:
   skin: pckg_back
   leader: {fileID: 1274418085}
   current_anim:
-    name: pckg_back.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/box/box_bg.box_bg_0
     sprites:
     - {fileID: 892497048, guid: 47ea19e94d77b164e9ee2c23bc7a9b3b, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -254766,16 +254760,16 @@ MonoBehaviour:
   skin: steel_door_midup
   leader: {fileID: 1733076057}
   current_anim:
-    name: steel_door_midup.idle.R
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_LR_up.steel_door_LR_up_0
     sprites:
     - {fileID: 182987510, guid: 45c16d13183e30e478b617122ef254ce, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 1
   follow_duration: 1
   never_flip: 1
   log: 0
@@ -260658,16 +260652,16 @@ MonoBehaviour:
   skin: steel_door_ceil
   leader: {fileID: 181968532}
   current_anim:
-    name: steel_door_ceil.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_ceil.steel_door_ceil_0
     sprites:
     - {fileID: -754984741, guid: bd5e0d486d82560488cad808e2c03bc6, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 0
   follow_duration: 1
   never_flip: 0
   log: 0
@@ -272672,16 +272666,16 @@ MonoBehaviour:
   skin: door_icon
   leader: {fileID: 181968532}
   current_anim:
-    name: door_icon.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ui_door.ui_door_0
     sprites:
     - {fileID: 83956777, guid: 5bcd23e470bcbf84ab7f7a29f65e6167, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -274009,16 +274003,16 @@ MonoBehaviour:
   skin: steel_door_ceil
   leader: {fileID: 135769176}
   current_anim:
-    name: steel_door_ceil.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_ceil.steel_door_ceil_0
     sprites:
     - {fileID: -754984741, guid: bd5e0d486d82560488cad808e2c03bc6, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 0
   follow_duration: 1
   never_flip: 0
   log: 0
@@ -279030,16 +279024,16 @@ MonoBehaviour:
   skin: door_ground
   leader: {fileID: 283086432}
   current_anim:
-    name: door_ground.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ground/door_ground.door_ground_0
     sprites:
     - {fileID: 1471092109, guid: cf3c5b333510b8249a578c42324aae44, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -279154,16 +279148,16 @@ MonoBehaviour:
   skin: door_icon
   leader: {fileID: 135769176}
   current_anim:
-    name: door_icon.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ui_door.ui_door_0
     sprites:
     - {fileID: 83956777, guid: 5bcd23e470bcbf84ab7f7a29f65e6167, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -282799,16 +282793,16 @@ MonoBehaviour:
   skin: steel_door_ceil
   leader: {fileID: 4007188}
   current_anim:
-    name: steel_door_ceil.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_ceil.steel_door_ceil_0
     sprites:
     - {fileID: -754984741, guid: bd5e0d486d82560488cad808e2c03bc6, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 0
   follow_duration: 1
   never_flip: 0
   log: 0
@@ -284758,16 +284752,16 @@ MonoBehaviour:
   skin: door_icon
   leader: {fileID: 1380064490}
   current_anim:
-    name: door_icon.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ui_door.ui_door_0
     sprites:
     - {fileID: 83956777, guid: 5bcd23e470bcbf84ab7f7a29f65e6167, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -285952,16 +285946,16 @@ MonoBehaviour:
   skin: door_ground
   leader: {fileID: 1499624632}
   current_anim:
-    name: door_ground.idle.R
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ground/door_ground.door_ground_1
     sprites:
     - {fileID: -969794077, guid: cf3c5b333510b8249a578c42324aae44, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 1
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -286864,7 +286858,9 @@ MonoBehaviour:
   skin: rack_fg
   leader: {fileID: 1534825385}
   current_anim:
-    name: rack_fg.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/computers/servers/blue_server_fg.blue_server_fg_9
     - objects/interactives/computers/servers/blue_server_fg.blue_server_fg_9
@@ -286886,9 +286882,7 @@ MonoBehaviour:
     - 0.116666675
     - 0.100000024
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -301861,16 +301855,16 @@ MonoBehaviour:
   skin: steel_door_ceil
   leader: {fileID: 283086432}
   current_anim:
-    name: steel_door_ceil.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_ceil.steel_door_ceil_0
     sprites:
     - {fileID: -754984741, guid: bd5e0d486d82560488cad808e2c03bc6, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 0
   follow_duration: 1
   never_flip: 0
   log: 0
@@ -320600,7 +320594,9 @@ MonoBehaviour:
   skin: rack_fg
   leader: {fileID: 1956751589}
   current_anim:
-    name: rack_fg.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/computers/servers/blue_server_fg.blue_server_fg_9
     - objects/interactives/computers/servers/blue_server_fg.blue_server_fg_9
@@ -320622,9 +320618,7 @@ MonoBehaviour:
     - 0.116666675
     - 0.100000024
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -323564,16 +323558,16 @@ MonoBehaviour:
   skin: door_icon
   leader: {fileID: 1380064490}
   current_anim:
-    name: door_icon.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ui_door.ui_door_0
     sprites:
     - {fileID: 83956777, guid: 5bcd23e470bcbf84ab7f7a29f65e6167, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -325254,16 +325248,16 @@ MonoBehaviour:
   skin: door_ground
   leader: {fileID: 1457801798}
   current_anim:
-    name: door_ground.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ground/door_ground.door_ground_0
     sprites:
     - {fileID: 1471092109, guid: cf3c5b333510b8249a578c42324aae44, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -327610,16 +327604,16 @@ MonoBehaviour:
   skin: door_ground
   leader: {fileID: 1663315842}
   current_anim:
-    name: door_ground.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ground/door_ground.door_ground_0
     sprites:
     - {fileID: 1471092109, guid: cf3c5b333510b8249a578c42324aae44, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -329419,16 +329413,16 @@ MonoBehaviour:
   skin: door_ground
   leader: {fileID: 715411121}
   current_anim:
-    name: door_ground.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ground/door_ground.door_ground_0
     sprites:
     - {fileID: 1471092109, guid: cf3c5b333510b8249a578c42324aae44, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -330581,16 +330575,16 @@ MonoBehaviour:
   skin: door_ground
   leader: {fileID: 181968532}
   current_anim:
-    name: door_ground.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ground/door_ground.door_ground_0
     sprites:
     - {fileID: 1471092109, guid: cf3c5b333510b8249a578c42324aae44, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -331075,16 +331069,16 @@ MonoBehaviour:
   skin: pckg_back
   leader: {fileID: 735368540}
   current_anim:
-    name: pckg_back.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/box/box_bg.box_bg_0
     sprites:
     - {fileID: 892497048, guid: 47ea19e94d77b164e9ee2c23bc7a9b3b, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -334443,16 +334437,16 @@ MonoBehaviour:
   skin: steel_door_ceil
   leader: {fileID: 283086432}
   current_anim:
-    name: steel_door_ceil.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_ceil.steel_door_ceil_0
     sprites:
     - {fileID: -754984741, guid: bd5e0d486d82560488cad808e2c03bc6, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 0
   follow_duration: 1
   never_flip: 0
   log: 0
@@ -334598,16 +334592,16 @@ MonoBehaviour:
   skin: door_ground
   leader: {fileID: 135769176}
   current_anim:
-    name: door_ground.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ground/door_ground.door_ground_0
     sprites:
     - {fileID: 1471092109, guid: cf3c5b333510b8249a578c42324aae44, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -334722,16 +334716,16 @@ MonoBehaviour:
   skin: door_ground
   leader: {fileID: 1007913444}
   current_anim:
-    name: door_ground.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ground/door_ground.door_ground_0
     sprites:
     - {fileID: 1471092109, guid: cf3c5b333510b8249a578c42324aae44, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -335056,16 +335050,16 @@ MonoBehaviour:
   skin: steel_door_ceil
   leader: {fileID: 181968532}
   current_anim:
-    name: steel_door_ceil.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_ceil.steel_door_ceil_0
     sprites:
     - {fileID: -754984741, guid: bd5e0d486d82560488cad808e2c03bc6, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 0
   follow_duration: 1
   never_flip: 0
   log: 0
@@ -350276,16 +350270,16 @@ MonoBehaviour:
   skin: door_icon
   leader: {fileID: 990565086}
   current_anim:
-    name: door_icon.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ui_door.ui_door_0
     sprites:
     - {fileID: 83956777, guid: 5bcd23e470bcbf84ab7f7a29f65e6167, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -352861,16 +352855,16 @@ MonoBehaviour:
   skin: pckg_back
   leader: {fileID: 565485515}
   current_anim:
-    name: pckg_back.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/box/bue_box_fg.bue_box_fg_0
     sprites:
     - {fileID: 892497048, guid: 47ea19e94d77b164e9ee2c23bc7a9b3b, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -356278,16 +356272,16 @@ MonoBehaviour:
   skin: pckg_back
   leader: {fileID: 322924662}
   current_anim:
-    name: pckg_back.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/box/box_bg.box_bg_0
     sprites:
     - {fileID: 892497048, guid: 47ea19e94d77b164e9ee2c23bc7a9b3b, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -356820,16 +356814,16 @@ MonoBehaviour:
   skin: pckg_back
   leader: {fileID: 97400788}
   current_anim:
-    name: pckg_back.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/box/bue_box_fg.bue_box_fg_0
     sprites:
     - {fileID: 892497048, guid: 47ea19e94d77b164e9ee2c23bc7a9b3b, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -363290,16 +363284,16 @@ MonoBehaviour:
   skin: door_icon
   leader: {fileID: 1457801798}
   current_anim:
-    name: door_icon.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ui_door.ui_door_0
     sprites:
     - {fileID: 83956777, guid: 5bcd23e470bcbf84ab7f7a29f65e6167, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -372460,16 +372454,16 @@ MonoBehaviour:
   skin: steel_door_ceil
   leader: {fileID: 715411121}
   current_anim:
-    name: steel_door_ceil.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_ceil.steel_door_ceil_0
     sprites:
     - {fileID: -754984741, guid: bd5e0d486d82560488cad808e2c03bc6, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 0
   follow_duration: 1
   never_flip: 0
   log: 0
@@ -372619,16 +372613,16 @@ MonoBehaviour:
   skin: door_icon
   leader: {fileID: 1457801798}
   current_anim:
-    name: door_icon.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ui_door.ui_door_0
     sprites:
     - {fileID: 83956777, guid: 5bcd23e470bcbf84ab7f7a29f65e6167, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -372743,16 +372737,16 @@ MonoBehaviour:
   skin: door_ground
   leader: {fileID: 1733076057}
   current_anim:
-    name: door_ground.idle.R
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ground/door_ground.door_ground_1
     sprites:
     - {fileID: -969794077, guid: cf3c5b333510b8249a578c42324aae44, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 1
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -377065,16 +377059,16 @@ MonoBehaviour:
   skin: steel_door_ceil
   leader: {fileID: 1007913444}
   current_anim:
-    name: steel_door_ceil.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_ceil.steel_door_ceil_0
     sprites:
     - {fileID: -754984741, guid: bd5e0d486d82560488cad808e2c03bc6, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 0
   follow_duration: 1
   never_flip: 0
   log: 0
@@ -377498,16 +377492,16 @@ MonoBehaviour:
   skin: pckg_back
   leader: {fileID: 1105853438}
   current_anim:
-    name: pckg_back.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/box/bue_box_fg.bue_box_fg_0
     sprites:
     - {fileID: 892497048, guid: 47ea19e94d77b164e9ee2c23bc7a9b3b, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -389255,16 +389249,16 @@ MonoBehaviour:
   skin: steel_door_ceil
   leader: {fileID: 1663315842}
   current_anim:
-    name: steel_door_ceil.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_ceil.steel_door_ceil_0
     sprites:
     - {fileID: -754984741, guid: bd5e0d486d82560488cad808e2c03bc6, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 0
   follow_duration: 1
   never_flip: 0
   log: 0
@@ -391038,16 +391032,16 @@ MonoBehaviour:
   skin: door_ground
   leader: {fileID: 1457801798}
   current_anim:
-    name: door_ground.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ground/door_ground.door_ground_0
     sprites:
     - {fileID: 1471092109, guid: cf3c5b333510b8249a578c42324aae44, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -393283,16 +393277,16 @@ MonoBehaviour:
   skin: door_ground
   leader: {fileID: 990565086}
   current_anim:
-    name: door_ground.idle.R
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ground/door_ground.door_ground_1
     sprites:
     - {fileID: -969794077, guid: cf3c5b333510b8249a578c42324aae44, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 1
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -393612,16 +393606,16 @@ MonoBehaviour:
   skin: door_ground
   leader: {fileID: 736660915}
   current_anim:
-    name: door_ground.idle.R
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ground/door_ground.door_ground_1
     sprites:
     - {fileID: -969794077, guid: cf3c5b333510b8249a578c42324aae44, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 1
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -393736,16 +393730,16 @@ MonoBehaviour:
   skin: door_ground
   leader: {fileID: 345160534}
   current_anim:
-    name: door_ground.idle.R
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ground/door_ground.door_ground_1
     sprites:
     - {fileID: -969794077, guid: cf3c5b333510b8249a578c42324aae44, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 1
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -403777,7 +403771,9 @@ MonoBehaviour:
   skin: rack_fg
   leader: {fileID: 838314952}
   current_anim:
-    name: rack_fg.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/computers/servers/blue_server_fg.blue_server_fg_9
     - objects/interactives/computers/servers/blue_server_fg.blue_server_fg_9
@@ -403799,9 +403795,7 @@ MonoBehaviour:
     - 0.116666675
     - 0.100000024
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -404476,16 +404470,16 @@ MonoBehaviour:
   skin: door_ground
   leader: {fileID: 181968532}
   current_anim:
-    name: door_ground.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ground/door_ground.door_ground_0
     sprites:
     - {fileID: 1471092109, guid: cf3c5b333510b8249a578c42324aae44, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -405939,16 +405933,16 @@ MonoBehaviour:
   skin: pckg_back
   leader: {fileID: 398064840}
   current_anim:
-    name: pckg_back.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/box/box_bg.box_bg_0
     sprites:
     - {fileID: 892497048, guid: 47ea19e94d77b164e9ee2c23bc7a9b3b, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -406063,16 +406057,16 @@ MonoBehaviour:
   skin: steel_door_ceil
   leader: {fileID: 1380064490}
   current_anim:
-    name: steel_door_ceil.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/steel/steel_door_ceil.steel_door_ceil_0
     sprites:
     - {fileID: -754984741, guid: bd5e0d486d82560488cad808e2c03bc6, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: NaN
-    flipX: 0
   follow_duration: 1
   never_flip: 0
   log: 0
@@ -406306,16 +406300,16 @@ MonoBehaviour:
   skin: pckg_back
   leader: {fileID: 556269641}
   current_anim:
-    name: pckg_back.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/box/box_bg.box_bg_0
     sprites:
     - {fileID: 892497048, guid: 47ea19e94d77b164e9ee2c23bc7a9b3b, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -407495,16 +407489,16 @@ MonoBehaviour:
   skin: door_icon
   leader: {fileID: 1581102873}
   current_anim:
-    name: door_icon.idle.U
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/doors/ui_door.ui_door_0
     sprites:
     - {fileID: 83956777, guid: 5bcd23e470bcbf84ab7f7a29f65e6167, type: 3}
     sprites_durations:
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -421502,13 +421496,13 @@ MonoBehaviour:
   skin: pckg_back
   leader: {fileID: 6833953617019915110}
   current_anim:
-    name: 
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths: []
     sprites: []
     sprites_durations: []
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -431342,6 +431336,7 @@ MonoBehaviour:
   attackant_advantage: 10
   base_attack_shake_magnitude: 0.5
   base_kill_shake_magnitude: 0.8
+  renderer_name: 
 --- !u!222 &1825799278295376123
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -454406,7 +454401,9 @@ MonoBehaviour:
   skin: rack_fg
   leader: {fileID: 8779294675636011056}
   current_anim:
-    name: rack_fg.idle.D
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths:
     - objects/interactives/computers/servers/blue_server_fg.blue_server_fg_9
     - objects/interactives/computers/servers/blue_server_fg.blue_server_fg_9
@@ -454428,9 +454425,7 @@ MonoBehaviour:
     - 0.116666675
     - 0.100000024
     - 0
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0
@@ -459211,13 +459206,13 @@ MonoBehaviour:
   skin: none
   leader: {fileID: 8818029696903872062}
   current_anim:
-    name: 
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths: []
     sprites: []
     sprites_durations: []
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 0
   log: 0

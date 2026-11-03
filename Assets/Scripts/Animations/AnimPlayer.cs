@@ -165,7 +165,7 @@ public class AnimPlayer : MonoBehaviour
         }
 
         // we check if this anim is a single frame anim
-        update_each_frame = !(anim.sprites.Length == 1);
+        update_each_frame = !(anim.sprites.Count == 1);
 
         // we check if the duration is overriden
         if (duration_override != -1f)
@@ -231,7 +231,7 @@ public class AnimPlayer : MonoBehaviour
         }
 
         // we check if this anim is a single frame anim
-        update_each_frame = !(anim.sprites.Length == 1);
+        update_each_frame = !(anim.sprites.Count == 1);
 
         // we play the animation
         OnAnimPlayedAtFrame.Invoke(anim_name, 0, 1f);
@@ -329,7 +329,7 @@ public class AnimPlayer : MonoBehaviour
         // we go to the next frame
         frame_timer = 0f;
         current_frame++;
-        if (current_frame < current_anim.sprites_durations.Length)
+        if (current_frame < current_anim.sprites_durations.Count)
         {
             Renderer.sprite = current_anim.sprites[current_frame];
             return;
@@ -355,7 +355,7 @@ public class AnimPlayer : MonoBehaviour
 
         // we saturate the frame
         if (frame < 0) { frame = 0; }
-        else if (frame >= anim.sprites.Length) { frame = 0; }
+        else if (frame >= anim.sprites.Count) { frame = 0; }
 
         // we play the animation
         if (current_anim != anim)

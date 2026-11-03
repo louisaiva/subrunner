@@ -17,6 +17,7 @@ public class UI_AnimPlayer : MonoBehaviour
     public bool resize_to_native_size = true;
     public bool play_on_start = true;
     public bool always_loop = false;
+    public bool loop_this_anim_override = false;
     public bool unscaled_time = false;
 
     [Header("Components")]
@@ -88,10 +89,10 @@ public class UI_AnimPlayer : MonoBehaviour
         // we go to the next frame
         frame_timer = 0f;
         current_frame++;
-        if (current_frame >= current_anim.sprites_durations.Length)
+        if (current_frame >= current_anim.sprites_durations.Count)
         {
             // if the animation is not looping, we stop it
-            if (!current_anim.loop && !always_loop)
+            if (!loop_this_anim_override && !always_loop)
             {
                 if (log_frames) { Debug.Log($"(UI_AnimPlayer) Animation {current_anim.name} ended."); }
                 current_frame = -1;
@@ -132,11 +133,7 @@ public class UI_AnimPlayer : MonoBehaviour
         if (current_anim != null && anim.name == current_anim.name) { return null; }
 
         // we check if we have a loop override
-        if (loop_override != null)
-        {
-            // we set the loop of the animation
-            anim.loop = (bool)loop_override;
-        }
+        loop_this_anim_override = loop_override ?? anim.loop;
 
         // we check if the duration is overriden
         if (duration_override == null) { anim.speed = 1f; }
@@ -157,7 +154,7 @@ public class UI_AnimPlayer : MonoBehaviour
     {
         // we saturate the frame
         if (frame < 0) { frame = 0; }
-        else if (frame >= anim.sprites.Length) { frame = 0; }
+        else if (frame >= anim.sprites.Count) { frame = 0; }
 
         // we play the animation
         if (current_anim != anim)
@@ -169,7 +166,7 @@ public class UI_AnimPlayer : MonoBehaviour
 
         if (log_frames)
         {
-            Debug.Log($"(UI_AnimPlayer) Playing animation {anim.name} at frame {frame} (anim frames: {anim.sprites.Length})");
+            Debug.Log($"(UI_AnimPlayer) Playing animation {anim.name} at frame {frame} (anim frames: {anim.sprites.Count})");
         }
 
         // we set the sprite
@@ -186,7 +183,7 @@ public class UI_AnimPlayer : MonoBehaviour
         rt.localScale = new Vector3(anim.flipX ? -1 : 1, 1, 1);
 
         // we check if its a one frame animation we instantly stop it
-        if (anim.sprites.Length == 1) { current_frame = -1; }
+        if (anim.sprites.Count == 1) { current_frame = -1; }
 
 
         if (log_advanced) { Debug.Log("(AnimPlayer) Playing " + anim.name + " at frame " + frame); }
