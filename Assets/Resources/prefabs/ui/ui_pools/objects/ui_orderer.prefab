@@ -2878,6 +2878,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4520494729518831139}
     m_Modifications:
+    - target: {fileID: 474975608978697094, guid: 06a7d5fd979e4304ba338781358a8c80, type: 3}
+      propertyPath: m_Color.b
+      value: 0.62352943
+      objectReference: {fileID: 0}
+    - target: {fileID: 474975608978697094, guid: 06a7d5fd979e4304ba338781358a8c80, type: 3}
+      propertyPath: m_Color.g
+      value: 0.8705883
+      objectReference: {fileID: 0}
+    - target: {fileID: 474975608978697094, guid: 06a7d5fd979e4304ba338781358a8c80, type: 3}
+      propertyPath: m_Color.r
+      value: 0.9333334
+      objectReference: {fileID: 0}
     - target: {fileID: 883397051540368467, guid: 06a7d5fd979e4304ba338781358a8c80, type: 3}
       propertyPath: m_text
       value: COOK MEAL
@@ -2886,6 +2898,18 @@ PrefabInstance:
       propertyPath: description
       value: Click me to cook your final meal !!\n\nSome of these ingredient are
         required, some are not :D\n\nBon ap la team
+      objectReference: {fileID: 0}
+    - target: {fileID: 1186366618448290292, guid: 06a7d5fd979e4304ba338781358a8c80, type: 3}
+      propertyPath: hoverColor.b
+      value: 0.62352943
+      objectReference: {fileID: 0}
+    - target: {fileID: 1186366618448290292, guid: 06a7d5fd979e4304ba338781358a8c80, type: 3}
+      propertyPath: hoverColor.g
+      value: 0.8705883
+      objectReference: {fileID: 0}
+    - target: {fileID: 1186366618448290292, guid: 06a7d5fd979e4304ba338781358a8c80, type: 3}
+      propertyPath: hoverColor.r
+      value: 0.9333334
       objectReference: {fileID: 0}
     - target: {fileID: 1186366618448290292, guid: 06a7d5fd979e4304ba338781358a8c80, type: 3}
       propertyPath: use_pool_description
