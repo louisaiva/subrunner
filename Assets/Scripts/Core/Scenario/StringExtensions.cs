@@ -4,13 +4,28 @@ public static class StringExtensions
 {
     public static string AddColor(this string text, Color col) => $"<color={ColorHexFromUnityColor(col)}>{text}</color>";
     public static string ColorHexFromUnityColor(this Color unityColor) => $"#{ColorUtility.ToHtmlStringRGBA(unityColor)}";
-    
+
     // SPECIFIC COLORS
     public static string Red(this string text) => AddColor(text, Color.red);
     public static string Green(this string text) => AddColor(text, Color.green);
     public static string Grey(this string text) => AddColor(text, Color.grey);
     public static string Cyan(this string text) => AddColor(text, Color.cyan);
     public static string Magenta(this string text) => AddColor(text, Color.magenta);
+    public static string RedIfNull(this string text)
+    {
+        if (text == null)
+        {
+            text = "NULL";
+            return AddColor(text, Color.red);
+        }
+
+        if (text == "")
+        {
+            text = "EMPTY";
+            return AddColor(text, Color.yellow);
+        }
+        return text;
+    }
 
     // NATURAL ORDER SORTING
     private static NaturalSortComparer comparer = new NaturalSortComparer(System.StringComparison.Ordinal);

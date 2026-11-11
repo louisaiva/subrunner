@@ -1,6 +1,7 @@
 #pragma warning disable 4014
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -347,6 +348,15 @@ public class UI_Navigator : Singleton<UI_Navigator>
         if (CurrentSlot == null) { return false; }
         return CurrentSlot.GetType() == type || CurrentSlot.GetType().IsSubclassOf(type);
     }
+    public UI_Slottable GetUI_SlottableOfUI_Slot(UI_Slot slot)
+    {
+        foreach (UI_Slottable slottable in Slottables)
+        {
+            if (!slottable.IsYourSlot(slot)) { continue; }
+            return slottable.GetLastParentOfSlot(slot);
+        }
+        return null;
+    }
 
 
     // INPUTS HANDLING
@@ -361,8 +371,6 @@ public class UI_Navigator : Singleton<UI_Navigator>
 
         if (CurrentSlot == null) { return; }
 
-
-        // soit on activate le slot si on a pas d'ui_item moving
         Mover.FinishMovingItem();
         activate(CurrentSlot);
         return;
@@ -409,6 +417,8 @@ public class UI_Navigator : Singleton<UI_Navigator>
         if (CurrentSlot == null) { return; }
         if (CurrentSlot is not Droppable droppable) { return; }
         UI_Slot slot = CurrentSlot;
+        string old_name = slot.name;
+        UI_Slottable old_slottable = GetUI_SlottableOfUI_Slot(slot);
 
         // on récupère le type favorisé pour la navigation après le click
         Type navigating_to_closest_slot_type = slot.GetFavorisedNavigationType();
@@ -428,12 +438,15 @@ public class UI_Navigator : Singleton<UI_Navigator>
         // wait for a frame to let the click happen
         await System.Threading.Tasks.Task.Yield();
 
+        // ! no need to navigate to closest here since we are navigating automatically when slot gets disabled.
+
         // on navigue vers le slot le plus proche (seulement si c pas null ni disabled parce que sinon handle_slot_disabled_while_hovering a été appelé)
         /* if (slot != null && !slot.Disabled)
         {
             if (log_inputs) { Debug.Log("(UI_Navigator - OnDrop) Navigating to closest after drop"); }
             Navigator.NavigateToClosest(position, favorised_type: navigating_to_closest_slot_type, unwanted_types: unwanted_types);
         } */
+
 
         // on enable le current slot si c'est toujours le même
         if (slot != null && !slot.Disabled)
@@ -444,6 +457,23 @@ public class UI_Navigator : Singleton<UI_Navigator>
 
         // on refresh les item pools de l'inventory menu
         UI_Manager.Instance.RefreshInventoryMenu();
+        
+        await System.Threading.Tasks.Task.Yield();
+        await System.Threading.Tasks.Task.Yield();
+
+        // we check if we changed slot, if we have a new slot, and if this new slot is in another slottable then the last slot' slottable,
+        UI_Slottable new_slottable = GetUI_SlottableOfUI_Slot(CurrentSlot);
+        // if (log_inputs) { Debug.Log($"(UI_Navigator) SLOTTABLES ON DROP :    '{old_name.RedIfNull()}' in '{(old_slottable?.name).RedIfNull()}'    >>> into >>>    '{(CurrentSlot?.name).RedIfNull()}' in '{(new_slottable?.name).RedIfNull()}'"); }
+        if (new_slottable != old_slottable
+            && UI_Manager.Instance.UIC is UI_InputsController uic
+            && uic.IsEndlessInputDown<float>("ui_drop_ingame"))
+        {
+            uic.PreventNextUI_DropRelease();
+            uic.CancelEndlessInput<float>("ui_drop_ingame");
+            if (log_inputs) { Debug.Log($"(UI_Navigator) SLOTTABLED CHANGED, stopped dropping --> '{old_name.RedIfNull()}' in '{(old_slottable?.name).RedIfNull()}'    >>> into >>>    '{(CurrentSlot != null ? CurrentSlot.name : null).RedIfNull()}' in '{(new_slottable?.name).RedIfNull()}'"); }
+            // here we also need to prevent next ui_drop_ingame released
+        }
+
     }
     public void OnDown(bool for_drop = false)
     {

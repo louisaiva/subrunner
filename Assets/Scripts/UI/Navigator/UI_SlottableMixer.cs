@@ -105,6 +105,14 @@ public class UI_SlottableMixer : UI_Slottable, Awakable
         }
         return false;
     }
+    public override UI_Slottable GetLastParentOfSlot(UI_Slot slot)
+    {
+        foreach (UI_Slottable slottable in slottables)
+        {
+            if (slottable.IsYourSlot(slot)) { return slottable.GetLastParentOfSlot(slot); }
+        }
+        return IsYourSlot(slot) ? this : null;
+    }
 
     // GET BUTTONS & TOGGLES
     public override UI_Button GetButtonByName(string button_name)

@@ -262,11 +262,22 @@ public class UI_InputsController : InputController, UI_Controller
 
             return;
         }
+        if (prevent_next_ui_drop_release)
+        {
+            prevent_next_ui_drop_release = false;
+            if (log_endless_inputs) { Debug.Log($"(UIC) Prevented next ui_drop release !!"); }
+            return;
+        }
 
         // else we release the button so we direclty drop with it
         OnUI_Drop();
     }
     private void OnUI_Drop() { navigator.OnDrop(); }
+    public bool prevent_next_ui_drop_release = false;
+    public void PreventNextUI_DropRelease()
+    {
+        prevent_next_ui_drop_release = true;
+    }
 
 
     // RIGHT JOYSTICK NAVIGATION
@@ -390,5 +401,11 @@ public class UI_InputsController : InputController, UI_Controller
     public EndlessInput<T> GetEndlessInput<T>(string name) where T : struct
     {
         return get_endless_input<T>(name);
+    }
+    public void CancelEndlessInput<T>(string name) where T : struct
+    {
+        EndlessInput<T> end_inputs = get_endless_input<T>(name);
+        if (end_inputs == null) { return; }
+        end_inputs.Cancel();
     }
 }

@@ -82,4 +82,9 @@ public abstract class UI_Slottable : MonoBehaviour, Slottable
     public virtual bool IsYourSlot(UI_Slot slot) { return false; } // same so always false
     public virtual UI_Button GetButtonByName(string button_name) { return null; }
     public virtual UI_Toggle GetToggleByName(string toggle_name) { return null; }
+    public virtual UI_Slottable GetLastParentOfSlot(UI_Slot slot)
+    {
+        if (!IsYourSlot(slot)) { return null; }
+        return this;
+    }
 }

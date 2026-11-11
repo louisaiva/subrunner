@@ -157,7 +157,7 @@ public class GamepadNavigator : MonoBehaviour, Navigator
         // we check if we have a slottable
         if (Manager.Slottables.Count == 0) { return; }
 
-        // we update the Manager.Slots
+        // we update the slots
         Manager.UpdateSlots();
 
         // wait for a frame to let the UI update
