@@ -12,7 +12,7 @@ using UnityEngine;
 {
     public string agent_type;
     [RuntimeOnly] public string current_room_id;
-    [/* InstanceSpecific,  */RuntimeOnly] public Dictionary<Type, string> room_destinations = new Dictionary<Type, string>(); // main room destinations per goal of the ia.
+    [/* InstanceData,  */RuntimeOnly] public Dictionary<Type, string> room_destinations = new Dictionary<Type, string>(); // main room destinations per goal of the ia.
     
 
 

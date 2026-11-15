@@ -169,8 +169,8 @@ public class ColliderAttackCapacity : ColliderCapacity
     public List<string> excluded_tags = new List<string> { };
     public float knockback_magnitude;
     public float damage;
-    [InstanceSpecific] public bool is_attacking;
-    [InstanceSpecific] public int kills = 0;
+    [InstanceData] public bool is_attacking;
+    [InstanceData] public int kills = 0;
 
     // CONSTRUCTOR
     public ColliderAttackData(CapacityData parent) : base(parent) { }

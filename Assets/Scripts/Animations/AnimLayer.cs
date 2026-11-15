@@ -294,7 +294,7 @@ public class AnimLayer : MonoBehaviour
 }
 
 
-[Serializable] public class AnimLayerData
+[Serializable] public class AnimLayerData : DataHolder
 {
     public string skin;
     public Vector2 local_position;

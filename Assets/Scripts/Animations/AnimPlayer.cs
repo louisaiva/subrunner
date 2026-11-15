@@ -900,7 +900,7 @@ public class AnimPlayer : MonoBehaviour
 
 
 // ANIMATIONS
-[Serializable] public class AnimPlayerData
+[Serializable] public class AnimPlayerData : DataHolder
 {
     public string skin_kind;
     public string skin;

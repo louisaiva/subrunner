@@ -3,33 +3,6 @@ using UnityEngine;
 using System;
 using System.Reflection;
 
-
-/// <summary>
-/// this attribute "RuntimeOnly" will never be serialized, and
-/// will be ignored when duplicating data
-/// </summary>
-[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-public sealed class RuntimeOnlyAttribute : Attribute { }
-
-/// <summary>
-/// this attribute "InstanceSpecific" mark fields that need to be
-/// saved dynamically for all instances of a same kind.
-/// </summary>
-[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-public sealed class InstanceSpecificAttribute : Attribute { }
-
-
-/// <summary>
-/// this attribute "KindSpecific" mark fields which values are the same
-/// for all instances of a same kind. These are not saved dynamically,
-/// since their values are feed on their pre saved static values.
-/// To modify a value, the kind template needs to be saved staticly.
-/// </summary>
-[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-public sealed class KindSpecificAttribute : Attribute { }
-
-
-
 public interface ICapableData : IData
 {
     ICapableData Duplicate();
@@ -37,35 +10,45 @@ public interface ICapableData : IData
 
 [Serializable] public class CapableData : ICapableData
 {
-    [field: SerializeField, InstanceSpecific] public string id { get; set; }
-    [InstanceSpecific] public string kind; // used to determine which kind of capable it is. i.e. chest, IA, spawner or else
-    // marked as InstanceSpecific bcz we need to store it so we can
-    // load back the correct kind, and so to retrieve the KindSpecific fields when loading
-    
+    [field: SerializeField, InstanceData] public string id { get; set; }
+    [InstanceData] public string kind; // used to determine which kind of capable it is. i.e. chest, IA, spawner or else
+    // marked as InstanceData bcz we need to store it so we can
+    // load back the correct kind, and so to retrieve the KindData fields when loading
+    // todo remove this if unecessary (new Json Contracts auto resolves types)
+
 
     // GENERAL
-    [InstanceSpecific] public Vector2 position;
-    [InstanceSpecific] public Vector2 orientation;
-    public int layer;
-    public string tag;
+    [InstanceData] public Vector2 position;
+    [InstanceData] public Vector2 orientation;
+    [KindData] public int layer;
+    [KindData] public string tag;
 
     // CAPACITIES
-    [InstanceSpecific] public List<string> capacities_ids;
-    public int TotalCapacitiesCount() { return capacities_ids.Count; }
+    [InstanceData] public List<string> capacities_ids;
     
     // ANIM PLAYER
     public AnimPlayerData anim_data;
 
     // INVENTORY
-    public InventoryData inventory;
+    [InstanceData, KindData] public InventoryData inventory;
 
     // BODY
-    public FeetData feet_data;
+    [KindData] public FeetData feet_data;
 
 
     // EFFECTS
-    [InstanceSpecific] public List<Effect> effects;
-    [InstanceSpecific] public List<float> effects_ttl; // time to live for each effect, in seconds
+    [InstanceData] public List<Effect> effects;
+    [InstanceData] public List<float> effects_ttl; // time to live for each effect, in seconds
+
+
+
+
+    ///
+    //
+    /// CONSTRUCTORS & METHODS
+    //
+    ///
+
 
     // CONSTRUCTORS
     public CapableData() { }
@@ -152,6 +135,7 @@ public interface ICapableData : IData
     }
 
 
+    public int TotalCapacitiesCount() { return capacities_ids.Count; }
 
 
 
@@ -225,10 +209,10 @@ public interface ICapableData : IData
 
 
 // COLLIDERS
-[Serializable] public class FeetData
+[Serializable] public class FeetData : DataHolder
 {
-    public List<BoxData> box_colliders;
-    public List<CircleData> circle_colliders;
+    [KindData] public List<BoxData> box_colliders;
+    [KindData] public List<CircleData> circle_colliders;
 
     // DUPLICATE
     public FeetData Duplicate()

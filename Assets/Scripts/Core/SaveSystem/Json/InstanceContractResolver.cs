@@ -61,7 +61,7 @@ public sealed class InstanceContractResolver : DefaultContractResolver
         if (!isDataClassRelative(field.DeclaringType)) { return false; } // we authorize all fields --> allow for storing Vector2.x & Vector2.y
 
         // handling field case
-        if (!Attribute.IsDefined(field, typeof(InstanceSpecificAttribute), inherit: false))
+        if (!Attribute.IsDefined(field, typeof(InstanceDataAttribute), inherit: false))
         {
             if (log) { Debug.Log($"(InstanceCR) Field {field.Name} has no Instance Specific attribute, will be skipped."); }
             return true;
@@ -70,9 +70,35 @@ public sealed class InstanceContractResolver : DefaultContractResolver
     }
     private static bool isDataClassRelative(Type type)
     {
-        if (typeof(CapableData).IsAssignableFrom(type)) { return true; }
+        return typeof(DataHolder).IsAssignableFrom(type);
+        /* if (typeof(CapableData).IsAssignableFrom(type)) { return true; }
         if (typeof(CapacityData).IsAssignableFrom(type)) { return true; }
         // inserts others here, like FeetData ?
-        return false;
+        return false; */
     }
 }
+
+
+/// <summary>
+/// this attribute "RuntimeOnly" will never be serialized, and
+/// will be ignored when duplicating data
+/// </summary>
+[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+public sealed class RuntimeOnlyAttribute : Attribute { }
+
+/// <summary>
+/// this attribute "InstanceData" mark fields that need to be
+/// saved dynamically for all instances of a same kind.
+/// </summary>
+[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+public sealed class InstanceDataAttribute : Attribute { }
+
+
+/// <summary>
+/// this attribute "KindData" mark fields which values are the same
+/// for all instances of a same kind. These are not saved dynamically,
+/// since their values are feed on their pre saved static values.
+/// To modify a value, the kind template needs to be saved staticly.
+/// </summary>
+[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+public sealed class KindDataAttribute : Attribute { }

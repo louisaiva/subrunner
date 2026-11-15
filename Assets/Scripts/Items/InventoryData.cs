@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-[Serializable] public class InventoryData
+[Serializable] public class InventoryData : DataHolder
 {
     public List<ItemPoolData> item_pools_data;
     public ItemType item_type;
