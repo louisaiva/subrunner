@@ -173058,7 +173058,7 @@ MonoBehaviour:
   log_loading:
     Verbose: 2
   log_get_material:
-    Verbose: 3
+    Verbose: 2
   y_see_through_material_lit: {fileID: 2100000, guid: fc7a97008fcc6804d84a76b6ac6f37f0, type: 2}
   see_through_material_unlit: {fileID: 2100000, guid: 71aa4916f2ac66b47a35b03d36b5607f, type: 2}
 --- !u!1 &906291655
@@ -328212,6 +328212,7 @@ GameObject:
   - component: {fileID: 1733966125}
   - component: {fileID: 1733966126}
   - component: {fileID: 1733966127}
+  - component: {fileID: 1733966128}
   m_Layer: 0
   m_Name: data_manager
   m_TagString: Untagged
@@ -328504,6 +328505,21 @@ MonoBehaviour:
   log: 1
   log_banks:
     Verbose: 3
+--- !u!114 &1733966128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1733966122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62d965a5eada5b447bb1368b8caf789b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TemplateJsonConverter
+  template: {fileID: 1492906358488399447, guid: 2bbf31ea3f9618640a60afd21f115de2, type: 3}
+  converter: 2
+  log: 1
 --- !u!1 &1734254098
 GameObject:
   m_ObjectHideFlags: 0

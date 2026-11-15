@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using UnityEngine;
 
@@ -11,7 +11,7 @@ public class LightsDataExporter : MonoBehaviour
     private static readonly JsonSerializerSettings exportSettings = new JsonSerializerSettings
     {
         Formatting = Formatting.Indented,
-        ContractResolver = new UnityValueTypeContractResolver()
+        ContractResolver = new DefaultContractResolver()
     };
 
     public Dictionary<string, List<LightData>> ExportLightsData(List<Room> rooms, out int lights_nb)

@@ -10,17 +10,23 @@ using System.Reflection;
 /// </summary>
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
 public sealed class RuntimeOnlyAttribute : Attribute { }
-[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-public sealed class IncludeInDataAttribute : Attribute { }
-
 
 /// <summary>
 /// this attribute "InstanceSpecific" mark fields that need to be
-/// saved dynamically for all instances of a same kind. the other fiels
-/// are shared between all instances of a same kind
+/// saved dynamically for all instances of a same kind.
 /// </summary>
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
 public sealed class InstanceSpecificAttribute : Attribute { }
+
+
+/// <summary>
+/// this attribute "KindSpecific" mark fields which values are the same
+/// for all instances of a same kind. These are not saved dynamically,
+/// since their values are feed on their pre saved static values.
+/// To modify a value, the kind template needs to be saved staticly.
+/// </summary>
+[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+public sealed class KindSpecificAttribute : Attribute { }
 
 
 

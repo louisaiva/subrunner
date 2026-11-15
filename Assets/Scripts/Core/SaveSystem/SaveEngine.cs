@@ -48,22 +48,22 @@ public class SaveEngine : MonoBehaviour
 
     [Header("Save Parameters")]
     [SerializeField] private bool save_as_one_file = true; // if true, saves the whole world save data in a single json file, if false, saves the world save data in multiple json files in a folder structure
-    private static JsonSerializerSettings one_file_settings = new JsonSerializerSettings
+    public static JsonSerializerSettings InstanceContract = new JsonSerializerSettings
+    {
+        TypeNameHandling = TypeNameHandling.Auto,
+        Formatting = Formatting.Indented,
+        ContractResolver = new InstanceContractResolver()
+    };
+    public static JsonSerializerSettings OldContract = new JsonSerializerSettings
     {
         TypeNameHandling = TypeNameHandling.Auto,
         Formatting = Formatting.Indented,
         ContractResolver = new UnityValueTypeContractResolver()
-        /* ,
-        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-        PreserveReferencesHandling = PreserveReferencesHandling.Objects */
     };
-    /* private static JsonTextWriter Writer = new JsonTextWriter(new StringWriter())
-    {
-        Formatting = Formatting.Indented,
-        Indentation = 4,
-        IndentChar = ' '
-    }; */
-    
+    /* ,
+    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+    PreserveReferencesHandling = PreserveReferencesHandling.Objects */
+
     [Header("Logs")]
     [SerializeField] private Loggable<SaveEngine> log;
     private static Loggable<SaveEngine> slog => LazyInstance != null ? LazyInstance.log : null;
@@ -476,7 +476,7 @@ public class SaveEngine : MonoBehaviour
             if (log) { Debug.LogWarning($"(SaveEngine - LoadWorldSaveFromJson) json is null or empty: {json}"); }
             return null;
         }
-        _loaded_save = JsonConvert.DeserializeObject<WorldSaveData>(json, one_file_settings);
+        _loaded_save = JsonConvert.DeserializeObject<WorldSaveData>(json, InstanceContract);
         return _loaded_save;
     }
     public static WorldSaveData GetWorldSave(string world_id)
@@ -491,7 +491,7 @@ public class SaveEngine : MonoBehaviour
         // Debug.Log($"(SaveEngine) Loading world save data for world '{world_id}' from folder or file..., save is null: {save == null}");
 
         AppManager.EnsureFolderExists(WorldManager.WorldsDataPath);
-        if (load_world_save_from_folder(world_id, ref _loaded_save, log:false)) { return _loaded_save; }
+        // if (load_world_save_from_folder(world_id, ref _loaded_save, log:false)) { return _loaded_save; }
 
         // here we have no folder for the world, we try to load it from the single file save
         if (load_world_save_from_file(world_id, ref _loaded_save)) { return _loaded_save; }
@@ -512,11 +512,11 @@ public class SaveEngine : MonoBehaviour
             if (log) { Debug.LogWarning($"(SaveEngine - Load World Save) World Save Data file not found: {id}.json"); }
             return false;
         }
-        save = JsonConvert.DeserializeObject<WorldSaveData>(json, one_file_settings);
+        save = JsonConvert.DeserializeObject<WorldSaveData>(json, InstanceContract);
         save.world.id = id; // ensure the world id is set correctly
         return true;
     }
-    private static bool load_world_save_from_folder(string id, ref WorldSaveData save, bool log = true)
+    [Obsolete("Use load world save from file instead")] private static bool load_world_save_from_folder(string id, ref WorldSaveData save, bool log = true)
     {
         string world_path = Path.Combine(WorldManager.WorldsDataPath, id);
 
@@ -709,7 +709,7 @@ public class SaveEngine : MonoBehaviour
             if (log) { Debug.LogWarning($"(SaveEngine - Load World Data Helper) World Data Helper file not found: {id}.json"); }
             return false;
         }
-        helper = JsonConvert.DeserializeObject<WorldDataHelper>(json, one_file_settings);
+        helper = JsonConvert.DeserializeObject<WorldDataHelper>(json, InstanceContract);
         helper.is_one_file = true;
         return true;
     }
@@ -764,7 +764,7 @@ public class SaveEngine : MonoBehaviour
         string json = "";
         try
         {
-            json = JsonConvert.SerializeObject(data, one_file_settings);
+            json = JsonConvert.SerializeObject(data, InstanceContract);
             slog?.Log($"Serialized {json.Length} chars");
         }
         catch (Exception ex)

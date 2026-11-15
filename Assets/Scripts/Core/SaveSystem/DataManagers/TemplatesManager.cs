@@ -106,7 +106,7 @@ public class TemplatesManager : MonoBehaviour
         // this is mainly for simplifying the work flow inside unity, bcz with data-driven approach
         // we don't have a lot of control on modifying data in scene view
         // We do most heavy job with templates, AND SO we must be fast
-        filter_capable_data(capable, ref data);
+        PrepareCapableDataTemplate(capable, ref data);
 
         // save the current data to a json file (+ handles MultipleSkins if we have one)
         save_capable_data_and_multiskin(capable, data);
@@ -165,7 +165,7 @@ public class TemplatesManager : MonoBehaviour
 
         if (log) { Debug.Log($"(TemplatesManager - Save Capable) Updated & Saved CapableData : {capable_id} (to {path})\n\n{data.GetDetails()}\n\n{json}"); }
     }
-    private void filter_capable_data(Capable capable, ref CapableData data)
+    public static void PrepareCapableDataTemplate(Capable capable, ref CapableData data)
     {
         // we check if the capable has some TemplateCapacityReference components, and we save the id of the ref
         TemplateCapacityReference[] template_capacity_refs = capable.GetComponentsInChildren<TemplateCapacityReference>(includeInactive: false);
@@ -198,7 +198,7 @@ public class TemplatesManager : MonoBehaviour
         // we also make sure all the items have is_grabbed to true by default
         if (data is ItemData item_data) { item_data.is_grabbed = true; }
     }
-    private InventoryData construct_inventory_data_from_pools(TemplateItemPoolReference[] pools)
+    private static InventoryData construct_inventory_data_from_pools(TemplateItemPoolReference[] pools)
     {
         if (pools.Length == 0) { return null; }
 
