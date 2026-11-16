@@ -535,10 +535,8 @@ public class Capable : MonoBehaviour, Debuggable
         data.OnUnloaded(this);
         this.data = null;
 
-        // we clear the feet collider
+        // ? I think we should move the 2 next lines above this.data = null ?   +1
         feet_collider = null;
-
-        // and stop all coroutines
         StopAllCoroutines();
     }
     public virtual void SaveDynamicData()
