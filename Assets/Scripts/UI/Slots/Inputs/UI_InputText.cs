@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
+using System.Linq;
 
 public class UI_InputText : UI_Slot
 {
@@ -13,6 +14,7 @@ public class UI_InputText : UI_Slot
 
 
     // CALLBACKS
+    private List<System.Action<string>> onValidateCallbacks;
     public void RegisterInput(string title, string placeholder, List<System.Action<string>> on_validate)
     {
         // set the title and placeholder
@@ -20,15 +22,14 @@ public class UI_InputText : UI_Slot
         placeholder_text.text = placeholder;
 
         // register the callback
-        set_callback(on_validate);
+        Debug.Log($"(UI_InputText) Setting {on_validate.Count} callbacks.");
+        onValidateCallbacks = on_validate;
     }
-    private List<System.Action<string>> onValidateCallbacks;
-    private void set_callback(List<System.Action<string>> callbacks)
+    private void OnDisable()
     {
-        onValidateCallbacks = callbacks;
-    }
-    private void remove_callback()
-    {
+        Debug.Log("(UI_InputText) disabling the input text. Resetting text & callbakcs");
+        input_field.SetTextWithoutNotify("");
+        inputText = "";
         onValidateCallbacks = new List<System.Action<string>>();
     }
 
@@ -36,28 +37,51 @@ public class UI_InputText : UI_Slot
     // INPUT SELECTION
     public void SelectInput()
     {
-        input_field.OnSelect(null);
+        // input_field.OnSelect(null);
         InputManager.Instance.EnableInputModule();
     }
     public void DeselectInput()
     {
-        input_field.OnDeselect(null);
+        // input_field.OnDeselect(null);
         InputManager.Instance.DisableInputModule();
     }
+    public void Write(string letters)
+    {
+        input_field.SetTextWithoutNotify(input_field.text + letters);
+    }
+    public void EraseLastLetter()
+    {
+        string new_text = input_field.text;
+        if (new_text.Length > 0)
+        {
+            new_text = new_text.Remove(new_text.Length - 1);
+        }
+        input_field.SetTextWithoutNotify(new_text);
+    }
 
-
-    // TMP methods
+    // VALIDATE INPUT
+    public void ValidateCurrentText()
+    {
+        inputText = input_field.text;
+        Validate();
+    }
     public void ValidateInput(string input)
     {
         inputText = input;
+        Validate();
+    }
+    public void Validate()
+    {
+        Debug.Log("Validating with " + onValidateCallbacks.Count + " callbacks");
 
         // fire the callback
         foreach (var callback in onValidateCallbacks)
         {
+            Debug.Log("Calling " + callback);
             callback(inputText);
         }
 
         // remove the callback
-        remove_callback();
+        // remove_callback();
     }
 }

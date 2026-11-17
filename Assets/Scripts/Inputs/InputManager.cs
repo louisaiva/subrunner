@@ -264,13 +264,17 @@ public class InputManager : MonoBehaviour
     {
         if (log) { Debug.Log("(InputManager) enabling input module"); }
         inputs.UI.Disable();
+        inputs.UI.navigate.Enable();
+        inputs.UI.activate.Enable();
+        inputs.UI.mouse_navigation.Enable();
+        // inputs.UI.mouse_delta.Enable();
         inputs.menus.Disable();
-        ui_input_module.enabled = true;
+        // ui_input_module.enabled = true;
     }
     public void DisableInputModule()
     {
         if (log) { Debug.Log("(InputManager) disabling input module"); }
-        ui_input_module.enabled = false;
+        // ui_input_module.enabled = false;
         inputs.UI.Enable();
         inputs.menus.Enable();
     }

@@ -114,7 +114,7 @@ public class MouseNavigator : MonoBehaviour, Navigator
         // we filter the results to keep only slots on "UI_Slot" layers & that have a UI_Slot on them
         for (int i = 0; i < results.Count; i++)
         {
-            log_results += $"\n\t- {results[i].gameObject.name} (layer {results[i].gameObject.layer})";
+            log_results += $"\n\t- {results[i].gameObject.name} (layer {LayerMask.LayerToName(results[i].gameObject.layer)})";
 
             slot = results[i].gameObject.GetComponent<UI_Slot>();
             if (slot == null) { continue; }
