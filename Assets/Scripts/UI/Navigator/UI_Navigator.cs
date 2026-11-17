@@ -30,6 +30,7 @@ public class UI_Navigator : Singleton<UI_Navigator>
     public List<UI_Slot> Slots;
     public UI_Slot CurrentSlot;
     public bool IsHoveringSlot { get { return CurrentSlot != null; } }
+    public Vector2 BasePosition { get { return Navigator.BasePosition; } }
 
     // events
     public event Action<UI_Slot> OnSlotHoverEnter = delegate { }; // delegate that triggers when we navigate to a new slot
@@ -41,7 +42,7 @@ public class UI_Navigator : Singleton<UI_Navigator>
     [SerializeField] private bool log = false;
     [SerializeField] private bool log_hover = false;
     [SerializeField] private bool log_handle_slot_disabled = false;
-    [SerializeField] private bool log_slot_position = false;
+    public bool log_slot_position = false;
     [SerializeField] private bool log_inputs = false;
     [SerializeField] private bool log_update_slots = false;
 
@@ -191,7 +192,7 @@ public class UI_Navigator : Singleton<UI_Navigator>
     private async void handle_slot_disabled_while_hovering(UI_Slot slot)
     {
         // register the position of the slot while we still have a slot (might be deleted the frame after)
-        Vector2 position = GetPosition(slot);
+        Vector2 position = slot.GetPosition();
 
         await System.Threading.Tasks.Task.Yield();
 
@@ -201,26 +202,6 @@ public class UI_Navigator : Singleton<UI_Navigator>
     }
 
     // GETTERS SLOTS
-    public Vector2 GetPosition(UI_Slot slot)
-    {
-        if (slot == null) { return Navigator.BasePosition; }
-
-        // if we are here we have a canvas slot -> means we have a recttransform
-        RectTransform rect_transform = slot.GetComponent<RectTransform>();
-        Vector2 position = rect_transform.TransformPoint(rect_transform.rect.center);
-        string s = "(UI_Navigator) GetPosition: slot " + slot.name + " position : " + position;
-
-        // on regarde si le slot est positionné dans un canvas world space or screen space
-        if (slot.gameObject.layer == LayerMask.NameToLayer("UI_World"))
-        {
-            // on le convertit en position
-            position = Camera.main.WorldToScreenPoint(position);
-            s += " position (screen) : " + position + "\n";
-        }
-        if (log_slot_position) { Debug.Log(s); }
-
-        return position;
-    }
     public UI_Slot GetCurrentSlot()
     {
         // get the current slot
@@ -268,7 +249,7 @@ public class UI_Navigator : Singleton<UI_Navigator>
 
 
             // on récupère la distance entre la position et la position du slot
-            Vector2 slot_position = GetPosition(slot);
+            Vector2 slot_position = slot.GetPosition();
             float distance;
 
             // si on a une direction & un local_angle_multiplicator, on applique la modification d'angle
@@ -323,7 +304,7 @@ public class UI_Navigator : Singleton<UI_Navigator>
     }
     public bool IsSlotOutOfScreen(UI_Slot slot)
     {
-        Vector2 position = GetPosition(slot);
+        Vector2 position = slot.GetPosition();
         if (position.x < 0 || position.x > Screen.width || position.y < 0 || position.y > Screen.height)
         {
             return true;
@@ -384,7 +365,7 @@ public class UI_Navigator : Singleton<UI_Navigator>
         List<Type> unwanted_types = Navigator.UnwantedTypesAfterActivate;
 
         // on retient la position du slot
-        Vector2 position = GetPosition(slot);
+        Vector2 position = slot.GetPosition();
 
         // on clique sur le slot
         slot.OnPointerClick(null);
@@ -425,7 +406,7 @@ public class UI_Navigator : Singleton<UI_Navigator>
         List<Type> unwanted_types = Navigator.UnwantedTypesAfterActivate;
 
         // on retient la position du slot
-        Vector2 position = GetPosition(slot);
+        Vector2 position = slot.GetPosition();
 
         // on vide le slot
         // on appelle OnPointerDropped pour simuler un drop

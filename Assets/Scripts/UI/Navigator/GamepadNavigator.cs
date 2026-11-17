@@ -83,7 +83,7 @@ public class GamepadNavigator : MonoBehaviour, Navigator
         if (UI_Manager.Instance.UIC is UI_InputsController uic && uic != null) { s += "\n\ndropping :\n\tis_drop_input_down : " + uic.IsDropInputDown() + "\n\tcurrent slot type : " + (Manager.CurrentSlot != null ? Manager.CurrentSlot.GetType().Name : "null") + "\n\n"; }
 
         // on récupère la position du slot actuel
-        Vector2 current_slot_position = Manager.GetPosition(Manager.CurrentSlot);
+        Vector2 current_slot_position = Manager.CurrentSlot?.GetPosition() ?? Manager.BasePosition;
         if (Manager.CurrentSlot != null) { s += "current slot : " + Manager.CurrentSlot.name + " / position : " + current_slot_position + "\n\n"; }
         else { s += "no current slot\n\n"; }
 
@@ -96,7 +96,7 @@ public class GamepadNavigator : MonoBehaviour, Navigator
             if (slot == Manager.CurrentSlot) { continue; }
 
             // on récupère la position du slot
-            Vector2 slot_position = Manager.GetPosition(slot);
+            Vector2 slot_position = slot.GetPosition();
             Vector2 direction_to_slot = (slot_position - current_slot_position).normalized;
             float angle = Vector2.Angle(direction, direction_to_slot);
             if (angle < angle_threshold)
@@ -122,7 +122,7 @@ public class GamepadNavigator : MonoBehaviour, Navigator
         // string s = "(UI_GamepadNavigator) NAVIGATE DOT: \n\n";
 
         // on récupère la position du slot actuel
-        Vector2 current_slot_position = Manager.GetPosition(Manager.CurrentSlot);
+        Vector2 current_slot_position = Manager.CurrentSlot?.GetPosition() ?? Manager.BasePosition; ;
 
         // on récupère les Manager.Slots dans le bon angle 45°
         float min_dot = float.MaxValue;
@@ -134,7 +134,7 @@ public class GamepadNavigator : MonoBehaviour, Navigator
             if (slot == Manager.CurrentSlot) { continue; }
 
             // on récupère la position du slot
-            Vector2 slot_position = Manager.GetPosition(slot);
+            Vector2 slot_position = slot.GetPosition();
             Vector2 direction_to_slot = (slot_position - current_slot_position).normalized;
             float angle = Vector2.Angle(direction, direction_to_slot);
             if (angle > 45f) { continue; }

@@ -71,6 +71,8 @@ using UnityEngine;
         this.flipX = override_flipX ?? other.flipX;
 
         this.sprites_paths = new List<string>(other.sprites_paths);
+        if (other == null) { Debug.LogError($"(Anim) created from null other anim : {name}"); }
+        else if (other.sprites == null) { Debug.LogError($"(Anim) created from other anim with null sprites : {name}"); }
         this.sprites = new List<Sprite>(other.sprites);
         this.sprites_durations = new List<float>(other.sprites_durations);
     }
