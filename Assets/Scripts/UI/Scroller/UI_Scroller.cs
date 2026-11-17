@@ -48,12 +48,12 @@ public class UI_Scroller : MonoBehaviour
 
     private void Start()
     {
-        UI_Navigator.Instance.OnSlotOutOfScreen += OnSlotOutOfScreen;
+        UI_Navigator.Instance.OnSlotPartiallyOutOfScreen += OnSlotOutOfScreen;
     }
     private void OnDestroy()
     {
         if (UI_Navigator.Instance == null) { return; }
-        UI_Navigator.Instance.OnSlotOutOfScreen -= OnSlotOutOfScreen;
+        UI_Navigator.Instance.OnSlotPartiallyOutOfScreen -= OnSlotOutOfScreen;
     }
 
     // MAIN METHODS
@@ -165,6 +165,8 @@ public class UI_Scroller : MonoBehaviour
     // ON SLOT OUT OF SCREEN
     private void OnSlotOutOfScreen(UI_Slot slot)
     {
+        if (!InputManager.Instance.UsingGamepad) { return; }
+
         // we only handle if the slot is a child of us ?
         if (!IsSlotInScroller(slot)) { return; }
 

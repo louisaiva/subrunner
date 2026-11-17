@@ -73,11 +73,16 @@ public class UI_Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 
     // GETTERS
 
-    public Vector2 GetPosition()
+    public Vector2 GetPosition(SlotAnchorPoint point = SlotAnchorPoint.Center)
     {
         // if we are here we have a canvas slot -> means we have a recttransform
         RectTransform rect_transform = GetComponent<RectTransform>();
-        Vector2 position = rect_transform.TransformPoint(rect_transform.rect.center);
+        Vector2 position = rect_transform.TransformPoint
+        (
+            point == SlotAnchorPoint.TopR ? rect_transform.rect.max :
+            point == SlotAnchorPoint.BottomL ? rect_transform.rect.min :
+            rect_transform.rect.center
+        );
         string s = "(UI_Navigator) GetPosition: slot " + name + " position : " + position;
 
         // on regarde si le slot est positionné dans un canvas world space or screen space
@@ -91,6 +96,7 @@ public class UI_Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 
         return position;
     }
+    public RectTransform GetRect() { return GetComponent<RectTransform>(); }
     public Type GetFavorisedNavigationType()
     {
         // get slot type
@@ -109,5 +115,12 @@ public class UI_Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         }
 
         return true;
+    }
+
+    public enum SlotAnchorPoint
+    {
+        Center,
+        TopR,
+        BottomL
     }
 }

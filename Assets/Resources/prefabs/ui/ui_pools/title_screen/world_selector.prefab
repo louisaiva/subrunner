@@ -151,10 +151,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b504b78d5e32465408419f8d61a3fb79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Writer
+  write_on_enable: 0
+  raw_writing_on_enable: 
+  on_enable_delay: 0
   caracters_per_sec: 250
   slow_caractere_delay: 0.1
   pause_caractere_delay: 0.5
   log_writing: 0
+  log_color_tags: 0
 --- !u!1 &335418117394642168
 GameObject:
   m_ObjectHideFlags: 0
@@ -832,10 +836,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b504b78d5e32465408419f8d61a3fb79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Writer
+  write_on_enable: 0
+  raw_writing_on_enable: 
+  on_enable_delay: 0
   caracters_per_sec: 100
   slow_caractere_delay: 0.1
   pause_caractere_delay: 0.5
   log_writing: 0
+  log_color_tags: 0
 --- !u!1 &2889610027949176479
 GameObject:
   m_ObjectHideFlags: 0
@@ -888,11 +896,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Scroller
   scroll_axis: 1
   invert_scroll: 1
-  scroll_speed: 100
-  clamp_speed: 5
+  scroll_speed: 250
   limit_to_bounds: 1
   min_offset: -500
   max_offset: 200
+  lerp_time_offset: 0.02
+  lerp_velocity: 0
+  clamp_speed: 8
+  log_scroll: 0
+  log_lerp: 0
   log_clamp: 0
 --- !u!114 &5986962005166423874
 MonoBehaviour:
@@ -2258,6 +2270,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  desc: close
+  color: {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &482200373971315997
 MonoBehaviour:
   m_ObjectHideFlags: 0

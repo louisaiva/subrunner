@@ -36,6 +36,7 @@ public class UI_Navigator : Singleton<UI_Navigator>
     public event Action<UI_Slot> OnSlotHoverEnter = delegate { }; // delegate that triggers when we navigate to a new slot
     public event Action<UI_Slot> OnSlotHoverExit = delegate { }; // delegate that triggers when we navigate away from a slot
     public event Action<UI_Slot> OnSlotOutOfScreen = delegate { }; // delegate that triggers when we navigate to a position that is out of screen
+    public event Action<UI_Slot> OnSlotPartiallyOutOfScreen = delegate { }; // delegate that triggers when we navigate to a position that is out of screen
 
 
     [Header("Logs")]
@@ -162,6 +163,7 @@ public class UI_Navigator : Singleton<UI_Navigator>
 
         // on vérifie si la position du slot est en dehors de l'écran
         if (IsSlotOutOfScreen(slot)) { OnSlotOutOfScreen?.Invoke(slot); }
+        if (IsSlotPartiallyOutOfScreen(slot)) { OnSlotPartiallyOutOfScreen?.Invoke(slot); }
 
         // on register le callback pour disabling
         slot.OnSlotDisabled += handle_slot_disabled_while_hovering;
@@ -305,6 +307,20 @@ public class UI_Navigator : Singleton<UI_Navigator>
     public bool IsSlotOutOfScreen(UI_Slot slot)
     {
         Vector2 position = slot.GetPosition();
+        if (position.x < 0 || position.x > Screen.width || position.y < 0 || position.y > Screen.height)
+        {
+            return true;
+        }
+        return false;
+    }
+    public bool IsSlotPartiallyOutOfScreen(UI_Slot slot)
+    {
+        Vector2 position = slot.GetPosition(UI_Slot.SlotAnchorPoint.BottomL);
+        if (position.x < 0 || position.x > Screen.width || position.y < 0 || position.y > Screen.height)
+        {
+            return true;
+        }
+        position = slot.GetPosition(UI_Slot.SlotAnchorPoint.TopR);
         if (position.x < 0 || position.x > Screen.width || position.y < 0 || position.y > Screen.height)
         {
             return true;
