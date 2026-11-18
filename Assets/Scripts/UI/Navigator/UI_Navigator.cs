@@ -27,7 +27,8 @@ public class UI_Navigator : Singleton<UI_Navigator>
 
     [Header("Slottables & Slots")]
     public List<Slottable> Slottables = new List<Slottable>();
-    public List<UI_Slot> Slots;
+    [SerializeField] private List<UI_Slot> slots;
+    public List<UI_Slot> Slots => new List<UI_Slot>(slots);
     public UI_Slot CurrentSlot;
     public bool IsHoveringSlot { get { return CurrentSlot != null; } }
     public Vector2 BasePosition { get { return Navigator.BasePosition; } }
@@ -116,7 +117,7 @@ public class UI_Navigator : Singleton<UI_Navigator>
     public void UpdateSlots()
     {
         // we clear Slots
-        Slots.Clear();
+        slots.Clear();
 
         // we check if we have a slottable
         if (Slottables.Count == 0)
@@ -134,10 +135,10 @@ public class UI_Navigator : Singleton<UI_Navigator>
 
             // on récupère les Slots du slottable
             List<UI_Slot> slottable_slots = slottable.GetSlots();
-            Slots.AddRange(slottable_slots);
+            slots.AddRange(slottable_slots);
         }
 
-        if (log_update_slots) { Debug.Log("(UI_Navigator) updated Slots: " + Slots.Count + " Slots"); }
+        if (log_update_slots) { Debug.Log("(UI_Navigator) updated Slots: " + slots.Count + " Slots"); }
     }
     public void HoverSlot(UI_Slot slot)
     {
@@ -210,17 +211,24 @@ public class UI_Navigator : Singleton<UI_Navigator>
         if (CurrentSlot == null) { return null; }
         return CurrentSlot;
     }
-    public UI_Slot GetClosestSlot(Vector2 position, ref List<UI_Slot> slots, ref string s,Type favorised_type=null, List<Type> unwanted_types = null)
+    public UI_Slot GetClosestSlot(Vector2 position, ref string s, Type favorised_type = null, List<Type> unwanted_types = null)
     {
-        return GetClosestSlot(position, ref slots, ref s, new Vector2(), 0f, favorised_type: favorised_type, unwanted_types: unwanted_types);
+        UpdateSlots();
+        List<UI_Slot> _slots = Slots;
+        calculate_positions_of_slots(ref _slots, out List<Vector2> positions);
+        return GetClosestSlot(position, ref _slots, ref positions, ref s, new Vector2(), 0f, favorised_type: favorised_type, unwanted_types: unwanted_types);
     }
-    public UI_Slot GetClosestSlot(Vector2 position, ref List<UI_Slot> slots, ref string s, Vector2 direction, float local_angle_multiplicator, Type favorised_type = null, Type unfavorised_type = null, List<Type> unwanted_types = null)
+    public UI_Slot GetClosestSlot(Vector2 position, ref List<UI_Slot> _slots, ref List<Vector2> slots_positions, ref string s, Type favorised_type = null, List<Type> unwanted_types = null)
+    {
+        return GetClosestSlot(position, ref _slots, ref slots_positions, ref s, new Vector2(), 0f, favorised_type: favorised_type, unwanted_types: unwanted_types);
+    }
+    public UI_Slot GetClosestSlot(Vector2 position, ref List<UI_Slot> _slots, ref List<Vector2> slots_positions, ref string s, Vector2 direction, float local_angle_multiplicator, Type favorised_type = null, Type unfavorised_type = null, List<Type> unwanted_types = null)
     {
         // find the closest slot to the given position
         // if direction & local_angle_multiplicator are given, we will find the closest slot in the direction
         // s is a string to debug the found slots
 
-        
+
         // global can't be set to closest slot type (specific ui_slot types that can't be closest, never)
         // List<Type> global_unfavorised_types = new List<Type>() { typeof(UI_OutlineSlot) };
 
@@ -228,9 +236,9 @@ public class UI_Navigator : Singleton<UI_Navigator>
         // on récupère le slot le plus proche
         UI_Slot next_slot = null;
         float closest_distance = float.MaxValue;
-        for (int i = 0; i < slots.Count; i++)
+        for (int i = 0; i < _slots.Count; i++)
         {
-            UI_Slot slot = slots[i];
+            UI_Slot slot = _slots[i];
 
             // global unfavorised type check - not even need to check distance for this type of slot
             bool is_slot_unwanted = false;
@@ -250,8 +258,8 @@ public class UI_Navigator : Singleton<UI_Navigator>
 
 
 
-            // on récupère la distance entre la position et la position du slot
-            Vector2 slot_position = slot.GetPosition();
+            // on récupère la distance entre la position et les positions du slot
+            Vector2 slot_position = slots_positions[i];
             float distance;
 
             // si on a une direction & un local_angle_multiplicator, on applique la modification d'angle
@@ -329,11 +337,11 @@ public class UI_Navigator : Singleton<UI_Navigator>
     }
     public bool IsAllSlotsOutOfScreen()
     {
-        if (Slots.Count == 0) { return false; }
+        if (slots.Count == 0) { return false; }
 
-        for (int i = 0; i < Slots.Count; i++)
+        for (int i = 0; i < slots.Count; i++)
         {
-            if (!IsSlotOutOfScreen(Slots[i]))
+            if (!IsSlotOutOfScreen(slots[i]))
             {
                 return false;
             }
@@ -353,6 +361,23 @@ public class UI_Navigator : Singleton<UI_Navigator>
             return slottable.GetLastParentOfSlot(slot);
         }
         return null;
+    }
+    private void calculate_positions_of_slots(ref List<UI_Slot> _slots, out List<Vector2> positions)
+    {
+        positions = new List<Vector2>();
+        List<Vector2> added_positions = new List<Vector2>();
+        for (int i = _slots.Count - 1; i >= 0; i--)
+        {
+            List<Vector2> pos = _slots[i].GetSlotPositions();
+            positions.Add(pos[0]);
+            for (int j = 1; j < pos.Count; j++)
+            {
+                added_positions.Add(pos[j]);
+                _slots.Add(_slots[i]);
+            }
+        }
+        positions.Reverse();
+        positions.AddRange(added_positions);
     }
 
 
@@ -523,9 +548,9 @@ public class UI_Navigator : Singleton<UI_Navigator>
     public void OnExit()
     {
         // checks if we have a UI_ExitButton
-        for (int i = 0; i < Slots.Count; i++)
+        for (int i = 0; i < slots.Count; i++)
         {
-            if (Slots[i] is not UI_ExitButton exit_button) { continue; }
+            if (slots[i] is not UI_ExitButton exit_button) { continue; }
             exit_button.OnPointerClick(null);
             if (log_inputs) { Debug.Log("(UI_Navigator) Exit button clicked: " + exit_button.name); }
             return;
@@ -534,9 +559,9 @@ public class UI_Navigator : Singleton<UI_Navigator>
     public void OnExitDown()
     {
         // checks if we have a UI_ExitButton
-        for (int i = 0; i < Slots.Count; i++)
+        for (int i = 0; i < slots.Count; i++)
         {
-            if (Slots[i] is not UI_ExitButton exit_button) { continue; }
+            if (slots[i] is not UI_ExitButton exit_button) { continue; }
             exit_button.OnPointerDown(null);
             if (log_inputs) { Debug.Log("(UI_Navigator) Exit button downed: " + exit_button.name); }
             return;
@@ -549,6 +574,27 @@ public class UI_Navigator : Singleton<UI_Navigator>
     {
         if (InputManager.Instance == null) { return; }
         InputManager.Instance.OnInputTypeChanged -= handle_input_type_changed;
+    }
+
+
+    // ON GIZMO
+    private void OnDrawGizmosSelected()
+    {
+        UpdateSlots();
+        List<UI_Slot> _slots = Slots;
+        calculate_positions_of_slots(ref _slots, out List<Vector2> screen_positions);
+        List<Vector3> world_positions = screen_positions.ConvertAll(p => Camera.main.ScreenToWorldPoint(p));
+        world_positions.ForEach(p => p.z = 0f);
+        // Debug.Log($"(UI_Navigator) GIZMOS : {slots.Count} slots positions to show :" + string.Join("\n - ",positions));
+
+        Gizmos.color = new Color(0.75f, 0.0f, 0.0f, 0.95f);
+        foreach ( Vector2 pos in world_positions )
+        {
+            Gizmos.DrawSphere(pos, 0.05f);
+        }
+        /* Vector3 position = Camera.main.ScreenToWorldPoint(Vector2.zero);
+        position.z = 0f;
+        Gizmos.DrawSphere(position, 0.05f); */
     }
 }
 
