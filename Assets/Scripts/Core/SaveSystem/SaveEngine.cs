@@ -476,7 +476,7 @@ public class SaveEngine : MonoBehaviour
             if (log) { Debug.LogWarning($"(SaveEngine - LoadWorldSaveFromJson) json is null or empty: {json}"); }
             return null;
         }
-        _loaded_save = JsonConvert.DeserializeObject<WorldSaveData>(json, InstanceContract);
+        _loaded_save = JsonConvert.DeserializeObject<WorldSaveData>(json, OldContract);
         return _loaded_save;
     }
     public static WorldSaveData GetWorldSave(string world_id)
@@ -512,7 +512,7 @@ public class SaveEngine : MonoBehaviour
             if (log) { Debug.LogWarning($"(SaveEngine - Load World Save) World Save Data file not found: {id}.json"); }
             return false;
         }
-        save = JsonConvert.DeserializeObject<WorldSaveData>(json, InstanceContract);
+        save = JsonConvert.DeserializeObject<WorldSaveData>(json, OldContract);
         save.world.id = id; // ensure the world id is set correctly
         return true;
     }
@@ -709,7 +709,7 @@ public class SaveEngine : MonoBehaviour
             if (log) { Debug.LogWarning($"(SaveEngine - Load World Data Helper) World Data Helper file not found: {id}.json"); }
             return false;
         }
-        helper = JsonConvert.DeserializeObject<WorldDataHelper>(json, InstanceContract);
+        helper = JsonConvert.DeserializeObject<WorldDataHelper>(json, OldContract);
         helper.is_one_file = true;
         return true;
     }
@@ -764,7 +764,7 @@ public class SaveEngine : MonoBehaviour
         string json = "";
         try
         {
-            json = JsonConvert.SerializeObject(data, InstanceContract);
+            json = JsonConvert.SerializeObject(data, OldContract);
             slog?.Log($"Serialized {json.Length} chars");
         }
         catch (Exception ex)
