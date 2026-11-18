@@ -14,6 +14,16 @@ public class Distributor : Crafter
     public override string ItemRule => "other:ticket";
     public override string UI_PoolName => "distributor";
 
+
+    // ON INTERACT / HOVER LOST
+    public override void OnInteract(Capable interactor)
+    {
+        // prevent interaction during the pasta distribution
+        if (pasta_coroutine != null) { return; }
+        base.OnInteract(interactor);
+    }
+
+
     private Coroutine pasta_coroutine = null;
     private List<Item> pending_tickets = new List<Item>();
     private void handle_item_grabbed(Item item)

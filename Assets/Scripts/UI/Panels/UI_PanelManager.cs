@@ -67,6 +67,11 @@ public class UI_PanelManager : MonoBehaviour
         // we tween to the current panel
         TweenToPanel(get_panel(current_panel));
     }
+    private void OnDestroy()
+    {
+        if (UI_Navigator.Instance == null) { return; }
+        UI_Navigator.Instance.OnSlotOutOfScreen -= TweenToSlot;
+    }
 
     // ROLLING & TWEENING HIGH LEVEL
     private void TweenToSlot(UI_Slot slot)

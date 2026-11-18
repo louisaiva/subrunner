@@ -481,9 +481,82 @@ MonoBehaviour:
     icon: {fileID: -834103212, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
   - binding: 9
     icon: {fileID: 649449379, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: a_min
+    icon: {fileID: -628797976, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: b_min
+    icon: {fileID: 269282800, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: c_min
+    icon: {fileID: -1391452049, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: d_min
+    icon: {fileID: -636337127, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: e_min
+    icon: {fileID: -1327216221, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: f_min
+    icon: {fileID: -332852442, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: g_min
+    icon: {fileID: 351169876, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: h_min
+    icon: {fileID: -403131550, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: i_min
+    icon: {fileID: 1853646808, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: j_min
+    icon: {fileID: -1752410039, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: k_min
+    icon: {fileID: -1984657896, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: l_min
+    icon: {fileID: 1666357835, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: m_min
+    icon: {fileID: 1355036800, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: n_min
+    icon: {fileID: -538692694, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: o_min
+    icon: {fileID: -640246197, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: p_min
+    icon: {fileID: 2014309548, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: q_min
+    icon: {fileID: 510542511, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: r_min
+    icon: {fileID: 1928632157, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: s_min
+    icon: {fileID: -252282310, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: t_min
+    icon: {fileID: -1533580380, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: u_min
+    icon: {fileID: 975376658, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: v_min
+    icon: {fileID: 1712010624, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: w_min
+    icon: {fileID: -2051509499, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: x_min
+    icon: {fileID: -709693200, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: y_min
+    icon: {fileID: -548303184, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: z_min
+    icon: {fileID: -1566661333, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: '&'
+    icon: {fileID: 200138834, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: '*'
+    icon: {fileID: -921864885, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: $
+    icon: {fileID: 364168906, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: ''''
+    icon: {fileID: 1940045277, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: (
+    icon: {fileID: -1946015152, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: '-'
+    icon: {fileID: -669379128, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: )
+    icon: {fileID: -698873767, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: _
+    icon: {fileID: 1432704132, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: +
+    icon: {fileID: -121926309, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+  - binding: "\xB0"
+    icon: {fileID: -1174896867, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
   key_prefab: {fileID: 6380900198815103699, guid: 609aea6603e0fd54996bd2806f7d0226, type: 3}
   log_dynamic_bindings: 0
   log_kb: 0
+  hide_icon_missing: 0
 --- !u!1 &3811816626350204236
 GameObject:
   m_ObjectHideFlags: 0
@@ -1052,6 +1125,42 @@ MonoBehaviour:
     base_spritesheets:
     - objects/interactives/crafters/distributor/distributor_fg
     keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: nikita_hair
+    variant_spritesheets:
+    - beings/boss/spyk/spyk_hair
+    - beings/boss/spyk/spyk_attack_hair
+    base_skin: nikita
+    base_spritesheets:
+    - beings/boss/spyk/spyk_base
+    - beings/boss/spyk/spyk_attack_base
+    keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: usb_hair
+    variant_spritesheets:
+    - beings/units/usb/usb_hair
+    - beings/units/usb/usb_shoot_hair
+    base_skin: usb
+    base_spritesheets:
+    - beings/units/usb/usb_base
+    - beings/units/usb/usb_shoot_base
+    keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: usb_arms
+    variant_spritesheets:
+    - beings/units/usb/usb_arms
+    - beings/units/usb/usb_shoot_arms
+    base_skin: usb
+    base_spritesheets:
+    - beings/units/usb/usb_base
+    - beings/units/usb/usb_shoot_base
+    keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: usb_shield
+    variant_spritesheets:
+    - beings/units/usb/usb_shield
+    - beings/units/usb/usb_shoot_shield
+    base_skin: usb
+    base_spritesheets:
+    - beings/units/usb/usb_base
+    - beings/units/usb/usb_shoot_base
+    keep_base_anim_if_spritesheet_not_found: 0
   log: 0
   log_LAFAC: 0
   log_variant_awake: 0
@@ -1155,6 +1264,22 @@ MonoBehaviour:
   - {fileID: -129852262, guid: 83d20de3bc490bc43aa8d2d7f451dc97, type: 3}
   - {fileID: 1241098219, guid: 83d20de3bc490bc43aa8d2d7f451dc97, type: 3}
   - {fileID: 979033039, guid: 83d20de3bc490bc43aa8d2d7f451dc97, type: 3}
+  - {fileID: 1021896847, guid: 446d865788f00404e837b56994831170, type: 3}
+  - {fileID: 900064990, guid: 446d865788f00404e837b56994831170, type: 3}
+  - {fileID: 2092579413, guid: 446d865788f00404e837b56994831170, type: 3}
+  - {fileID: -1899451792, guid: 446d865788f00404e837b56994831170, type: 3}
+  - {fileID: 435787958, guid: 446d865788f00404e837b56994831170, type: 3}
+  - {fileID: -401257352, guid: 446d865788f00404e837b56994831170, type: 3}
+  - {fileID: 1850686231, guid: 446d865788f00404e837b56994831170, type: 3}
+  - {fileID: 21082006, guid: 446d865788f00404e837b56994831170, type: 3}
+  - {fileID: 902362302, guid: 446d865788f00404e837b56994831170, type: 3}
+  - {fileID: -97743176, guid: 446d865788f00404e837b56994831170, type: 3}
+  - {fileID: 1701190347, guid: 446d865788f00404e837b56994831170, type: 3}
+  - {fileID: -1122276252, guid: 446d865788f00404e837b56994831170, type: 3}
+  - {fileID: 1211026501, guid: 446d865788f00404e837b56994831170, type: 3}
+  - {fileID: 374087177, guid: 649b66b9eb86cf645a2948fe195c759b, type: 3}
+  - {fileID: -2029178852, guid: 649b66b9eb86cf645a2948fe195c759b, type: 3}
+  - {fileID: -1069179877, guid: 649b66b9eb86cf645a2948fe195c759b, type: 3}
   IF_gamepad_path: spritesheets/ui/inputs/ui_interactables
   IF_kb_path: spritesheets/ui/inputs/input_kb_feedback
   joystick_feedback_icons:
@@ -1522,6 +1647,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SaveEngine
   save_as_one_file: 1
+  log_get:
+    Verbose: 1
   log:
     Verbose: 4
   log_capable_data_kind_checking: 0
@@ -1700,7 +1827,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LoadedSceneCount: 0
-  prototype: july26demo
+  prototype: UI_Slot with multi slot positions !
   log: 0
   log_stats: 0
 --- !u!114 &714515157948744320
@@ -1818,7 +1945,7 @@ MonoBehaviour:
   log_icons_paths: 0
   log_world_data_loading_on_awake: 0
   hide_files_not_found: 1
-  log_selecting_world: 1
+  log_selecting_world: 0
   log_create: 0
 --- !u!1 &7970305435618458122
 GameObject:
@@ -2163,6 +2290,8 @@ MonoBehaviour:
   BUTTON_ENDLESSLY_SHORT_DELAY: 0.06
   BUTTON_ENDLESSLY_LONG_THRESHOLD: 0.6
   BUTTON_ENDLESSLY_LONG_DELAY: 0.1
+  BUTTON_ENDLESSLY_XTREM_LONG_THRESHOLD: 2
+  BUTTON_ENDLESSLY_XTREM_LONG_DELAY: 0.4
   log: 0
   log_input_maps_enabled: 0
   log_get_bindings: 0

@@ -566,6 +566,16 @@ public class Controller : MonoBehaviour
         return false;
     }
 
+    public string GetControllerPosition()
+    {
+        Capable controller = ControlledCapable;
+        if (controller == null) { return "no controller"; }
+
+        string details = $" - controller : {controller.ID}";
+        details += $" - position : {controller.transform.position}";
+        // details += $" - position : {controller.transform.position}";
+        return details;
+    }
 
     // CLEAR STACK
     public void ClearStack()

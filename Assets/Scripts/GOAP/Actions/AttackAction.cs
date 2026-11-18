@@ -10,7 +10,7 @@ namespace subrunner.goap
 {
     public class AttackAction : IA_Action<AttackAction.Data>
     {
-        
+
         // dictionary that holds the last or current AttackActionResult for each IA performing this action, we will use it to update the distance to attack based on the last result (missed, took damage, hit)
         private Dictionary<IA, AttackActionResult> last_attack_results = new Dictionary<IA, AttackActionResult>();
         // ! WARNING !
@@ -39,6 +39,7 @@ namespace subrunner.goap
             public Action<CapableData> target_changed_room_callback;
 
             public AttackCapacity attack_capacity { get; set; }
+            public CycleAttackCapacity cycle_attack_capacity { get; set; }
             public float this_action_stop_distance { get; set; } // we cache this at start to be used in the IsInRange override
         }
 
@@ -59,6 +60,9 @@ namespace subrunner.goap
                 return;
             }
 
+            // we get the cycle attack capacity if we have one but it is not mandatory !
+            data.cycle_attack_capacity = data.ia.GetCapacity<CycleAttackCapacity>();
+
             // we register to the target changing room callback
             data.target_changed_room_callback = (ctx) => on_target_changed_room(agent, data);
             data.CapableTarget.CapableData.OnRoomChanged += data.target_changed_room_callback;
@@ -78,7 +82,7 @@ namespace subrunner.goap
 
 
             // we check if we have a last_attack_result for this IA
-            
+
             // if not we create a new one
             if (!last_attack_results.TryGetValue(data.ia, out AttackActionResult last_result)/*  || last_result == null */)
             {
@@ -113,7 +117,7 @@ namespace subrunner.goap
                 data.this_action_stop_distance = data.attack_capacity.distance_to_attack;
                 return;
             }
-            
+
 
             // we have the same target as last time, we update the distance to attack
             // based on last attack status
@@ -162,6 +166,13 @@ namespace subrunner.goap
                 Debug.Log($"(AttackAction) {data.ia.data.id} is trying to attack {capable_target.data.id}");
             }
 
+            // check if we can use the cycle attack capacity !
+            if (data.cycle_attack_capacity != null)
+            {
+                data.cycle_attack_capacity.Use(data.ia); // this will trigger the attack capacity from inside
+                return;
+            }
+
             // use the attack capacity
             AttackCapacity attack_capacity = data.attack_capacity;
             if (attack_capacity.Able) { attack_capacity.Use(data.ia); }
@@ -169,7 +180,7 @@ namespace subrunner.goap
         public override IActionRunState Perform(IMonoAgent agent, Data data, IActionContext context)
         {
             // wait for the animation to finish
-            if (data.ia.AnimPlayer.IsShowing("attack")) { return ActionRunState.Continue; }
+            if (data.attack_capacity.IsShowingAttack()) { return ActionRunState.Continue; }
 
             // we check if we have a last attack result for this IA to stop watching the attack
             if (last_attack_results.TryGetValue(data.ia, out AttackActionResult last_result))
@@ -221,7 +232,7 @@ namespace subrunner.goap
             base.Stop(agent, data);
 
             data.ia.GetCapacity<WalkCapacity>()?.DisableRun();
-            
+
             // we check if we have a last attack result for this IA to stop watching the attack
             if (last_attack_results.TryGetValue(data.ia, out AttackActionResult last_result))
             {

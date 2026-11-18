@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 
 
-[Serializable] public class ChunkLoader
+[Serializable] public class ChunkLoader : Loader
 {
     private HashSet<ChunkData> loaded_chunks = new HashSet<ChunkData>(); // all the chunks that are currently loaded
     private HashSet<string> loaded_chunks_ids = new HashSet<string>();
@@ -83,7 +83,7 @@ using UnityEngine;
     {
         for (int i = 0; i < load_tasks.Count; i++)
         {
-            if (load_tasks[i].State == ChunkLoaderTaskState.Waiting) { return load_tasks[i]; }
+            if (load_tasks[i].State == TaskState.Waiting) { return load_tasks[i]; }
         }
         return null;
     }
@@ -91,14 +91,14 @@ using UnityEngine;
     {
         for (int i = 0; i < unload_tasks.Count; i++)
         {
-            if (unload_tasks[i].State == ChunkLoaderTaskState.Waiting) { return unload_tasks[i]; }
+            if (unload_tasks[i].State == TaskState.Waiting) { return unload_tasks[i]; }
         }
         return null;
     }
 
 
     // CHUNK LOADING / UNLOADING
-    public bool LoadChunk(string chunk_id /*, out CapableLoadTask task*/) // for later
+    protected override bool Load(string chunk_id /*, out CapableLoadTask task*/) // for later
     {
         if (loaded_chunks_ids.Contains(chunk_id)) { return true; }
 
@@ -117,7 +117,7 @@ using UnityEngine;
         else { RoomEngine.DoorEngine.ShowRoom(data.room_id); }
         return true;
     }
-    public bool UnloadChunk(string chunk_id /*, out CapableUnloadTask task*/) // for later
+    protected override bool Unload(string chunk_id /*, out CapableUnloadTask task*/) // for later
     {
         if (!loaded_chunks_ids.Contains(chunk_id)) { return true; }
 
@@ -160,97 +160,25 @@ using UnityEngine;
     }
 }
 
-[Serializable] public class ChunkLoadTask
+[Serializable] public class ChunkLoadTask : Loader.LoadTask
 {
-    [SerializeField] private ChunkLoaderTaskState state = ChunkLoaderTaskState.Waiting;
-    public ChunkLoaderTaskState State { get => state; }
-    public bool IsDone { get => state == ChunkLoaderTaskState.Done; }
-    [SerializeField] private List<string> chunks_ids_to_load = new List<string>();
-    public System.Action<ChunkLoadTask> OnDone;
-
-    public ChunkLoadTask(string[] chunks_ids)
+    public ChunkLoadTask(string[] ids) : base(ids) { type = TaskType.Load; }
+    public override bool LoadedTheIDWithSuccess(string id, Loader loader)
     {
-        chunks_ids_to_load.AddRange(chunks_ids);
-    }
-
-    public void Run(ChunkLoader loader)
-    {
-        state = ChunkLoaderTaskState.Running;
-
-        // we get the intersection of the chunks to load with the ones that are still waiting for load
-        for (int i = chunks_ids_to_load.Count - 1; i >= 0; i--)
-        {
-            string chunk_id = chunks_ids_to_load[i];
-            if (!loader.is_chunk_waiting_for_load(chunk_id)) { chunks_ids_to_load.RemoveAt(i); continue; } // no need to load it after all, maybe it went back to unload waiting
-            if (!loader.LoadChunk(chunk_id)) { continue; }
-
-            // we successfully loaded the chunk, we remove it from our list
-            chunks_ids_to_load.RemoveAt(i);
-        }
-
-        // if we have no more chunk to load, we are done
-        if (chunks_ids_to_load.Count == 0) { Done(); }
-        else { state = ChunkLoaderTaskState.Delayed; }
-    }
-    public void Done()
-    {
-        state = ChunkLoaderTaskState.Done;
-        OnDone?.Invoke(this);
-    }
-
-    public void Clear()
-    {
-        chunks_ids_to_load.Clear();
-        state = ChunkLoaderTaskState.Waiting;
+        if (loader is not ChunkLoader cloader) { return false; }
+        if (!cloader.is_chunk_waiting_for_load(id)) { return true; } // no need to load it after all, maybe it went back to unload waiting
+        if (!Load(id, cloader)) { return false; }
+        return true;
     }
 }
-[Serializable] public class ChunkUnloadTask
+[Serializable] public class ChunkUnloadTask : Loader.LoadTask
 {
-    [SerializeField] private ChunkLoaderTaskState state = ChunkLoaderTaskState.Waiting;
-    public ChunkLoaderTaskState State { get => state; }
-    public bool IsDone { get => state == ChunkLoaderTaskState.Done; }
-    [SerializeField] private List<string> chunks_ids_to_unload = new List<string>();
-    public System.Action<ChunkUnloadTask> OnDone;
-
-    public ChunkUnloadTask(string[] chunks_ids)
+    public ChunkUnloadTask(string[] ids) : base(ids) { type = TaskType.Unload; }
+    public override bool UnloadedTheIDWithSuccess(string id, Loader loader)
     {
-        chunks_ids_to_unload.AddRange(chunks_ids);
+        if (loader is not ChunkLoader cloader) { return false; }
+        if (!cloader.is_chunk_waiting_for_unload(id)) { return true; } // no need to unload it after all, maybe it went back to load waiting
+        if (!Unload(id, cloader)) { return false; }
+        return true;
     }
-
-    public void Run(ChunkLoader loader)
-    {
-        state = ChunkLoaderTaskState.Running;
-
-        // we get the intersection of the chunks to unload with the ones that are still waiting for unload
-        for (int i = chunks_ids_to_unload.Count - 1; i >= 0; i--)
-        {
-            string chunk_id = chunks_ids_to_unload[i];
-            if (!loader.is_chunk_waiting_for_unload(chunk_id)) { chunks_ids_to_unload.RemoveAt(i); continue; } // no need to unload it after all, maybe it went back to load waiting
-            if (!loader.UnloadChunk(chunk_id)) { continue; }
-
-            // we successfully unloaded the chunk, we remove it from our list
-            chunks_ids_to_unload.RemoveAt(i);
-        }
-
-        // if we have no more chunk to unload, we are done
-        if (chunks_ids_to_unload.Count == 0) { Done(); }
-        else { state = ChunkLoaderTaskState.Delayed; }
-    }
-    public void Done()
-    {
-        state = ChunkLoaderTaskState.Done;
-        OnDone?.Invoke(this);
-    }
-    public void Clear()
-    {
-        chunks_ids_to_unload.Clear();
-        state = ChunkLoaderTaskState.Waiting;
-    }
-}
-public enum ChunkLoaderTaskState
-{
-    Waiting,
-    Running,
-    Delayed,
-    Done
 }

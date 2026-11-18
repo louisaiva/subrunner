@@ -28,6 +28,16 @@ public class AttackCapacity : CooldownCapacity
     [SerializeField] private List<string> base_excluded_tags = new List<string> { };
 
 
+    [Header("Selected attack animation")]
+    protected string attack_capacity = "attack"; // this is the current selected animation. runtime only
+    // todo : for better handling different animations, please create a new capacity called "ComboCapacity" or "EnhancedAttackCapa" etc
+    public void SetAttackCapacityAnimation(string capa_name)
+    {
+        // ? do we need to clear stuff here ?
+        // maybe if we are playing the attack the last anim will never finish ?
+        attack_capacity = capa_name;
+    }
+
     [Header("Attack parameters")]
     [SerializeField] private bool single_hit = false; // if true, the attack will stop after hitting one enemy
     [SerializeField] private bool split_damage = false; // if true, the damage dealt will be split between all hit enemies, if false, each enemy will receive the full damage (overpowered but funier)
@@ -56,11 +66,13 @@ public class AttackCapacity : CooldownCapacity
     private AnimPlayer anim_player;
     private PolygonCollider2D pc;
 
+    [Header("GET STATIC DATA"), Tooltip("These requires a template save in order to affect something. Changing it at runtime won't have any effect")]
+    [SerializeField] private string renderer_name = ""; // leave blank for default renderer (the bearer.AnimPlayer) or specify the name of the specific anim_layer you want to target (the one that has the damage sprites)
 
     // EVENTS
     public Action<HealthCapacity, float> OnDamageDealt = delegate { };
 
-    
+
     // START
     private void Start()
     {
@@ -92,8 +104,9 @@ public class AttackCapacity : CooldownCapacity
         // we set the bearer and its components
         bearer = capable;
         anim_player = bearer.AnimPlayer;
-        sr = bearer.AnimPlayer.Renderer;
-        if (anim_player.IsShowing("attack")) { return; } // we check if we are already attacking
+        if (anim_player.IsShowing(attack_capacity)) { return; } // we check if we are already attacking
+        sr = bearer.AnimPlayer.GetRendererByName(((AttackData)data).renderer_name); // ! don't cache since we need to be able to use the katana
+        Debug.Log($"(AttackCapacity) {bearer.ID} is attacking and checking the damage sprites on the {sr.name} (p)layer");
 
         // we update damage value if capable is Perso
         // if (bearer is Perso perso) { damage = perso.skillManager.GetSkillValue("stat:damage"); }
@@ -107,7 +120,7 @@ public class AttackCapacity : CooldownCapacity
         }
 
         // we play the animation
-        Anim anim = anim_player.Play("attack", duration_override: duration_override);
+        Anim anim = anim_player.Play(attack_capacity, duration_override: duration_override);
         if (anim == null) { return; } // if the animation is not found, we return
 
         // we start the cooldown for the time of the animation
@@ -130,7 +143,7 @@ public class AttackCapacity : CooldownCapacity
 
         // we check if we are attacking
         if (!IsAttacking) { return; }
-        if (!bearer.AnimPlayer.IsShowing("attack")) { return; }
+        if (!bearer.AnimPlayer.IsShowing(attack_capacity)) { return; }
 
         // we check if the pc is enabled
         if (!pc.enabled) { return; }
@@ -190,7 +203,7 @@ public class AttackCapacity : CooldownCapacity
         base.Update();
 
         if (!IsAttacking) { return; }
-        if (!anim_player.IsShowing("attack"))
+        if (!anim_player.IsShowing(attack_capacity))
         {
             // checks if we are still attacking & the animation is not the attack animation anymore
             stop_attack();
@@ -309,9 +322,16 @@ public class AttackCapacity : CooldownCapacity
         if (bearer != null)
         {
             bearer.RemoveEffect(Effect.Unstoppable);
-            bearer.AnimPlayer.StopPlaying("attack");
+            bearer.AnimPlayer.StopPlaying(attack_capacity);
         }
     }
+
+    public bool IsShowingAttack()
+    {
+        if (bearer == null) { return false; }
+        return bearer.AnimPlayer.IsPlaying(attack_capacity);
+    }
+
 
 
     // DAMAGE AND KNOCKBACK CALCULATION
@@ -423,7 +443,6 @@ public class AttackCapacity : CooldownCapacity
 
 
 
-
     ///
     //
     /// DATA MANAGEMENT
@@ -434,6 +453,8 @@ public class AttackCapacity : CooldownCapacity
     // LOAD / UNLOAD DATA
     public override void LoadData(CapacityData data, CapableData capable_data)
     {
+        attack_capacity = "attack";
+
         if (data is not AttackData adata) { return; }
 
         // we load the static data
@@ -478,6 +499,7 @@ public class AttackCapacity : CooldownCapacity
     {
         AttackData static_data = new AttackData(base.GetStaticData())
         {
+            renderer_name = renderer_name,
             template_damage = damage,
             random_damage_modifier = random_damage_modifier_at_start,
             distance_to_attack = distance_to_attack,
@@ -498,10 +520,12 @@ public class AttackCapacity : CooldownCapacity
 }
 
 
-[Serializable] public class AttackData : CapacityData
+[Serializable]
+public class AttackData : CapacityData
 {
 
     // TYPE DATA (static at runtime, one per template)
+    public string renderer_name = "";
     public float template_damage;
     public float random_damage_modifier; // replace with an "exp" system for mobs ?
     public float distance_to_attack;
@@ -528,6 +552,7 @@ public class AttackCapacity : CooldownCapacity
     {
         return new AttackData(base.Duplicate() as CapacityData)
         {
+            renderer_name = renderer_name,
             template_damage = template_damage,
             random_damage_modifier = random_damage_modifier,
             distance_to_attack = distance_to_attack,
@@ -548,6 +573,7 @@ public class AttackCapacity : CooldownCapacity
     public override string GetDetails()
     {
         string details = "";
+        details += $"  - renderer name : {(string.IsNullOrEmpty(renderer_name) ? "default renderer" : renderer_name)}\n";
         details += $"  - template damage : {template_damage} (+/- {random_damage_modifier})\n";
         details += $"  - distance to attack : {distance_to_attack}\n";
         details += $"  - single hit : {single_hit}\n";

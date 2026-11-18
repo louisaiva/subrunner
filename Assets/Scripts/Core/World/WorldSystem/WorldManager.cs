@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class WorldManager : MonoBehaviour
@@ -437,6 +438,17 @@ public class WorldManager : MonoBehaviour
             return;
         }
         else if (world_name == "_____//-!!-_o_o__") { world_name = get_first_not_existing_world_name_with_prefix(world_template); }
+
+        // we remove some defended characters from the name
+        world_name = world_name.Replace("*", "")
+                                .Replace("/", "")
+                                .Replace("\\", "")
+                                .Replace(":", "")
+                                .Replace("?", "")
+                                .Replace("<", "")
+                                .Replace(">", "")
+                                .Replace("\"", "")
+                                .Replace("|", "");
 
         // and we check if the world name is not already taken
         if (existing_worlds_data.ContainsKey(world_name))

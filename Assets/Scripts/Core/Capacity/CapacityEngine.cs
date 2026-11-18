@@ -386,12 +386,13 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         }
 
         // we check that the capacity owner id is the same as the capable id
-        bool link_ok = CapableEngine.Instance.ValidateOwnershipLinks(capable_data, data, repair : auto_repair_owner_links_on_load, repair_removes_duplicates : false);
+        // !! this takes a LOT OF time, is it really mandatory all the time ???
+        /* bool link_ok = CapableEngine.Instance.ValidateOwnershipLinks(capable_data, data, repair : auto_repair_owner_links_on_load, repair_removes_duplicates : false);
         if (!link_ok)
         {
             if (log_loading_extended) { Debug.LogWarning($"(CapacityEngine - Load) Capacity '{data.id}' owner id '{data.owner_id}' does not match capable id '{capable_data.id}' for '{capable_data.id}' (if they matches, it means there are some Duplicates)"); }
             // return null;
-        }
+        } */
 
         if (log_loading_extended) { Debug.Log($"(CapacityEngine - Load) Loading capacity '{data.id}' \n{data.GetDetails()}"); }
 

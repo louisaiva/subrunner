@@ -19,7 +19,7 @@ namespace subrunner.goap
             if (data.Target is not CapableTarget capable_target) { return ActionRunState.Completed; }
             if (capable_target.Capable == null || !capable_target.Capable.Loaded) { return ActionRunState.Completed; }
             if (capable_target.Capable is not Door door) { return ActionRunState.Completed; }
-            if (door.IsOpenOrOpening()) { return ActionRunState.Completed; } // if the door is already open/opening, no need to open it again !
+            if (((Openable)door).IsOpenOrOpening()) { return ActionRunState.Completed; } // if the door is already open/opening, no need to open it again !
 
             // else the door is either closing either steady close, so we continue to perform !
             // we interact with the door

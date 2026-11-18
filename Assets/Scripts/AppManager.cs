@@ -141,7 +141,7 @@ public class AppManager : MonoBehaviour
         IsQuitting = true;
 
         // we save the settings prefs
-        SettingsManager.Instance.SaveLocalSettings();
+        SettingsManager.Instance?.SaveLocalSettings();
 
         if (log) { Debug.Log("(AppManager) Application is quitting"); }
     }
@@ -320,6 +320,18 @@ public class AppManager : MonoBehaviour
             return;
         }
         if (verbose >= Verbosity.Normal) { Debug.Log($"(AppManager) Saved json to asset: {path}\n{json}"); }
+    }
+    private static StreamWriter sw;
+    public static void AddLogToWorldLogger(string world_id, string log)
+    {
+        string path = Path.Combine(WorldManager.WorldsDataPath, world_id, "log.txt");
+        using (sw = System.IO.File.AppendText(path))
+        {
+            // add the real time to the log
+            log = "\n[" + DateTime.Now + "] " + log;
+            sw.Write(log);
+            sw.Close();
+        }
     }
 
 

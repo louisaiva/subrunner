@@ -19,6 +19,10 @@ public interface Openable
 {
     public bool is_moving { get; set; }
     public bool is_open { get; set; }
+    public bool IsOpenOrOpening() { return IsOpen() || (is_moving && !is_open); }
+    public bool IsClosedOrClosing() { return IsClosed() || (is_moving && is_open); }
+    public bool IsClosed() { return !is_moving && !is_open; }
+    public bool IsOpen() { return !is_moving && is_open; }
 }
 
 public interface Onnable

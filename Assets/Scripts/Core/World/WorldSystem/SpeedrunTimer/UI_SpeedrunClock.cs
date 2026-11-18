@@ -9,7 +9,7 @@ public class UI_SpeedrunClock : MonoBehaviour
         if (World.Instance == null) { return; }
         if (World.Instance.data == null) { return; }
         clock_text.enabled = GameManager.State != GameState.Cinematic;
-        float time = World.Instance.Timer.Time;
-        clock_text.text = time.ToString("F2");
+        clock_text.text = World.Instance.Timer.GetColoredHMS_Time(Color.white, Color.grey);
     }
+
 }

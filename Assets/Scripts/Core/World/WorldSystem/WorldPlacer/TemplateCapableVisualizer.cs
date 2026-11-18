@@ -141,9 +141,7 @@ public class TemplateCapableVisualizer : MonoBehaviour
             }
         }
 
-        player.LoadPlayerData(anim_data);
-
-        // and the layers
+        // we load the layers + the player
         CapableBank.LazyInstance.LayerBank.LoadAnimData(player, anim_data);
 
         player.Show();

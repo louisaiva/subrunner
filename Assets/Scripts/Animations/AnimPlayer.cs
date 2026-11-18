@@ -62,12 +62,15 @@ public class AnimPlayer : MonoBehaviour
     private float frame_timer = 0f;
     private int current_frame = -1; // if -1, the animation is over
     [SerializeField] private bool update_each_frame = true; // if false, it means that the animation is a single frame anim, we don't want to check it each frame
+    public void ForceUpdateEachFrame() { update_each_frame = true; }
     public Action<string, int, float> OnAnimPlayedAtFrame = delegate { };
+    public event Action<string> OnAnimationDonePlaying = delegate {};
 
 
     [Header("Anim Capacity Priorities")]
     [SerializeField] private List<AnimCapacityPriority> anim_capacity_priorities = new();
     private AnimCapacityPriority current_capacity_priority = null;
+    
 
     [Header("Parameters")]
     [SerializeField] private bool never_flip = false;
@@ -109,7 +112,7 @@ public class AnimPlayer : MonoBehaviour
     private void Start()
     {
         // if the capable is not in the capable system, we play idle
-        if (!CapableBank.Instance.HasCapable(Capable)) { AddToPile("idle"); }
+        if (CapableBank.Instance == null || !CapableBank.Instance.HasCapable(Capable)) { AddToPile("idle"); }
     }
 
 
@@ -126,7 +129,7 @@ public class AnimPlayer : MonoBehaviour
 
     // PLAY ANIMATION
     public void VoidPlay(string capacity) { Play(capacity); }
-    public Anim Play(string capacity, float duration_override = default)
+    public Anim Play(string capacity, float duration_override = -1f)
     {
         if (AnimBank.Instance == null) { return null; }
 
@@ -162,10 +165,10 @@ public class AnimPlayer : MonoBehaviour
         }
 
         // we check if this anim is a single frame anim
-        update_each_frame = !(anim.sprites.Length == 1);
+        update_each_frame = !(anim.sprites.Count == 1);
 
         // we check if the duration is overriden
-        if (duration_override != default)
+        if (duration_override != -1f)
         {
             // we get the duration of the animation
             float duration = anim.GetBaseDuration();
@@ -228,7 +231,7 @@ public class AnimPlayer : MonoBehaviour
         }
 
         // we check if this anim is a single frame anim
-        update_each_frame = !(anim.sprites.Length == 1);
+        update_each_frame = !(anim.sprites.Count == 1);
 
         // we play the animation
         OnAnimPlayedAtFrame.Invoke(anim_name, 0, 1f);
@@ -326,7 +329,7 @@ public class AnimPlayer : MonoBehaviour
         // we go to the next frame
         frame_timer = 0f;
         current_frame++;
-        if (current_frame < current_anim.sprites_durations.Length)
+        if (current_frame < current_anim.sprites_durations.Count)
         {
             Renderer.sprite = current_anim.sprites[current_frame];
             return;
@@ -344,6 +347,7 @@ public class AnimPlayer : MonoBehaviour
         }
 
         // we play the highest animation in the pile
+        OnAnimationDonePlaying?.Invoke(current_capacity);
         playNextAnim();
     }
     private void play_now_at_frame(Anim anim, int frame = 0)
@@ -351,7 +355,7 @@ public class AnimPlayer : MonoBehaviour
 
         // we saturate the frame
         if (frame < 0) { frame = 0; }
-        else if (frame >= anim.sprites.Length) { frame = 0; }
+        else if (frame >= anim.sprites.Count) { frame = 0; }
 
         // we play the animation
         if (current_anim != anim)
@@ -411,7 +415,10 @@ public class AnimPlayer : MonoBehaviour
             if (priority.capacity_playing.StartsWith("idle")) { StopPlaying(priority.capacity_playing); }
         }
     }
-
+    public List<AnimCapacityPriority> GetACPs()
+    {
+        return anim_capacity_priorities;
+    }
 
 
 
@@ -499,6 +506,24 @@ public class AnimPlayer : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// returns the Renderer of a Layer or itself based on the name given. the name should be the exact name of the anim_layer' gameobject
+    /// otherwise it will return itself (the renderer from the anim player) by default.
+    /// </summary>
+    public SpriteRenderer GetRendererByName(string renderer_name)
+    {
+        Debug.Log($"(AnimPlayer) Getting renderer of {renderer_name}. Our layers are {string.Join(" & ", anim_layers.Select(al => al.name))}");
+        // go through all the layers
+        foreach (AnimLayer layer in anim_layers)
+        {
+            if (layer.name == renderer_name) { return layer.Renderer; }
+            if (layer.name == "layer_" + renderer_name) { return layer.Renderer; }
+        }
+        return Renderer;
+    }
+
+
+
 
     ///
     //
@@ -507,6 +532,7 @@ public class AnimPlayer : MonoBehaviour
     ///
 
     // ORIENTATION & FLIP
+    public void SetOrientationFromString(string orientation) { setOrientation(orientation); }
     public void SetOrientation(Vector2 look_at)
     {
         if (log_orientation) { Debug.Log("(AnimPlayer) Changing " + name + " orientation to " + look_at); }
@@ -874,7 +900,7 @@ public class AnimPlayer : MonoBehaviour
 
 
 // ANIMATIONS
-[Serializable] public class AnimPlayerData
+[Serializable] public class AnimPlayerData : DataHolder
 {
     public string skin_kind;
     public string skin;

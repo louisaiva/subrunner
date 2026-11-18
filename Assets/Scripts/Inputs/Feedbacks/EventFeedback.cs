@@ -21,6 +21,9 @@ public class EventFeedback : InputFeedback
         }
     }
 
+    public bool simulate_click = false;
+
+
     // INPUT / RESET
     public override void OnInput()
     {
@@ -31,12 +34,16 @@ public class EventFeedback : InputFeedback
             if (log_callbacks) { Debug.LogError($"(EventFeedback) OnInput was called but the gameObject is destroyed :/ type : {GetType().Name}, callbacks registered ? {callbacks_registered}, action is {action}, error : {e}"); }
             else { Debug.LogWarning($"(EventFeedback) callback error on input for {GetType().Name}. callbacks are ? {(callbacks_registered ? "registered" : "NOT registered")}. Enable 'log_callbacks' to see full error log"); }
         }
-        
     }
     public override void OnReset()
     {
         base.OnReset();
-        try { ui_button.OnPointerExit(null); }
+        try
+        {
+            if (simulate_click && ui_button.Hovered && gameObject.activeInHierarchy) { ui_button.OnPointerClick(null); }
+
+            ui_button.OnPointerExit(null);
+        }
         catch (Exception e)
         {
             if (log_callbacks) { Debug.LogError($"(EventFeedback) OnReset was called but the gameObject is destroyed :/ type : {GetType().Name}, callbacks registered ? {callbacks_registered}, action is {action}, error : {e}"); }

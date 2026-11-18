@@ -84,11 +84,11 @@ using UnityEngine;
 [Serializable] public class LightData
 {
     // public string id;
-    public Vector2 position;
-    public Color color;
-    public float intensity;
-    public Vector2 radius; // inner & outer radius for the light falloff
-    public float falloff; // how fast the light decreases
+    [KindData] public Vector2 position;
+    [KindData] public Color color;
+    [KindData] public float intensity;
+    [KindData] public Vector2 radius; // inner & outer radius for the light falloff
+    [KindData] public float falloff; // how fast the light decreases
 
     // DUPLICATE
     public LightData Duplicate()

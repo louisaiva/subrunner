@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -72,6 +74,8 @@ public class UI_Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 
 
     // GETTERS
+
+    public RectTransform GetRect() { return GetComponent<RectTransform>(); }
     public Type GetFavorisedNavigationType()
     {
         // get slot type
@@ -90,5 +94,61 @@ public class UI_Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         }
 
         return true;
+    }
+
+
+    // POSITION GETTERS
+    public enum SlotAnchorPoint
+    {
+        Center,
+        TopR,
+        BottomL
+    }
+    public Vector2 GetPosition(SlotAnchorPoint point = SlotAnchorPoint.Center, Vector2? offset = null)
+    {
+        // if we are here we have a canvas slot -> means we have a recttransform
+        RectTransform rect_transform = GetComponent<RectTransform>();
+        Vector2 position = rect_transform.TransformPoint
+        (
+            point == SlotAnchorPoint.TopR ? rect_transform.rect.max :
+            point == SlotAnchorPoint.BottomL ? rect_transform.rect.min :
+            rect_transform.rect.center
+        );
+        string s = "(UI_Navigator) GetPosition: slot " + name + " position : " + position;
+
+        // on regarde si le slot est positionné dans un canvas world space or screen space
+        if (gameObject.layer == LayerMask.NameToLayer("UI_World"))
+        {
+            // on le convertit en position
+            position = Camera.main.WorldToScreenPoint(position);
+            s += " position (screen) : " + position + "\n";
+        }
+        if (offset != null)
+        {
+            position += offset.Value;
+            s += " with offset : " + offset.Value + " makes a final screen pos of " + position;
+        }
+        if (UI_Navigator.Instance.log_slot_position) { Debug.Log(s); }
+
+        return position;
+    }
+    public virtual List<Vector2> GetSlotPositions()
+    {
+        if (entry_positions == null) { cache_entry_positions(); }
+
+        List<Vector2> positions = new List<Vector2>() { GetPosition() };
+
+        foreach (UI_SlotEntryPosition entry_pos in entry_positions)
+        {
+            positions.Add(/* positions[0] + (Vector2)pos.transform.localPosition */entry_pos.GetPosition());
+        }
+
+        return positions;
+    }
+
+    private List<UI_SlotEntryPosition> entry_positions = null;
+    private void cache_entry_positions()
+    {
+        entry_positions = GetComponentsInChildren<UI_SlotEntryPosition>(includeInactive:false).ToList();
     }
 }

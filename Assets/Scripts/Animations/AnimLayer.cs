@@ -28,6 +28,7 @@ public class AnimLayer : MonoBehaviour
     private int current_frame = -1; // if -1, the animation is over
     private bool update_each_frame = true; // if false, it means that the animation is a single frame anim, we don't want to check it each frame
     [SerializeField] private bool follow_duration = false; // if true, the layer will sync its speed with the leader's one
+    // TODO : DEBUG FOLLOW DURATION SINCE WE STILL HAVE SOME MAJOR ISSUES WITH IT
     [SerializeField] private bool never_flip = false;
     private bool choose_perfect_orientation_if_available =  true;
     // if true, when the leader changes Orientation, the layer will
@@ -105,7 +106,7 @@ public class AnimLayer : MonoBehaviour
 
         // we play the current animation
         if (current_frame == -1) { return; }
-        if (current_frame >= current_anim.sprites.Length) { return; }
+        if (current_frame >= current_anim.sprites.Count) { return; }
         if (!update_each_frame) { return; }
         updateAnim();
     }
@@ -118,7 +119,7 @@ public class AnimLayer : MonoBehaviour
         // we go to the next frame
         frame_timer = 0f;
         current_frame++;
-        if (current_frame < current_anim.sprites_durations.Length)
+        if (current_frame < current_anim.sprites_durations.Count)
         {
             sr.sprite = current_anim.sprites[current_frame];
             return;
@@ -128,7 +129,7 @@ public class AnimLayer : MonoBehaviour
     private void play_now_at_frame_with_duration(Anim anim, int frame = 0, float duration_override = -1f)
     {
         // we check if the duration is overriden
-        if (follow_duration && duration_override != 1f)
+        if (follow_duration && duration_override != -1f)
         {
             // we get the duration of the animation
             float duration = anim.GetBaseDuration();
@@ -140,7 +141,7 @@ public class AnimLayer : MonoBehaviour
 
         // we saturate the frame
         if (frame < 0) { frame = 0; }
-        else if (frame >= anim.sprites.Length) { frame = 0; }
+        else if (frame >= anim.sprites.Count) { frame = 0; }
 
         // we play the animation
         if (current_anim != anim)
@@ -159,7 +160,7 @@ public class AnimLayer : MonoBehaviour
         else if (!anim.flipX && sr.flipX) { sr.flipX = false; }
 
         // we check if this anim is a single frame anim
-        update_each_frame = !(anim.sprites.Length == 1);
+        update_each_frame = !(anim.sprites.Count == 1);
 
         if (log) { Debug.Log("(AnimLayer) Playing " + anim.name + " at frame " + frame + " flipX: " + anim.flipX + $" (never_flip: {never_flip})"); }
     }
@@ -293,7 +294,7 @@ public class AnimLayer : MonoBehaviour
 }
 
 
-[Serializable] public class AnimLayerData
+[Serializable] public class AnimLayerData : DataHolder
 {
     public string skin;
     public Vector2 local_position;

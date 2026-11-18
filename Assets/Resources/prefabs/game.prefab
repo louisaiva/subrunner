@@ -210,6 +210,7 @@ Transform:
   - {fileID: 3552693348846279321}
   - {fileID: 2356989553353723250}
   - {fileID: 5014761727663062268}
+  - {fileID: 6274772219303790707}
   m_Father: {fileID: 8466870086659227338}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4927723071802305916
@@ -235,6 +236,8 @@ MonoBehaviour:
   - {fileID: 6891086296172980495}
   - {fileID: 5188519605673357783}
   - {fileID: 7743078840864688459}
+  - {fileID: 7743078840864688459}
+  - {fileID: 6474692086587313741}
 --- !u!114 &4638387620946702657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -682,6 +685,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2307fc5f4c51c4a45a07936e98367b30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldDebug
+--- !u!1 &6355555147877134037
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6274772219303790707}
+  - component: {fileID: 6474692086587313741}
+  m_Layer: 23
+  m_Name: usb_type
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6274772219303790707
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6355555147877134037}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 934573574474036947}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6474692086587313741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6355555147877134037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e109c430ad5255249ac4663ad56baaa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::subrunner.goap.UnitTypeFactory
 --- !u!1 &6415610740479548152
 GameObject:
   m_ObjectHideFlags: 0

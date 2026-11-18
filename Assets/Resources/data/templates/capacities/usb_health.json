@@ -1,0 +1,39 @@
+﻿{
+    "<id>k__BackingField": "usb_health",
+    "<owner_id>k__BackingField": "no_capable_id",
+    "kind": "HealthCapacity",
+    "local_position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "layer": 23,
+    "tag": "Boss",
+    "health": 200.0,
+    "max_health": 200,
+    "regen_health": 0.0,
+    "hurted_animation": "hurted",
+    "box_colliders": [
+        {
+            "local_position": {
+                "x": 0.0,
+                "y": 0.3709999918937683
+            },
+            "layerID": 23,
+            "pathfinding_area": -1,
+            "shadow_caster_data": {
+                "cast_and_self": false,
+                "used_layers": []
+            },
+            "is_trigger": true,
+            "offset": {
+                "x": 0.006763145327568054,
+                "y": 0.03481703996658325
+            },
+            "size": {
+                "x": 0.35123082995414736,
+                "y": 0.4731947183609009
+            }
+        }
+    ],
+    "circle_colliders": []
+}

@@ -10,7 +10,6 @@ public class UI_YouWinClockTimer : MonoBehaviour
     {
         if (World.Instance == null) { return; }
         if (World.Instance.data == null) { return; }
-        float time = World.Instance.Timer.Time;
-        clock_text.text = prefix + time.ToString("F2").AddColor(color) + " seconds";
+        clock_text.text = prefix + World.Instance.Timer.GetColoredHMS_Time(color, Color.white);
     }
 }

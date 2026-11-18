@@ -159,7 +159,10 @@ public class UI_Manager : Singleton<UI_Manager>
 
         // the pool is not stacked :D
         if (IsOnHUD()) { SwitchTo(pool_name); return; }
-        StackPool(pool_name);
+
+        // we need to check if the current pool can be hidden, otherwise we don't stack !
+        if (current_pool == null || current_pool.Settings.CanBeHidden) { StackPool(pool_name); return; }
+        if (log) { Debug.LogWarning($"(UI_Manager) TogglePool called for {pool_name}, but current pool ({PoolStack}) cannot be hidden. We do nothing !"); }
     }
 
     /// <summary>

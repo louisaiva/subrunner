@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -41,11 +38,11 @@ public sealed class UnityValueTypeContractResolver : DefaultContractResolver
             if (log) { Debug.Log($"Checking property: {propertyInfo.Name} of type {propertyInfo.PropertyType}"); }
 
             // we only want properties that have a SerializeField attribute !
-            if (Attribute.IsDefined(propertyInfo, typeof(IncludeInDataAttribute), inherit: false))
+            /* if (Attribute.IsDefined(propertyInfo, typeof(IncludeInDataAttribute), inherit: false))
             {
                 if (log) { Debug.Log($"Property {propertyInfo.Name} has IncludeInData attribute, will be serialized."); }
                 return false;
-            }
+            } */
 
             // Check if the backing field has the attribute (for [field: SerializeField])
             string backingFieldName = $"<{propertyInfo.Name}>k__BackingField";
@@ -58,7 +55,7 @@ public sealed class UnityValueTypeContractResolver : DefaultContractResolver
                 if (log) { Debug.Log($"Backing field {backingField.Name} for property {propertyInfo.Name} has SerializeField attribute, will be serialized."); }
                 return false;
             }
-            if (log) { Debug.Log($"Property {propertyInfo.Name} does not have IncludeInData attribute and its backing field does not have SerializeField attribute, will be skipped."); }
+            // if (log) { Debug.Log($"Property {propertyInfo.Name} does not have IncludeInData attribute and its backing field does not have SerializeField attribute, will be skipped."); }
             return true;
         }
 
@@ -69,7 +66,7 @@ public sealed class UnityValueTypeContractResolver : DefaultContractResolver
             return true;
         }
 
-        // for fields, we don't want RuntimeOnly, NonSerialized, JsonIgnore, or not Serializable attributes
+        // for fields, we don't want RuntimeOnly, NonSerialized, JsonIgnore attributes
         // all the rest is good !
         if (log) { Debug.Log($"Checking field: {field.Name} of type {field.FieldType}"); }
 
@@ -93,26 +90,4 @@ public sealed class UnityValueTypeContractResolver : DefaultContractResolver
 
         return false;
     }
-
-    /* private static bool ShouldSerializeType(Type type)
-    {
-        if (type == null) { return false; }
-
-        if (type.IsPrimitive || type.IsEnum || type == typeof(string) || type == typeof(decimal)) { return true; }
-
-        if (typeof(MonoBehaviour).IsAssignableFrom(type)) { return false; }
-
-        Type nullableType = Nullable.GetUnderlyingType(type);
-        if (nullableType != null)
-        {
-            return ShouldSerializeType(nullableType);
-        }
-
-        if (type.IsArray)
-        {
-            return ShouldSerializeType(type.GetElementType());
-        }
-
-        return false;
-    } */
 }

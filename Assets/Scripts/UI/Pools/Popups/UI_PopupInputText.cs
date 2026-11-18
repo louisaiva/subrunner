@@ -4,9 +4,17 @@ using UnityEngine;
 public class UI_PopupInputText : UI_SlottablePool
 {
     [SerializeField] private UI_InputText inputTextSlot;
+    [SerializeField] private UI_Keyboard virtual_keyboard;
     public UI_InputText InputText => inputTextSlot;
 
     // ENABLING
+
+
+    protected override void before_showing()
+    {
+        base.before_showing();
+        virtual_keyboard.BuildKeyboardIfNotBuilt();
+    }
     protected override IEnumerator enable_coroutine()
     {
         yield return base.enable_coroutine();

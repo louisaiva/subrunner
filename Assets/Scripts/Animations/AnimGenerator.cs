@@ -56,21 +56,29 @@ public class AnimGenerator : MonoBehaviour
             return 0;
         }
 
+        // we extract all sprites and sort them in a deterministic way (based on their name)
+        List<Sprite> sprites = new List<Sprite>();
+
         // we load all sprites
-        int sprite_count = 0;
         for (int i = 0; i < data.Length; i++)
         {
-            if (data[i] is Sprite)
-            {
-                Sprite sprite = (Sprite)data[i];
-                string sprite_path = UnityEditor.AssetDatabase.GetAssetPath(sprite).Replace(".png", "").Replace("Assets/Resources/" + spritesheets_path, "") + "." + sprite.name;
-                string anim_name = ba.name + "_" + i + ".idle.D";
-                generated_anims.Add(new Anim(anim_name, new string[1] { sprite_path }, new float[1] { 0.1f }));
-                sprite_count++;
-            }
+            if (data[i] is not Sprite sprite) { continue; }
+            sprites.Add(sprite);
         }
 
-        return sprite_count;
+        // then we sort them alphabetically
+        sprites.Sort((a, b) => StringExtensions.NumericOrderingCompare(a.name, b.name));
+
+        // finally we re go through them and generate an anim from the sprites
+        for (int i = 0; i < sprites.Count; i++)
+        {
+            Sprite sprite = sprites[i];
+            string sprite_path = UnityEditor.AssetDatabase.GetAssetPath(sprite).Replace(".png", "").Replace("Assets/Resources/" + spritesheets_path, "") + "." + sprite.name;
+            string anim_name = ba.name + "_" + (i + 1) + ".idle.D";
+            generated_anims.Add(new Anim(anim_name, new string[1] { sprite_path }, new float[1] { 0.1f }));
+        }
+
+        return sprites.Count;
     }
 
     public Anim extractSimpleSpriteAnim(SimpleSpriteAnim ssa, string spritesheets_path)

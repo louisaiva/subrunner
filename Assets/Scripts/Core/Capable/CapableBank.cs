@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CapableBank : MonoBehaviour
@@ -30,7 +31,7 @@ public class CapableBank : MonoBehaviour
 
     // CAPABLE LOADING
     [Header("Loaded capables")]
-    [SerializeField] protected List<Capable> loaded_capables;
+    [SerializeField] protected Dictionary<string,Capable> loaded_capables = new Dictionary<string, Capable>();
     
     [Header("Prefabs")]
     [SerializeField] protected GameObject capable_prefab; // with no kind at all : when instantiating we need to add component to it
@@ -70,6 +71,7 @@ public class CapableBank : MonoBehaviour
 
 
     [Header("Logs")]
+    public bool log_loading = false;
     public bool log_types = false;
     public bool log_inventory_build = false;
     public bool log_feet = false;
@@ -84,6 +86,13 @@ public class CapableBank : MonoBehaviour
     // LOAD CAPABLES
     public Capable Load(CapableData data)
     {
+        // first we ensure we don't have a capable like this one already
+        if (loaded_capables.ContainsKey(data.id))
+        {
+            if (log_loading) { Debug.LogError("(CapableBank) We already have a loaded capable with id : " + data.id); }
+            return null;
+        }
+
         // we first try to extract a capable of the right kind from the pool
         Capable capable = extractFromPool(data.kind);
 
@@ -105,7 +114,8 @@ public class CapableBank : MonoBehaviour
             // we load its data
             capable.LoadData(data);
             capable.gameObject.SetActive(true);
-            loaded_capables.Add(capable);
+            loaded_capables.Add(data.id,capable);
+            if (log_loading) { Debug.Log("(CapableBank) Added capable to loaded : " + data.id); }
 
             // fire the loaded callback
             OnCapableLoaded?.Invoke(capable);
@@ -148,7 +158,8 @@ public class CapableBank : MonoBehaviour
 
         // then we can load the data
         capable.LoadData(data);
-        loaded_capables.Add(capable);
+        loaded_capables.Add(data.id,capable);
+        if (log_loading) { Debug.Log("(CapableBank) Added capable to loaded : " + data.id); }
         OnCapableLoaded?.Invoke(capable);
         return capable;
     }
@@ -256,7 +267,16 @@ public class CapableBank : MonoBehaviour
     {
         // get capable
         Capable capable = GetLoadedCapable(data);
-        if (capable == null) { return null; }
+        if (capable == null)
+        {
+            if (loaded_capables.ContainsKey(data.id))
+            {
+                // todo : improve this, because why do we have null capables in the first place ?
+                if (log_loading) { Debug.LogWarning($"(CapableBank) unloading {data.id} returned null but we still have a loaded capable with this id..."); }
+                loaded_capables.Remove(data.id);
+            }
+            return null;
+        }
 
         // fire the callback
         OnCapableUnloading?.Invoke(capable);
@@ -271,6 +291,7 @@ public class CapableBank : MonoBehaviour
     }
     private void unload_capable(Capable capable)
     {
+        string id = capable.ID;
         LayerBank.UnloadAnimData(capable.AnimPlayer);
 
         // unload feet colliders
@@ -287,7 +308,8 @@ public class CapableBank : MonoBehaviour
         insertInPool(capable, kind);
 
         // remove the capable from the loaded capables list
-        loaded_capables.Remove(capable);
+        loaded_capables.Remove(id);
+        if (log_loading) { Debug.Log("(CapableBank) Removed capable from loaded : " + id); }
 
         // disable the gameObject
         capable.gameObject.SetActive(false);
@@ -304,13 +326,14 @@ public class CapableBank : MonoBehaviour
     }
     private void destroy_all_loaded_capables(bool log)
     {
-        if (log) { Debug.Log($"(CapableBank) Removing null loaded capables"); }
-        loaded_capables.RemoveAll(c => c == null);
-        if (log) { Debug.Log($"(CapableBank) Destroying all LOADED capables, count : {loaded_capables.Count}"); }
-        for (int i = 0; i < loaded_capables.Count; i++)
+        int destroyed_loaded_capables = 0;
+        foreach (KeyValuePair<string,Capable> kvp in loaded_capables)
         {
-            Destroy(loaded_capables[i].gameObject);
+            if (kvp.Value == null) { continue; }
+            Destroy(kvp.Value.gameObject);
+            destroyed_loaded_capables++;
         }
+        if (log) { Debug.Log($"(CapableBank) Clearing LOADED capables. (Destroyed gameObjects / Total cleared) : {destroyed_loaded_capables} / {loaded_capables.Count}"); }
         loaded_capables.Clear();
         if (log) { Debug.Log($"(CapableBank) All loaded capables are now destroyed and loaded_capables is cleared"); }
     }
@@ -354,26 +377,19 @@ public class CapableBank : MonoBehaviour
         capable = null;
 
         // we look for the capable with the given id in the pool of loaded capables
-        for (int i = 0; i < loaded_capables.Count; i++)
+        foreach (KeyValuePair<string, Capable> kvp in loaded_capables)
         {
-            capable = loaded_capables[i];
-            if (capable.data == null) { continue; }
-            if (World.Instance.DoesIDMatchPrefix(capable.data.id, prefix)) { return true; }
+            if (kvp.Value == null) { continue; }
+            if (kvp.Value.data == null) { continue; } // ? really useful ???
+            capable = kvp.Value;
+            if (World.Instance.DoesIDMatchPrefix(kvp.Key, prefix)) { return true; }
         }
         return false;
     }
     public Capable GetLoadedCapable(string id)
     {
-        // we look for the capable with the given id in the pool of loaded capables
-        for (int i = 0; i < loaded_capables.Count; i++)
-        {
-            Capable capable = loaded_capables[i];
-            if (capable.data != null && capable.data.id == id)
-            {
-                return capable;
-            }
-        }
-        return null;
+        if (!loaded_capables.TryGetValue(id, out Capable capable)) { return null; }
+        return capable;
     }
     public Capable GetLoadedCapable(CapableData data)
     {
@@ -385,5 +401,5 @@ public class CapableBank : MonoBehaviour
         // -> means we check capables_in_bank because it contains all capables instantiated ever !
         return capables_in_bank.Contains(capable);
     }
-    public List<Capable> GetAllLoadedCapables() { return loaded_capables; }
+    public List<Capable> GetAllLoadedCapables() { return loaded_capables.Values.ToList(); }
 }

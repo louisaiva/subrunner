@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-[Serializable] public class InventoryData
+[Serializable] public class InventoryData : DataHolder
 {
     public List<ItemPoolData> item_pools_data;
     public ItemType item_type;
@@ -113,7 +113,7 @@ using System.Collections.Generic;
             string item_ref = "";
             if (stacks_data[i] != null && stacks_data[i].items_ids.Count > 0)
             {
-                item_ref = stacks_data[i].items_ids[0];
+                item_ref = stacks_data[i].items_ids[0].GetPrefix() + " : " + string.Join(" ; ", stacks_data[i].items_ids);
             }
             details += $"        - {stacks_data[i].items_ids.Count} {item_ref}\n";
         }

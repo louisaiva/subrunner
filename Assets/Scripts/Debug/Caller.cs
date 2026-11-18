@@ -36,6 +36,18 @@ public class Caller : MonoBehaviour
     public void SaveWorld() => SaveEngine.SaveDynamicWorld();
     public void StartTimer() => World.Instance?.Timer.StartTimer();
     public void StopTimer() => World.Instance?.Timer.StopTimer();
+    public void OpenURL(string url) => Application.OpenURL(url);
+
+    // STEAM BUTTON
+    private bool next_we_open_steam = true;
+    private string steam_url = "steam://store/4898010";
+    private string steam_url_2 = "https://store.steampowered.com/app/4898010/SUBRUNNER/";
+    public void OpenSteamStore()
+    {
+        if (next_we_open_steam) { Application.OpenURL(steam_url); }
+        else { Application.OpenURL(steam_url_2); }
+        next_we_open_steam = !next_we_open_steam;
+    }
 
     // PLAY BUTTON
     public void Play()

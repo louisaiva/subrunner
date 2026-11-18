@@ -19,7 +19,7 @@ public class SaveEngine : MonoBehaviour
             Instance = FindFirstObjectByType<SaveEngine>();
             if (Instance == null)
             {
-                Debug.LogError("No instance of SaveManager found in the scene. Please make sure to add a SaveManager component to a game object in the scene.");
+                Debug.LogError("No instance of SaveEngine found in the scene. Please make sure to add a SaveEngine component to a game object in the scene.");
             }
             return Instance;
         }
@@ -48,23 +48,24 @@ public class SaveEngine : MonoBehaviour
 
     [Header("Save Parameters")]
     [SerializeField] private bool save_as_one_file = true; // if true, saves the whole world save data in a single json file, if false, saves the world save data in multiple json files in a folder structure
-    private static JsonSerializerSettings one_file_settings = new JsonSerializerSettings
+    public static JsonSerializerSettings InstanceContract = new JsonSerializerSettings
+    {
+        TypeNameHandling = TypeNameHandling.Auto,
+        Formatting = Formatting.Indented,
+        ContractResolver = new InstanceContractResolver()
+    };
+    public static JsonSerializerSettings OldContract = new JsonSerializerSettings
     {
         TypeNameHandling = TypeNameHandling.Auto,
         Formatting = Formatting.Indented,
         ContractResolver = new UnityValueTypeContractResolver()
-        /* ,
-        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-        PreserveReferencesHandling = PreserveReferencesHandling.Objects */
     };
-    /* private static JsonTextWriter Writer = new JsonTextWriter(new StringWriter())
-    {
-        Formatting = Formatting.Indented,
-        Indentation = 4,
-        IndentChar = ' '
-    }; */
-    
+    /* ,
+    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+    PreserveReferencesHandling = PreserveReferencesHandling.Objects */
+
     [Header("Logs")]
+    [SerializeField] private Loggable<SaveEngine> log_get;
     [SerializeField] private Loggable<SaveEngine> log;
     private static Loggable<SaveEngine> slog => LazyInstance != null ? LazyInstance.log : null;
     private static bool log_static => LazyInstance != null && LazyInstance.log.Verbose >= Verbosity.Extended;
@@ -476,28 +477,28 @@ public class SaveEngine : MonoBehaviour
             if (log) { Debug.LogWarning($"(SaveEngine - LoadWorldSaveFromJson) json is null or empty: {json}"); }
             return null;
         }
-        _loaded_save = JsonConvert.DeserializeObject<WorldSaveData>(json, one_file_settings);
+        _loaded_save = JsonConvert.DeserializeObject<WorldSaveData>(json, OldContract);
         return _loaded_save;
     }
     public static WorldSaveData GetWorldSave(string world_id)
     {        
-        if (string.IsNullOrEmpty(world_id)) { Debug.LogWarning($"(SaveEngine) Invalid world_id : '{world_id}'"); return null; }
+        if (string.IsNullOrEmpty(world_id)) { LazyInstance.log_get.Warning($"(SaveEngine) Invalid world_id : '{world_id}'"); return null; }
 
-        // Debug.Log($"(SaveEngine) Loading world save data for world '{world_id}' from folder or file..., save is null: {save == null}");
+        // LazyInstance.log_get.Warning($"(SaveEngine) Loading world save data for world '{world_id}' from folder or file..., save is null: {save == null}");
         if (_loaded_save != null && _loaded_save.world.id == world_id) { return _loaded_save; } // we already have one loaded, we return it
         _loaded_save = new WorldSaveData();
 
         // then we have no save load
-        // Debug.Log($"(SaveEngine) Loading world save data for world '{world_id}' from folder or file..., save is null: {save == null}");
+        // LazyInstance.log_get.Warning($"(SaveEngine) Loading world save data for world '{world_id}' from folder or file..., save is null: {save == null}");
 
         AppManager.EnsureFolderExists(WorldManager.WorldsDataPath);
-        if (load_world_save_from_folder(world_id, ref _loaded_save, log:false)) { return _loaded_save; }
+        // if (load_world_save_from_folder(world_id, ref _loaded_save, log:false)) { return _loaded_save; }
 
         // here we have no folder for the world, we try to load it from the single file save
         if (load_world_save_from_file(world_id, ref _loaded_save)) { return _loaded_save; }
 
         // if we reach this point, we failed to load the world save data
-        Debug.LogError($"(SaveEngine) Failed to load world save data for world '{world_id}' from both folder and file.");
+        LazyInstance.log_get.Error($"(SaveEngine) Failed to load world save data for world '{world_id}' from both folder and file.");
         return null;
     }
     public static void ClearWorldSave() { _loaded_save = null; }
@@ -512,11 +513,11 @@ public class SaveEngine : MonoBehaviour
             if (log) { Debug.LogWarning($"(SaveEngine - Load World Save) World Save Data file not found: {id}.json"); }
             return false;
         }
-        save = JsonConvert.DeserializeObject<WorldSaveData>(json, one_file_settings);
+        save = JsonConvert.DeserializeObject<WorldSaveData>(json, OldContract);
         save.world.id = id; // ensure the world id is set correctly
         return true;
     }
-    private static bool load_world_save_from_folder(string id, ref WorldSaveData save, bool log = true)
+    [Obsolete("Use load world save from file instead")] private static bool load_world_save_from_folder(string id, ref WorldSaveData save, bool log = true)
     {
         string world_path = Path.Combine(WorldManager.WorldsDataPath, id);
 
@@ -684,7 +685,7 @@ public class SaveEngine : MonoBehaviour
     private static Dictionary<string, WorldDataHelper> _world_data_helpers = new Dictionary<string, WorldDataHelper>();
     public static WorldDataHelper GetWorldData(string world_id)
     {
-        if (string.IsNullOrEmpty(world_id)) { Debug.LogWarning($"(SaveEngine) Invalid world_id : '{world_id}'"); return null; }
+        if (string.IsNullOrEmpty(world_id)) { LazyInstance.log_get.Warning($"(SaveEngine) Invalid world_id : '{world_id}'"); return null; }
 
         if (_world_data_helpers.TryGetValue(world_id, out WorldDataHelper w_data)) { return w_data; }
         w_data = new WorldDataHelper();
@@ -697,7 +698,7 @@ public class SaveEngine : MonoBehaviour
         if (load_world_data_helper_from_file(world_id, ref w_data, log:false)) { return w_data; }
 
         // if we reach this point, we failed to load the world save data
-        Debug.LogWarning($"(SaveEngine) Failed to load world save data for world '{world_id}' from both folder and file.");
+        LazyInstance.log_get.Warning($"(SaveEngine) Failed to load world save data for world '{world_id}' from both folder and file.");
         return null;
     }
     private static bool load_world_data_helper_from_file(string id, ref WorldDataHelper helper, bool log = true)
@@ -709,7 +710,7 @@ public class SaveEngine : MonoBehaviour
             if (log) { Debug.LogWarning($"(SaveEngine - Load World Data Helper) World Data Helper file not found: {id}.json"); }
             return false;
         }
-        helper = JsonConvert.DeserializeObject<WorldDataHelper>(json, one_file_settings);
+        helper = JsonConvert.DeserializeObject<WorldDataHelper>(json, OldContract);
         helper.is_one_file = true;
         return true;
     }
@@ -764,7 +765,7 @@ public class SaveEngine : MonoBehaviour
         string json = "";
         try
         {
-            json = JsonConvert.SerializeObject(data, one_file_settings);
+            json = JsonConvert.SerializeObject(data, OldContract);
             slog?.Log($"Serialized {json.Length} chars");
         }
         catch (Exception ex)

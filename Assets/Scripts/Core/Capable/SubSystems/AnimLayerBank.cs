@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class AnimLayerBank : MonoBehaviour
@@ -67,6 +68,14 @@ public class AnimLayerBank : MonoBehaviour
 
 
     // LOAD / UNLOAD
+
+    /// <summary>
+    /// Feed the anim data into the AnimPlayer.
+    /// Ensures we exactly have the required AnimLayers + loads their data.
+    /// AND THEN also loads the data of the main AnimPlayer
+    /// </summary>
+    /// <param name="player">The main AnimPlayer that will receive the data</param>
+    /// <param name="anim_data">The AnimPlayerData to feed. This also includes a List-AnimLayerData- for the layers</param>
     public void LoadAnimData(AnimPlayer player, AnimPlayerData anim_data)
     {
         if (player == null) { return; }
@@ -81,19 +90,32 @@ public class AnimLayerBank : MonoBehaviour
         Transform layer_parent = player.transform;
 
         // check that we do have some layers / layer_parent
-        if (layer_parent == null || anim_data.layers == null) { return; }
-        if (log_anim_layers) { Debug.Log($"(CapableBank - Load) Loading anim data for {anim_data.skin}, loading {anim_data.layers.Count} anim layers"); }
+        if (layer_parent == null) { return; }
+
+        // remove existing anim layers
+        List<AnimLayer> anim_layers = player.GetStaticAnimLayers();
+        if (log_anim_layers) { Debug.Log($"(AnimLayerBank) Removing layers of {player.Capable?.ID ?? player.Skin}, unloading {anim_layers.Count} anim layers" + string.Join("\n - ", anim_layers.Select(al => al.name))); }
+        while (anim_layers.Count > 0)
+        {
+            anim_layers[0].UnassignLeader();
+            insertAnimLayerInPool(anim_layers[0]);
+            anim_layers.RemoveAt(0);
+        }
+        if (log_anim_layers) { Debug.Log($"(AnimLayerBank) Loading anim data for {anim_data.skin}, loading {anim_data.layers.Count} anim layers"); }
 
         // we go through all the layers inside anim_data and we load a layer for each
-        for (int i = 0; i < anim_data.layers.Count; i++)
+        if (anim_data.layers != null)
         {
-            // we extract an anim layer from pooled ones
-            AnimLayer anim_layer = extractAnimLayerFromPool(layer_parent);
+            for (int i = 0; i < anim_data.layers.Count; i++)
+            {
+                // we extract an anim layer from pooled ones
+                AnimLayer anim_layer = extractAnimLayerFromPool(layer_parent);
 
-            // then we load the data in the anim layer
-            AnimLayerData layer_data = anim_data.layers[i];
-            anim_layer.LoadData(layer_data);
-            anim_layer.AssignLeader(player);
+                // then we load the data in the anim layer
+                AnimLayerData layer_data = anim_data.layers[i];
+                anim_layer.LoadData(layer_data);
+                anim_layer.AssignLeader(player);
+            }
         }
 
         // we load the main anim data in the player
@@ -106,8 +128,8 @@ public class AnimLayerBank : MonoBehaviour
 
         // unload anim layers
         List<AnimLayer> anim_layers = player.GetStaticAnimLayers(); // test with .layers
-        if (log_anim_layers) { Debug.Log($"(AnimLayerBank) Unloading capable {player.Capable.ID}, unloading {anim_layers.Count} anim layers"); }
-        
+        if (log_anim_layers) { Debug.Log($"(AnimLayerBank) Unloading layers of {player.Capable?.ID ?? player.Skin}, unloading {anim_layers.Count} anim layers" + string.Join("\n - ", anim_layers.Select(al => al.name))); }
+
         while (anim_layers.Count > 0)
         {
             anim_layers[0].UnassignLeader();

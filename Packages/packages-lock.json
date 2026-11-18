@@ -22,6 +22,16 @@
       "dependencies": {},
       "url": "https://registry.npmjs.org"
     },
+    "com.singularitygroup.hotreload": {
+      "version": "git+https://gitlab.hotreload.net/root/hot-reload-releases.git#1.13.23",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0",
+        "com.unity.modules.unitywebrequest": "1.0.0"
+      },
+      "hash": "4fed345deaaa9f54a3f780ffe5132ff5a7159b5f"
+    },
     "com.unity.2d.animation": {
       "version": "13.0.4",
       "depth": 1,
