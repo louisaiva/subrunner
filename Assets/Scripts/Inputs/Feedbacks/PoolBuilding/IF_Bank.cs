@@ -20,6 +20,7 @@ public class IF_Bank : MonoBehaviour
     [Header("Logs")]
     [SerializeField] private bool log_dynamic_bindings = false;
     [SerializeField] private bool log_kb = false;
+    [SerializeField] private bool hide_icon_missing = false;
 
 
     private List<string> dynamic_kb_bindings = new List<string>
@@ -60,6 +61,19 @@ public class IF_Bank : MonoBehaviour
 
 
     // INSTANCIATOR
+    public InputFeedback Instantiate(string binding, Transform parent, string custom_icon = null)
+    {
+        InputFeedback ef = Instantiate(binding,parent, gamepad:false);
+        if (string.IsNullOrEmpty(custom_icon)) { return ef; }
+        Sprite sprite = get_icon(bind: custom_icon);
+        if (sprite == null)
+        {
+            if (!hide_icon_missing) { Debug.LogWarning($"(IF_Bank) Icon not found : {custom_icon}"); }
+            return ef;
+        }
+        ef.transform.Find("icon").GetComponent<Image>().sprite = sprite;
+        return ef;
+    }
     public InputFeedback Instantiate(string binding, Transform parent, bool gamepad = true)
     {
         InputFeedback prefab;

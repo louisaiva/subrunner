@@ -65,6 +65,7 @@ public class SaveEngine : MonoBehaviour
     PreserveReferencesHandling = PreserveReferencesHandling.Objects */
 
     [Header("Logs")]
+    [SerializeField] private Loggable<SaveEngine> log_get;
     [SerializeField] private Loggable<SaveEngine> log;
     private static Loggable<SaveEngine> slog => LazyInstance != null ? LazyInstance.log : null;
     private static bool log_static => LazyInstance != null && LazyInstance.log.Verbose >= Verbosity.Extended;
@@ -481,14 +482,14 @@ public class SaveEngine : MonoBehaviour
     }
     public static WorldSaveData GetWorldSave(string world_id)
     {        
-        if (string.IsNullOrEmpty(world_id)) { Debug.LogWarning($"(SaveEngine) Invalid world_id : '{world_id}'"); return null; }
+        if (string.IsNullOrEmpty(world_id)) { LazyInstance.log_get.Warning($"(SaveEngine) Invalid world_id : '{world_id}'"); return null; }
 
-        // Debug.Log($"(SaveEngine) Loading world save data for world '{world_id}' from folder or file..., save is null: {save == null}");
+        // LazyInstance.log_get.Warning($"(SaveEngine) Loading world save data for world '{world_id}' from folder or file..., save is null: {save == null}");
         if (_loaded_save != null && _loaded_save.world.id == world_id) { return _loaded_save; } // we already have one loaded, we return it
         _loaded_save = new WorldSaveData();
 
         // then we have no save load
-        // Debug.Log($"(SaveEngine) Loading world save data for world '{world_id}' from folder or file..., save is null: {save == null}");
+        // LazyInstance.log_get.Warning($"(SaveEngine) Loading world save data for world '{world_id}' from folder or file..., save is null: {save == null}");
 
         AppManager.EnsureFolderExists(WorldManager.WorldsDataPath);
         // if (load_world_save_from_folder(world_id, ref _loaded_save, log:false)) { return _loaded_save; }
@@ -497,7 +498,7 @@ public class SaveEngine : MonoBehaviour
         if (load_world_save_from_file(world_id, ref _loaded_save)) { return _loaded_save; }
 
         // if we reach this point, we failed to load the world save data
-        Debug.LogError($"(SaveEngine) Failed to load world save data for world '{world_id}' from both folder and file.");
+        LazyInstance.log_get.Error($"(SaveEngine) Failed to load world save data for world '{world_id}' from both folder and file.");
         return null;
     }
     public static void ClearWorldSave() { _loaded_save = null; }
@@ -684,7 +685,7 @@ public class SaveEngine : MonoBehaviour
     private static Dictionary<string, WorldDataHelper> _world_data_helpers = new Dictionary<string, WorldDataHelper>();
     public static WorldDataHelper GetWorldData(string world_id)
     {
-        if (string.IsNullOrEmpty(world_id)) { Debug.LogWarning($"(SaveEngine) Invalid world_id : '{world_id}'"); return null; }
+        if (string.IsNullOrEmpty(world_id)) { LazyInstance.log_get.Warning($"(SaveEngine) Invalid world_id : '{world_id}'"); return null; }
 
         if (_world_data_helpers.TryGetValue(world_id, out WorldDataHelper w_data)) { return w_data; }
         w_data = new WorldDataHelper();
@@ -697,7 +698,7 @@ public class SaveEngine : MonoBehaviour
         if (load_world_data_helper_from_file(world_id, ref w_data, log:false)) { return w_data; }
 
         // if we reach this point, we failed to load the world save data
-        Debug.LogWarning($"(SaveEngine) Failed to load world save data for world '{world_id}' from both folder and file.");
+        LazyInstance.log_get.Warning($"(SaveEngine) Failed to load world save data for world '{world_id}' from both folder and file.");
         return null;
     }
     private static bool load_world_data_helper_from_file(string id, ref WorldDataHelper helper, bool log = true)

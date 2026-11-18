@@ -40,7 +40,7 @@ public class EventFeedback : InputFeedback
         base.OnReset();
         try
         {
-            if (simulate_click && ui_button.Hovered) { ui_button.OnPointerClick(null); }
+            if (simulate_click && ui_button.Hovered && gameObject.activeInHierarchy) { ui_button.OnPointerClick(null); }
 
             ui_button.OnPointerExit(null);
         }
