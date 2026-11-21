@@ -1827,7 +1827,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LoadedSceneCount: 0
-  prototype: ui_keyboard
+  prototype: popup & ui_pause qol
   log: 0
   log_stats: 0
 --- !u!114 &714515157948744320
@@ -2295,6 +2295,7 @@ MonoBehaviour:
   log: 0
   log_input_maps_enabled: 0
   log_get_bindings: 0
+  log_get_action: 0
   pool_bindings:
   - pool_id: shoes
     action: {fileID: 8033976421120227725, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}

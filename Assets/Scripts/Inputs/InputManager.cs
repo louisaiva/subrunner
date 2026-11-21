@@ -58,6 +58,8 @@ public class InputManager : MonoBehaviour
     public bool log = false;
     public bool log_input_maps_enabled = false;
     public bool log_get_bindings = false;
+    public bool log_get_action = false;
+
 
     // AWAKE & SINGLETON LOGIC
     public static InputManager Instance { get; private set; }
@@ -103,6 +105,7 @@ public class InputManager : MonoBehaviour
         // on ajoute les listeners
         inputs.any.keyboard.performed += ctx => setInputType("keyboard");
         inputs.any.gamepad.performed += ctx => setInputType("gamepad");
+        Cursor.visible = current_input_type == "keyboard"; // set the cursor for the first time so we hide it if needed
         if (log) { Debug.Log("(InputManager) input type callbacks set"); }
         
         // et certains listeners d'actions spécifiques
@@ -134,10 +137,9 @@ public class InputManager : MonoBehaviour
     }
 
     // SWITCH INPUTS TYPE
-    private void setInputType(string input_type/* , bool force = false */)
+    private void setInputType(string input_type)
     {
-        if (log) { Debug.Log("(InputManager) received inputs from " + input_type + ", realtime since startup is " + Time.realtimeSinceStartup); }
-        if (current_input_type == input_type && Time.realtimeSinceStartup > 10f) { return; }
+        if (current_input_type == input_type) { return; }
 
         // on met à jour le type d'input
         current_input_type = input_type;
@@ -147,7 +149,6 @@ public class InputManager : MonoBehaviour
         if (log) { Debug.Log("(InputManager) switching to " + input_type); }
         OnInputTypeChanged?.Invoke(current_input_type);
     }
-    // public void ForceSetInputType(string input_type) => setInputType(input_type, force:true);
 
 
     // getters
@@ -155,7 +156,7 @@ public class InputManager : MonoBehaviour
     {
         if (reference == null)
         {
-            if (log) { Debug.LogWarning("(InputManager) GetAction called with null reference"); }
+            if (log_get_action) { Debug.LogWarning("(InputManager) GetAction called with null reference"); }
             return null;
         }
 
@@ -189,7 +190,7 @@ public class InputManager : MonoBehaviour
         // else if (inputMap == "enhanced_perso") { action = inputs.enhanced_perso.Get()[action_name]; }
 
         // on log
-        if (log) { Debug.Log("(InputManager) getting action : " + action_name + " from " + inputMap + " returned " + action); }
+        if (log_get_action) { Debug.Log("(InputManager) getting action : " + action_name + " from " + inputMap + " returned " + action); }
 
         // on retourne l'action
         return action;
