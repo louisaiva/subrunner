@@ -503,7 +503,8 @@ public class WorldManager : MonoBehaviour
             {
                 world = new WorldData()
                 {
-                    id = world_name
+                    id = world_name,
+                    game_clock = 0f
                 },
                 controller = new ControllerData()
                 {

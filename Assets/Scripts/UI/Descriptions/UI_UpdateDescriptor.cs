@@ -35,15 +35,17 @@ public class UI_UpdateDescriptor : UI_Descriptor
     }
 
     private void Update() { Describe(); }
-
+    
     // DESCRIPTION
     public void Describe() { Describe(current_slot as Descriptable); }
     public override void Describe(Descriptable descriptable)
     {
-        if (descriptable == null && UI_Manager.Instance.GetCurrentPool() is Descriptable descriptable_pool)
+        // if (log) { Debug.Log($"(UI_UpdateDescriptor) describing {descriptable} : " + (descriptable == null ? "" : descriptable.Name + " : " + descriptable.Description)); }
+        if ((descriptable == null || (string.IsNullOrEmpty(descriptable.Description) && string.IsNullOrEmpty(descriptable.Name)))
+            && UI_Manager.Instance.GetCurrentPool() is Descriptable descriptable_pool)
         {
             descriptable = descriptable_pool;
         }
         base.Describe(descriptable);
     }
-}
+} 

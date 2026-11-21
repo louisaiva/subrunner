@@ -93,15 +93,18 @@ public class InputManager : MonoBehaviour
         inputs.settings.Enable();
         inputs.camera.Enable();
 
+        
+
         Invoke(nameof(set_callbacks), 0.2f); // slight delay to avoid issues on start
     }
     private void set_callbacks()
     {
+
         // on ajoute les listeners
         inputs.any.keyboard.performed += ctx => setInputType("keyboard");
         inputs.any.gamepad.performed += ctx => setInputType("gamepad");
         if (log) { Debug.Log("(InputManager) input type callbacks set"); }
-
+        
         // et certains listeners d'actions spécifiques
         inputs.settings.F1.performed += ctx => SettingsManager.Instance.Toggle("dev_minimap");
         // inputs.settings.F2.performed += ctx => SettingsManager.Instance.Toggle();
@@ -131,9 +134,10 @@ public class InputManager : MonoBehaviour
     }
 
     // SWITCH INPUTS TYPE
-    private void setInputType(string input_type)
+    private void setInputType(string input_type/* , bool force = false */)
     {
-        if (current_input_type == input_type) { return; }
+        if (log) { Debug.Log("(InputManager) received inputs from " + input_type + ", realtime since startup is " + Time.realtimeSinceStartup); }
+        if (current_input_type == input_type && Time.realtimeSinceStartup > 10f) { return; }
 
         // on met à jour le type d'input
         current_input_type = input_type;
@@ -143,6 +147,8 @@ public class InputManager : MonoBehaviour
         if (log) { Debug.Log("(InputManager) switching to " + input_type); }
         OnInputTypeChanged?.Invoke(current_input_type);
     }
+    // public void ForceSetInputType(string input_type) => setInputType(input_type, force:true);
+
 
     // getters
     public InputAction GetAction(InputActionReference reference)

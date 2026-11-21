@@ -45,6 +45,7 @@ public class UI_WorldSlot : UI_EventButton, Descriptable
         description += $"<b>subrunner {wdata.game_version}</b>\n".AddColor(get_color_version(wdata.game_version));
 
         description += "\n\n";
+        description += $"played time : ".Grey() + $"<b>{(wdata.game_clock == 0f ? "NONE".Grey() : wdata.game_clock.ToHMS("F1"))}</b>\n";
         description += $"modified : ".Grey() + $"<b>{wdata.last_update_date}</b>\n";
         description += $"created : ".Grey() + $"<b>{wdata.creation_date}</b>\n";
 

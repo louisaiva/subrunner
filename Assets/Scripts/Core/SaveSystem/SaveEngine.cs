@@ -106,6 +106,7 @@ public class SaveEngine : MonoBehaviour
         }
 
         SaveWorldSaveData(save);
+        World.SetSave(save);
         slog?.Log($"Finished dynamic saving of world '{save.world.id}' !");
 
         // notif

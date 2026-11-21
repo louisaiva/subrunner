@@ -509,18 +509,20 @@ public class UI_Manager : Singleton<UI_Manager>
 
 
 
-    public void OpenQuestionPopup(string title, string question, System.Action on_validate)
+    public void OpenQuestionPopup(string title, string question, System.Action on_validate, Color? outline_color = null, string desc_name = "", string desc = "")
     {
-        OpenQuestionPopup(title, question, new List<System.Action> { on_validate });
+        OpenQuestionPopup(title, question, new List<System.Action> { on_validate }, outline_color, desc_name, desc);
     }
-    public void OpenQuestionPopup(string title, string question, List<System.Action> on_validate)
+    public void OpenQuestionPopup(string title, string question, List<System.Action> on_validate, Color? outline_color = null, string desc_name = "", string desc = "")
     {
         // set the input slot callback
-        if (!TryGetPool<UI_PopupOkNo>(out UI_PopupOkNo popup)) { return; }
+        if (!TryGetPool(out UI_PopupOkNo popup)) { return; }
 
         // add the popup closing callback to the on_validate callbacks
         // on_validate.Insert(0, () => { CloseQuestionPopup(); });
         popup.RegisterDialog(title, question, on_validate);
+        popup.ApplyColor(outline_color);
+        popup.SetNameAndDescription(desc_name, desc);
 
         // show the stacked popup ok no pool
         StackPool("popup_okno");

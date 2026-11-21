@@ -4,14 +4,16 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class UI_PopupOkNo : UI_SlottablePool
+public class UI_PopupOkNo : UI_SlottablePool, Descriptable
 {
+
     [Header("Texts")]
     [SerializeField] private TextMeshProUGUI title_text;
     [SerializeField] private TextMeshProUGUI question_text;
 
     [Header("Buttons")]
     [SerializeField] private UI_EventButton ok_button;
+
 
     // ENABLING
     protected override IEnumerator enable_coroutine()
@@ -28,6 +30,8 @@ public class UI_PopupOkNo : UI_SlottablePool
 
         yield return base.disable_coroutine();
     }
+
+
 
     // CALLBACKS
     private List<System.Action> onValidateCallbacks;
@@ -57,4 +61,32 @@ public class UI_PopupOkNo : UI_SlottablePool
         
         foreach (var callback in onValidateCallbacks) { callback(); }
     }
+
+
+
+
+
+
+
+    ///
+    //
+    /// CUSTOMIZATION
+    //
+    ///
+
+
+
+    [Header("Colors")]
+    [SerializeField] private UI_Colorant colorant;
+    public void ResetColor() { ApplyColor(); }
+    public void ApplyColor(Color? color = null) => colorant.ApplyColor(color);
+
+
+
+    [Header("Description")]
+    [SerializeField] private string desc_name = "";
+    [SerializeField] private string desc = "";
+    public string Name => string.IsNullOrEmpty(desc_name) ? null : desc_name;
+    public string Description => string.IsNullOrEmpty(desc) ? null : desc;
+    public void SetNameAndDescription(string n, string d) { desc_name = n; desc = d; }
 }

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public static class StringExtensions
@@ -26,6 +27,53 @@ public static class StringExtensions
         }
         return text;
     }
+
+    // TIME METHODS
+    public static string ToHMS(this float sec, string format="F2")
+    {
+        int min = (int)sec / 60;
+        if (min <= 0) { return sec.ToString(format) + "s"; } // only seconds
+
+        // we have some minutes !
+        sec -= min * 60;
+        int hour = min / 60;
+        if (hour <= 0) { return $"{min}min {sec.ToString(format)}s"; }
+
+        // we have some hours !
+        min -= hour * 60;
+        return $"{hour}h {min}min {sec.ToString(format)}s";
+    }
+    public static string ToColoredHMS(this float sec, Color highlight, Color base_color, string format = "F2")
+    {
+        return color_hms(sec.ToHMS(format), highlight, base_color);
+    }
+    private static string color_hms(string hms, Color highlight, Color base_color)
+    {
+        // ex : 17h 36min 10,21s
+        // we highlight 17 ; 36 & 10,21
+        // we set base_color to the rest (h, min & s)
+        string colored_hms = "";
+        foreach (char c in hms)
+        {
+            if (c == ' ')
+            {
+                colored_hms += ' ';
+                continue;
+            }
+
+            if (Char.IsNumber(c) || c == ',')
+            {
+                colored_hms += c.ToString().AddColor(highlight);
+                continue;
+            }
+
+            // else we only have the rest
+            colored_hms += c.ToString().AddColor(base_color);
+        }
+        return colored_hms;
+    }
+
+
 
     // NATURAL ORDER SORTING
     private static NaturalSortComparer comparer = new NaturalSortComparer(System.StringComparison.Ordinal);

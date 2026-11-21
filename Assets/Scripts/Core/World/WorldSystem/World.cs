@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -16,6 +15,11 @@ public class World : BSOD_System<World>
     public WorldData data => save == null ? null : save.world;
     public WorldSaveData save;
     public static WorldSaveData Save => LazyInstance == null ? null : LazyInstance.save;
+    public static void SetSave(WorldSaveData save)
+    {
+        if (LazyInstance == null) { return; }
+        LazyInstance.save = save;
+    }
     public bool IsWorldLoaded => load_status == WorldLoadStatus.Loaded;
     public bool IsWorldLoadingOrUnloading => load_status != WorldLoadStatus.Loaded && load_status != WorldLoadStatus.NotLoaded;
 
@@ -352,6 +356,22 @@ public class World : BSOD_System<World>
     }
 
 
+    ///
+    //
+    /// UPDATE
+    //
+    ///
+
+    public void Update()
+    {
+        if (!IsWorldLoaded) { return; }
+        if (data == null) { return; }
+        data.UpdateGameClock();
+
+    }
+
+
+
 
     ///
     //
@@ -468,7 +488,8 @@ public class World : BSOD_System<World>
             color = data != null ? data.color : Color.white,
             icon_path = data != null ? data.icon_path : "",
             icon_name = data != null ? data.icon_name : "",
-            game_version = data != null ? data.game_version : Application.version
+            game_version = data != null ? data.game_version : Application.version,
+            game_clock = 0f
         };
 
         return new_data;
@@ -512,20 +533,27 @@ public class World : BSOD_System<World>
     // meta data
     public string game_version;
     public string creation_date;
+    public float game_clock; // delta unscaled time
     public string last_update_date;
+    public float last_update_game_clock; // delta unscaled time
     public string icon_path;
     public string icon_name;
     public Color color;
-    public float speedrun_clock;
+    public float speedrun_clock; // delta time // todo improve this bc it is saved in plain text wtf ?
 
 
     // story data
     public StoryData story_data;
 
+    public void UpdateGameClock()
+    {
+        game_clock += Time.unscaledDeltaTime;
+    }
 
     public void UpdateTime(bool just_created = false)
     {
         game_version = Application.version;
+        last_update_game_clock = game_clock;
         last_update_date = DateTime.Now.ToString();
         creation_date = (just_created || string.IsNullOrEmpty(creation_date)) ? last_update_date : creation_date;
 
@@ -540,6 +568,20 @@ public class World : BSOD_System<World>
     public int CompareTime(WorldData other)
     {
         return CompareTime(this.last_update_date, other.last_update_date);
+    }
+    public float GetDelaySinceLastSave(out Color recommanded_color)
+    {
+        float diff = game_clock - last_update_game_clock;
+
+        // determine which color to show
+        recommanded_color = Color.green;
+        if (diff < 30) { }
+        else if (diff < 60) { recommanded_color = Color.yellowGreen; }
+        else if (diff < 60 * 3) { recommanded_color = Color.yellow; }
+        else if (diff < 60 * 10) { recommanded_color = Color.orange; }
+        else if (diff < 60 * 20) { recommanded_color = Color.orangeRed; }
+        else { recommanded_color = Color.red; }
+        return diff;
     }
     public static int CompareTime(string a_date, string b_date)
     {
@@ -556,7 +598,6 @@ public class World : BSOD_System<World>
             return 0;
         }
     }
-
     public string GetDetails()
     {
         string details = "";
