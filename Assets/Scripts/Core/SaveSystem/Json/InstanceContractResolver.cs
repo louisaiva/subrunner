@@ -38,17 +38,14 @@ public sealed class InstanceContractResolver : DefaultContractResolver
             if (log) { Debug.Log($"(InstanceCR) Checking property: {propertyInfo.Name} of type {propertyInfo.PropertyType}"); }
             if (!isDataClassRelative(propertyInfo.DeclaringType)) { return true; } // we don't want Vector2.normalized
 
-            // Check if the backing field has the attribute (for [field: SerializeField])
+            // get the backing field
             string backingFieldName = $"<{propertyInfo.Name}>k__BackingField";
             backingField = propertyInfo.DeclaringType?.GetField(
                 backingFieldName,
                 System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-
-            // if the field has no attributes, we skip it by default
             if (backingField == null) { return true; }
-            // List<Attribute> attrs = Attribute.GetCustomAttributes(backingField, inherit: false).ToList();
-            // if (attrs.Count == 0) { return true; }
-            // if (log) { Debug.Log($"(InstanceCR) Backing field {backingField.Name} for property {propertyInfo.Name} has {attrs.Count} attributes, we check if we should skip it"); }
+
+            // check if skip the backing field
             return ShouldSkipMember(backingField, out _); 
         }
 

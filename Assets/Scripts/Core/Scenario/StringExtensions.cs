@@ -12,6 +12,7 @@ public static class StringExtensions
     public static string Grey(this string text) => AddColor(text, Color.grey);
     public static string Cyan(this string text) => AddColor(text, Color.cyan);
     public static string Magenta(this string text) => AddColor(text, Color.magenta);
+    public static string Yellow(this string text) => AddColor(text, Color.yellow);
     public static string RedIfNull(this string text)
     {
         if (text == null)
