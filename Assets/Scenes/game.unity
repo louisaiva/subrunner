@@ -328363,6 +328363,7 @@ GameObject:
   - component: {fileID: 1733966126}
   - component: {fileID: 1733966127}
   - component: {fileID: 1733966128}
+  - component: {fileID: 1733966129}
   m_Layer: 0
   m_Name: data_manager
   m_TagString: Untagged
@@ -328670,6 +328671,22 @@ MonoBehaviour:
   template: {fileID: 1492906358488399447, guid: 2bbf31ea3f9618640a60afd21f115de2, type: 3}
   converter: 2
   log: 1
+--- !u!114 &1733966129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1733966122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e685fb54325b8bf459a233600802ad14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AttributesAnalyzer
+  data_types: 0
+  broken_members: 0
+  subclass_members: 0
+  total_members: 0
 --- !u!1 &1734254098
 GameObject:
   m_ObjectHideFlags: 0

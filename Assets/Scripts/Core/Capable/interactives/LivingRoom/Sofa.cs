@@ -123,8 +123,8 @@ public class Sofa : Container, Interactable, Sittable
 
 public class SofaData : ContainerData
 {
-    public Vector2 local_sitting_position;
-    public Vector2 local_standing_position;
+    [KindData] public Vector2 local_sitting_position;
+    [KindData] public Vector2 local_standing_position;
     // CONSTRUCTOR
     public SofaData() : base() { }
     public SofaData(CapableData parent) : base(parent) { }

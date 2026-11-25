@@ -872,13 +872,13 @@ public class AnimPlayer : MonoBehaviour
 }
 
 
-[Serializable] public class AnimCapacityPriority
+[Serializable] public class AnimCapacityPriority : DataHolder
 {
-    [HideInInspector] public int priority = 0;
-    public string capacity_playing = "";
-    public List<string> capacities;
-    public bool lock_orientation = false;
-    public bool one_shot = false;
+    [HideInInspector, KindData] public int priority = 0;
+    [RuntimeOnly] public string capacity_playing = "";
+    [KindData] public List<string> capacities;
+    [KindData] public bool lock_orientation = false;
+    [KindData] public bool one_shot = false;
 
     public AnimCapacityPriority(List<string> capacities)
     {
@@ -902,22 +902,22 @@ public class AnimPlayer : MonoBehaviour
 // ANIMATIONS
 [Serializable] public class AnimPlayerData : DataHolder
 {
-    public string skin_kind;
-    public string skin;
-    public List<AnimCapacityPriority> anim_capacity_priorities;
-    public string current_capacity; // runtime only
+    [KindData] public string skin_kind;
+    [KindData] public string skin;
+    [KindData] public List<AnimCapacityPriority> anim_capacity_priorities; 
+    [RuntimeOnly] public string current_capacity; // runtime only
 
     // player sr data
-    public string material_name;
-    public int sorting_layer_id;
-    public int order_in_layer;
-    public bool never_flip;
+    [KindData] public string material_name;
+    [KindData] public int sorting_layer_id;
+    [KindData] public int order_in_layer;
+    [KindData] public bool never_flip;
 
     // layers
-    public List<AnimLayerData> layers;
+    [InstanceData, KindData] public List<AnimLayerData> layers;
 
     // position
-    public Vector2 local_position;
+    [KindData] public Vector2 local_position;
 
 
     // GET & DUPLICATE

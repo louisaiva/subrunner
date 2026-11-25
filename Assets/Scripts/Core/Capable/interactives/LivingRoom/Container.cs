@@ -83,7 +83,7 @@ public class Container : Capable
 
 public class ContainerData : CapableData
 {
-    public List<string> contained_capable_ids = new List<string>();
+    [InstanceData] public List<string> contained_capable_ids = new List<string>();
 
     // CONSTRUCTOR
     public ContainerData() : base() { }

@@ -57,8 +57,8 @@ public class CraftCapacity : Capacity
 
 public class CraftCapacityData : CapacityData
 {
-    public float craft_duration = 2f;
-    public string craft_anim = "craft";
+    [KindData] public float craft_duration = 2f;
+    [KindData] public string craft_anim = "craft";
 
 
     // CONSTRUCTOR

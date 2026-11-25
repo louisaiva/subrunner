@@ -261,11 +261,11 @@ public class Door : Capable, Interactable, Openable
 {
 
     // INSTANCE DATA
-    public bool is_vertical;
-    public string room1_id;
-    public string room2_id;
-    public bool is_open;
-    public IFPositionSwitcher if_switcher;
+    [KindData] public bool is_vertical;
+    [InstanceData] public string room1_id;
+    [InstanceData] public string room2_id;
+    [InstanceData] public bool is_open;
+    [KindData, InstanceData] public IFPositionSwitcher if_switcher;
 
 
     // CONSTRUCTOR
@@ -314,10 +314,10 @@ public class Door : Capable, Interactable, Openable
     }
 }
 
-[Serializable] public class IFPositionSwitcher
+[Serializable] public class IFPositionSwitcher : DataHolder
 {
-    public Vector2 closed_interact_kf_y = new Vector2(2.25f, 1.25f); // orientation up then down
-    public Vector2 opened_interact_kf_y = new Vector2(0.9f, -0.4f); // orientation up then down
+    [KindData] public Vector2 closed_interact_kf_y = new Vector2(2.25f, 1.25f); // orientation up then down
+    [KindData] public Vector2 opened_interact_kf_y = new Vector2(0.9f, -0.4f); // orientation up then down
 
     // DUPLICATE
     public IFPositionSwitcher Duplicate()

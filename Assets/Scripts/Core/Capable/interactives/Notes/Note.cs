@@ -32,7 +32,7 @@ public class Note : Capable, Interactable
 
 public class NoteData : CapableData
 {
-    public string ui_pool_to_open = "";
+    [KindData] public string ui_pool_to_open = "";
 
     // CONSTRUCTOR
     public NoteData() : base() { }

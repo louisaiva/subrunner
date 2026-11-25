@@ -6,7 +6,7 @@ using UnityEngine;
 
 public sealed class InstanceContractResolver : DefaultContractResolver
 {
-    private static bool log = false;
+    private static bool log = true;
 
     protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
     {
@@ -24,7 +24,7 @@ public sealed class InstanceContractResolver : DefaultContractResolver
         }
         else { prop = base.CreateProperty(member, memberSerialization); }
 
-        if (log) { Debug.Log($"(InstanceCR) Created JsonProperty: Name={prop.PropertyName}, Ignored={prop.Ignored}, Readable={prop.Readable}, Writable={prop.Writable}"); }
+        if (log) { Debug.Log($"(InstanceCR) Created JsonProperty: Name={prop.PropertyName}, Type={prop.PropertyType} Ignored={prop.Ignored}, Readable={prop.Readable}, Writable={prop.Writable}"); }
 
         return prop;
     }
@@ -40,9 +40,7 @@ public sealed class InstanceContractResolver : DefaultContractResolver
 
             // get the backing field
             string backingFieldName = $"<{propertyInfo.Name}>k__BackingField";
-            backingField = propertyInfo.DeclaringType?.GetField(
-                backingFieldName,
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            backingField = propertyInfo.DeclaringType?.GetField(backingFieldName, BindingFlags.NonPublic | BindingFlags.Instance);
             if (backingField == null) { return true; }
 
             // check if skip the backing field

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 [Serializable] public class InventoryData : DataHolder
 {
-    public List<ItemPoolData> item_pools_data;
-    public ItemType item_type;
+    [KindData, InstanceData] public List<ItemPoolData> item_pools_data;
+    [KindData] public ItemType item_type;
     public int ItemsCount()
     {
         int count = 0;
@@ -73,15 +73,15 @@ using System.Collections.Generic;
     }
 }
 
-[Serializable] public class ItemPoolData
+[Serializable] public class ItemPoolData : DataHolder
 {
-    public ItemType item_type;
-    public List<ItemStackData> stacks_data;
-    public string pool_id;
-    public int max_stacks;
-    public int min_stacks;
-    public bool scalable;
-    public string item_rule;
+    [KindData] public ItemType item_type;
+    [InstanceData] public List<ItemStackData> stacks_data;
+    [KindData] public string pool_id;
+    [KindData] public int max_stacks;
+    [KindData] public int min_stacks;
+    [KindData] public bool scalable;
+    [KindData] public string item_rule;
 
     // DUPLICATE
     public ItemPoolData Duplicate()
@@ -124,8 +124,8 @@ using System.Collections.Generic;
 
 [Serializable] public class ItemStackData
 {
-    public string item_ref;
-    public List<string> items_ids;
+    [InstanceData] public string item_ref;
+    [InstanceData] public List<string> items_ids;
     
     public ItemStackData Duplicate()
     {

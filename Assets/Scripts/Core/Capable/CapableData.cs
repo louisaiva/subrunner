@@ -25,9 +25,9 @@ public interface ICapableData : IData
 
     // CAPACITIES
     [InstanceData] public List<string> capacities_ids;
-    
+
     // ANIM PLAYER
-    public AnimPlayerData anim_data;
+    [InstanceData, KindData] public AnimPlayerData anim_data;
 
     // INVENTORY
     [InstanceData, KindData] public InventoryData inventory;

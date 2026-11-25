@@ -18,15 +18,20 @@ public static class StringExtensions
         if (text == null)
         {
             text = "NULL";
-            return AddColor(text, Color.red);
+            return Red(text);
         }
 
         if (text == "")
         {
             text = "EMPTY";
-            return AddColor(text, Color.yellow);
+            return Yellow(text);
         }
         return text;
+    }
+    public static string RedIf(this string text, bool test)
+    {
+        if (!test) { return text; }
+        return Red(text);
     }
 
     // TIME METHODS

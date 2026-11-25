@@ -296,16 +296,16 @@ public class AnimLayer : MonoBehaviour
 
 [Serializable] public class AnimLayerData : DataHolder
 {
-    public string skin;
-    public Vector2 local_position;
-    public Vector3 local_rotation;
+    [KindData] public string skin;
+    [KindData] public Vector2 local_position;
+    [KindData] public Vector3 local_rotation;
 
     // layer sr data
-    public string material_name;
-    public int sorting_layer_id;
-    public int order_in_layer;
-    public bool never_flip;
-    public bool follow_duration;
+    [KindData] public string material_name;
+    [KindData] public int sorting_layer_id;
+    [KindData] public int order_in_layer;
+    [KindData] public bool never_flip;
+    [KindData] public bool follow_duration;
 
     public AnimLayerData Duplicate()
     {
