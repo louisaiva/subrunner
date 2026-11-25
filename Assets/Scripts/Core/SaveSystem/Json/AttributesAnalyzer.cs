@@ -130,13 +130,13 @@ public class AttributesAnalyzer : MonoBehaviour
             broken_fields++;
             return false;
         }
-        if (attributes_count > 1 && !is_data_holder(field.FieldType)) // instancedata & kinddata
+        if (attributes_count > 1 && !is_data_holder(field.FieldType)) // instancedata & kinddata & !DataHolder
         {
             debug += "\n" + (" [>] " + field_debug + " <--- SUBCLASS FIELDS NEED TO BE DATA HOLDER. Apply DataHolder interface on type : ").Red() + get_generic_type_of(field.FieldType).Name;
             broken_fields++;
             return false;
         }
-        if (attributes_count > 1) // instancedata & kinddata & DataHolder
+        if (attributes_count > 1 || is_data_holder(field.FieldType)) // instancedata & kinddata & DataHolder | instancedata & DataHolder | kinddata & DataHolder
         {
             debug += "\n" + ("  >  " + field_debug).Yellow();
             subclass_fields++;

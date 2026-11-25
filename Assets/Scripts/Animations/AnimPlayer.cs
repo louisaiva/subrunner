@@ -914,7 +914,7 @@ public class AnimPlayer : MonoBehaviour
     [KindData] public bool never_flip;
 
     // layers
-    [InstanceData, KindData] public List<AnimLayerData> layers;
+    [KindData] public List<AnimLayerData> layers;
 
     // position
     [KindData] public Vector2 local_position;

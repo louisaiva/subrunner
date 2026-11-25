@@ -265,7 +265,7 @@ public class Door : Capable, Interactable, Openable
     [InstanceData] public string room1_id;
     [InstanceData] public string room2_id;
     [InstanceData] public bool is_open;
-    [KindData, InstanceData] public IFPositionSwitcher if_switcher;
+    [KindData] public IFPositionSwitcher if_switcher;
 
 
     // CONSTRUCTOR
