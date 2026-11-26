@@ -328669,7 +328669,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateJsonConverter
   template: {fileID: 1492906358488399447, guid: 2bbf31ea3f9618640a60afd21f115de2, type: 3}
-  converter: 2
+  converter: 3
   log: 1
 --- !u!114 &1733966129
 MonoBehaviour:
@@ -328683,10 +328683,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e685fb54325b8bf459a233600802ad14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AttributesAnalyzer
-  data_types: 42
-  broken_fields: 116
-  subclass_fields: 8
-  total_fields: 189
+  data_types: 48
+  broken_fields: 0
+  subclass_fields: 24
+  total_fields: 197
+  kind_fields: 137
+  instance_fields: 50
+  rto_fields: 12
 --- !u!1 &1734254098
 GameObject:
   m_ObjectHideFlags: 0

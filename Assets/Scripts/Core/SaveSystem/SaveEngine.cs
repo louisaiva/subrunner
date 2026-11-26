@@ -54,6 +54,12 @@ public class SaveEngine : MonoBehaviour
         Formatting = Formatting.Indented,
         ContractResolver = new InstanceContractResolver()
     };
+    public static JsonSerializerSettings KindContract = new JsonSerializerSettings
+    {
+        TypeNameHandling = TypeNameHandling.Auto,
+        Formatting = Formatting.Indented,
+        ContractResolver = new KindContractResolver()
+    };
     public static JsonSerializerSettings OldContract = new JsonSerializerSettings
     {
         TypeNameHandling = TypeNameHandling.Auto,

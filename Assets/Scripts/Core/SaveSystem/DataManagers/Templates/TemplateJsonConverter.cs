@@ -84,6 +84,7 @@ public class TemplateJsonConverter : MonoBehaviour
         {
             case JSON_Contract.Old: return SaveEngine.OldContract;
             case JSON_Contract.Instance: return SaveEngine.InstanceContract;
+            case JSON_Contract.Kind: return SaveEngine.KindContract;
         }
         return null;
     }

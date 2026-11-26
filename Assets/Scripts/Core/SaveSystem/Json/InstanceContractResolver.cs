@@ -36,7 +36,7 @@ public sealed class InstanceContractResolver : DefaultContractResolver
         if (member is PropertyInfo propertyInfo)
         {
             if (log) { Debug.Log($"(InstanceCR) Checking property: {propertyInfo.Name} of type {propertyInfo.PropertyType}"); }
-            if (!isDataClassRelative(propertyInfo.DeclaringType)) { return true; } // we don't want Vector2.normalized
+            if (!AttributesAnalyzer.IsDataClassRelative(propertyInfo.DeclaringType)) { return true; } // we don't want Vector2.normalized
 
             // get the backing field
             string backingFieldName = $"<{propertyInfo.Name}>k__BackingField";
@@ -53,7 +53,7 @@ public sealed class InstanceContractResolver : DefaultContractResolver
             return true;
         }
 
-        if (!isDataClassRelative(field.DeclaringType)) { return false; } // we authorize all fields --> allow for storing Vector2.x & Vector2.y
+        if (!AttributesAnalyzer.IsDataClassRelative(field.DeclaringType)) { return false; } // we authorize all fields --> allow for storing Vector2.x & Vector2.y
 
         // handling field case
         if (!Attribute.IsDefined(field, typeof(InstanceDataAttribute), inherit: false))
@@ -62,14 +62,6 @@ public sealed class InstanceContractResolver : DefaultContractResolver
             return true;
         }
         return false;
-    }
-    private static bool isDataClassRelative(Type type)
-    {
-        return typeof(DataHolder).IsAssignableFrom(type);
-        /* if (typeof(CapableData).IsAssignableFrom(type)) { return true; }
-        if (typeof(CapacityData).IsAssignableFrom(type)) { return true; }
-        // inserts others here, like FeetData ?
-        return false; */
     }
 }
 

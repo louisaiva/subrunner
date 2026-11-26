@@ -16,6 +16,11 @@ public class AttributesAnalyzer : MonoBehaviour
     public int broken_fields = 0;
     public int subclass_fields = 0;
     public int total_fields = 0;
+    
+    // tracking
+    public int kind_fields = 0;
+    public int instance_fields = 0;
+    public int rto_fields = 0;
 
     // ENTRY POINT
     public void AnalyzeAttributes()
@@ -26,6 +31,9 @@ public class AttributesAnalyzer : MonoBehaviour
         broken_fields = 0;
         total_fields = 0;
         subclass_fields = 0;
+        kind_fields = 0;
+        instance_fields = 0;
+        rto_fields = 0;
 
         // get all DataHolder types
         Assembly currentAssembly = Assembly.GetExecutingAssembly();
@@ -44,7 +52,7 @@ public class AttributesAnalyzer : MonoBehaviour
         }
 
         string broken = (broken_fields > 0 ? $"{broken_fields} / {total_fields} broken fields" : $"{total_fields} fields").AddColor(broken_fields > 0 ? Color.red : Color.green);
-        string end_debug = $"(AttributesAnalyzer) Analyze found {data_types} HolderData types, {broken}   ({subclass_fields} subclass fields)\n" + debug;
+        string end_debug = $"(AttributesAnalyzer) Analyze found {data_types} HolderData types, {broken}   --> {rto_fields} RTO | {kind_fields} KIND | {instance_fields} INSTANCE FIELDS  <--  ({subclass_fields} subclass fields)\n" + debug;
         // Debug.Log(end_debug);
 
         // output_debug(end_debug);
@@ -65,11 +73,18 @@ public class AttributesAnalyzer : MonoBehaviour
     private bool is_data_holder(Type type)
     {
         type = get_generic_type_of(type);
-        if (!typeof(DataHolder).IsAssignableFrom(type)) { return false; }
+        // if (!typeof(DataHolder).IsAssignableFrom(type)) { return false; }
+        if (!IsDataClassRelative(type)) { return false; }
         if (!type.IsPublic) { return false; }
         if (type.IsInterface) { return false; }
         return true;
     }
+    public static bool IsDataClassRelative(Type type)
+    {
+        return typeof(DataHolder).IsAssignableFrom(type);
+    }
+
+
     private int analyze_type(Type type, ref string debug, out int broken_in_type)
     {
         broken_in_type = 0;
@@ -114,9 +129,9 @@ public class AttributesAnalyzer : MonoBehaviour
         bool is_kind = Attribute.IsDefined(field, typeof(KindDataAttribute));
                 
         string field_debug = field.Name + " : ";
-        if (is_rto) { attributes_count++; has_at_least_one_attribute = true; field_debug += " RuntimeOnly "; }
-        if (is_instance) { attributes_count++; has_at_least_one_attribute = true; field_debug += " InstanceData "; }
-        if (is_kind) { attributes_count++; has_at_least_one_attribute = true; field_debug += " KindData "; }
+        if (is_rto) { rto_fields++; attributes_count++; has_at_least_one_attribute = true; field_debug += " RuntimeOnly "; }
+        if (is_instance) { instance_fields++; attributes_count++; has_at_least_one_attribute = true; field_debug += " InstanceData "; }
+        if (is_kind) { kind_fields++; attributes_count++; has_at_least_one_attribute = true; field_debug += " KindData "; }
 
         if (!has_at_least_one_attribute)
         {
