@@ -53164,9 +53164,7 @@
         "biggi-21",
         "biggi-24"
       ],
-      "capables_ids": [
-        "carpet-0"
-      ],
+      "capables_ids": [],
       "movables_ids": [],
       "<id>k__BackingField": "biggi-15"
     },
@@ -91323,48 +91321,6 @@
       "effects": [],
       "effects_ttl": [],
       "<id>k__BackingField": "trashbag_3-17"
-    },
-    {
-      "kind": "Capable",
-      "position": {
-        "x": 58.75,
-        "y": 0.5
-      },
-      "orientation": {
-        "x": 0.0,
-        "y": -1.0
-      },
-      "layer": 29,
-      "tag": "Untagged",
-      "capacities_ids": [
-        "red_carpet_sr-0"
-      ],
-      "anim_data": {
-        "skin_kind": null,
-        "skin": "",
-        "anim_capacity_priorities": [],
-        "current_capacity": "",
-        "material_name": "",
-        "sorting_layer_id": 0,
-        "order_in_layer": 0,
-        "never_flip": false,
-        "layers": [],
-        "local_position": {
-          "x": 0.0,
-          "y": 0.0
-        }
-      },
-      "inventory": {
-        "item_pools_data": [],
-        "item_type": 0
-      },
-      "feet_data": {
-        "box_colliders": [],
-        "circle_colliders": []
-      },
-      "effects": [],
-      "effects_ttl": [],
-      "<id>k__BackingField": "carpet-0"
     },
     {
       "kind": "Package",
@@ -129625,7 +129581,7 @@
       "<owner_id>k__BackingField": "trash_container-0"
     },
     {
-      "$type": "HealthCapacityData, Assembly-CSharp",
+      "$type": "HealthData, Assembly-CSharp",
       "health": 100.0,
       "max_health": 100,
       "regen_health": 0.1,
@@ -130240,7 +130196,7 @@
       "<owner_id>k__BackingField": "cat_nester-1"
     },
     {
-      "$type": "SpawnCapacityData, Assembly-CSharp",
+      "$type": "SpawnData, Assembly-CSharp",
       "spawn_anim_name": "spawn",
       "base_entity_id": "zombo",
       "spawn_force": 0.0,
@@ -130436,7 +130392,7 @@
       "<owner_id>k__BackingField": "nest_z2once-1"
     },
     {
-      "$type": "SpawnCapacityData, Assembly-CSharp",
+      "$type": "SpawnData, Assembly-CSharp",
       "spawn_anim_name": "spawn",
       "base_entity_id": "zombo",
       "spawn_force": 0.0,
@@ -130650,7 +130606,7 @@
       "<owner_id>k__BackingField": "nest_npc1-2"
     },
     {
-      "$type": "SpawnCapacityData, Assembly-CSharp",
+      "$type": "SpawnData, Assembly-CSharp",
       "spawn_anim_name": "spawn",
       "base_entity_id": "npc",
       "spawn_force": 0.0,
@@ -130752,7 +130708,7 @@
       "<owner_id>k__BackingField": "nest_z4-0"
     },
     {
-      "$type": "SpawnCapacityData, Assembly-CSharp",
+      "$type": "SpawnData, Assembly-CSharp",
       "spawn_anim_name": "spawn",
       "base_entity_id": "zombo",
       "spawn_force": 0.0,
@@ -131028,7 +130984,7 @@
       "<owner_id>k__BackingField": "nest_npc1-1"
     },
     {
-      "$type": "SpawnCapacityData, Assembly-CSharp",
+      "$type": "SpawnData, Assembly-CSharp",
       "spawn_anim_name": "spawn",
       "base_entity_id": "npc",
       "spawn_force": 0.0,
@@ -131224,7 +131180,7 @@
       "<owner_id>k__BackingField": "nest_z2once-0"
     },
     {
-      "$type": "SpawnCapacityData, Assembly-CSharp",
+      "$type": "SpawnData, Assembly-CSharp",
       "spawn_anim_name": "spawn",
       "base_entity_id": "zombo",
       "spawn_force": 0.0,
@@ -131699,7 +131655,7 @@
       "<owner_id>k__BackingField": "nest_npc1-0"
     },
     {
-      "$type": "SpawnCapacityData, Assembly-CSharp",
+      "$type": "SpawnData, Assembly-CSharp",
       "spawn_anim_name": "spawn",
       "base_entity_id": "npc",
       "spawn_force": 0.0,
@@ -133699,7 +133655,7 @@
       "<owner_id>k__BackingField": "end_sofa-0"
     },
     {
-      "$type": "SpawnCapacityData, Assembly-CSharp",
+      "$type": "SpawnData, Assembly-CSharp",
       "spawn_anim_name": "spawn",
       "base_entity_id": "",
       "spawn_force": 0.0,
@@ -135163,7 +135119,7 @@
       "<owner_id>k__BackingField": "cat_nester-0"
     },
     {
-      "$type": "SpawnCapacityData, Assembly-CSharp",
+      "$type": "SpawnData, Assembly-CSharp",
       "spawn_anim_name": "spawn",
       "base_entity_id": "zombo",
       "spawn_force": 0.0,
@@ -137698,7 +137654,7 @@
       "<owner_id>k__BackingField": "nest_npc1-3"
     },
     {
-      "$type": "SpawnCapacityData, Assembly-CSharp",
+      "$type": "SpawnData, Assembly-CSharp",
       "spawn_anim_name": "spawn",
       "base_entity_id": "npc",
       "spawn_force": 0.0,
@@ -138035,7 +137991,7 @@
       "<owner_id>k__BackingField": "nest_z2once-2"
     },
     {
-      "$type": "SpawnCapacityData, Assembly-CSharp",
+      "$type": "SpawnData, Assembly-CSharp",
       "spawn_anim_name": "spawn",
       "base_entity_id": "zombo",
       "spawn_force": 0.0,
@@ -138090,7 +138046,7 @@
       "<owner_id>k__BackingField": "nest_z2once-3"
     },
     {
-      "$type": "SpawnCapacityData, Assembly-CSharp",
+      "$type": "SpawnData, Assembly-CSharp",
       "spawn_anim_name": "spawn",
       "base_entity_id": "zombo",
       "spawn_force": 0.0,
@@ -138239,7 +138195,7 @@
       "<owner_id>k__BackingField": "nest_z4-2"
     },
     {
-      "$type": "SpawnCapacityData, Assembly-CSharp",
+      "$type": "SpawnData, Assembly-CSharp",
       "spawn_anim_name": "spawn",
       "base_entity_id": "zombo",
       "spawn_force": 0.0,
@@ -138529,7 +138485,7 @@
       "<owner_id>k__BackingField": "nest_z10once-1"
     },
     {
-      "$type": "SpawnCapacityData, Assembly-CSharp",
+      "$type": "SpawnData, Assembly-CSharp",
       "spawn_anim_name": "spawn",
       "base_entity_id": "zombo",
       "spawn_force": 0.0,
@@ -138584,7 +138540,7 @@
       "<owner_id>k__BackingField": "nest_z4-4"
     },
     {
-      "$type": "SpawnCapacityData, Assembly-CSharp",
+      "$type": "SpawnData, Assembly-CSharp",
       "spawn_anim_name": "spawn",
       "base_entity_id": "zombo",
       "spawn_force": 0.0,
@@ -138639,7 +138595,7 @@
       "<owner_id>k__BackingField": "nest_z10once-0"
     },
     {
-      "$type": "SpawnCapacityData, Assembly-CSharp",
+      "$type": "SpawnData, Assembly-CSharp",
       "spawn_anim_name": "spawn",
       "base_entity_id": "zombo",
       "spawn_force": 0.0,
@@ -138659,23 +138615,6 @@
       "tag": "Untagged",
       "<id>k__BackingField": "zombo_spawn-5",
       "<owner_id>k__BackingField": "nest_z10once-0"
-    },
-    {
-      "$type": "SpriteData, Assembly-CSharp",
-      "sprite": {},
-      "random_sprites": [],
-      "material_name": "sprite_lit_default",
-      "sorting_layer_id": -31225397,
-      "order_in_layer": 1,
-      "kind": "SpriteCapacity",
-      "local_position": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "layer": 29,
-      "tag": "Untagged",
-      "<id>k__BackingField": "red_carpet_sr-0",
-      "<owner_id>k__BackingField": "carpet-0"
     },
     {
       "$type": "InputIndicationData, Assembly-CSharp",
@@ -139933,7 +139872,7 @@
       "<owner_id>k__BackingField": "nest_z4-5"
     },
     {
-      "$type": "SpawnCapacityData, Assembly-CSharp",
+      "$type": "SpawnData, Assembly-CSharp",
       "spawn_anim_name": "spawn",
       "base_entity_id": "zombo",
       "spawn_force": 0.0,
@@ -139988,7 +139927,7 @@
       "<owner_id>k__BackingField": "nest_z4-7"
     },
     {
-      "$type": "SpawnCapacityData, Assembly-CSharp",
+      "$type": "SpawnData, Assembly-CSharp",
       "spawn_anim_name": "spawn",
       "base_entity_id": "zombo",
       "spawn_force": 0.0,
@@ -140043,7 +139982,7 @@
       "<owner_id>k__BackingField": "nest_z4-8"
     },
     {
-      "$type": "SpawnCapacityData, Assembly-CSharp",
+      "$type": "SpawnData, Assembly-CSharp",
       "spawn_anim_name": "spawn",
       "base_entity_id": "zombo",
       "spawn_force": 0.0,
@@ -140098,7 +140037,7 @@
       "<owner_id>k__BackingField": "nest_z4-3"
     },
     {
-      "$type": "SpawnCapacityData, Assembly-CSharp",
+      "$type": "SpawnData, Assembly-CSharp",
       "spawn_anim_name": "spawn",
       "base_entity_id": "zombo",
       "spawn_force": 0.0,
@@ -140153,7 +140092,7 @@
       "<owner_id>k__BackingField": "nest_z4-1"
     },
     {
-      "$type": "SpawnCapacityData, Assembly-CSharp",
+      "$type": "SpawnData, Assembly-CSharp",
       "spawn_anim_name": "spawn",
       "base_entity_id": "zombo",
       "spawn_force": 0.0,
@@ -140208,7 +140147,7 @@
       "<owner_id>k__BackingField": "nest_z6once-0"
     },
     {
-      "$type": "SpawnCapacityData, Assembly-CSharp",
+      "$type": "SpawnData, Assembly-CSharp",
       "spawn_anim_name": "spawn",
       "base_entity_id": "zombo",
       "spawn_force": 0.0,
@@ -140404,7 +140343,7 @@
       "<owner_id>k__BackingField": "nest_z4-6"
     },
     {
-      "$type": "SpawnCapacityData, Assembly-CSharp",
+      "$type": "SpawnData, Assembly-CSharp",
       "spawn_anim_name": "spawn",
       "base_entity_id": "zombo",
       "spawn_force": 0.0,
@@ -140445,7 +140384,7 @@
       "<owner_id>k__BackingField": "nest_npc1-4"
     },
     {
-      "$type": "SpawnCapacityData, Assembly-CSharp",
+      "$type": "SpawnData, Assembly-CSharp",
       "spawn_anim_name": "spawn",
       "base_entity_id": "npc",
       "spawn_force": 0.0,
@@ -141016,7 +140955,7 @@
       "<owner_id>k__BackingField": "cat_nester-3"
     },
     {
-      "$type": "SpawnCapacityData, Assembly-CSharp",
+      "$type": "SpawnData, Assembly-CSharp",
       "spawn_anim_name": "spawn",
       "base_entity_id": "zombo",
       "spawn_force": 0.0,
@@ -141150,7 +141089,7 @@
       "<owner_id>k__BackingField": "cat_nester-2"
     },
     {
-      "$type": "SpawnCapacityData, Assembly-CSharp",
+      "$type": "SpawnData, Assembly-CSharp",
       "spawn_anim_name": "spawn",
       "base_entity_id": "zombo",
       "spawn_force": 0.0,
@@ -141205,7 +141144,7 @@
       "<owner_id>k__BackingField": "cat_nester-4"
     },
     {
-      "$type": "SpawnCapacityData, Assembly-CSharp",
+      "$type": "SpawnData, Assembly-CSharp",
       "spawn_anim_name": "spawn",
       "base_entity_id": "zombo",
       "spawn_force": 0.0,
@@ -141260,7 +141199,7 @@
       "<owner_id>k__BackingField": "cat_nester-5"
     },
     {
-      "$type": "SpawnCapacityData, Assembly-CSharp",
+      "$type": "SpawnData, Assembly-CSharp",
       "spawn_anim_name": "spawn",
       "base_entity_id": "zombo",
       "spawn_force": 0.0,
@@ -141342,7 +141281,7 @@
       "<owner_id>k__BackingField": "bob-0"
     },
     {
-      "$type": "HealthCapacityData, Assembly-CSharp",
+      "$type": "HealthData, Assembly-CSharp",
       "health": 98.0,
       "max_health": 100,
       "regen_health": 0.0,

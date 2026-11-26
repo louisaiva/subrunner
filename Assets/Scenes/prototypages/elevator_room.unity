@@ -293,8 +293,6 @@ MonoBehaviour:
   Showed: 0
   Stacked: 0
   Settings: {fileID: 11400000, guid: 78550bce7a74b884da0ac63b0243f33c, type: 2}
-  angle_threshold: 45
-  angle_multiplicator: 0
   ui_elements:
   - {fileID: 1808722018}
   stacked_elements: []
@@ -304,6 +302,7 @@ MonoBehaviour:
   use_ingame_drop: 1
   PersoUI_Inventory: {fileID: 2005274666}
   ChestUI_ItemPool: {fileID: 406660989}
+  title_text: {fileID: 0}
 --- !u!1001 &28607692
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1163,10 +1162,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b504b78d5e32465408419f8d61a3fb79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Writer
+  write_on_enable: 0
+  raw_writing_on_enable: 
+  on_enable_delay: 0
   caracters_per_sec: 100
   slow_caractere_delay: 0.1
   pause_caractere_delay: 0.5
   log_writing: 0
+  log_color_tags: 0
 --- !u!114 &117692526
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1225,6 +1228,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1646,6 +1650,184 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2806026283884960729, guid: abacdc781c511fc42b1c0e4dd87c3c7b, type: 3}
   m_PrefabInstance: {fileID: 133884876}
   m_PrefabAsset: {fileID: 0}
+--- !u!43 &138581862
+Mesh:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  serializedVersion: 12
+  m_SubMeshes:
+  - serializedVersion: 2
+    firstByte: 0
+    indexCount: 0
+    topology: 0
+    baseVertex: 0
+    firstVertex: 0
+    vertexCount: 0
+    localAABB:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0, y: 0, z: 0}
+  m_Shapes:
+    vertices: []
+    shapes: []
+    channels: []
+    fullWeights: []
+  m_BindPose: []
+  m_BoneNameHashes: 
+  m_RootBoneNameHash: 0
+  m_BonesAABB: []
+  m_VariableBoneCountWeights:
+    m_Data: 
+  m_MeshCompression: 0
+  m_IsReadable: 1
+  m_KeepVertices: 1
+  m_KeepIndices: 1
+  m_IndexFormat: 0
+  m_IndexBuffer: 
+  m_VertexData:
+    serializedVersion: 3
+    m_VertexCount: 0
+    m_Channels:
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    m_DataSize: 0
+    _typelessdata: 
+  m_CompressedMesh:
+    m_Vertices:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UV:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Normals:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Tangents:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Weights:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_NormalSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_TangentSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_FloatColors:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_BoneIndices:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Triangles:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UVInfo: 0
+  m_LocalAABB:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  m_MeshUsageFlags: 0
+  m_CookingOptions: 30
+  m_BakedConvexCollisionMesh: 
+  m_BakedTriangleCollisionMesh: 
+  'm_MeshMetrics[0]': 1
+  'm_MeshMetrics[1]': 1
+  m_MeshOptimizationFlags: 1
+  m_StreamData:
+    serializedVersion: 2
+    offset: 0
+    size: 0
+    path: 
+  m_MeshLodInfo:
+    serializedVersion: 2
+    m_LodSelectionCurve:
+      serializedVersion: 1
+      m_LodSlope: 0
+      m_LodBias: 0
+    m_NumLevels: 1
+    m_SubMeshes:
+    - serializedVersion: 2
+      m_Levels:
+      - serializedVersion: 1
+        m_IndexStart: 0
+        m_IndexCount: 0
 --- !u!4 &145659216 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2639434519578746112, guid: 8e698d275de8153098a8ed058a15c65d, type: 3}
@@ -1936,6 +2118,8 @@ MonoBehaviour:
   AlwaysShow: 0
   ui_stacks: []
   bank: {fileID: 0}
+  log_ui_stack:
+    Verbose: 3
   PoolID: conso_2
 --- !u!114 &173496227
 MonoBehaviour:
@@ -2016,13 +2200,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: stuff
+  <PoolID>k__BackingField: stuff
+  <ItemType>k__BackingField: 0
   stacks: []
   MaxStacks: 20
   MinStacks: 20
   Scalable: 0
   item_rule: '!file'
   Inventory: {fileID: 0}
+  log_start_grabbing: 0
+  log_loading: 0
   log_grab: 0
   log_merge: 0
   log_stacks: 0
@@ -13728,10 +13915,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b504b78d5e32465408419f8d61a3fb79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Writer
+  write_on_enable: 0
+  raw_writing_on_enable: 
+  on_enable_delay: 0
   caracters_per_sec: 100
   slow_caractere_delay: 0.1
   pause_caractere_delay: 0.5
   log_writing: 0
+  log_color_tags: 0
 --- !u!114 &320462417
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13790,6 +13981,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -14293,6 +14485,8 @@ MonoBehaviour:
   AlwaysShow: 1
   ui_stacks: []
   bank: {fileID: 0}
+  log_ui_stack:
+    Verbose: 3
   PoolID: none
 --- !u!114 &406660990
 MonoBehaviour:
@@ -14661,6 +14855,7 @@ MonoBehaviour:
   m_VerticalAlignment: 1024
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -14961,6 +15156,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -15070,6 +15266,8 @@ MonoBehaviour:
   AlwaysShow: 0
   ui_stacks: []
   bank: {fileID: 0}
+  log_ui_stack:
+    Verbose: 3
   PoolID: files
 --- !u!114 &472838379
 MonoBehaviour:
@@ -15577,6 +15775,7 @@ MonoBehaviour:
   m_VerticalAlignment: 1024
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -15841,13 +16040,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: conso_2
+  <PoolID>k__BackingField: stuff
+  <ItemType>k__BackingField: 0
   stacks: []
   MaxStacks: 1
   MinStacks: 1
   Scalable: 0
   item_rule: usable
   Inventory: {fileID: 0}
+  log_start_grabbing: 0
+  log_loading: 0
   log_grab: 0
   log_merge: 0
   log_stacks: 0
@@ -15946,6 +16148,7 @@ MonoBehaviour:
   m_VerticalAlignment: 1024
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -16050,6 +16253,8 @@ MonoBehaviour:
   AlwaysShow: 0
   ui_stacks: []
   bank: {fileID: 0}
+  log_ui_stack:
+    Verbose: 3
   PoolID: conso_3
 --- !u!114 &548193323
 MonoBehaviour:
@@ -18032,18 +18237,23 @@ MonoBehaviour:
   skin: blue_elevdoor_ceil
   leader: {fileID: 5309520440598796836}
   current_anim:
-    name: 
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths: []
     sprites: []
     sprites_durations: []
-    loop: 1
     speed: 1
-    flipX: 0
-  update_each_frame: 1
+  follow_duration: 0
+  never_flip: 0
   log: 0
   log_frames: 0
+  log_assign: 0
+  already_assigned: 0
+  visible_on: 0
 --- !u!212 &739819186
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -18089,6 +18299,7 @@ SpriteRenderer:
   m_SortingLayerID: -438027575
   m_SortingLayer: 5
   m_SortingOrder: 1
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 294983002, guid: 3f745624e627c9841ac6d051c5f473b7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -18098,9 +18309,8 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 1
---- !u!43 &743380845
+--- !u!43 &757017755
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -18132,9 +18342,9 @@ Mesh:
     m_Data: 
   m_MeshCompression: 0
   m_IsReadable: 1
-  m_KeepVertices: 1
-  m_KeepIndices: 1
-  m_IndexFormat: 0
+  m_KeepVertices: 0
+  m_KeepIndices: 0
+  m_IndexFormat: 1
   m_IndexBuffer: 
   m_VertexData:
     serializedVersion: 3
@@ -18149,9 +18359,9 @@ Mesh:
       format: 0
       dimension: 0
     - stream: 0
-      offset: 0
+      offset: 12
       format: 0
-      dimension: 0
+      dimension: 4
     - stream: 0
       offset: 0
       format: 0
@@ -19083,6 +19293,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -19363,184 +19574,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2806026283884960729, guid: abacdc781c511fc42b1c0e4dd87c3c7b, type: 3}
   m_PrefabInstance: {fileID: 906213734}
   m_PrefabAsset: {fileID: 0}
---- !u!43 &909587952
-Mesh:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  serializedVersion: 12
-  m_SubMeshes:
-  - serializedVersion: 2
-    firstByte: 0
-    indexCount: 36
-    topology: 0
-    baseVertex: 0
-    firstVertex: 0
-    vertexCount: 20
-    localAABB:
-      m_Center: {x: 0, y: 0.3037262, z: 0}
-      m_Extent: {x: 1, y: 0.2476654, z: 0}
-  m_Shapes:
-    vertices: []
-    shapes: []
-    channels: []
-    fullWeights: []
-  m_BindPose: []
-  m_BoneNameHashes: 
-  m_RootBoneNameHash: 0
-  m_BonesAABB: []
-  m_VariableBoneCountWeights:
-    m_Data: 
-  m_MeshCompression: 0
-  m_IsReadable: 1
-  m_KeepVertices: 0
-  m_KeepIndices: 0
-  m_IndexFormat: 1
-  m_IndexBuffer: 000000000400000005000000050000000100000000000000010000000800000009000000090000000200000001000000020000000c0000000d0000000d0000000300000002000000030000001000000011000000110000000000000003000000000000000600000007000000010000000a0000000b000000020000000e0000000f000000030000001200000013000000
-  m_VertexData:
-    serializedVersion: 3
-    m_VertexCount: 20
-    m_Channels:
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 3
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 12
-      format: 0
-      dimension: 4
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    m_DataSize: 560
-    _typelessdata: 0000803f00280d3f00000000000080bf00000000000080bf00280d3f000080bf00280d3f00000000000080bf00000000000080bf00a0653d000080bf00a0653d00000000000080bf000000000000803f00a0653d0000803f00a0653d00000000000080bf000000000000803f00280d3f0000803f00280d3f000000000000000000000000000080bf00280d3f000080bf00280d3f0000000000000000000000000000803f00280d3f0000803f00280d3f000000000000803f00000000000080bf00280d3f0000803f00280d3f000000000000404000000000000080bf00280d3f000080bf00280d3f000000000000000000000000000080bf00a0653d000080bf00a0653d000000000000000000000000000080bf00280d3f000080bf00280d3f000000000000803f00000000000080bf00a0653d000080bf00280d3f000000000000404000000000000080bf00a0653d000080bf00a0653d0000000000000000000000000000803f00a0653d0000803f00a0653d000000000000000000000000000080bf00a0653d000080bf00a0653d000000000000803f000000000000803f00a0653d000080bf00a0653d0000000000004040000000000000803f00a0653d0000803f00a0653d0000000000000000000000000000803f00280d3f0000803f00280d3f0000000000000000000000000000803f00a0653d0000803f00a0653d000000000000803f000000000000803f00280d3f0000803f00a0653d0000000000004040000000000000803f00280d3f
-  m_CompressedMesh:
-    m_Vertices:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_UV:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Normals:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Tangents:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Weights:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_NormalSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_TangentSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_FloatColors:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_BoneIndices:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Triangles:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_UVInfo: 0
-  m_LocalAABB:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
-  m_MeshUsageFlags: 0
-  m_CookingOptions: 30
-  m_BakedConvexCollisionMesh: 
-  m_BakedTriangleCollisionMesh: 
-  'm_MeshMetrics[0]': 1
-  'm_MeshMetrics[1]': 1
-  m_MeshOptimizationFlags: 1
-  m_StreamData:
-    serializedVersion: 2
-    offset: 0
-    size: 0
-    path: 
-  m_MeshLodInfo:
-    serializedVersion: 2
-    m_LodSelectionCurve:
-      serializedVersion: 1
-      m_LodSlope: 0
-      m_LodBias: 0
-    m_NumLevels: 1
-    m_SubMeshes:
-    - serializedVersion: 2
-      m_Levels:
-      - serializedVersion: 1
-        m_IndexStart: 0
-        m_IndexCount: 0
 --- !u!1001 &916797990
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19937,6 +19970,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -20233,6 +20267,7 @@ GameObject:
   m_IsActive: 1
 --- !u!212 &995370179
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -20278,6 +20313,7 @@ SpriteRenderer:
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 246810180, guid: f1527933b9e8678498dd8d2f0fcc9f83, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -20287,7 +20323,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 1
 --- !u!95 &995370180
 Animator:
@@ -20464,10 +20499,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b504b78d5e32465408419f8d61a3fb79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Writer
+  write_on_enable: 0
+  raw_writing_on_enable: 
+  on_enable_delay: 0
   caracters_per_sec: 100
   slow_caractere_delay: 0.1
   pause_caractere_delay: 0.5
   log_writing: 0
+  log_color_tags: 0
 --- !u!114 &1015093059
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20526,6 +20565,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -20625,6 +20665,8 @@ MonoBehaviour:
   AlwaysShow: 0
   ui_stacks: []
   bank: {fileID: 0}
+  log_ui_stack:
+    Verbose: 3
   PoolID: conso_4
 --- !u!114 &1018816753
 MonoBehaviour:
@@ -21098,13 +21140,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: weapon
+  <PoolID>k__BackingField: stuff
+  <ItemType>k__BackingField: 0
   stacks: []
   MaxStacks: 1
   MinStacks: 1
   Scalable: 0
   item_rule: weapon
   Inventory: {fileID: 0}
+  log_start_grabbing: 0
+  log_loading: 0
   log_grab: 0
   log_merge: 0
   log_stacks: 0
@@ -22466,6 +22511,8 @@ MonoBehaviour:
   AlwaysShow: 0
   ui_stacks: []
   bank: {fileID: 0}
+  log_ui_stack:
+    Verbose: 3
   PoolID: weapon
 --- !u!1 &1149760209
 GameObject:
@@ -22562,6 +22609,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -22930,6 +22978,184 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 75ef769ddd9ecf94f93b18d3c80f3f16, type: 3}
+--- !u!43 &1193879370
+Mesh:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  serializedVersion: 12
+  m_SubMeshes:
+  - serializedVersion: 2
+    firstByte: 0
+    indexCount: 36
+    topology: 0
+    baseVertex: 0
+    firstVertex: 0
+    vertexCount: 20
+    localAABB:
+      m_Center: {x: 0, y: 0.3037262, z: 0}
+      m_Extent: {x: 1, y: 0.2476654, z: 0}
+  m_Shapes:
+    vertices: []
+    shapes: []
+    channels: []
+    fullWeights: []
+  m_BindPose: []
+  m_BoneNameHashes: 
+  m_RootBoneNameHash: 0
+  m_BonesAABB: []
+  m_VariableBoneCountWeights:
+    m_Data: 
+  m_MeshCompression: 0
+  m_IsReadable: 1
+  m_KeepVertices: 0
+  m_KeepIndices: 0
+  m_IndexFormat: 1
+  m_IndexBuffer: 000000000400000005000000050000000100000000000000010000000800000009000000090000000200000001000000020000000c0000000d0000000d0000000300000002000000030000001000000011000000110000000000000003000000000000000600000007000000010000000a0000000b000000020000000e0000000f000000030000001200000013000000
+  m_VertexData:
+    serializedVersion: 3
+    m_VertexCount: 20
+    m_Channels:
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 12
+      format: 0
+      dimension: 4
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    m_DataSize: 560
+    _typelessdata: 0000803f00280d3f00000000000080bf00000000000080bf00280d3f000080bf00280d3f00000000000080bf00000000000080bf00a0653d000080bf00a0653d00000000000080bf000000000000803f00a0653d0000803f00a0653d00000000000080bf000000000000803f00280d3f0000803f00280d3f000000000000000000000000000080bf00280d3f000080bf00280d3f0000000000000000000000000000803f00280d3f0000803f00280d3f000000000000803f00000000000080bf00280d3f0000803f00280d3f000000000000404000000000000080bf00280d3f000080bf00280d3f000000000000000000000000000080bf00a0653d000080bf00a0653d000000000000000000000000000080bf00280d3f000080bf00280d3f000000000000803f00000000000080bf00a0653d000080bf00280d3f000000000000404000000000000080bf00a0653d000080bf00a0653d0000000000000000000000000000803f00a0653d0000803f00a0653d000000000000000000000000000080bf00a0653d000080bf00a0653d000000000000803f000000000000803f00a0653d000080bf00a0653d0000000000004040000000000000803f00a0653d0000803f00a0653d0000000000000000000000000000803f00280d3f0000803f00280d3f0000000000000000000000000000803f00a0653d0000803f00a0653d000000000000803f000000000000803f00280d3f0000803f00a0653d0000000000004040000000000000803f00280d3f
+  m_CompressedMesh:
+    m_Vertices:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UV:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Normals:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Tangents:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Weights:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_NormalSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_TangentSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_FloatColors:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_BoneIndices:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Triangles:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UVInfo: 0
+  m_LocalAABB:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  m_MeshUsageFlags: 0
+  m_CookingOptions: 30
+  m_BakedConvexCollisionMesh: 
+  m_BakedTriangleCollisionMesh: 
+  'm_MeshMetrics[0]': 1
+  'm_MeshMetrics[1]': 1
+  m_MeshOptimizationFlags: 1
+  m_StreamData:
+    serializedVersion: 2
+    offset: 0
+    size: 0
+    path: 
+  m_MeshLodInfo:
+    serializedVersion: 2
+    m_LodSelectionCurve:
+      serializedVersion: 1
+      m_LodSlope: 0
+      m_LodBias: 0
+    m_NumLevels: 1
+    m_SubMeshes:
+    - serializedVersion: 2
+      m_Levels:
+      - serializedVersion: 1
+        m_IndexStart: 0
+        m_IndexCount: 0
 --- !u!1 &1206507889
 GameObject:
   m_ObjectHideFlags: 0
@@ -22974,13 +23200,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: shoes
+  <PoolID>k__BackingField: stuff
+  <ItemType>k__BackingField: 0
   stacks: []
   MaxStacks: 1
   MinStacks: 1
   Scalable: 0
   item_rule: shoes
   Inventory: {fileID: 0}
+  log_start_grabbing: 0
+  log_loading: 0
   log_grab: 0
   log_merge: 0
   log_stacks: 0
@@ -23304,13 +23533,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: device
+  <PoolID>k__BackingField: stuff
+  <ItemType>k__BackingField: 0
   stacks: []
   MaxStacks: 1
   MinStacks: 1
   Scalable: 0
   item_rule: laptop
   Inventory: {fileID: 0}
+  log_start_grabbing: 0
+  log_loading: 0
   log_grab: 0
   log_merge: 0
   log_stacks: 0
@@ -23410,6 +23642,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -23886,6 +24119,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -24175,13 +24409,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: conso_4
+  <PoolID>k__BackingField: stuff
+  <ItemType>k__BackingField: 0
   stacks: []
   MaxStacks: 1
   MinStacks: 1
   Scalable: 0
   item_rule: usable
   Inventory: {fileID: 0}
+  log_start_grabbing: 0
+  log_loading: 0
   log_grab: 0
   log_merge: 0
   log_stacks: 0
@@ -24892,6 +25129,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -24945,184 +25183,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b186bb40c8a0b04281b6cfa864f9e0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Caller
---- !u!43 &1344407753
-Mesh:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  serializedVersion: 12
-  m_SubMeshes:
-  - serializedVersion: 2
-    firstByte: 0
-    indexCount: 0
-    topology: 0
-    baseVertex: 0
-    firstVertex: 0
-    vertexCount: 0
-    localAABB:
-      m_Center: {x: 0, y: 0, z: 0}
-      m_Extent: {x: 0, y: 0, z: 0}
-  m_Shapes:
-    vertices: []
-    shapes: []
-    channels: []
-    fullWeights: []
-  m_BindPose: []
-  m_BoneNameHashes: 
-  m_RootBoneNameHash: 0
-  m_BonesAABB: []
-  m_VariableBoneCountWeights:
-    m_Data: 
-  m_MeshCompression: 0
-  m_IsReadable: 1
-  m_KeepVertices: 1
-  m_KeepIndices: 1
-  m_IndexFormat: 0
-  m_IndexBuffer: 
-  m_VertexData:
-    serializedVersion: 3
-    m_VertexCount: 0
-    m_Channels:
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 3
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 12
-      format: 0
-      dimension: 4
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    m_DataSize: 0
-    _typelessdata: 
-  m_CompressedMesh:
-    m_Vertices:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_UV:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Normals:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Tangents:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Weights:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_NormalSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_TangentSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_FloatColors:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_BoneIndices:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Triangles:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_UVInfo: 0
-  m_LocalAABB:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
-  m_MeshUsageFlags: 0
-  m_CookingOptions: 30
-  m_BakedConvexCollisionMesh: 
-  m_BakedTriangleCollisionMesh: 
-  'm_MeshMetrics[0]': 1
-  'm_MeshMetrics[1]': 1
-  m_MeshOptimizationFlags: 1
-  m_StreamData:
-    serializedVersion: 2
-    offset: 0
-    size: 0
-    path: 
-  m_MeshLodInfo:
-    serializedVersion: 2
-    m_LodSelectionCurve:
-      serializedVersion: 1
-      m_LodSlope: 0
-      m_LodBias: 0
-    m_NumLevels: 1
-    m_SubMeshes:
-    - serializedVersion: 2
-      m_Levels:
-      - serializedVersion: 1
-        m_IndexStart: 0
-        m_IndexCount: 0
 --- !u!1001 &1346004140
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27859,18 +27919,23 @@ MonoBehaviour:
   skin: blue_elevdoor_ground
   leader: {fileID: 5309520440598796836}
   current_anim:
-    name: 
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths: []
     sprites: []
     sprites_durations: []
-    loop: 1
     speed: 1
-    flipX: 0
-  update_each_frame: 1
+  follow_duration: 0
+  never_flip: 0
   log: 0
   log_frames: 0
+  log_assign: 0
+  already_assigned: 0
+  visible_on: 0
 --- !u!212 &1567641038
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -27916,6 +27981,7 @@ SpriteRenderer:
   m_SortingLayerID: -31225397
   m_SortingLayer: 2
   m_SortingOrder: 1
+  m_MaskInteraction: 0
   m_Sprite: {fileID: -2030023891, guid: d819ab5c28a76594aad34653220ca33d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -27925,7 +27991,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 1
 --- !u!1001 &1571851552
 PrefabInstance:
@@ -29896,6 +29961,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -31610,10 +31676,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b504b78d5e32465408419f8d61a3fb79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Writer
+  write_on_enable: 0
+  raw_writing_on_enable: 
+  on_enable_delay: 0
   caracters_per_sec: 100
   slow_caractere_delay: 0.1
   pause_caractere_delay: 0.5
   log_writing: 0
+  log_color_tags: 0
 --- !u!114 &1869880757
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31672,6 +31742,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -33203,6 +33274,8 @@ MonoBehaviour:
   AlwaysShow: 1
   ui_stacks: []
   bank: {fileID: 0}
+  log_ui_stack:
+    Verbose: 3
   log_attach: 1
   log_grab_drop: 1
   item_rule: 
@@ -33573,13 +33646,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: conso_1
+  <PoolID>k__BackingField: stuff
+  <ItemType>k__BackingField: 0
   stacks: []
   MaxStacks: 1
   MinStacks: 1
   Scalable: 0
   item_rule: usable
   Inventory: {fileID: 0}
+  log_start_grabbing: 0
+  log_loading: 0
   log_grab: 0
   log_merge: 0
   log_stacks: 0
@@ -33755,6 +33831,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -33947,13 +34024,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: conso_3
+  <PoolID>k__BackingField: stuff
+  <ItemType>k__BackingField: 0
   stacks: []
   MaxStacks: 1
   MinStacks: 1
   Scalable: 0
   item_rule: usable
   Inventory: {fileID: 0}
+  log_start_grabbing: 0
+  log_loading: 0
   log_grab: 0
   log_merge: 0
   log_stacks: 0
@@ -34472,6 +34552,8 @@ MonoBehaviour:
   AlwaysShow: 0
   ui_stacks: []
   bank: {fileID: 0}
+  log_ui_stack:
+    Verbose: 3
   PoolID: device
 --- !u!1 &2119162636
 GameObject:
@@ -35110,6 +35192,7 @@ MonoBehaviour:
   log_starting_slot: 0
   slots_parents:
   - {fileID: 4135079686809697031}
+  deep_search: 0
 --- !u!114 &76981529333024113
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35168,6 +35251,7 @@ MonoBehaviour:
   m_VerticalAlignment: 1024
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -35308,8 +35392,6 @@ MonoBehaviour:
   Showed: 0
   Stacked: 0
   Settings: {fileID: 11400000, guid: 82462624f960d97409e7ca9b5a331297, type: 2}
-  angle_threshold: 45
-  angle_multiplicator: 0
   ui_elements:
   - {fileID: 3490296219970090731}
   stacked_elements:
@@ -36107,6 +36189,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e1dddf14327e41e38dbb2194b0a821e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Notifier
+  text_notif_prefab: {fileID: 0}
   notifPrefab: {fileID: 482172942100330681, guid: a7cbcb16f3e94219b937f49d26d2c5db, type: 3}
   notifParent: {fileID: 2388010415613242024}
 --- !u!224 &392467166636850213
@@ -36209,8 +36292,6 @@ MonoBehaviour:
   Showed: 0
   Stacked: 0
   Settings: {fileID: 11400000, guid: 78550bce7a74b884da0ac63b0243f33c, type: 2}
-  angle_threshold: 45
-  angle_multiplicator: 0
   ui_elements:
   - {fileID: 2451307576318060236}
   - {fileID: 1599134405727005481}
@@ -36227,6 +36308,8 @@ MonoBehaviour:
   log_extended: 0
   log_elements_showing: 0
   log_refresh_pools: 0
+  log_ui_attachment: 0
+  log_specific_get_item_pools: 0
   no_inventory_panel: {fileID: 2680335235115919118}
   base_transition: 0.2
   never_fade_pools: 1
@@ -36385,6 +36468,7 @@ MonoBehaviour:
   m_VerticalAlignment: 1024
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -36488,6 +36572,8 @@ MonoBehaviour:
   AlwaysShow: 0
   ui_stacks: []
   bank: {fileID: 0}
+  log_ui_stack:
+    Verbose: 3
   PoolID: stuff
 --- !u!1 &535560840734372483
 GameObject:
@@ -36671,6 +36757,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -36812,6 +36899,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -37150,6 +37238,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -37286,6 +37375,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -37650,6 +37740,7 @@ MonoBehaviour:
   log_starting_slot: 0
   slots_parents:
   - {fileID: 2719238387103148016}
+  deep_search: 0
 --- !u!114 &1080562079501164490
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37819,6 +37910,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -38479,6 +38571,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -38624,6 +38717,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -38871,17 +38965,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 605537624630310800, guid: 072977a86300dbb4b941ff609eb15d12, type: 3}
   m_PrefabInstance: {fileID: 1591341092210806985}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1591341092210806987 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4687063478930118041, guid: 072977a86300dbb4b941ff609eb15d12, type: 3}
-  m_PrefabInstance: {fileID: 1591341092210806985}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 722de7716f79c484b8b02b30fa7ea1f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1592095604998297860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39052,6 +39135,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -39339,6 +39423,8 @@ MonoBehaviour:
   AlwaysShow: 0
   ui_stacks: []
   bank: {fileID: 0}
+  log_ui_stack:
+    Verbose: 3
   mb: {fileID: 40551286200216247}
 --- !u!224 &1750340867526373320
 RectTransform:
@@ -39438,6 +39524,8 @@ MonoBehaviour:
   AlwaysShow: 0
   ui_stacks: []
   bank: {fileID: 0}
+  log_ui_stack:
+    Verbose: 3
   PoolID: conso_1
 --- !u!224 &1847183041963980385
 RectTransform:
@@ -39584,8 +39672,6 @@ MonoBehaviour:
   Showed: 0
   Stacked: 0
   Settings: {fileID: 11400000, guid: 5d15525edb52e4442b79c183308fa392, type: 2}
-  angle_threshold: 45
-  angle_multiplicator: 0
   ui_elements:
   - {fileID: 498643116507685314}
   stacked_elements: []
@@ -39659,6 +39745,7 @@ MonoBehaviour:
   log_starting_slot: 0
   slots_parents:
   - {fileID: 9150585456781373969}
+  deep_search: 0
 --- !u!224 &2020526296439251681
 RectTransform:
   m_ObjectHideFlags: 0
@@ -39691,9 +39778,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Target: {fileID: 0}
-  item: {fileID: 5452145971278340319}
-  qty: {fileID: 6712139313734572234}
-  feedback: {fileID: 0}
   log: 0
 --- !u!1 &2041444813923330051
 GameObject:
@@ -39753,9 +39837,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Target: {fileID: 0}
-  item: {fileID: 3441522747108437838}
-  qty: {fileID: 2224063744343520715}
-  feedback: {fileID: 0}
   log: 0
 --- !u!1 &2073707968040255557
 GameObject:
@@ -39881,6 +39962,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -40035,6 +40117,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -40197,6 +40280,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -40317,6 +40401,7 @@ CanvasRenderer:
   m_CullTransparentMesh: 1
 --- !u!212 &2318360538048163857
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -40362,6 +40447,7 @@ SpriteRenderer:
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 178506509, guid: 6439657126e2af84cbe6f34d10d1d5d5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -40371,7 +40457,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 1
 --- !u!1001 &2345662780003662769
 PrefabInstance:
@@ -40929,8 +41014,6 @@ MonoBehaviour:
   Showed: 0
   Stacked: 0
   Settings: {fileID: 11400000, guid: ab19349ab8561ad44b4f29a128336fc4, type: 2}
-  angle_threshold: 45
-  angle_multiplicator: 0
   ui_elements:
   - {fileID: 5360817216151909869}
   stacked_elements:
@@ -41007,6 +41090,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -41384,9 +41468,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Target: {fileID: 0}
-  item: {fileID: 3834423843300383161}
-  qty: {fileID: 7401316302671532452}
-  feedback: {fileID: 0}
   log: 0
 --- !u!114 &2665281967845505856
 MonoBehaviour:
@@ -41404,8 +41485,6 @@ MonoBehaviour:
   Showed: 0
   Stacked: 0
   Settings: {fileID: 11400000, guid: ab19349ab8561ad44b4f29a128336fc4, type: 2}
-  angle_threshold: 45
-  angle_multiplicator: 0
   ui_elements:
   - {fileID: 6123140692672822489}
   - {fileID: 301813732771268819}
@@ -41418,6 +41497,10 @@ MonoBehaviour:
   log_extended: 0
   log_elements_showing: 0
   Notifier: {fileID: 375018962361677306}
+  ItemBar: {fileID: 0}
+  HealthBarSweeper: {fileID: 0}
+  XP_BarSweeper: {fileID: 0}
+  XP_IconSweeper: {fileID: 0}
 --- !u!1 &2670615972566894386
 GameObject:
   m_ObjectHideFlags: 0
@@ -41701,6 +41784,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -41800,6 +41884,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -42742,6 +42827,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -43068,10 +43154,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b504b78d5e32465408419f8d61a3fb79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Writer
+  write_on_enable: 0
+  raw_writing_on_enable: 
+  on_enable_delay: 0
   caracters_per_sec: 100
   slow_caractere_delay: 0.1
   pause_caractere_delay: 0.5
   log_writing: 0
+  log_color_tags: 0
 --- !u!114 &3559912841956946239
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43088,8 +43178,6 @@ MonoBehaviour:
   Showed: 0
   Stacked: 0
   Settings: {fileID: 11400000, guid: e6d8e178ec0da5b4a82096088bee9169, type: 2}
-  angle_threshold: 45
-  angle_multiplicator: 0
   ui_elements:
   - {fileID: 5749561244780278243}
   - {fileID: 6236477258401809959}
@@ -43243,6 +43331,8 @@ MonoBehaviour:
   AlwaysShow: 0
   ui_stacks: []
   bank: {fileID: 0}
+  log_ui_stack:
+    Verbose: 3
   PoolID: shoes
 --- !u!224 &3690037501902753098
 RectTransform:
@@ -43374,6 +43464,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -43624,17 +43715,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6563624588513666000, guid: b45e0e02d5a5f8d4ca1493f18e855a64, type: 3}
   m_PrefabInstance: {fileID: 3794536404679876312}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3794536404679876314 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7812301186420496611, guid: b45e0e02d5a5f8d4ca1493f18e855a64, type: 3}
-  m_PrefabInstance: {fileID: 3794536404679876312}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3794536404679876315}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b62c7690aaea9664cb23c3b458e32385, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3794536404679876315 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5896076262160305960, guid: b45e0e02d5a5f8d4ca1493f18e855a64, type: 3}
@@ -44360,7 +44440,7 @@ MonoBehaviour:
     rid: 691466519777640632
   m_ShadowCastingSource: 2
   m_ShadowMesh:
-    m_Mesh: {fileID: 909587952}
+    m_Mesh: {fileID: 1193879370}
     m_LocalBounds:
       m_Center: {x: 0, y: 0.3037262, z: 0}
       m_Extent: {x: 1, y: 0.2476654, z: 0}
@@ -44467,6 +44547,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -44791,6 +44872,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -45283,9 +45365,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Target: {fileID: 0}
-  item: {fileID: 702121501453310658}
-  qty: {fileID: 4500800764104945394}
-  feedback: {fileID: 1591341092210806987}
   log: 0
 --- !u!1 &4467092828092788455
 GameObject:
@@ -45376,6 +45455,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -45695,6 +45775,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -45801,6 +45882,7 @@ MonoBehaviour:
   m_VerticalAlignment: 1024
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -45957,8 +46039,6 @@ MonoBehaviour:
   Showed: 0
   Stacked: 0
   Settings: {fileID: 11400000, guid: adc0b4d07f6a82541b0cdd184428d920, type: 2}
-  angle_threshold: 45
-  angle_multiplicator: 0
   ui_elements:
   - {fileID: 6501274641981067268}
   - {fileID: 1039836527}
@@ -46693,6 +46773,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -47204,15 +47285,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: blue_bench
+  <orientation>k__BackingField: D
   current_capacity: 
-  current_anim:
-    name: 
-    sprites_paths: []
-    sprites: []
-    sprites_durations: []
-    loop: 1
-    speed: 1
-    flipX: 0
   update_each_frame: 1
   anim_capacity_priorities:
   - priority: 0
@@ -47221,11 +47295,14 @@ MonoBehaviour:
     - idle
     lock_orientation: 0
     one_shot: 0
+  never_flip: 0
   log: 0
   log_orientation: 0
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
+  visible_on: 1
 --- !u!224 &5202088766236295936
 RectTransform:
   m_ObjectHideFlags: 0
@@ -47334,15 +47411,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: blue_elevdoor
+  <orientation>k__BackingField: D
   current_capacity: 
-  current_anim:
-    name: 
-    sprites_paths: []
-    sprites: []
-    sprites_durations: []
-    loop: 1
-    speed: 1
-    flipX: 0
   update_each_frame: 1
   anim_capacity_priorities:
   - priority: 0
@@ -47376,11 +47446,14 @@ MonoBehaviour:
     - close
     lock_orientation: 1
     one_shot: 1
+  never_flip: 0
   log: 0
   log_orientation: 0
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
+  visible_on: 1
 --- !u!1 &5334966426413324010
 GameObject:
   m_ObjectHideFlags: 0
@@ -47947,6 +48020,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -48178,6 +48252,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -48366,7 +48441,7 @@ RectTransform:
   m_GameObject: {fileID: 4407408406653321457}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.49720672, y: 0.49720672, z: 0.49720672}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5477250923338215944}
@@ -48618,6 +48693,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -48831,13 +48907,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data:
-    id: 
+    <id>k__BackingField: 
     kind: 
     position: {x: 0, y: 0}
     orientation: {x: 0, y: 0}
-    skin: 
-    inventory: []
+    layer: 0
+    tag: 
     capacities_ids: []
+    anim_data:
+      skin_kind: 
+      skin: 
+      anim_capacity_priorities: []
+      current_capacity: 
+      material_name: 
+      sorting_layer_id: 0
+      order_in_layer: 0
+      never_flip: 0
+      layers: []
+      local_position: {x: 0, y: 0}
+    inventory:
+      item_pools_data: []
+      item_type: 0
+    feet_data:
+      box_colliders: []
+      circle_colliders: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 1}
@@ -48845,15 +48938,17 @@ MonoBehaviour:
   capacities: []
   effects: 
   effects_timetolive: []
-  debug: 0
+  log: 0
   activate_all_capacities_logs_on_awake: 0
+  log_static_data: 0
   log_interact_kf: 0
   is_vertical: 1
-  DontTouchSortingLayer: 1
-  door_collider: {fileID: 0}
   shadow_caster: {fileID: 0}
-  room1: {fileID: 0}
-  room2: {fileID: 0}
+  room1_id: 
+  room2_id: 
+  if_switcher:
+    closed_interact_kf_y: {x: 2.25, y: 1.25}
+    opened_interact_kf_y: {x: 0.9, y: -0.4}
 --- !u!224 &5876583268239104636
 RectTransform:
   m_ObjectHideFlags: 0
@@ -49577,6 +49672,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -49673,8 +49769,6 @@ MonoBehaviour:
   Showed: 0
   Stacked: 0
   Settings: {fileID: 11400000, guid: 7af7a90cd1fb6034dbd27edb79f31261, type: 2}
-  angle_threshold: 45
-  angle_multiplicator: 0
   ui_elements:
   - {fileID: 146307346675556306}
   - {fileID: 1099194964}
@@ -49684,7 +49778,6 @@ MonoBehaviour:
   log_extended: 0
   log_elements_showing: 0
   level_text: {fileID: 7002242653021348151}
-  delay_before_activating_buttons: 0.4
   skills_parent: {fileID: 2719238387103148016}
   slottable: {fileID: 1061877919129754598}
 --- !u!114 &6260682479225247180
@@ -49984,6 +50077,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -50030,9 +50124,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Target: {fileID: 0}
-  item: {fileID: 6679860431898273423}
-  qty: {fileID: 2784286206006991814}
-  feedback: {fileID: 0}
   log: 0
 --- !u!224 &6399087360503437753
 RectTransform:
@@ -50283,7 +50374,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5ea1bb99adea54080124e796c89224, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Navigator
-  Slots: []
+  slots: []
   CurrentSlot: {fileID: 0}
   log: 0
   log_hover: 1
@@ -50389,6 +50480,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -50978,8 +51070,9 @@ MonoBehaviour:
   AlwaysShow: 0
   ui_stacks: []
   bank: {fileID: 0}
+  log_ui_stack:
+    Verbose: 3
   PoolID: motherboard
-  log_modules: 1
   _has_device: 0
 --- !u!224 &6659681447082448578
 RectTransform:
@@ -51184,6 +51277,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -51677,6 +51771,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -52170,6 +52265,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -52393,6 +52489,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -52876,6 +52973,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -52929,10 +53027,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b504b78d5e32465408419f8d61a3fb79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Writer
+  write_on_enable: 0
+  raw_writing_on_enable: 
+  on_enable_delay: 0
   caracters_per_sec: 100
   slow_caractere_delay: 0.1
   pause_caractere_delay: 0.5
   log_writing: 0
+  log_color_tags: 0
 --- !u!1 &7289965068031761389
 GameObject:
   m_ObjectHideFlags: 0
@@ -53061,6 +53163,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -53106,10 +53209,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b504b78d5e32465408419f8d61a3fb79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Writer
+  write_on_enable: 0
+  raw_writing_on_enable: 
+  on_enable_delay: 0
   caracters_per_sec: 100
   slow_caractere_delay: 0.1
   pause_caractere_delay: 0.5
   log_writing: 0
+  log_color_tags: 0
 --- !u!114 &7372822037601268203
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53428,6 +53535,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -53521,6 +53629,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -53570,8 +53679,6 @@ MonoBehaviour:
   Showed: 0
   Stacked: 0
   Settings: {fileID: 11400000, guid: b4b9e2792cec98f4d80c46c5f1bc7050, type: 2}
-  angle_threshold: 45
-  angle_multiplicator: 0
   ui_elements:
   - {fileID: 2921507685973774210}
   stacked_elements:
@@ -53649,6 +53756,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -54336,6 +54444,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -54381,10 +54490,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b504b78d5e32465408419f8d61a3fb79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Writer
+  write_on_enable: 0
+  raw_writing_on_enable: 
+  on_enable_delay: 0
   caracters_per_sec: 100
   slow_caractere_delay: 0.1
   pause_caractere_delay: 0.5
   log_writing: 0
+  log_color_tags: 0
 --- !u!224 &7712630040992200124
 RectTransform:
   m_ObjectHideFlags: 0
@@ -54629,6 +54742,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -54942,6 +55056,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -55202,9 +55317,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Target: {fileID: 0}
-  item: {fileID: 2546155575319113770}
-  qty: {fileID: 9012746446348641404}
-  feedback: {fileID: 3794536404679876314}
   log: 0
 --- !u!114 &8176209906299839344
 MonoBehaviour:
@@ -55252,10 +55364,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b504b78d5e32465408419f8d61a3fb79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Writer
+  write_on_enable: 0
+  raw_writing_on_enable: 
+  on_enable_delay: 0
   caracters_per_sec: 100
   slow_caractere_delay: 0.1
   pause_caractere_delay: 0.5
   log_writing: 0
+  log_color_tags: 0
 --- !u!1 &8208765882860701917
 GameObject:
   m_ObjectHideFlags: 0
@@ -55287,7 +55403,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: {r: 0.7882353, g: 0.8980392, b: 0.5568628, a: 1}
+  force_our_color: 0
   disable_on_revert: 0
+  disable_on_color: 0
   log: 0
 --- !u!1 &8233206140701486202
 GameObject:
@@ -55373,6 +55491,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -55484,10 +55603,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b504b78d5e32465408419f8d61a3fb79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Writer
+  write_on_enable: 0
+  raw_writing_on_enable: 
+  on_enable_delay: 0
   caracters_per_sec: 100
   slow_caractere_delay: 0.1
   pause_caractere_delay: 0.5
   log_writing: 0
+  log_color_tags: 0
 --- !u!224 &8383015536948454440
 RectTransform:
   m_ObjectHideFlags: 0
@@ -55627,6 +55750,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -55743,9 +55867,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Target: {fileID: 0}
-  item: {fileID: 7848918016679487849}
-  qty: {fileID: 2140845442946370432}
-  feedback: {fileID: 0}
   log: 0
 --- !u!114 &8483284837011537162
 MonoBehaviour:
@@ -55970,6 +56091,7 @@ RectTransform:
   m_Pivot: {x: 0.5, y: 0}
 --- !u!212 &8566428055017846529
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -56015,6 +56137,7 @@ SpriteRenderer:
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 1704555601, guid: 15689042ca3b4fa40aa8f2d4c5865731, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -56024,7 +56147,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 1
 --- !u!61 &8566428055017846530
 BoxCollider2D:
@@ -56085,13 +56207,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Capable
   data:
-    id: 
+    <id>k__BackingField: 
     kind: 
     position: {x: 0, y: 0}
     orientation: {x: 0, y: 0}
-    skin: 
-    inventory: []
+    layer: 0
+    tag: 
     capacities_ids: []
+    anim_data:
+      skin_kind: 
+      skin: 
+      anim_capacity_priorities: []
+      current_capacity: 
+      material_name: 
+      sorting_layer_id: 0
+      order_in_layer: 0
+      never_flip: 0
+      layers: []
+      local_position: {x: 0, y: 0}
+    inventory:
+      item_pools_data: []
+      item_type: 0
+    feet_data:
+      box_colliders: []
+      circle_colliders: []
     effects: 
     effects_ttl: []
   inputs: {x: 0, y: 0}
@@ -56099,8 +56238,9 @@ MonoBehaviour:
   capacities: []
   effects: 
   effects_timetolive: []
-  debug: 0
+  log: 0
   activate_all_capacities_logs_on_awake: 0
+  log_static_data: 0
 --- !u!114 &8566428055017846532
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -56638,10 +56778,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b504b78d5e32465408419f8d61a3fb79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Writer
+  write_on_enable: 0
+  raw_writing_on_enable: 
+  on_enable_delay: 0
   caracters_per_sec: 100
   slow_caractere_delay: 0.1
   pause_caractere_delay: 0.5
   log_writing: 0
+  log_color_tags: 0
 --- !u!224 &8651342527450479838
 RectTransform:
   m_ObjectHideFlags: 0
@@ -56891,10 +57035,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b504b78d5e32465408419f8d61a3fb79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Writer
+  write_on_enable: 0
+  raw_writing_on_enable: 
+  on_enable_delay: 0
   caracters_per_sec: 100
   slow_caractere_delay: 0.1
   pause_caractere_delay: 0.5
   log_writing: 0
+  log_color_tags: 0
 --- !u!114 &8724329741263997878
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -56953,6 +57101,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -57100,6 +57249,7 @@ MonoBehaviour:
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -57251,6 +57401,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -57588,6 +57739,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -57744,8 +57896,6 @@ MonoBehaviour:
   Showed: 0
   Stacked: 0
   Settings: {fileID: 11400000, guid: 94119f42decf8e34990bd47ca0ec56c3, type: 2}
-  angle_threshold: 45
-  angle_multiplicator: 0
   ui_elements:
   - {fileID: 7568614292155675154}
   - {fileID: 4161379497689919739}
@@ -57855,10 +58005,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b504b78d5e32465408419f8d61a3fb79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Writer
+  write_on_enable: 0
+  raw_writing_on_enable: 
+  on_enable_delay: 0
   caracters_per_sec: 100
   slow_caractere_delay: 0.1
   pause_caractere_delay: 0.5
   log_writing: 0
+  log_color_tags: 0
 --- !u!114 &9131570254883854793
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57917,6 +58071,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -58178,6 +58333,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -58251,10 +58407,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b504b78d5e32465408419f8d61a3fb79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Writer
+  write_on_enable: 0
+  raw_writing_on_enable: 
+  on_enable_delay: 0
   caracters_per_sec: 100
   slow_caractere_delay: 0.1
   pause_caractere_delay: 0.5
   log_writing: 0
+  log_color_tags: 0
 --- !u!222 &9208497359295392985
 CanvasRenderer:
   m_ObjectHideFlags: 0

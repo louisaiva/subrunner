@@ -173,6 +173,10 @@ public class ItemPool : MonoBehaviour, ItemStorer
         {
             OnItemGrabbed -= (Action<Item>)d;
         }
+        foreach (Delegate d in OnItemDropped.GetInvocationList())
+        {
+            OnItemDropped -= (Action<Item>)d;
+        }
     }
     string ItemStorer.GetDetails()
     {
@@ -430,6 +434,8 @@ public class ItemPool : MonoBehaviour, ItemStorer
 
         // we trigger the event
         OnItemGrabbed?.Invoke(item);
+        if (log_grab) { Debug.Log($"(ItemPool) The ItemPool.OnItemGrabbed event was invoked for {item.name} : {OnItemGrabbed?.GetInvocationList().Length ?? 0}"); }
+
     }
     private void handle_item_reference_changed(Item item)
     {

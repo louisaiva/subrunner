@@ -70,6 +70,7 @@ public class Controller : MonoBehaviour
     [SerializeField] private HackableNavigator hackable_navigator;
     [SerializeField] private ExploitNavigator exploit_navigator;
     [SerializeField] private SeeThroughHandler see_through;
+    public MouseAttackDirectionIndicator MADI;
 
 
     [Header("Events")]
@@ -254,6 +255,9 @@ public class Controller : MonoBehaviour
         // met les callbacks de notif
         UI_Manager.Instance.GetPool("hud").GetComponent<UI_HUD>().Notifier.SetCallbacks(controlled_capable);
 
+        // refresh le mouse attack direction indicator
+        MADI.OnCapableControlled(controlled_capable);
+
         // we refresh the player chunk through ChunkEngine
         ChunkEngine.LazyInstance.RefreshPlayerChunk(capable);
 
@@ -279,6 +283,9 @@ public class Controller : MonoBehaviour
 
         // enleve les callbacks de notif
         UI_Manager.Instance?.GetPool<UI_HUD>()?.Notifier.RemoveCallbacks(controlled_capable);
+
+        // refresh le mouse attack direction indicator
+        MADI.OnCapableUncontrolled(controlled_capable);
 
         uncontrol_capacities(controlled_capable);
 

@@ -5,8 +5,8 @@ public class FeedbackSwitcher : MonoBehaviour
 {
     
     [Header("Feedback GameObjects")]
-    [SerializeField] private GameObject keyboardFeedback;
-    [SerializeField] private GameObject gamepadFeedback;
+    public GameObject keyboardFeedback;
+    public GameObject gamepadFeedback;
     [SerializeField] private string show_feedback_setting_name = "show_input_feedbacks";
     private Setting show_feedbacks;
 
@@ -15,12 +15,9 @@ public class FeedbackSwitcher : MonoBehaviour
     {
         // register to setting
         show_feedbacks = SettingsManager.Instance.GetSetting(show_feedback_setting_name);
-        if (show_feedbacks != null)
-        {
-            show_feedbacks.OnValueChanged += toggle_feedbacks;
-            // Initial toggle based on setting value
-            toggle_feedbacks(show_feedbacks.Value);
-        }
+        if (show_feedbacks == null) { return; }
+        show_feedbacks.OnValueChanged += toggle_feedbacks;
+        toggle_feedbacks(show_feedbacks.Value); // Initial toggle based on setting value
     }
     private void OnDestroy()
     {
@@ -51,12 +48,12 @@ public class FeedbackSwitcher : MonoBehaviour
         if (show_feedbacks != null && show_feedbacks.Value <= 0.5f)
         {
             // If feedbacks are disabled in settings, turn both off
-            keyboardFeedback.SetActive(false);
-            gamepadFeedback.SetActive(false);
+            if (keyboardFeedback != null) { keyboardFeedback.SetActive(false); }
+            if (gamepadFeedback != null) { gamepadFeedback.SetActive(false); }
             return;
         }
 
-        keyboardFeedback.SetActive(input_type == "keyboard");
-        gamepadFeedback.SetActive(input_type == "gamepad");
+        if (keyboardFeedback != null) { keyboardFeedback.SetActive(input_type == "keyboard"); }
+        if (gamepadFeedback != null) { gamepadFeedback.SetActive(input_type == "gamepad"); }
     }
 }

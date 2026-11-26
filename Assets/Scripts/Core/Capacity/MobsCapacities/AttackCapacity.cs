@@ -106,10 +106,16 @@ public class AttackCapacity : CooldownCapacity
         anim_player = bearer.AnimPlayer;
         if (anim_player.IsShowing(attack_capacity)) { return; } // we check if we are already attacking
         sr = bearer.AnimPlayer.GetRendererByName(((AttackData)data).renderer_name); // ! don't cache since we need to be able to use the katana
-        Debug.Log($"(AttackCapacity) {bearer.ID} is attacking and checking the damage sprites on the {sr.name} (p)layer");
+        // Debug.Log($"(AttackCapacity) {bearer.ID} is attacking and checking the damage sprites on the {sr.name} (p)layer");
 
         // we update damage value if capable is Perso
         // if (bearer is Perso perso) { damage = perso.skillManager.GetSkillValue("stat:damage"); }
+
+        // we update the attacker rotation if we are using the mouse (so we face the mouse)
+        if (InputManager.Instance.CurrentInputType == "keyboard" && Controller.Capable == bearer && Controller.LazyInstance.MADI != null)
+        {
+            anim_player.SetOrientation(Controller.LazyInstance.MADI.look_at);
+        }
 
         // we calculate the duration of the attack
         float duration_override = attack_duration;

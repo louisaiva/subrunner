@@ -905,7 +905,7 @@ public class AnimPlayer : MonoBehaviour
     [KindData] public string skin_kind;
     [KindData] public string skin;
     [KindData] public List<AnimCapacityPriority> anim_capacity_priorities; 
-    [RuntimeOnly] public string current_capacity; // runtime only
+    [InstanceData] public string current_capacity; // runtime only
 
     // player sr data
     [KindData] public string material_name;
