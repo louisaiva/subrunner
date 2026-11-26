@@ -439,7 +439,7 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         foreach (Capacity capacity in capacities)
         {
             if (capacity == null) { continue; }
-            capacity.SaveDynamicData();
+            capacity.SaveInstanceData();
         }
         if (log_saving) { Debug.Log($"(CapacitySystem) Saved dynamic data for {capacities.Count} loaded capacities"); }
     }

@@ -60,9 +60,9 @@ public class Food : Item, Usable
         this.life_regen = fdata.life_regen;
         this.portions = fdata.portions;
     }
-    public override void SaveDynamicData()
+    public override void SaveInstanceData()
     {
-        base.SaveDynamicData();
+        base.SaveInstanceData();
 
         if (data is not FoodData fdata) { return; }
         fdata.portions = this.portions;
@@ -72,6 +72,7 @@ public class Food : Item, Usable
         FoodData static_data = new FoodData((CapableData)base.GetStaticData())
         {
             life_regen = this.life_regen,
+            max_portions = this.portions,
             portions = this.portions
         };
 
@@ -83,8 +84,9 @@ public class Food : Item, Usable
 // ITEM DATA
 [Serializable] public class FoodData : ItemData
 {
-    public float life_regen = 10f; // life regen of the food per portions
-    public int portions = 1; // number of portions of the food
+    [KindData] public float life_regen = 10f; // life regen of the food per portions
+    [KindData] public int max_portions = 1; // number of max portions of the food
+    [InstanceData] public int portions = 1; // number of portions left
 
 
     // CONSTRUCTOR

@@ -70,7 +70,7 @@ public class Capacity : MonoBehaviour
     public virtual void UnloadData()
     {
         // save dynamic data
-        SaveDynamicData();
+        SaveInstanceData();
 
         data.OnUnloaded(this);
         this.data = null;
@@ -81,7 +81,7 @@ public class Capacity : MonoBehaviour
     }
 
     // SAVE DYNAMIC DATA
-    public virtual void SaveDynamicData()
+    public virtual void SaveInstanceData()
     {
         // this method is made for saving data that changes during the game (dynamic data).
         // it means it should run when the game is running and the data is loaded.

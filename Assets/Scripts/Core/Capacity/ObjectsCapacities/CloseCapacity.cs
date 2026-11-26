@@ -134,10 +134,10 @@ public class CloseCapacity : Capacity
 
 public class CloseCapacityData : CapacityData
 {
-    public float closing_duration = 0.5f;
-    public string close_anim = "close";
-    public string hover_close_anim = "hover";
-    public string idle_open_anim = "idle_open";
+    [KindData] public float closing_duration = 0.5f;
+    [KindData] public string close_anim = "close";
+    [KindData] public string hover_close_anim = "hover";
+    [KindData] public string idle_open_anim = "idle_open";
 
 
     // CONSTRUCTOR

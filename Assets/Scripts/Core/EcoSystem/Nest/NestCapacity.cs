@@ -28,7 +28,7 @@ public class NestCapacity : Capacity
     // ! readme please
     // for now we do the stuff in the update of the NestCapacity
     // but this is only available when the capacity is loaded, which is a problem
-    // later we will want to have the spawning logic directly inside NestData
+    // later we will want to have the spawning logic directly inside NestData / have a NestEngine
     private void Update()
     {
         if (!Loaded) { return; }
@@ -156,15 +156,15 @@ public class NestCapacity : Capacity
 }
 [Serializable] public class NestData : CapacityData
 {
-    public string species;
-    public int capacity; // capacity of the burrow in count of max entity it can store at the same time
-    public NestStoreMode store_mode;
+    [KindData] public string species;
+    [KindData] public int capacity; // capacity of the burrow in count of max entity it can store at the same time
+    [KindData] public NestStoreMode store_mode;
     // public int received_entities_since_last_reset;
-    public bool spawned_once;
-    public NestSpawnMode spawn_mode;
-    public CircleData trigger;
+    [KindData] public NestSpawnMode spawn_mode;
+    [KindData] public CircleData trigger;
+    [InstanceData] public bool spawned_once;
     // public List<string> stored_entities = new List<string>();
-    public int stored_entities;
+    [InstanceData] public int stored_entities;
 
     // CONSTRUCTOR
     public NestData(CapacityData parent) : base(parent) { }

@@ -89,8 +89,8 @@ public class ColliderCapacity : Capacity
 
 [Serializable] public class ColliderCapacityData : CapacityData
 {
-    public List<BoxData> boxes;
-    public List<CircleData> circles;
+    [KindData] public List<BoxData> boxes;
+    [KindData] public List<CircleData> circles;
 
 
 

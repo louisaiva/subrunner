@@ -774,7 +774,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
         }
 
         // 2. SAVE CAPABLE DATA
-        capable.SaveDynamicData();
+        capable.SaveInstanceData();
         CapableData capable_data = capable.data;
         List<Force> forces = new List<Force>((capable as Movable)?.GetForces() ?? new List<Force>()); // duplicate the forces
 
@@ -806,7 +806,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
         }
 
         // 2. SAVE CAPABLE DATA
-        capable.SaveDynamicData();
+        capable.SaveInstanceData();
         CapableData capable_data = capable.data;
         List<Force> forces = new List<Force>((capable as Movable)?.GetForces() ?? new List<Force>()); // duplicate the forces
 
@@ -1186,7 +1186,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
         foreach (Capable capable in capables)
         {
             if (capable == null) { continue; }
-            capable.SaveDynamicData();
+            capable.SaveInstanceData();
         }
         if (log_saving) { Debug.Log($"(CapableSystem) Saved dynamic data for {capables.Count} loaded capables"); }
     }

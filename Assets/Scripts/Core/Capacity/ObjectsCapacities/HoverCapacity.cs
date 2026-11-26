@@ -214,8 +214,8 @@ public class HoverCapacity : Capacity
 [Serializable] public class HoverCapacityData : CapacityData
 {
     // need to store a collider data for the hover to work
-    public CircleData hover_collider_data;
-    public float interact_kf_height = 1f;
+    [KindData] public CircleData hover_collider_data;
+    [KindData] public float interact_kf_height = 1f;
 
     // CONSTRUCTOR
     public HoverCapacityData(CapacityData parent) : base(parent) { }

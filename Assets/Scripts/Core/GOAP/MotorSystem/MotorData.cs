@@ -10,17 +10,17 @@ using UnityEngine;
 
 [Serializable] public class MotorData : CapacityData
 {
-    public string agent_type;
+    [KindData] public string agent_type;
     [RuntimeOnly] public string current_room_id;
-    [/* InstanceData,  */RuntimeOnly] public Dictionary<Type, string> room_destinations = new Dictionary<Type, string>(); // main room destinations per goal of the ia.
+    [RuntimeOnly] public Dictionary<Type, string> room_destinations = new Dictionary<Type, string>(); // main room destinations per goal of the ia.
     
 
 
     // LOCAL WORLD DATA
-    public SerializableLocalWorldData local_world_data = new SerializableLocalWorldData();
+    [InstanceData] public SerializableLocalWorldData local_world_data = new SerializableLocalWorldData();
 
     // GOTO DATA
-    public AvoidanceData avoidance_data = new AvoidanceData();
+    [KindData] public AvoidanceData avoidance_data = new AvoidanceData();
 
     // CONSTRUCTOR
     public MotorData(CapacityData parent) : base(parent) { }
@@ -103,7 +103,7 @@ using UnityEngine;
 
 // LOCAL WORLD DATA
 
-[Serializable] public class SerializableLocalWorldData
+[Serializable] public class SerializableLocalWorldData : DataHolder
 {
 
 
@@ -113,9 +113,9 @@ using UnityEngine;
 
     // ----------------------------
 
-    public List<SerializableWorldState> local_world_states = new List<SerializableWorldState>();
-    public List<SerializablePositionTarget> local_world_positions = new List<SerializablePositionTarget>();
-    public List<SerializableCapableTarget> local_world_capables = new List<SerializableCapableTarget>();
+    [InstanceData] public List<SerializableWorldState> local_world_states = new List<SerializableWorldState>();
+    [InstanceData] public List<SerializablePositionTarget> local_world_positions = new List<SerializablePositionTarget>();
+    [InstanceData] public List<SerializableCapableTarget> local_world_capables = new List<SerializableCapableTarget>();
 
 
 
@@ -557,10 +557,10 @@ using UnityEngine;
 // LOCAL WORLD DATA CLASSES
 
 
-[Serializable] public class SerializableWorldState
+[Serializable] public class SerializableWorldState : DataHolder
 {
-    public string key_name;
-    public int key_value;
+    [InstanceData] public string key_name;
+    [InstanceData] public int key_value;
 }
 
 public interface ISerialiableTarget
@@ -569,19 +569,19 @@ public interface ISerialiableTarget
     public Vector2 Position { get; }
 }
 
-[Serializable] public class SerializablePositionTarget : ISerialiableTarget
+[Serializable] public class SerializablePositionTarget : ISerialiableTarget, DataHolder
 {
-    public string key_name;
-    public Vector2 target_position;
+    [InstanceData] public string key_name;
+    [InstanceData] public Vector2 target_position;
 
-    public string KeyName { get { return key_name; } }
-    public Vector2 Position { get { return target_position; } }
+    [RuntimeOnly] public string KeyName { get { return key_name; } }
+    [RuntimeOnly] public Vector2 Position { get { return target_position; } }
 }
-[Serializable] public class SerializableCapableTarget : ISerialiableTarget
+[Serializable] public class SerializableCapableTarget : ISerialiableTarget, DataHolder
 {
-    public string key_name;
-    private string _capable_id;
-    public string capable_id
+    [InstanceData] public string key_name;
+    [InstanceData] private string _capable_id;
+    [RuntimeOnly] public string capable_id
     {
         get { return _capable_id; }
         set
@@ -590,8 +590,8 @@ public interface ISerialiableTarget
             _target_capable = null; // reset the cached capable data so it will be reloaded on next access
         }
     }
-    [NonSerialized] private CapableData _target_capable = null; // we only store the capable id, the capable data is loaded at runtime from the CapableBank using the id
-    private CapableData target_capable
+    [NonSerialized, RuntimeOnly] private CapableData _target_capable = null; // we only store the capable id, the capable data is loaded at runtime from the CapableBank using the id
+    [RuntimeOnly] private CapableData target_capable
     {
         get
         {
@@ -602,8 +602,8 @@ public interface ISerialiableTarget
         }
     }
 
-    public string KeyName { get { return key_name; } }
-    public Vector2 Position
+    [RuntimeOnly] public string KeyName { get { return key_name; } }
+    [RuntimeOnly] public Vector2 Position
     {
         get
         {

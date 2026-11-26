@@ -245,9 +245,9 @@ public class Door : Capable, Interactable, Openable
 
         return static_data;
     }
-    public override void SaveDynamicData()
+    public override void SaveInstanceData()
     {
-        base.SaveDynamicData();
+        base.SaveInstanceData();
 
         if (data is not DoorData door_data) { return; }
         door_data.is_open = this.is_open;

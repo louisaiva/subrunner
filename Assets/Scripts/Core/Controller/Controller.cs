@@ -522,7 +522,7 @@ public class Controller : MonoBehaviour
         List<CapacityData> capacities_data = CapacityEngine.LazyInstance.GetCapacitiesDataFromIDs(capable.capacities_ids);
         foreach (CapacityData capa_data in capacities_data)
         {
-            if (capa_data is HealthCapacityData health_data)
+            if (capa_data is HealthData health_data)
             {
                 // we heal the perso to max
                 health_data.health = health_data.max_health;

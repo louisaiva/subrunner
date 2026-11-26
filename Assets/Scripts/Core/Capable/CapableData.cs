@@ -3,7 +3,7 @@ using UnityEngine;
 using System;
 using System.Reflection;
 
-public interface ICapableData : IData
+public interface ICapableData : IData, DataHolder
 {
     ICapableData Duplicate();
 }

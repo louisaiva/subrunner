@@ -117,8 +117,8 @@ public class SpawnEgg : Item, TurnableIntoSomething
 
 [Serializable] public class SpawnEggData : ItemData
 {
-    public string entity_to_spawn;
-    public float xp_to_spawn = 0f;
+    [KindData] public string entity_to_spawn;
+    [KindData] public float xp_to_spawn = 0f;
 
 
     // CONSTRUCTOR

@@ -151,9 +151,9 @@ public class EatCapacity : Capacity
     }
 
     // SAVE DYNAMIC DATA
-    public override void SaveDynamicData()
+    public override void SaveInstanceData()
     {
-        base.SaveDynamicData();
+        base.SaveInstanceData();
 
         if (this.data == null) { return; }
         if (this.data is not EatData edata) { return; }
@@ -180,15 +180,15 @@ public class EatCapacity : Capacity
 
 [Serializable] public class EatData : CapacityData
 {
-    // TYPE DATA (static at runtime, one per template)
-    public string food_rule = "food";
-    public float range_food_detection = 15f;
-    public float bite_duration = 1f; // duration of one bite
-    public int bites_per_portion = 1; // number of bites per eating action
+    // KIND DATA (static at runtime, one per template)
+    [KindData] public string food_rule = "food";
+    [KindData] public float range_food_detection = 15f;
+    [KindData] public float bite_duration = 1f; // duration of one bite
+    [KindData] public int bites_per_portion = 1; // number of bites per eating action
 
 
-    // ENTITY DATA (dynamic at runtime, one per entity)
-    public float hunger = 0f; // Hunger level of the being, the less the better
+    // INSTANCE DATA (dynamic at runtime, one per entity)
+    [InstanceData] public float hunger = 0f; // Hunger level of the being, the less the better
 
 
     // CONSTRUCTOR

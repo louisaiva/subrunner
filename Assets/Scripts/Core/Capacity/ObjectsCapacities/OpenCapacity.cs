@@ -147,10 +147,10 @@ public class OpenCapacity : Capacity
 
 public class OpenCapacityData : CapacityData
 {
-    public float opening_duration = 0.5f;
-    public string open_anim = "open";
-    public string hover_open_anim = "hover";
-    public string idle_open_anim = "idle_open";
+    [KindData] public float opening_duration = 0.5f;
+    [KindData] public string open_anim = "open";
+    [KindData] public string hover_open_anim = "hover";
+    [KindData] public string idle_open_anim = "idle_open";
 
 
     // CONSTRUCTOR

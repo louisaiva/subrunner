@@ -522,7 +522,7 @@ public class Capable : MonoBehaviour, Debuggable
     public virtual void UnloadData()
     {
         // we save the dynamic data
-        SaveDynamicData();
+        SaveInstanceData();
 
         // here we need to unload all the capacities that we hold
         if (CapableEngine.Instance.log_loading_extended) { Debug.Log($"(Capable - UnloadData) Calling CapacitySystem unloading for capacities : {string.Join(" ", data.capacities_ids)}"); }
@@ -539,7 +539,7 @@ public class Capable : MonoBehaviour, Debuggable
         feet_collider = null;
         StopAllCoroutines();
     }
-    public virtual void SaveDynamicData()
+    public virtual void SaveInstanceData()
     {
         if (data == null) { return; }
 

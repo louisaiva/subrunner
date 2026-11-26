@@ -33,7 +33,7 @@ public class TemplateCapableVisualizer : MonoBehaviour
 
         // then we load the feet & anim data
         if (data.anim_data != null && !string.IsNullOrEmpty(data.anim_data.skin)) { load_anim_data(data.anim_data); }
-        else if ( has_sprite_capacity(data, out SpriteData sr_data) ) { load_sprite_data(sr_data); }
+        // else if ( has_sprite_capacity(data, out SpriteData sr_data) ) { load_sprite_data(sr_data); }
         load_feet_data(data.feet_data);
 
         // then we start following the mouse :D
@@ -146,7 +146,7 @@ public class TemplateCapableVisualizer : MonoBehaviour
 
         player.Show();
     }
-    private void load_sprite_data(SpriteData sr_data)
+    /* private void load_sprite_data(SpriteData sr_data)
     {
         player.Hide();
         player.gameObject.SetActive(false);
@@ -177,7 +177,7 @@ public class TemplateCapableVisualizer : MonoBehaviour
             }
         }
         return false;
-    }
+    } */
 }
 
 public enum CapablePlacementStatus

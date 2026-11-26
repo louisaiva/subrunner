@@ -219,7 +219,7 @@ public class HealthCapacity : Capacity
     // LOAD / UNLOAD DATA
     public override void LoadData(CapacityData data, CapableData capable_data)
     {
-        if (data is not HealthCapacityData hdata) { return; }
+        if (data is not HealthData hdata) { return; }
 
         // load health
         health = hdata.health;
@@ -254,24 +254,23 @@ public class HealthCapacity : Capacity
     }
 
     // SAVE DYNAMIC DATA
-    public override void SaveDynamicData()
+    public override void SaveInstanceData()
     {
-        base.SaveDynamicData();
+        base.SaveInstanceData();
 
         // update the dynamic fields data with the current values of the capacity
         if (this.data == null) { return; }
-        if (this.data is not HealthCapacityData hdata) { return; }
+        if (this.data is not HealthData hdata) { return; }
 
         hdata.health = health;
         hdata.max_health = max_health;
         hdata.regen_health = regen_health;
-        hdata.hurted_animation = hurted_animation;
     }
 
     // GET STATIC DATA
     public override CapacityData GetStaticData()
     {
-        HealthCapacityData static_data = new HealthCapacityData(base.GetStaticData())
+        HealthData static_data = new HealthData(base.GetStaticData())
         {
             health = this.health,
             max_health = this.max_health,
@@ -292,28 +291,28 @@ public class HealthCapacity : Capacity
     }
 }
 
-[Serializable] public class HealthCapacityData : CapacityData
+[Serializable] public class HealthData : CapacityData
 {
-    // global health parameters
-    public float health;
-    public int max_health;
-    public float regen_health;
-    public string hurted_animation;
+    // health parameters
+    [InstanceData] public float health;
+    [InstanceData] public int max_health;
+    [InstanceData] public float regen_health;
+    [KindData] public string hurted_animation;
 
     // health colliders
-    public List<BoxData> box_colliders;
-    public List<CircleData> circle_colliders;
+    [KindData] public List<BoxData> box_colliders;
+    [KindData] public List<CircleData> circle_colliders;
 
 
 
 
     // CONSTRUCTOR
-    public HealthCapacityData(CapacityData parent) : base(parent) { }
+    public HealthData(CapacityData parent) : base(parent) { }
 
     // DUPLICATE
     public override ICapacityData Duplicate()
     {
-        return new HealthCapacityData(base.Duplicate() as CapacityData)
+        return new HealthData(base.Duplicate() as CapacityData)
         {
             health = this.health,
             max_health = this.max_health,

@@ -278,9 +278,9 @@ public class MotorCapacity : Capacity
 
 
     // SAVE DYNAMIC DATA
-    public override void SaveDynamicData()
+    public override void SaveInstanceData()
     {
-        base.SaveDynamicData();
+        base.SaveInstanceData();
 
         if (data is not MotorData motor_data) { return; }
         

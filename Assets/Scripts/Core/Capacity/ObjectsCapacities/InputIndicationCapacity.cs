@@ -68,8 +68,8 @@ public class InputIndicationCapacity : Capacity
 
 [Serializable] public class InputIndicationData : CapacityData
 {
-    public Color color;
-    public string input_name;
+    [KindData] public Color color;
+    [KindData] public string input_name;
 
     // CONSTRUCTOR
     public InputIndicationData(CapacityData parent) : base(parent) { }

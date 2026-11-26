@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface DataHolder {}
 
-public interface IData : DataHolder
+public interface IData
 {
     public string id { get; set; }
     string GetDetails();

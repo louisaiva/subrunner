@@ -15,16 +15,16 @@ public interface IColliderData
 
 
 
-[Serializable] public class ColliderData : IColliderData
+[Serializable] public class ColliderData : IColliderData, DataHolder
 {
     // collider data
-    public Vector2 local_position;
-    public int layerID;
-    public int pathfinding_area = -1; // -1 -> not used for pathfinding
+    [KindData] public Vector2 local_position;
+    [KindData] public int layerID;
+    [KindData] public int pathfinding_area = -1; // -1 -> not used for pathfinding
     [RuntimeOnly] public bool UsedForPathfinding => pathfinding_area != -1;
-    public ShadowCasterData shadow_caster_data;
-    public bool is_trigger;
-    public Vector2 offset;
+    [KindData] public ShadowCasterData shadow_caster_data;
+    [KindData] public bool is_trigger;
+    [KindData] public Vector2 offset;
 
     public ColliderData() { }
     protected ColliderData(ColliderData parent) { copy_from_parent(parent); }
@@ -85,7 +85,7 @@ public interface IColliderData
 }
 [Serializable] public class CircleData : ColliderData
 {
-    public float radius;
+    [KindData] public float radius;
 
 
     // CONSTRUCTOR
@@ -110,7 +110,7 @@ public interface IColliderData
 
 [Serializable] public class BoxData : ColliderData
 {
-    public Vector2 size;
+    [KindData] public Vector2 size;
 
     // CONSTRUCTOR
     public BoxData(ColliderData parent) : base(parent) { }
@@ -132,10 +132,10 @@ public interface IColliderData
 }
 
 
-[Serializable] public class ShadowCasterData
+[Serializable] public class ShadowCasterData : DataHolder
 {
-    public bool cast_and_self; // if true it means we cast + self, otherwise we only cast
-    public List<string> used_layers = new List<string>();
+    [KindData] public bool cast_and_self; // if true it means we cast + self, otherwise we only cast
+    [KindData] public List<string> used_layers = new List<string>();
     
     // DUPLICATE
     public ShadowCasterData Duplicate()

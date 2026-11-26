@@ -224,9 +224,9 @@ public class WalkCapacity : Capacity
     }
 
     // SAVE DYNAMIC DATA
-    public override void SaveDynamicData()
+    public override void SaveInstanceData()
     {
-        base.SaveDynamicData();
+        base.SaveInstanceData();
 
         // update the dynamic fields data with the current values of the capacity
         if (this.data == null) { return; }
@@ -272,18 +272,18 @@ public class WalkCapacity : Capacity
 [Serializable] public class WalkData : CapacityData
 {
     // template walk parameters
-    public float template_max_walk_speed = 3f;
-    public float template_max_run_speed = 3f;
-    public float random_speed_modifier_at_start = 0.5f;
-    public Color particles_color = Color.white;
-    public float particles_rate = 1f;
+    [KindData] public float template_max_walk_speed = 3f;
+    [KindData] public float template_max_run_speed = 3f;
+    [KindData] public float random_speed_modifier_at_start = 0.5f;
+    [KindData] public Color particles_color = Color.white;
+    [KindData] public float particles_rate = 1f;
 
 
     // instance walk parameters
-    public float max_walk_speed = 3f;
-    public float max_run_speed = 3f;
-    public float walk_percentage_target = 0f;
-    public bool is_running = false;
+    [InstanceData] public float max_walk_speed = 3f;
+    [InstanceData] public float max_run_speed = 3f;
+    [InstanceData] public float walk_percentage_target = 0f;
+    [InstanceData] public bool is_running = false;
     
 
 

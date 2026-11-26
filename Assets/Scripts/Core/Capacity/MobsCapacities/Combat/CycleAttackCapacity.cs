@@ -65,7 +65,7 @@ public class CycleAttackCapacity : Capacity
 }
 [Serializable] public class CycleAttackData : CapacityData
 {
-	public List<string> animations_cycle = new List<string>();
+	[KindData] public List<string> animations_cycle = new List<string>();
 
 	// CONSTRUCTOR
 	public CycleAttackData(CapacityData parent) : base(parent) { }

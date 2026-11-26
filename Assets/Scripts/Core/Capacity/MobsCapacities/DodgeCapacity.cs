@@ -93,8 +93,8 @@ public class DodgeData : CapacityData
 {
 
     // instance parameters
-    public float dodge_magnitude;
-    public float dodge_duration;
+    [KindData] public float dodge_magnitude;
+    [KindData] public float dodge_duration;
 
 
     // CONSTRUCTOR

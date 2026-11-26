@@ -3,6 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// used for spikes or things like this that deal damage when something is in a collider.
+/// THe vent big is an exemple of this
+/// </summary>
 public class ColliderAttackCapacity : ColliderCapacity
 {
     [Header("Collider Attack Capacity")]
@@ -138,9 +142,9 @@ public class ColliderAttackCapacity : ColliderCapacity
         this.is_attacking = cad.is_attacking;
         this.kills = cad.kills;
     }
-    public override void SaveDynamicData()
+    public override void SaveInstanceData()
     {
-        base.SaveDynamicData();
+        base.SaveInstanceData();
         if (data is not ColliderAttackData cad) { return; }
 
         cad.is_attacking = this.is_attacking;
@@ -166,9 +170,9 @@ public class ColliderAttackCapacity : ColliderCapacity
 }
 [Serializable] public class ColliderAttackData : ColliderCapacityData
 {
-    public List<string> excluded_tags = new List<string> { };
-    public float knockback_magnitude;
-    public float damage;
+    [KindData] public List<string> excluded_tags = new List<string> { };
+    [KindData] public float knockback_magnitude;
+    [KindData] public float damage;
     [InstanceData] public bool is_attacking;
     [InstanceData] public int kills = 0;
 

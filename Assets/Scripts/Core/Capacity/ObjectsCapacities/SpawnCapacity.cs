@@ -154,7 +154,7 @@ public class SpawnCapacity : Capacity
     {
         base.LoadData(data, capable_data);
 
-        if (data is not SpawnCapacityData spawn_data) { return; }
+        if (data is not SpawnData spawn_data) { return; }
 
         entity_layer_connected = false;
         if (entity_layer != null)
@@ -188,7 +188,7 @@ public class SpawnCapacity : Capacity
     // GET STATIC DATA
     public override CapacityData GetStaticData()
     {
-        SpawnCapacityData static_data = new SpawnCapacityData(base.GetStaticData())
+        SpawnData static_data = new SpawnData(base.GetStaticData())
         {
             base_entity_id = this.base_entity_id,
             spawn_force = this.spawn_force,
@@ -204,27 +204,27 @@ public class SpawnCapacity : Capacity
 }
 
 
-[Serializable] public class SpawnCapacityData : CapacityData
+[Serializable] public class SpawnData : CapacityData
 {
 
 
     // template variables
-    public string spawn_anim_name = "spawn"; // the name of the spawn animation in the AnimPlayer
-    public string base_entity_id; // the id of the entity to spawn
-    public float spawn_force = 0f; // (optional) force applied to the spawned entity
-    public Vector2 local_spawn_position; // or the center of the spawn circle if spawn_radius > 0
-    public float spawn_radius = 0.5f; // the spawn is randowmized in a circle of this radius
-    public float spawn_rate = 0f; // one entity is spawned each x seconds - needs to be > 0 to spawn continuously
-    public bool spawn_after_animation = false;
+    [KindData] public string spawn_anim_name = "spawn"; // the name of the spawn animation in the AnimPlayer
+    [KindData] public string base_entity_id; // the id of the entity to spawn
+    [KindData] public float spawn_force = 0f; // (optional) force applied to the spawned entity
+    [KindData] public Vector2 local_spawn_position; // or the center of the spawn circle if spawn_radius > 0
+    [KindData] public float spawn_radius = 0.5f; // the spawn is randowmized in a circle of this radius
+    [KindData] public float spawn_rate = 0f; // one entity is spawned each x seconds - needs to be > 0 to spawn continuously
+    [KindData] public bool spawn_after_animation = false;
 
 
     // CONSTRUCTOR
-    public SpawnCapacityData(CapacityData parent) : base(parent) { }
+    public SpawnData(CapacityData parent) : base(parent) { }
 
     // DUPLICATE
     public override ICapacityData Duplicate()
     {
-        return new SpawnCapacityData(base.Duplicate() as CapacityData)
+        return new SpawnData(base.Duplicate() as CapacityData)
         {
             base_entity_id = this.base_entity_id,
             spawn_force = this.spawn_force,

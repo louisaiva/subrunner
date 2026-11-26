@@ -417,9 +417,9 @@ public class Item : Movable, EndlessInteractable
         Capable parent_capable = transform.parent.GetComponentInParent<Capable>(includeInactive: true);
         return parent_capable != null;
     }
-    public override void SaveDynamicData()
+    public override void SaveInstanceData()
     {
-        base.SaveDynamicData();
+        base.SaveInstanceData();
 
         if (data is not ItemData item_data) { return; }
         item_data.is_grabbed = Grabbed;
@@ -431,11 +431,11 @@ public class Item : Movable, EndlessInteractable
 // ITEM DATA
 [Serializable] public class ItemData : CapableData
 {
-    public string reference;
-    public Color color;
-    public int max_qty;
-    public string item_description;
-    public bool is_grabbed; // only a flag, for the CapacityEngine to know which capacities not to load
+    [KindData] public string reference;
+    [KindData] public Color color;
+    [KindData] public int max_qty;
+    [KindData] public string item_description;
+    [InstanceData] public bool is_grabbed; // only a flag, for the CapacityEngine to know which capacities not to load
 
     // CONSTRUCTOR
     public ItemData() : base() { }

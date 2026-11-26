@@ -14,7 +14,7 @@ public class TalkCapacity : Capacity
     // [SerializeField] private bool log_lerp = false;
 
     [Header("Talk mode")]
-    [SerializeField] private TalkMode talk_mode;
+    [SerializeField] private Talk talk_mode;
 
     [Header("Talking parameters")]
     [SerializeField] private string talk_anim = "talk";
@@ -406,10 +406,10 @@ public class TalkCapacity : Capacity
 
         // else we have no dialog running, we set ourself as the leader of the new dialog
         Debug.Log($"(TalkCapacity) {Capable.ID} is creating dialog with {asker.Capable.ID}.");
-        talk_mode = new TalkMode(TalkType.Dialog, this);
+        talk_mode = new Talk(TalkType.Dialog, this);
         asker.StartDialog(talk_mode);
     }
-    public void StartDialog(TalkMode mode)
+    public void StartDialog(Talk mode)
     {
         Debug.Log($"(TalkCapacity) {Capable.ID} is starting dialog with {mode.Leader.Capable.ID}.");
         talk_mode = mode;
@@ -472,7 +472,7 @@ public class TalkCapacity : Capacity
         if (talk_mode.Leader == null) { return; }
 
 
-        talk_mode = new TalkMode(TalkType.Monologue, this);
+        talk_mode = new Talk(TalkType.Monologue, this);
 
         if (talk_mode.Leader != this)
         {
@@ -703,9 +703,9 @@ public class TalkData : CapacityData
 {
 
     // template parameters
-    public string talk_anim_name;
-    public Color slot_color;
-    public Color text_color;
+    [KindData] public string talk_anim_name;
+    [KindData] public Color slot_color; // todo : this should be store in the Talk class
+    [KindData] public Color text_color; // todo : this should be store in the Talk class
 
     // CONSTRUCTOR
     public TalkData(CapacityData parent) : base(parent) { }
@@ -735,14 +735,15 @@ public class TalkData : CapacityData
 
 
 // RTO
-[Serializable] public class TalkMode
+[Serializable] public class Talk
 {
     public TalkType Mode;
     public TalkCapacity Leader;
 
     // TODO : WE COULD HOLD THE TALK MEMBERS HERE, would be better
+    // todo : yes and also messages and everything. this should be the central hub of this system, and TalkCapacity should only represent one participant in the Talk
 
-    public TalkMode(TalkType Mode, TalkCapacity Leader)
+    public Talk(TalkType Mode, TalkCapacity Leader)
     {
         this.Mode = Mode;
         this.Leader = Leader;

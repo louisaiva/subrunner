@@ -99,8 +99,8 @@ public enum InteractType
 [Serializable] public class InteractData : CapacityData
 {
     // data
-    public List<InteractType> interact_types;
-    public string item_rule;
+    [KindData] public List<InteractType> interact_types;
+    [KindData] public string item_rule;
 
     // CONSTRUCTOR
     public InteractData(CapacityData parent) : base(parent) { }

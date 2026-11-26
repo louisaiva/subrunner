@@ -144,7 +144,7 @@ public class IA : Movable
 // IA DATA
 [Serializable] public class IAData : CapableData
 {
-    public SocialData social_data = new SocialData();
+    [KindData] public SocialData social_data = new SocialData();
     
     // CONSTRUCTOR
     public IAData(CapableData parent) : base(parent) {}
@@ -168,13 +168,13 @@ public class IA : Movable
     }
 }
 
-[Serializable] public class SocialData
+[Serializable] public class SocialData : DataHolder
 {
-    public float exploration_radius = 3f;
-    public float range_detection = 15f;
-    public List<string> friendly_skins = new List<string>();
-    public List<string> dangerous_skins = new List<string>();
-    public List<string> prey_skins = new List<string>();
+    [KindData] public float exploration_radius = 3f;
+    [KindData] public float range_detection = 15f;
+    [KindData] public List<string> friendly_skins = new List<string>(); // todo : for now these 3 lists are kind data but they can evolve to instance data if we want cats to learn their enemies
+    [KindData] public List<string> dangerous_skins = new List<string>();
+    [KindData] public List<string> prey_skins = new List<string>();
 
     public SocialData Duplicate()
     {

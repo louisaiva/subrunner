@@ -487,9 +487,9 @@ public class AttackCapacity : CooldownCapacity
     }
 
     // SAVE DYNAMIC DATA
-    public override void SaveDynamicData()
+    public override void SaveInstanceData()
     {
-        base.SaveDynamicData();
+        base.SaveInstanceData();
         if (data is not AttackData adata) { return; }
         adata.damage = damage;
     }
@@ -520,27 +520,26 @@ public class AttackCapacity : CooldownCapacity
 }
 
 
-[Serializable]
-public class AttackData : CapacityData
+[Serializable] public class AttackData : CapacityData
 {
 
     // TYPE DATA (static at runtime, one per template)
-    public string renderer_name = "";
-    public float template_damage;
-    public float random_damage_modifier; // replace with an "exp" system for mobs ?
-    public float distance_to_attack;
-    public bool single_hit, split_damage, perforant_attack;
-    public float attack_duration, attack_duration_random_variation;
-    public float unstoppable_rate;
+    [KindData] public string renderer_name = "";
+    [KindData] public float template_damage;
+    [KindData] public float random_damage_modifier; // replace with an "exp" system for mobs ?
+    [KindData] public float distance_to_attack;
+    [KindData] public bool single_hit, split_damage, perforant_attack;
+    [KindData] public float attack_duration, attack_duration_random_variation;
+    [KindData] public float unstoppable_rate;
 
     // knocback_base ?
     // attackant_advantage ?
 
     // excluded tags
-    public List<string> base_excluded_tags = new List<string> { };
+    [KindData] public List<string> base_excluded_tags = new List<string> { };
 
     // instance parameters
-    public float damage;
+    [InstanceData] public float damage;
     // kills ?
 
 

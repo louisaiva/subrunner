@@ -150,18 +150,18 @@ public class ExpCapacity : Capacity
 
 [Serializable] public class ExpData : CapacityData
 {
-    public int xp;
-    public int total_xp;
-    public int xp_to_next_level;
-    public int level;
-    public int upgrade_points;
+    [InstanceData] public int xp;
+    [InstanceData] public int total_xp;
+    [InstanceData] public int xp_to_next_level;
+    [InstanceData] public int level;
+    [InstanceData] public int upgrade_points;
 
     // particle system field data
-    public float end_range;
-    public float gravity_strengh;
+    [KindData] public float end_range;
+    [KindData] public float gravity_strengh;
 
     // collider data
-    public CircleData circle_data;
+    [KindData] public CircleData circle_data;
 
     // CONSTRUCTOR
     public ExpData(CapacityData parent) : base(parent) { }

@@ -4,7 +4,7 @@ using System;
 using System.Reflection;
 
 
-public interface ICapacityData : IData
+public interface ICapacityData : IData, DataHolder
 {
     string owner_id { get; set; }
     ICapacityData Duplicate();
@@ -12,12 +12,12 @@ public interface ICapacityData : IData
 
 [Serializable] public class CapacityData : ICapacityData
 {
-    [field: SerializeField] public string id { get; set; }
-    [field: SerializeField] public string owner_id { get; set; }
-    public string kind; // used to determine which kind of capacity it is. i.e. open,close,hover,interact etc (CapableBank uses this to instantiate the right prefab)
-    public Vector2 local_position;
-    public int layer = 0;
-    public string tag = "";
+    [field: SerializeField, InstanceData] public string id { get; set; }
+    [field: SerializeField, InstanceData] public string owner_id { get; set; }
+    [KindData] public string kind; // used to determine which kind of capacity it is. i.e. open,close,hover,interact etc (CapableBank uses this to instantiate the right prefab)
+    [InstanceData] public Vector2 local_position;
+    [KindData] public int layer = 0;
+    [KindData] public string tag = "";
 
     // CONSTRUCTORS
     public CapacityData() { }
