@@ -512,7 +512,7 @@ public class AnimPlayer : MonoBehaviour
     /// </summary>
     public SpriteRenderer GetRendererByName(string renderer_name)
     {
-        Debug.Log($"(AnimPlayer) Getting renderer of {renderer_name}. Our layers are {string.Join(" & ", anim_layers.Select(al => al.name))}");
+        // Debug.Log($"(AnimPlayer) Getting renderer of {renderer_name}. Our layers are {string.Join(" & ", anim_layers.Select(al => al.name))}");
         // go through all the layers
         foreach (AnimLayer layer in anim_layers)
         {

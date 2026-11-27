@@ -107,13 +107,13 @@ MonoBehaviour:
   skin: dummy_base
   leader: {fileID: 1077724374631330725}
   current_anim:
-    name: 
+    skin: 
+    capacity: 
+    orientation: 
     sprites_paths: []
     sprites: []
     sprites_durations: []
-    loop: 1
     speed: 1
-    flipX: 0
   follow_duration: 0
   never_flip: 1
   log: 0
@@ -342,6 +342,12 @@ MonoBehaviour:
     - hurted
     lock_orientation: 1
     one_shot: 1
+  - priority: 0
+    capacity_playing: 
+    capacities:
+    - die
+    lock_orientation: 1
+    one_shot: 0
   never_flip: 0
   log: 0
   log_orientation: 0

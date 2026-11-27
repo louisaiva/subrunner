@@ -37,9 +37,10 @@ public class AnimBank : MonoBehaviour
     public Dictionary<string, Dictionary<string, List<Anim>>> anims = new();
     // if this is true, the bank will load animations from .anim files and store them as .json files
     // if false, the bank will load animations from .json files (/!\ you need to have the .json files in the Resources/anims/ folder)
+    public bool delete_all_anims_on_extract = false; // if true this will remove the folder and recreate it (clean old anims)
     public bool extract_json_on_load = false;
     public string anims_path = "animations/";
-    public string jsons_path = "anims/";
+    public string jsons_path = "data/anims/";
 
 
     [Header("Animations parameters")]
@@ -110,9 +111,12 @@ public class AnimBank : MonoBehaviour
 #if UNITY_EDITOR
 
         // we remove all the .json files in the Resources/anims/ folder
-        // string[] jsons_paths = Directory.GetFiles("Assets/Resources/" + jsons_path, "*.json", SearchOption.AllDirectories);
-        FileUtil.DeleteFileOrDirectory("Assets/Resources/" + jsons_path);
-        Directory.CreateDirectory("Assets/Resources/" + jsons_path);
+        if (delete_all_anims_on_extract)
+        {
+            FileUtil.DeleteFileOrDirectory("Assets/Resources/" + jsons_path);
+            Directory.CreateDirectory("Assets/Resources/" + jsons_path);
+            if (log) { Debug.Log("(AnimBank - LoadAnims) Cleaned the jsons folder. (All old jsons are deleted, we will now extract the new ones.)"); }
+        }
 
         if (log) { Debug.Log("(AnimBank - LoadAnims) Extracting animations from AnimationClips and saving them as .json files."); }
 
@@ -151,18 +155,18 @@ public class AnimBank : MonoBehaviour
         // LOAD AN ANIMATION FROM A ALREADY EXISTING JSON FILE
 
         // on charge le json depuis le path
-        TextAsset json = Resources.Load<TextAsset>("anims/" + path);
+        TextAsset json = Resources.Load<TextAsset>(jsons_path + path);
         if (!json)
         {
-            Debug.LogError("(AnimBank - LAFJ) JSON NOT found : " + path);
+            Debug.LogError("(AnimBank - LAFJ) JSON NOT found : " + jsons_path + path);
             return;
         }
 
         // on désérialise le json
-        Anim anim = JsonConvert.DeserializeObject<Anim>(json.text);
+        Anim anim = JsonConvert.DeserializeObject<Anim>(json.text, SaveEngine.OldContract);
         if (anim == null)
         {
-            Debug.LogError("(AnimBank - LAFJ) JSON deserialization failed : " + path);
+            Debug.LogError("(AnimBank - LAFJ) JSON deserialization failed : " + jsons_path + path);
             return;
         }
 
@@ -266,7 +270,8 @@ public class AnimBank : MonoBehaviour
     }
     private void saveAnimToJson(Anim anim)
     {
-        string json = JsonConvert.SerializeObject(anim);
+        // string json = JsonConvert.SerializeObject(anim, Formatting.Indented);
+        string json = JsonConvert.SerializeObject(anim, SaveEngine.OldContract);
         string path = "Assets/Resources/" + jsons_path + anim.name + ".json";
         System.IO.File.WriteAllText(path, json);
     }
@@ -362,8 +367,8 @@ public class AnimBank : MonoBehaviour
 
         // we copy the animation
         Anim variant_anim = new Anim(anim);
-        // variant_anim.name = skin_variant.variant_name + "." + anim.capacity + "." + anim.orientation;
         variant_anim.skin = skin_variant.variant_name;
+        Debug.Log($"(AnimBank - CreateVariantAnim) Creating variant anim : {variant_anim.name} from base anim : {anim.name} for skin variant : {skin_variant.variant_name} : \n\n base anim : {anim.GetDetails()} \n\n variant anim : {variant_anim.GetDetails()}");
 
         // we prepare for checking in which Sprite[] is every sprite
         int preferred_spritesheet_index = 0;
@@ -733,7 +738,7 @@ public class AnimBank : MonoBehaviour
                 {
                     list += "\t\t" + anim.name + "\n";
                     count++;
-                    if (log_awake_extended) { Debug.Log("(AnimBank - getAnimsList) Found anim : " + anim.name); }
+                    if (log_awake_extended) { Debug.Log("(AnimBank - getAnimsList) Found " + anim.GetDetails()); }
                 }
             }
         }

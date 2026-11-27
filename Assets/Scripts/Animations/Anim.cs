@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using UnityEngine;
 
 /// <summary>
@@ -22,7 +23,7 @@ using UnityEngine;
     public string skin;
     public string capacity;
     public string orientation;
-    public string name => skin + '.' + capacity + '.' + orientation;
+    [RuntimeOnly] public string name => skin + '.' + capacity + '.' + orientation;
 
     // stockage utile de l'animation
     // TEMPLATE SPECIFIC
@@ -37,7 +38,11 @@ using UnityEngine;
     public readonly bool flipX = false; // flip le sprite renderer si besoin
     public float speed = 1f; // vitesse de l'animation // ! todo : remove this since it is capable-instance based --> doit être dans une AnimModifData gérée par AnimPlayer
 
-    public Anim() {}
+    [JsonConstructor] public Anim(bool loop, bool flipX)
+    {
+        this.loop = loop;
+        this.flipX = flipX;
+    }
     public Anim(string name, string[] sprites_paths, float[] sprites_durations)
     {
         // this.name = name;
@@ -129,7 +134,6 @@ using UnityEngine;
         if (splitted_name.Length != 3) { return false; }
         return true;
     }
-
     public float GetDuration() { return GetBaseDuration() / speed; }
     public float GetBaseDuration()
     {
@@ -151,5 +155,21 @@ using UnityEngine;
             duration += sprites_durations[i];
         }
         return duration;
+    }
+
+
+    // GET DETAILS
+    public virtual string GetDetails()
+    {
+        string details = $"Anim {name} :\n";
+        details += $"  - skin : {skin}\n";
+        details += $"  - capacity : {capacity}\n";
+        details += $"  - orientation : {orientation}\n";
+        details += $"  - loop : {loop}\n";
+        details += $"  - speed : {speed}\n";
+        details += $"  - flipX : {flipX}\n";
+        details += $"  - sprites_paths : {(sprites_paths == null ? "null" : string.Join(", ", sprites_paths))}\n";
+        details += $"  - sprites_durations : {(sprites_durations == null ? "null" : string.Join(", ", sprites_durations))}\n";
+        return details;
     }
 }

@@ -44,7 +44,6 @@ public class MouseAttackDirectionIndicator : MonoBehaviour
     // callbacks
     internal void on_inventory_changed(Item item)
     {
-        Debug.Log("(MADI) on_inventory_changed");
         if (WeaponPool?.GetItemsByType<Weapon>().FirstOrDefault() == null) { disable(); return; }
         activate();
     }

@@ -9,6 +9,7 @@ public class Burner : Capable, EndlessInteractable
     [Header("Buner")]
     [SerializeField] private List<CapableData> pending_items_to_burn = new List<CapableData>();
     private string trash_rule = "corpse,leftover";
+    // [SerializeField] private bool log_burner = false;
 
 
     // INTERACTABLE
@@ -83,8 +84,7 @@ public class Burner : Capable, EndlessInteractable
     private void burn_item(CapableData item)
     {
         pending_items_to_burn.Remove(item);
-        Debug.Log($"(Burner) {ID} Burning item : '{item.id}'");
+        if (log) { Debug.Log($"(Burner) {ID} Burning item : '{item.id}'"); }
         CapableEngine.LazyInstance.DespawnCapable(item);
     }
-
 }

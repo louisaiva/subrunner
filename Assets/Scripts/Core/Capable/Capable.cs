@@ -346,35 +346,6 @@ public class Capable : MonoBehaviour, Debuggable
             Destroy(item.gameObject);
         }
     }
-    /* public async Awaitable DropAllItems()
-    {
-        if (Inventory == null || Inventory.Count == 0) { return; }
-
-        // we get the drop capacity
-        DropCapacity dropper = GetCapacity<DropCapacity>();
-        if (dropper == null)
-        {
-            // we add it if not present
-            AddCapacity("drop");
-
-            // we wait a frame
-            await System.Threading.Tasks.Task.Yield();
-
-            // we get the dropper
-            dropper = GetCapacity<DropCapacity>();
-        }
-        dropper.random_direction = true;
-        dropper.lock_magnitude = false;
-
-        // we drop all items on the ground
-        List<Item> items = Inventory.Items;
-        for (int i = items.Count - 1; i >= 0; i--)
-        {
-            // we drop the item
-            dropper.Select(items[i]);
-            dropper.Use(this);
-        }
-    } */
     public void DropAllItems(DropParameters parameters = null)
     {
         if (Inventory == null || Inventory.Count == 0) { return; }
@@ -692,12 +663,13 @@ public enum Effect
     Ghost, // a Movable can walk through other Beings & walls & objects (everything)
     Invisible, // a Being can't be seen -> change its body collider to Ghosts layer
     Invincible, // a Being can't be hurt
-    CantDie, // a Being can't die (if health reaches 0, it comes back to max health)
+    ReviveAfter5Seconds, // a Being will revive after 5 seconds if it dies
     Stunned, // a Being can't attack
     RegenLife, // a Being regenerates life
     Immobile, // a Movable can't move
     Unstoppable, // a Movable can't be stopped in its attack
     BeingCarried, // a Movable is being carried (bypass all movement updates)
     Boiling, // boiling, when the water is RILLY HOT -> deals damage to beings
-    Burning // litteraly in FIRE -> deals damage mainly, also transmit heat
+    Burning, // litteraly in FIRE -> deals damage mainly, also transmit heat
+    CantDie, // a Being can't die (if health reaches 0, it comes back to max health)
 }

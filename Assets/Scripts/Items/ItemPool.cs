@@ -154,7 +154,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
     public void UnloadPoolData()
     {
         // we unload items
-        List<string> item_ids = Items.Select(i => i.data.id).ToList();
+        List<string> item_ids = get_items_ids(); 
         CapableEngine.Instance.UnloadCapables(item_ids);
 
         // clears stacks
@@ -180,6 +180,24 @@ public class ItemPool : MonoBehaviour, ItemStorer
         {
             Debug.LogError($"(ItemPool) Clearing delegates left invalid delegates for pool {name} on capable {Capable?.ID ?? "null"} : delegates have Created:{OnStackCreated?.GetInvocationList().Length ?? -1}, Removed:{OnStackRemoved?.GetInvocationList().Length ?? -1}, Grabbed:{OnItemGrabbed?.GetInvocationList().Length ?? -1}, Dropped:{OnItemDropped?.GetInvocationList().Length ?? -1}");
         }
+    }
+    private List<string> get_items_ids()
+    {
+        List<string> item_ids = new List<string>();
+        int dead_item_count = 0;
+        for (int i = 0; i < stacks.Count; i++)
+        {
+            ItemStack stack = stacks[i];
+            if (stack.IsEmpty) { continue; }
+            foreach (Item item in stack.Items)
+            {
+                if (item == null) { dead_item_count++; continue; }
+                if (item.data == null) { dead_item_count++; continue; }
+                item_ids.Add(item.data.id);
+            }
+        }
+        if (dead_item_count > 0) { throw new Exception($"(ItemPool) Found {dead_item_count} dead items in pool {name} on capable {Capable?.ID ?? "null"}"); }
+        return item_ids;
     }
     string ItemStorer.GetDetails()
     {

@@ -1,5 +1,6 @@
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -136,6 +137,12 @@ public class HealthCapacity : Capacity
         {
             // if we can't die we come back to max health
             if (Capable.HasEffect(Effect.CantDie)) { health = MaxHealth; return true; } // we can't die
+            else if (Capable.HasEffect(Effect.ReviveAfter5Seconds))
+            {
+                AnimPlayer.Play("die");
+                if (reviving_coroutine == null) { reviving_coroutine = StartCoroutine(ReviveAfterSeconds(5f)); }
+                return true;
+            }
 
             // trigger OnDie event
             Die();
@@ -148,9 +155,7 @@ public class HealthCapacity : Capacity
                 return true;
             }
 
-            // else we are no part of the capable system (old way)
-            // we call DieCapacity if it exists, else we just set health to 0
-            // Capable.GetCapacity<DieCapacity>()?.Use(Capable);
+            // else we are no part of the capable system (weird)
             health = 0f;
             Debug.LogError($"(HealthCapacity - TakeDamage) {name} died but could not turn to corpse, (loaded : {Capable.Loaded} / id : {Capable.ID})");
         }
@@ -177,6 +182,18 @@ public class HealthCapacity : Capacity
 
 
     // HEALING
+    public Coroutine reviving_coroutine;
+    private IEnumerator ReviveAfterSeconds(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        revive();
+        reviving_coroutine = null;
+    }
+    private void revive()
+    {
+        AnimPlayer.StopPlaying("die");
+        HealMax();
+    }
     public virtual void AddLife(float life)
     {
         health += life;
@@ -237,6 +254,9 @@ public class HealthCapacity : Capacity
             _health_colliders.Add(ColliderBank.Instance.LoadCollider(colldata,transform));
         }
 
+        // we check the effects to revive automatically if we have revive 5 seconds or cant die
+        if (!Alive && (Capable.HasEffect(Effect.ReviveAfter5Seconds) || Capable.HasEffect(Effect.CantDie))) { revive(); }
+
         // ? is there a reason we load the data at the end ????
         base.LoadData(data, capable_data);
     }
@@ -248,7 +268,8 @@ public class HealthCapacity : Capacity
             ColliderBank.Instance.UnloadCollider(collider.gameObject);
         }
         _health_colliders.Clear();
-        
+        reviving_coroutine = null;
+
         // this saves the dynamic health data
         base.UnloadData();
     }
