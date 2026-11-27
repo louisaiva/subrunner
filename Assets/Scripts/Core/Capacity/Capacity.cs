@@ -54,6 +54,8 @@ public class Capacity : MonoBehaviour
     // LOAD / UNLAOD
     public virtual void LoadData(CapacityData data, CapableData capable_data)
     {
+        // !! CANT ACCESS Capacity.Capable from here, which means no Capacity.AnimPlayer
+
         this.data = data;
         this.name = data.id;
 

@@ -13,6 +13,7 @@ public class SitCapacity : Capacity
 
     private Coroutine zap_coroutine;
     private Coroutine sit_stand_coroutine;
+    private string last_coroutine_type = "";
 
 
     // SIT & STAND
@@ -72,6 +73,8 @@ public class SitCapacity : Capacity
     }
     public void ExitSofa()
     {
+        if (sit_stand_coroutine != null && last_coroutine_type == "stand") { return; } // we are already doing standing up so no need to do anything except wait
+
         StopAllCoroutines();
         sit_stand_coroutine = StartCoroutine(standCoroutine());
 
@@ -86,6 +89,7 @@ public class SitCapacity : Capacity
     // SIT & STAND COROUTINES
     private IEnumerator sitCoroutine()
     {
+        last_coroutine_type = "sit";
         // we play the sit anim
         AnimPlayer.Play("sit");
         while (AnimPlayer.IsPlaying("sit"))
@@ -110,6 +114,7 @@ public class SitCapacity : Capacity
         if (log) { Debug.Log($"(SitCapacity) Exiting sofa {current_sofa.ID}"); }
         if (current_sofa == null) { yield break; }
         if (Capable is not Movable movable) { yield break; }
+        last_coroutine_type = "stand";
 
         // we turn off the TV if the sofa has one
         if (current_sofa.SiblingTV != null)

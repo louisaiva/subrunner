@@ -37,6 +37,8 @@ public class UI_Writer : MonoBehaviour
 
     [Header("Logs")]
     public bool log_writing = false;
+    public bool log_characters = false;
+    public bool log_cpf = false;
     public bool log_color_tags = false;
 
     // AWAKE
@@ -62,8 +64,10 @@ public class UI_Writer : MonoBehaviour
 
             if (on_enable_delay <= 0) { Write(raw_writing_on_enable); }
             else { StartCoroutine(write_on_enable_delay()); }
+            return;
         }
-        else if (cursor == 0) { return; } // we finished writing last time so we don't write again
+        
+        if (cursor == 0) { return; } // we finished writing last time so we don't write again
         writing_coroutine = StartCoroutine(write());
     }
     private IEnumerator write_on_enable_delay()
@@ -128,16 +132,18 @@ public class UI_Writer : MonoBehaviour
 
     public IEnumerator write()
     {
+        if (log_characters) { Debug.Log($"(UI_Writer) Starting a new writing coroutine with target writing : '{target_writing}'"); }
         while (cursor < target_writing.Length)
         {
             // we get the number of characters we want to add this frame
             float chars_this_frame = calculate_chars_per_frame();
 
+
             // if the cpf is below 1 then we need to wait some time to match the cpf (and so we will write only 1 letter)
             if (chars_this_frame < 1f)
             {
                 float wait_time = 1 / caracters_per_sec; // time to wait to write 1 character
-                if (log_writing) { Debug.Log($"(UI_Writer) cpf below 1 ({chars_this_frame}), waiting {wait_time} seconds"); }
+                if (log_cpf) { Debug.Log($"(UI_Writer) cpf below 1 ({chars_this_frame}), waiting {wait_time} seconds"); }
                 yield return new WaitForSecondsRealtime(wait_time);
                 chars_this_frame = 1f;
             }
@@ -164,6 +170,7 @@ public class UI_Writer : MonoBehaviour
             // we get the final text to write
             // then we add the color tags and finally
             // we update the label
+            if (log_characters) { Debug.Log($"(UI_Writer) text is '{label.text}'. cursor: {cursor}. next_cursor: {next_cursor}"); }
             label.text = apply_color_tags(target_writing.Substring(0, next_cursor), next_cursor);
 
             // we play pause / dot if needed
@@ -325,7 +332,7 @@ public class UI_Writer : MonoBehaviour
     }
     private float calculate_chars_per_frame()
     {
-        if (log_writing) { Debug.Log($"(UI_Writer) calculating chars per frame : {caracters_per_sec * Time.unscaledDeltaTime} cpf"); }
+        if (log_cpf) { Debug.Log($"(UI_Writer) calculating chars per frame : {caracters_per_sec * Time.unscaledDeltaTime} cpf"); }
         return caracters_per_sec * Time.unscaledDeltaTime;
     }
 

@@ -50,14 +50,6 @@ public class HealthCapacity : Capacity
     public event Action<float> OnHeal; // heal amount
     public event Action<CapableData> OnDie;
 
-    // START
-    protected void Start()
-    {
-        // on initialise les capacités
-        Capable.AddEffect(Effect.RegenLife, -888f);
-    }
-
-
     // UPDATE
     protected void Update()
     {
@@ -93,6 +85,12 @@ public class HealthCapacity : Capacity
         {
             // reset the body collider to Beings layer
             HealthCollider.gameObject.layer = LayerMask.NameToLayer("Beings");
+        }
+
+        // Revived after 5 seconds
+        if (Capable.HasEffect(Effect.ReviveAfter5Seconds) && Alive && AnimPlayer.IsPlaying("die"))
+        {
+            AnimPlayer.StopPlaying("die");
         }
     }
 
@@ -186,13 +184,8 @@ public class HealthCapacity : Capacity
     private IEnumerator ReviveAfterSeconds(float seconds)
     {
         yield return new WaitForSeconds(seconds);
-        revive();
-        reviving_coroutine = null;
-    }
-    private void revive()
-    {
-        AnimPlayer.StopPlaying("die");
         HealMax();
+        reviving_coroutine = null;
     }
     public virtual void AddLife(float life)
     {
@@ -254,11 +247,11 @@ public class HealthCapacity : Capacity
             _health_colliders.Add(ColliderBank.Instance.LoadCollider(colldata,transform));
         }
 
-        // we check the effects to revive automatically if we have revive 5 seconds or cant die
-        if (!Alive && (Capable.HasEffect(Effect.ReviveAfter5Seconds) || Capable.HasEffect(Effect.CantDie))) { revive(); }
-
         // ? is there a reason we load the data at the end ????
         base.LoadData(data, capable_data);
+
+        // we check the effects to revive automatically if we have revive 5 seconds or cant die
+        if (!Alive && (capable_data.effects.Contains(Effect.ReviveAfter5Seconds) || capable_data.effects.Contains(Effect.CantDie))) { health = max_health; }
     }
     public override void UnloadData()
     {

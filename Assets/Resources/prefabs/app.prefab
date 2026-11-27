@@ -695,6 +695,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbc26d7ebcdf22f47a529f15eaf424b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  delete_all_anims_on_extract: 0
   extract_json_on_load: 0
   anims_path: animations/
   jsons_path: data/anims/
@@ -1827,7 +1828,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LoadedSceneCount: 0
-  prototype: mouse based keyboard attack !!
+  prototype: bug fixes
   log: 0
   log_stats: 0
 --- !u!114 &714515157948744320

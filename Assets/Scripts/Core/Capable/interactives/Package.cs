@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Package : Movable, Interactable, TurnableIntoItem
+public class Package : Movable, EndlessInteractable, TurnableIntoItem
 {
     public InteractCapacity Interactor => null;
     public InteractType InteractionType => InteractType.Other;
@@ -34,6 +34,7 @@ public class Package : Movable, Interactable, TurnableIntoItem
         AnimPlayer.AddToPile("idle_open");
         StartCoroutine(turn_into_leftover());
     }
+    public void OnEndlessInteract(Capable interactor) => OnInteract(interactor);
     private IEnumerator turn_into_leftover()
     {
         is_turning_to_item = true;
@@ -70,6 +71,7 @@ public class Package : Movable, Interactable, TurnableIntoItem
         is_turning_to_item = false;
     }
 
+
     // DATA LOADING
     public override void LoadData(CapableData data)
     {
@@ -102,4 +104,5 @@ public class Package : Movable, Interactable, TurnableIntoItem
         cancel_coroutine();
         base.UnloadData();
     }
+
 }
