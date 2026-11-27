@@ -161,21 +161,24 @@ public class ItemPool : MonoBehaviour, ItemStorer
         stacks.Clear();
 
         // clearing delegates
-        foreach (Delegate d in OnStackCreated.GetInvocationList())
+        if (OnStackCreated != null) { foreach (Delegate d in OnStackCreated.GetInvocationList()) { OnStackCreated -= (Action<ItemStack>)d; } }
+        if (OnStackRemoved != null) { foreach (Delegate d in OnStackRemoved.GetInvocationList()) { OnStackRemoved -= (Action<ItemStack>)d; } }
+        if (OnItemGrabbed != null) { foreach (Delegate d in OnItemGrabbed.GetInvocationList()) { OnItemGrabbed -= (Action<Item>)d; } }
+        if (OnItemDropped != null) { foreach (Delegate d in OnItemDropped.GetInvocationList()) { OnItemDropped -= (Action<Item>)d; } }
+
+        OnStackCreated = delegate { };
+        OnStackRemoved = delegate { };
+        OnItemGrabbed = delegate { };
+        OnItemDropped = delegate { };
+
+        // we verify that all events delegate are not null & have precisely 1 delegate.
+        if (OnStackCreated == null || OnStackRemoved == null || OnItemGrabbed == null || OnItemDropped == null)
         {
-            OnStackCreated -= (Action<ItemStack>)d;
+            Debug.LogError($"(ItemPool) Clearing delegates left null delegates for pool {name} on capable {Capable?.ID ?? "null"} : delegates have Created:{OnStackCreated?.GetInvocationList().Length ?? -1}, Removed:{OnStackRemoved?.GetInvocationList().Length ?? -1}, Grabbed:{OnItemGrabbed?.GetInvocationList().Length ?? -1}, Dropped:{OnItemDropped?.GetInvocationList().Length ?? -1}");
         }
-        foreach (Delegate d in OnStackRemoved.GetInvocationList())
+        else if (OnStackCreated.GetInvocationList().Length != 1 || OnStackRemoved.GetInvocationList().Length != 1 || OnItemGrabbed.GetInvocationList().Length != 1 || OnItemDropped.GetInvocationList().Length != 1)
         {
-            OnStackRemoved -= (Action<ItemStack>)d;
-        }
-        foreach (Delegate d in OnItemGrabbed.GetInvocationList())
-        {
-            OnItemGrabbed -= (Action<Item>)d;
-        }
-        foreach (Delegate d in OnItemDropped.GetInvocationList())
-        {
-            OnItemDropped -= (Action<Item>)d;
+            Debug.LogError($"(ItemPool) Clearing delegates left invalid delegates for pool {name} on capable {Capable?.ID ?? "null"} : delegates have Created:{OnStackCreated?.GetInvocationList().Length ?? -1}, Removed:{OnStackRemoved?.GetInvocationList().Length ?? -1}, Grabbed:{OnItemGrabbed?.GetInvocationList().Length ?? -1}, Dropped:{OnItemDropped?.GetInvocationList().Length ?? -1}");
         }
     }
     string ItemStorer.GetDetails()
